@@ -1006,19 +1006,24 @@ following tasks:</p>
 </span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="na">keyPassword</span><span class="o">=</span><span class="s">your-key-password</span>
 </span></code></pre></div></p>
 </li>
+<li>
+<p><code>PLAY_STORE_JSON</code>: Base64 encoded content of your <code>play-store.json</code> file
+    <div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>base64<span class="w"> </span>-i<span class="w"> </span>play-store.json<span class="w"> </span><span class="p">|</span><span class="w"> </span>tr<span class="w"> </span>-d<span class="w"> </span><span class="s1">&#39;\n&#39;</span>
+</span></code></pre></div></p>
+</li>
 </ol>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
-<p>Never commit your keystore file, keystore properties, or google-services.json directly to the
- repository.</p>
+<p>Never commit your keystore file, keystore properties, google-services.json or play-store.json
+ directly to the repository.</p>
 </div>
 <h3 id="creating-a-release">Creating a Release</h3>
 <p>To create a new release:</p>
 <ol>
 <li>Update the <code>CHANGELOG.md</code> file with your release notes</li>
 <li>Create and push a new tag:
-    <div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>git<span class="w"> </span>tag<span class="w"> </span>-a<span class="w"> </span>v1.0.0<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Release v1.0.0&quot;</span>
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>v1.0.0
+    <div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>git<span class="w"> </span>tag<span class="w"> </span>-a<span class="w"> </span>v1.0.0<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Release v1.0.0&quot;</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>v1.0.0
 </span></code></pre></div></li>
 </ol>
 <p>The workflow will automatically:</p>
