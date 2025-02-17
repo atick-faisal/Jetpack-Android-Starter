@@ -31,6 +31,10 @@ android {
     namespace = "dev.atick.firebase.auth"
 }
 
+secrets {
+    defaultPropertiesFileName = "secrets.defaults.properties"
+}
+
 dependencies {
     // ... Modules
     implementation(project(":core:android"))
