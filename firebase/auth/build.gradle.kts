@@ -18,14 +18,17 @@ plugins {
     alias(libs.plugins.jetpack.library)
     alias(libs.plugins.jetpack.dagger.hilt)
     alias(libs.plugins.jetpack.dokka)
+    alias(libs.plugins.secrets)
 }
 
 android {
-    namespace = "dev.atick.firebase.auth"
-
+    buildFeatures {
+        buildConfig = true
+    }
     defaultConfig {
         consumerProguardFiles("consumer-rules.pro")
     }
+    namespace = "dev.atick.firebase.auth"
 }
 
 dependencies {

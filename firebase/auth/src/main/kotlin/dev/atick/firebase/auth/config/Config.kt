@@ -16,6 +16,8 @@
 
 package dev.atick.firebase.auth.config
 
+import dev.atick.firebase.auth.BuildConfig
+
 /**
  * Configuration object containing constants and values used in the application.
  */
@@ -25,6 +27,5 @@ object Config {
      * This identifier is associated with your application and is used to authenticate with Google services.
      * Ensure that it is properly configured and secured in the Google Developer Console.
      */
-    const val WEB_CLIENT_ID =
-        "1052755869243-tb3s2g60ct3fji814vq59ht295946ai2.apps.googleusercontent.com"
+    const val WEB_CLIENT_ID = BuildConfig.GOOGLE_WEB_CLIENT_ID
 }

@@ -171,7 +171,7 @@ internal class AuthDataSourceImpl @Inject constructor(
     private fun getSignInRequest(): GetCredentialRequest {
         val getPasswordOption = GetPasswordOption()
         val getGoogleIdOption = GetGoogleIdOption.Builder().setFilterByAuthorizedAccounts(true)
-            .setServerClientId(Config.WEB_CLIENT_ID).setAutoSelectEnabled(true).build()
+            .setServerClientId(Config.WEB_CLIENT_ID).setAutoSelectEnabled(false).build()
         return GetCredentialRequest
             .Builder()
             .addCredentialOption(getPasswordOption)
