@@ -2,7 +2,7 @@
 <html class="no-js">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
-    <title>getJetpack</title>
+    <title>pullJetpacks</title>
 <link href="../../../../images/logo-icon.svg" rel="icon" type="image/svg">    <script>var pathToRoot = "../../../../";</script>
     <script>document.documentElement.classList.replace("no-js","js");</script>
     <script>const storage = localStorage.getItem("dokka-dark-mode")
@@ -46,7 +46,7 @@
         </div>
         <div class="navigation-controls">
         <div class="filter-section filter-section_loading" id="filter-section">
-                <button class="platform-tag platform-selector jvm-like" data-active="" data-filter=":feature:home/release">androidJvm</button>
+                <button class="platform-tag platform-selector jvm-like" data-active="" data-filter=":firebase:firestore/release">androidJvm</button>
             <div class="dropdown filter-section--dropdown" data-role="dropdown" id="filter-section-dropdown">
                 <button class="button button_dropdown filter-section--dropdown-toggle" role="combobox" data-role="dropdown-toggle" aria-controls="platform-tags-listbox" aria-haspopup="listbox" aria-expanded="false" aria-label="Toggle source sets"></button>
                 <ul role="listbox" id="platform-tags-listbox" class="dropdown--list" data-role="dropdown-listbox">
@@ -57,7 +57,7 @@
                     </div>
                         <li role="option" class="dropdown--option platform-selector-option jvm-like" tabindex="0">
                             <label class="checkbox">
-                                <input type="checkbox" class="checkbox--input" id=":feature:home/release" data-filter=":feature:home/release">
+                                <input type="checkbox" class="checkbox--input" id=":firebase:firestore/release" data-filter=":firebase:firestore/release">
                                 <span class="checkbox--icon"></span>
                                 androidJvm
                             </label>
@@ -91,12 +91,12 @@
                 </div>
             </div>
             <div id="main">
-<div class="main-content" data-page-type="member" id="content" pageids=":feature:home::dev.atick.feature.home.ui.item/ItemViewModel/getJetpack/#/PointingToDeclaration//1912801902">
-  <div class="breadcrumbs"><a href="../../index.html">:feature:home</a><span class="delimiter">/</span><a href="../index.html">dev.atick.feature.home.ui.item</a><span class="delimiter">/</span><a href="index.html">ItemViewModel</a><span class="delimiter">/</span><span class="current">getJetpack</span></div>
+<div class="main-content" data-page-type="member" id="content" pageids=":firebase:firestore::dev.atick.firebase.firestore.data/FirebaseDataSource/pullJetpacks/#kotlin.String#kotlin.Long/PointingToDeclaration//1599995203">
+  <div class="breadcrumbs"><a href="../../index.html">:firebase:firestore</a><span class="delimiter">/</span><a href="../index.html">dev.atick.firebase.firestore.data</a><span class="delimiter">/</span><a href="index.html">FirebaseDataSource</a><span class="delimiter">/</span><span class="current">pullJetpacks</span></div>
   <div class="cover ">
-    <h1 class="cover"><span>get</span><wbr><span><span>Jetpack</span></span></h1>
+    <h1 class="cover"><span>pull</span><wbr><span><span>Jetpacks</span></span></h1>
   </div>
-  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:home/release"><div class="symbol monospace"><span class="token keyword">fun </span><a href="get-jetpack.html"><span class="token function">getJetpack</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div></div></div>
+  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":firebase:firestore/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="pull-jetpacks.html"><span class="token function">pullJetpacks</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">userId<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">lastSynced<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-long/index.html">Long</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><a href="../../dev.atick.firebase.firestore.model/-firebase-jetpack/index.html">FirebaseJetpack</a><span class="token operator">&gt;</span></div><p class="paragraph">Pulls a list of FirebaseJetpack objects that have been updated since the last sync.</p><span class="kdoc-tag"><h4 class="">Return</h4><p class="paragraph">A list of FirebaseJetpack objects.</p></span><h4 class="">Parameters</h4><div class="table"><div class="table-row" data-filterable-current=":firebase:firestore/release" data-filterable-set=":firebase:firestore/release"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><u><span>user</span><wbr><span><span>Id</span></span></u></div></span></div><div><div class="title"><p class="paragraph">The unique identifier of the user.</p></div></div></div></div><div class="table-row" data-filterable-current=":firebase:firestore/release" data-filterable-set=":firebase:firestore/release"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><u><span>last</span><wbr><span><span>Synced</span></span></u></div></span></div><div><div class="title"><p class="paragraph">The timestamp of the last sync.</p></div></div></div></div></div></div></div>
 </div>
     <div class="footer">
         <a href="#content" id="go-to-top-link" class="footer--button footer--button_go-to-top"></a>
