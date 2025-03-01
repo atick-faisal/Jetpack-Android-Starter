@@ -31,7 +31,7 @@ interface FirebaseDataSource {
         /**
          * The name of the collection.
          */
-        const val COLLECTION_NAME = "jetpacks"
+        const val JETPACK_COLLECTION_NAME = "jetpacks"
     }
 
     /**
@@ -41,26 +41,26 @@ interface FirebaseDataSource {
      * @param lastSynced The timestamp of the last sync.
      * @return A list of FirebaseJetpack objects.
      */
-    suspend fun pull(userId: String, lastSynced: Long): List<FirebaseJetpack>
+    suspend fun pullJetpacks(userId: String, lastSynced: Long): List<FirebaseJetpack>
 
     /**
      * Creates a new FirebaseJetpack object in the database.
      *
      * @param firebaseJetpack The FirebaseJetpack object to create.
      */
-    suspend fun create(firebaseJetpack: FirebaseJetpack)
+    suspend fun createJetpack(firebaseJetpack: FirebaseJetpack)
 
     /**
      * Creates or updates a FirebaseJetpack object in the database.
      *
      * @param firebaseJetpack The FirebaseJetpack object to create or update.
      */
-    suspend fun createOrUpdate(firebaseJetpack: FirebaseJetpack)
+    suspend fun createOrUpdateJetpack(firebaseJetpack: FirebaseJetpack)
 
     /**
      * Deletes a FirebaseJetpack object from the database.
      *
      * @param firebaseJetpack The FirebaseJetpack object to delete.
      */
-    suspend fun delete(firebaseJetpack: FirebaseJetpack)
+    suspend fun deleteJetpack(firebaseJetpack: FirebaseJetpack)
 }

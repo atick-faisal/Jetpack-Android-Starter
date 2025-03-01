@@ -134,7 +134,7 @@ internal class HomeRepositoryImpl @Inject constructor(
                 when (unsyncedJetpack.syncAction) {
                     SyncAction.UPSERT -> {
                         Timber.d("Syncing create/update jetpack: ${unsyncedJetpack.id}")
-                        firebaseDataSource.createOrUpdate(
+                        firebaseDataSource.createOrUpdateJetpack(
                             unsyncedJetpack
                                 .toFirebaseJetpack()
                                 .copy(
@@ -144,7 +144,7 @@ internal class HomeRepositoryImpl @Inject constructor(
                     }
 
                     SyncAction.DELETE -> {
-                        firebaseDataSource.delete(
+                        firebaseDataSource.deleteJetpack(
                             unsyncedJetpack
                                 .toFirebaseJetpack()
                                 .copy(
@@ -170,7 +170,7 @@ internal class HomeRepositoryImpl @Inject constructor(
 
             // Remote jetpacks
             val lastSynced = localDataSource.getLatestUpdateTimestamp(userId)
-            val remoteJetpacks = firebaseDataSource.pull(userId, lastSynced)
+            val remoteJetpacks = firebaseDataSource.pullJetpacks(userId, lastSynced)
             val totalRemoteJetpacks = remoteJetpacks.size
             Timber.d("Syncing $totalRemoteJetpacks remote jetpacks")
 

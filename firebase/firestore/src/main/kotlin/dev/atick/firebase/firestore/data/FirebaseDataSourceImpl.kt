@@ -47,11 +47,11 @@ internal class FirebaseDataSourceImpl @Inject constructor(
      * @param lastSynced The timestamp of the last sync.
      * @return A list of [FirebaseJetpack] objects.
      */
-    override suspend fun pull(userId: String, lastSynced: Long): List<FirebaseJetpack> {
+    override suspend fun pullJetpacks(userId: String, lastSynced: Long): List<FirebaseJetpack> {
         return withContext(ioDispatcher) {
             database
                 .document(checkAuthentication(userId))
-                .collection(FirebaseDataSource.COLLECTION_NAME)
+                .collection(FirebaseDataSource.JETPACK_COLLECTION_NAME)
                 .whereGreaterThan("lastUpdated", lastSynced)
                 .get()
                 .await()
@@ -64,11 +64,11 @@ internal class FirebaseDataSourceImpl @Inject constructor(
      *
      * @param firebaseJetpack The [FirebaseJetpack] object to create.
      */
-    override suspend fun create(firebaseJetpack: FirebaseJetpack) {
+    override suspend fun createJetpack(firebaseJetpack: FirebaseJetpack) {
         withContext(ioDispatcher) {
             database
                 .document(checkAuthentication(firebaseJetpack.userId))
-                .collection(FirebaseDataSource.COLLECTION_NAME)
+                .collection(FirebaseDataSource.JETPACK_COLLECTION_NAME)
                 .add(firebaseJetpack)
                 .await()
         }
@@ -79,11 +79,11 @@ internal class FirebaseDataSourceImpl @Inject constructor(
      *
      * @param firebaseJetpack The [FirebaseJetpack] object to create or update.
      */
-    override suspend fun createOrUpdate(firebaseJetpack: FirebaseJetpack) {
+    override suspend fun createOrUpdateJetpack(firebaseJetpack: FirebaseJetpack) {
         withContext(ioDispatcher) {
             database
                 .document(checkAuthentication(firebaseJetpack.userId))
-                .collection(FirebaseDataSource.COLLECTION_NAME)
+                .collection(FirebaseDataSource.JETPACK_COLLECTION_NAME)
                 .document(firebaseJetpack.id)
                 .set(firebaseJetpack)
                 .await()
@@ -95,11 +95,11 @@ internal class FirebaseDataSourceImpl @Inject constructor(
      *
      * @param firebaseJetpack The [FirebaseJetpack] object to delete.
      */
-    override suspend fun delete(firebaseJetpack: FirebaseJetpack) {
+    override suspend fun deleteJetpack(firebaseJetpack: FirebaseJetpack) {
         withContext(ioDispatcher) {
             database
                 .document(checkAuthentication(firebaseJetpack.userId))
-                .collection(FirebaseDataSource.COLLECTION_NAME)
+                .collection(FirebaseDataSource.JETPACK_COLLECTION_NAME)
                 .document(firebaseJetpack.id)
                 .delete()
                 .await()
