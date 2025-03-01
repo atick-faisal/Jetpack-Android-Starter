@@ -86,8 +86,8 @@ internal class HomeRepositoryImpl @Inject constructor(
      * @return A [Result] indicating the success or failure of the operation.
      */
     override suspend fun createOrUpdateJetpack(jetpack: Jetpack): Result<Unit> {
-        val userId = preferencesDataSource.getUserIdOrThrow()
         return suspendRunCatching {
+            val userId = preferencesDataSource.getUserIdOrThrow()
             localDataSource.upsertJetpack(
                 jetpack
                     .toJetpackEntity()
