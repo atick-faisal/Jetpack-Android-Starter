@@ -28,6 +28,9 @@ dependencies {
     // ... Core Android
     api(libs.androidx.core.ktx)
 
+    // ... Kotlin Reflect
+    api(libs.kotlin.reflect)
+
     // ... Coroutines
     api(libs.kotlinx.coroutines.android)
 

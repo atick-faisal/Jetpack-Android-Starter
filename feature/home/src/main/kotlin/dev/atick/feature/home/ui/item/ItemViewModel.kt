@@ -23,7 +23,9 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.atick.core.extensions.asOneTimeEvent
+import dev.atick.core.extensions.stateInDelayed
 import dev.atick.core.ui.utils.UiState
+import dev.atick.core.ui.utils.asUiState
 import dev.atick.core.ui.utils.updateState
 import dev.atick.core.ui.utils.updateStateWith
 import dev.atick.core.utils.OneTimeEvent
@@ -31,10 +33,10 @@ import dev.atick.data.model.home.Jetpack
 import dev.atick.data.repository.home.HomeRepository
 import dev.atick.feature.home.navigation.Item
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.onStart
 import java.util.UUID
 import javax.inject.Inject
 
@@ -52,7 +54,9 @@ class ItemViewModel @Inject constructor(
     private val existingJetpackId: String? = savedStateHandle.toRoute<Item>().itemId
 
     private val _itemUiState = MutableStateFlow(UiState(ItemScreenData()))
-    val itemUiState = _itemUiState.asStateFlow()
+    val itemUiState = _itemUiState
+        .onStart { getJetpack() }
+        .stateInDelayed(ItemScreenData::class.asUiState(), viewModelScope)
 
     fun updateName(name: String) {
         _itemUiState.updateState { copy(jetpackName = name) }
@@ -75,7 +79,7 @@ class ItemViewModel @Inject constructor(
         }
     }
 
-    fun getJetpack() {
+    private fun getJetpack() {
         existingJetpackId?.let {
             homeRepository.getJetpack(existingJetpackId)
                 .onEach { jetpack ->

@@ -28,6 +28,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlin.reflect.KClass
+import kotlin.reflect.full.createInstance
 
 /**
  * A composable function that represents a stateful UI component.
@@ -160,3 +162,11 @@ inline fun <T : Any> MutableStateFlow<UiState<T>>.updateWith(
         }
     }
 }
+
+/**
+ * Extension function to create a new instance of a class as a UiState.
+ *
+ * @param T The type of the data.
+ * @return A new instance of the class as a UiState.
+ */
+fun <T : Any> KClass<T>.asUiState() = UiState(data = createInstance())

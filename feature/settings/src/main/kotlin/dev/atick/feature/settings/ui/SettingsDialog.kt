@@ -44,7 +44,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
@@ -93,10 +92,6 @@ fun SettingsDialog(
     settingsViewModel: SettingsViewModel = hiltViewModel(),
 ) {
     val settingsState by settingsViewModel.settingsUiState.collectAsStateWithLifecycle()
-
-    LaunchedEffect(Unit) {
-        settingsViewModel.updateSettings()
-    }
 
     StatefulComposable(
         state = settingsState,

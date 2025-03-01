@@ -61,10 +61,6 @@ internal fun ItemScreen(
 ) {
     val itemUiState by itemViewModel.itemUiState.collectAsStateWithLifecycle()
 
-    LaunchedEffect(Unit) {
-        itemViewModel.getJetpack()
-    }
-
     StatefulComposable(
         state = itemUiState,
         onShowSnackbar = onShowSnackbar,

@@ -38,7 +38,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -67,10 +66,6 @@ internal fun HomeScreen(
     homeViewModel: HomeViewModel = hiltViewModel(),
 ) {
     val homeState by homeViewModel.homeUiState.collectAsStateWithLifecycle()
-
-    LaunchedEffect(Unit) {
-        homeViewModel.getJetpacks()
-    }
 
     StatefulComposable(
         state = homeState,
