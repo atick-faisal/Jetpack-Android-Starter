@@ -18,7 +18,7 @@ kotlinxSerializationJson = "1.8.0"
 timber = "5.0.1"
 
 # ... CORE:UI ...
-androidxNavigation = "2.8.7"
+androidxNavigation = "2.8.8"
 androidxFragment = "1.8.6"
 androidxAppCompat = "1.7.0"
 androidxActivity = "1.10.0"
