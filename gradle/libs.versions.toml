@@ -3,7 +3,7 @@
 # ... PROJECT ...
 java = "21"
 kotlin = "2.1.10"
-androidGradlePlugin = "8.8.1"
+androidGradlePlugin = "8.8.2"
 gmsPlugin = "4.4.2"
 ksp = "2.1.10-1.0.30"
 dokka = "2.0.0"
