@@ -95,7 +95,7 @@
   <div class="breadcrumbs"></div>
   <div class="cover ">
     <h1 class="cover"><span><span>:feature:profile</span></span></h1>
-    <div class="platform-hinted UnderCoverText" data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:profile/release"><p class="paragraph">User profile management module with account details and preferences.</p><h2 class="">Features</h2><ul><li><p class="paragraph">Profile Information Display</p></li><li><p class="paragraph">Avatar Management</p></li><li><p class="paragraph">Account Settings</p></li><li><p class="paragraph">User Stats</p></li><li><p class="paragraph">Sign Out Flow</p></li></ul><h2 class="">Dependencies Graph</h2><div class="sample-container"><div id="mermaid-container-4s18m88b3lmeb"></div></div><script>
+    <div class="platform-hinted UnderCoverText" data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:profile/release"><p class="paragraph">User profile management module with account details and preferences.</p><h2 class="">Features</h2><ul><li><p class="paragraph">Profile Information Display</p></li><li><p class="paragraph">Avatar Management</p></li><li><p class="paragraph">Account Settings</p></li><li><p class="paragraph">User Stats</p></li><li><p class="paragraph">Sign Out Flow</p></li></ul><h2 class="">Dependencies Graph</h2><div class="sample-container"><div id="mermaid-container-5j92arg5fc18e"></div></div><script>
 window.addEventListener('load', function() {
   var graphDef =  `graph TD
     A[feature:profile] --> B[core:ui]
@@ -110,9 +110,9 @@ window.addEventListener('load', function() {
     style B fill: #64B5F6, stroke: #333, stroke-width: 2px
     style C fill: #64B5F6, stroke: #333, stroke-width: 2px
     style D fill: #64B5F6, stroke: #333, stroke-width: 2px`;
-  var container = document.getElementById('mermaid-container-4s18m88b3lmeb');
-  container.innerHTML = '<div id="mermaid-target-4s18m88b3lmeb"></div>';
-  var updateGraph4s18m88b3lmeb = function() {
+  var container = document.getElementById('mermaid-container-5j92arg5fc18e');
+  container.innerHTML = '<div id="mermaid-target-5j92arg5fc18e"></div>';
+  var updateGraph5j92arg5fc18e = function() {
     // setTimeout required or else the 1st render could be done before mermaid.initialize() has applied the theme.
     // Also required because we can't listen to localStorage events reliably, and it's changed on the same click event...
     setTimeout(() => {
@@ -123,19 +123,19 @@ window.addEventListener('load', function() {
         theme = 'dark';
       }
       mermaid.initialize({'theme': theme});
-      mermaid.render('mermaid-target-4s18m88b3lmeb', graphDef).then(({ svg, bindFunctions }) => {
+      mermaid.render('mermaid-target-5j92arg5fc18e', graphDef).then(({ svg, bindFunctions }) => {
           container.innerHTML = svg;
           // Trick to make the graph takes only the required height.
-          document.getElementById('mermaid-target-4s18m88b3lmeb').removeAttribute('height')
+          document.getElementById('mermaid-target-5j92arg5fc18e').removeAttribute('height')
           bindFunctions?.(element);
       });
     }, 0);
   }
-  updateGraph4s18m88b3lmeb();
+  updateGraph5j92arg5fc18e();
   
   var themeToggleButton = document.getElementById('theme-toggle-button');
   themeToggleButton.addEventListener('click', () => {
-    updateGraph4s18m88b3lmeb();
+    updateGraph5j92arg5fc18e();
   });
 });</script><h2 class="">Key Components</h2><ol><li><p class="paragraph"><strong>Profile Screen</strong>: Shows the user profile information</p><div class="sample-container"><pre><code class="block lang-kotlin" theme="idea">@Composable<br>fun ProfileRoute(<br>  onShowSnackbar: suspend (String, SnackbarAction, Throwable?) -&gt; Boolean<br>)</code></pre><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></li></ol></div></div>
   </div>
