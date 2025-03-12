@@ -17,8 +17,6 @@
 package dev.atick.firebase.analytics.utils
 
 import com.google.firebase.crashlytics.FirebaseCrashlytics
-import com.google.firebase.crashlytics.ktx.crashlytics
-import com.google.firebase.ktx.Firebase
 import javax.inject.Inject
 
 /**
@@ -33,7 +31,6 @@ internal class FirebaseCrashReporter @Inject constructor(
      * @param throwable The exception to be reported.
      */
     override fun reportException(throwable: Throwable) {
-        Firebase.crashlytics
         crashlytics.recordException(throwable)
     }
 }
