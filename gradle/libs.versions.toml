@@ -18,12 +18,12 @@ kotlinxSerializationJson = "1.8.0"
 timber = "5.0.1"
 
 # ... CORE:UI ...
-androidxNavigation = "2.8.8"
+androidxNavigation = "2.8.9"
 androidxFragment = "1.8.6"
 androidxAppCompat = "1.7.0"
 androidxActivity = "1.10.1"
 androidxLifecycle = "2.8.7"
-androidxComposeBom = "2025.02.00"
+androidxComposeBom = "2025.03.00"
 androidxComposeCompiler = "1.5.15"
 androidxCoreSplashscreen = "1.0.1"
 androidxHiltNavigationCompose = "1.2.0"
@@ -42,7 +42,7 @@ room = "2.6.1"
 
 # ... AUTH ...
 playServicesAuth = "21.3.0"
-androidxCredentials = "1.3.0"
+androidxCredentials = "1.5.0"
 identityGoogleId = "1.1.1"
 
 # ... FIREBASE ...
