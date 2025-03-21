@@ -2,10 +2,10 @@
 
 # ... PROJECT ...
 java = "21"
-kotlin = "2.1.10"
+kotlin = "2.1.20"
 androidGradlePlugin = "8.9.0"
 gmsPlugin = "4.4.2"
-ksp = "2.1.10-1.0.31"
+ksp = "2.1.20-1.0.31"
 dokka = "2.0.0"
 dokkaMermaid = "0.6.0"
 secrets = "2.0.1"
@@ -46,7 +46,7 @@ androidxCredentials = "1.5.0"
 identityGoogleId = "1.1.1"
 
 # ... FIREBASE ...
-firebaseBom = "33.10.0"
+firebaseBom = "33.11.0"
 firebaseCrashlyticsPlugin = "3.0.3"
 firebasePerfPlugin = "1.4.2"
 
