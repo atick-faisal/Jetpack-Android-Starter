@@ -95,7 +95,7 @@
   <div class="breadcrumbs"></div>
   <div class="cover ">
     <h1 class="cover"><span><span>:core:network</span></span></h1>
-    <div class="platform-hinted UnderCoverText" data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":core:network/release"><p class="paragraph">This module handles all network-related operations, including API communication, image loading, and network state monitoring. It provides a centralized way to manage network requests and responses.</p><h2 class="">Features</h2><ul><li><p class="paragraph">REST API Communication (Retrofit)</p></li><li><p class="paragraph">Network Interceptors (OkHttp)</p></li><li><p class="paragraph">Image Loading (Coil)</p></li><li><p class="paragraph">Network State Monitoring</p></li><li><p class="paragraph">Secrets Management</p></li></ul><h2 class="">Dependencies Graph</h2><div class="sample-container"><div id="mermaid-container-nspjotfdt62u"></div></div><script>
+    <div class="platform-hinted UnderCoverText" data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":core:network/release"><p class="paragraph">This module handles all network-related operations, including API communication, image loading, and network state monitoring. It provides a centralized way to manage network requests and responses.</p><h2 class="">Features</h2><ul><li><p class="paragraph">REST API Communication (Retrofit)</p></li><li><p class="paragraph">Network Interceptors (OkHttp)</p></li><li><p class="paragraph">Image Loading (Coil)</p></li><li><p class="paragraph">Network State Monitoring</p></li><li><p class="paragraph">Secrets Management</p></li></ul><h2 class="">Dependencies Graph</h2><div class="sample-container"><div id="mermaid-container-3ggitdmpan35f"></div></div><script>
 window.addEventListener('load', function() {
   var graphDef =  `graph TD
     A[core:network] --> B[core:android]
@@ -116,9 +116,9 @@ window.addEventListener('load', function() {
     style C fill: #FF7043, stroke: #333, stroke-width: 2px
     style F fill: #FF7043, stroke: #333, stroke-width: 2px
     style H fill: #FF7043, stroke: #333, stroke-width: 2px`;
-  var container = document.getElementById('mermaid-container-nspjotfdt62u');
-  container.innerHTML = '<div id="mermaid-target-nspjotfdt62u"></div>';
-  var updateGraphnspjotfdt62u = function() {
+  var container = document.getElementById('mermaid-container-3ggitdmpan35f');
+  container.innerHTML = '<div id="mermaid-target-3ggitdmpan35f"></div>';
+  var updateGraph3ggitdmpan35f = function() {
     // setTimeout required or else the 1st render could be done before mermaid.initialize() has applied the theme.
     // Also required because we can't listen to localStorage events reliably, and it's changed on the same click event...
     setTimeout(() => {
@@ -129,19 +129,19 @@ window.addEventListener('load', function() {
         theme = 'dark';
       }
       mermaid.initialize({'theme': theme});
-      mermaid.render('mermaid-target-nspjotfdt62u', graphDef).then(({ svg, bindFunctions }) => {
+      mermaid.render('mermaid-target-3ggitdmpan35f', graphDef).then(({ svg, bindFunctions }) => {
           container.innerHTML = svg;
           // Trick to make the graph takes only the required height.
-          document.getElementById('mermaid-target-nspjotfdt62u').removeAttribute('height')
+          document.getElementById('mermaid-target-3ggitdmpan35f').removeAttribute('height')
           bindFunctions?.(element);
       });
     }, 0);
   }
-  updateGraphnspjotfdt62u();
+  updateGraph3ggitdmpan35f();
   
   var themeToggleButton = document.getElementById('theme-toggle-button');
   themeToggleButton.addEventListener('click', () => {
-    updateGraphnspjotfdt62u();
+    updateGraph3ggitdmpan35f();
   });
 });</script><h2 class="">Usage</h2><div class="sample-container"><pre><code class="block lang-kotlin" theme="idea">dependencies {<br>    implementation(project(":core:network"))<br>}</code></pre><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><h3 class="">Secret Management</h3><p class="paragraph">Uses Gradle secrets plugin to manage API keys and endpoints:</p><div class="sample-container"><pre><code class="block lang-properties" theme="idea"># secrets.defaults.properties (version controlled)<br>apiKey=dummy-key<br>apiEndpoint=https://example.com<br># local.properties (not version controlled)<br>apiKey=actual-secret-key<br>apiEndpoint=actual-endpoint</code></pre><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
   </div>
