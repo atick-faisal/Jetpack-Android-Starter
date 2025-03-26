@@ -51,7 +51,7 @@ firebaseCrashlyticsPlugin = "3.0.3"
 firebasePerfPlugin = "1.4.2"
 
 # ... DAGGER-HILT ...
-daggerHilt = "2.56"
+daggerHilt = "2.56.1"
 daggerHiltExt = "1.2.0"
 
 # ... Open Source Licenses ...
