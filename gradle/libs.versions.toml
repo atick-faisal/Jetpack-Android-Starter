@@ -14,7 +14,7 @@ secrets = "2.0.1"
 androidxCore = "1.15.0"
 kotlinxCoroutines = "1.10.1"
 kotlinxDatetime = "0.6.2"
-kotlinxSerializationJson = "1.8.0"
+kotlinxSerializationJson = "1.8.1"
 timber = "5.0.1"
 
 # ... CORE:UI ...
@@ -46,7 +46,7 @@ androidxCredentials = "1.5.0"
 identityGoogleId = "1.1.1"
 
 # ... FIREBASE ...
-firebaseBom = "33.11.0"
+firebaseBom = "33.12.0"
 firebaseCrashlyticsPlugin = "3.0.3"
 firebasePerfPlugin = "1.4.2"
 
