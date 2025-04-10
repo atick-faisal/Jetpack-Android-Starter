@@ -5,14 +5,14 @@ java = "21"
 kotlin = "2.1.20"
 androidGradlePlugin = "8.9.1"
 gmsPlugin = "4.4.2"
-ksp = "2.1.20-1.0.32"
+ksp = "2.1.20-2.0.0"
 dokka = "2.0.0"
 dokkaMermaid = "0.6.0"
 secrets = "2.0.1"
 
 # ... CORE:ANDROID ...
-androidxCore = "1.15.0"
-kotlinxCoroutines = "1.10.1"
+androidxCore = "1.16.0"
+kotlinxCoroutines = "1.10.2"
 kotlinxDatetime = "0.6.2"
 kotlinxSerializationJson = "1.8.1"
 timber = "5.0.1"
@@ -23,11 +23,11 @@ androidxFragment = "1.8.6"
 androidxAppCompat = "1.7.0"
 androidxActivity = "1.10.1"
 androidxLifecycle = "2.8.7"
-androidxComposeBom = "2025.03.01"
+androidxComposeBom = "2025.04.00"
 androidxComposeCompiler = "1.5.15"
 androidxCoreSplashscreen = "1.0.1"
 androidxHiltNavigationCompose = "1.2.0"
-lottieCompose = "6.6.4"
+lottieCompose = "6.6.6"
 
 # ... NETWORK ...
 okhttp = "4.12.0"
@@ -38,7 +38,7 @@ coil = "2.7.0"
 androidxDataStore = "1.1.4"
 
 # ... STORAGE:ROOM ...
-room = "2.6.1"
+room = "2.7.0"
 
 # ... AUTH ...
 playServicesAuth = "21.3.0"
