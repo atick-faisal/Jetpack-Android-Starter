@@ -95,7 +95,7 @@
   <div class="breadcrumbs"></div>
   <div class="cover ">
     <h1 class="cover"><span><span>:firebase:analytics</span></span></h1>
-    <div class="platform-hinted UnderCoverText" data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":firebase:analytics/release"><p class="paragraph">This module handles crash reporting and analytics through Firebase Crashlytics. It provides a centralized way to track app crashes and report exceptions.</p><h2 class="">Features</h2><ul><li><p class="paragraph">Crash Reporting</p></li><li><p class="paragraph">Error Tracking</p></li><li><p class="paragraph">Exception Handling</p></li><li><p class="paragraph">Custom Error Reports</p></li></ul><h2 class="">Dependencies Graph</h2><div class="sample-container"><div id="mermaid-container-3lo97qk3gtkgo"></div></div><script>
+    <div class="platform-hinted UnderCoverText" data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":firebase:analytics/release"><p class="paragraph">This module handles crash reporting and analytics through Firebase Crashlytics. It provides a centralized way to track app crashes and report exceptions.</p><h2 class="">Features</h2><ul><li><p class="paragraph">Crash Reporting</p></li><li><p class="paragraph">Error Tracking</p></li><li><p class="paragraph">Exception Handling</p></li><li><p class="paragraph">Custom Error Reports</p></li></ul><h2 class="">Dependencies Graph</h2><div class="sample-container"><div id="mermaid-container-7q40tkl5f57om"></div></div><script>
 window.addEventListener('load', function() {
   var graphDef =  `graph TD
     A[firebase:analytics] --> B[core:android]
@@ -105,9 +105,9 @@ window.addEventListener('load', function() {
     style B fill: #64B5F6, stroke: #333, stroke-width: 2px
     style C fill: #FFA726, stroke: #333, stroke-width: 2px
     style D fill: #FFA726, stroke: #333, stroke-width: 2px`;
-  var container = document.getElementById('mermaid-container-3lo97qk3gtkgo');
-  container.innerHTML = '<div id="mermaid-target-3lo97qk3gtkgo"></div>';
-  var updateGraph3lo97qk3gtkgo = function() {
+  var container = document.getElementById('mermaid-container-7q40tkl5f57om');
+  container.innerHTML = '<div id="mermaid-target-7q40tkl5f57om"></div>';
+  var updateGraph7q40tkl5f57om = function() {
     // setTimeout required or else the 1st render could be done before mermaid.initialize() has applied the theme.
     // Also required because we can't listen to localStorage events reliably, and it's changed on the same click event...
     setTimeout(() => {
@@ -118,19 +118,19 @@ window.addEventListener('load', function() {
         theme = 'dark';
       }
       mermaid.initialize({'theme': theme});
-      mermaid.render('mermaid-target-3lo97qk3gtkgo', graphDef).then(({ svg, bindFunctions }) => {
+      mermaid.render('mermaid-target-7q40tkl5f57om', graphDef).then(({ svg, bindFunctions }) => {
           container.innerHTML = svg;
           // Trick to make the graph takes only the required height.
-          document.getElementById('mermaid-target-3lo97qk3gtkgo').removeAttribute('height')
+          document.getElementById('mermaid-target-7q40tkl5f57om').removeAttribute('height')
           bindFunctions?.(element);
       });
     }, 0);
   }
-  updateGraph3lo97qk3gtkgo();
+  updateGraph7q40tkl5f57om();
   
   var themeToggleButton = document.getElementById('theme-toggle-button');
   themeToggleButton.addEventListener('click', () => {
-    updateGraph3lo97qk3gtkgo();
+    updateGraph7q40tkl5f57om();
   });
 });</script><h2 class="">Usage</h2><div class="sample-container"><pre><code class="block lang-kotlin" theme="idea">dependencies {<br>    implementation(project(":firebase:analytics"))<br>}</code></pre><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><h3 class="">Error Reporting</h3><div class="sample-container"><pre><code class="block lang-kotlin" theme="idea">class YourClass @Inject constructor(<br>    private val crashReporter: CrashReporter<br>) {<br>    fun handleError(error: Throwable) {<br>        crashReporter.reportException(error)<br>    }<br>}</code></pre><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><p class="paragraph">The module integrates with the app's error handling system to automatically report uncaught exceptions to Firebase Crashlytics.</p></div></div>
   </div>
