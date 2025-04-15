@@ -50,6 +50,6 @@ object DatabaseModule {
             appContext,
             JetpackDatabase::class.java,
             ROOM_DATABASE_NAME,
-        ).fallbackToDestructiveMigration().build()
+        ).fallbackToDestructiveMigration(true).build()
     }
 }
