@@ -95,7 +95,7 @@
   <div class="breadcrumbs"></div>
   <div class="cover ">
     <h1 class="cover"><span><span>:core:preferences</span></span></h1>
-    <div class="platform-hinted UnderCoverText" data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":core:preferences/release"><p class="paragraph">This module handles local data persistence using DataStore Preferences. It provides type-safe access to user preferences and app settings with support for serialization and migrations.</p><h2 class="">Features</h2><ul><li><p class="paragraph">Type-safe Preferences Storage</p></li><li><p class="paragraph">Reactive Updates with Flow</p></li><li><p class="paragraph">Custom Serializers</p></li></ul><h2 class="">Dependencies Graph</h2><div class="sample-container"><div id="mermaid-container-37r27cub6u49d"></div></div><script>
+    <div class="platform-hinted UnderCoverText" data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":core:preferences/release"><p class="paragraph">This module handles local data persistence using DataStore Preferences. It provides type-safe access to user preferences and app settings with support for serialization and migrations.</p><h2 class="">Features</h2><ul><li><p class="paragraph">Type-safe Preferences Storage</p></li><li><p class="paragraph">Reactive Updates with Flow</p></li><li><p class="paragraph">Custom Serializers</p></li></ul><h2 class="">Dependencies Graph</h2><div class="sample-container"><div id="mermaid-container-36b7ft1gc572"></div></div><script>
 window.addEventListener('load', function() {
   var graphDef =  `graph TD
     A[core:preferences] --> B[core:android]
@@ -109,9 +109,9 @@ window.addEventListener('load', function() {
     style B fill: #64B5F6, stroke: #333, stroke-width: 2px
     style C fill: #FF7043, stroke: #333, stroke-width: 2px
     style D fill: #FF7043, stroke: #333, stroke-width: 2px`;
-  var container = document.getElementById('mermaid-container-37r27cub6u49d');
-  container.innerHTML = '<div id="mermaid-target-37r27cub6u49d"></div>';
-  var updateGraph37r27cub6u49d = function() {
+  var container = document.getElementById('mermaid-container-36b7ft1gc572');
+  container.innerHTML = '<div id="mermaid-target-36b7ft1gc572"></div>';
+  var updateGraph36b7ft1gc572 = function() {
     // setTimeout required or else the 1st render could be done before mermaid.initialize() has applied the theme.
     // Also required because we can't listen to localStorage events reliably, and it's changed on the same click event...
     setTimeout(() => {
@@ -122,19 +122,19 @@ window.addEventListener('load', function() {
         theme = 'dark';
       }
       mermaid.initialize({'theme': theme});
-      mermaid.render('mermaid-target-37r27cub6u49d', graphDef).then(({ svg, bindFunctions }) => {
+      mermaid.render('mermaid-target-36b7ft1gc572', graphDef).then(({ svg, bindFunctions }) => {
           container.innerHTML = svg;
           // Trick to make the graph takes only the required height.
-          document.getElementById('mermaid-target-37r27cub6u49d').removeAttribute('height')
+          document.getElementById('mermaid-target-36b7ft1gc572').removeAttribute('height')
           bindFunctions?.(element);
       });
     }, 0);
   }
-  updateGraph37r27cub6u49d();
+  updateGraph36b7ft1gc572();
   
   var themeToggleButton = document.getElementById('theme-toggle-button');
   themeToggleButton.addEventListener('click', () => {
-    updateGraph37r27cub6u49d();
+    updateGraph36b7ft1gc572();
   });
 });</script><h2 class="">Usage</h2><div class="sample-container"><pre><code class="block lang-kotlin" theme="idea">dependencies {<br>    implementation(project(":core:preferences"))<br>}</code></pre><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><h3 class="">Data Storage</h3><div class="sample-container"><pre><code class="block lang-kotlin" theme="idea">@Serializable<br>data class UserPreferences(<br>    val darkMode: Boolean = false,<br>    val notifications: Boolean = true<br>)<br><br>class PreferencesDataSource @Inject constructor(<br>    private val dataStore: DataStore&lt;UserPreferences&gt;<br>) {<br>    val preferences: Flow&lt;UserPreferences&gt; = dataStore.data<br><br>    suspend fun updateDarkMode(enabled: Boolean) {<br>        dataStore.updateData {<br>            it.copy(darkMode = enabled)<br>        }<br>    }<br>}</code></pre><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><p class="paragraph">ProGuard rules are included for serialization support.</p></div></div>
   </div>
