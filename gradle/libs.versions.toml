@@ -2,10 +2,10 @@
 
 # ... PROJECT ...
 java = "21"
-kotlin = "2.1.20"
+kotlin = "2.1.21"
 androidGradlePlugin = "8.10.0"
 gmsPlugin = "4.4.2"
-ksp = "2.1.20-2.0.1"
+ksp = "2.1.21-2.0.1"
 dokka = "2.0.0"
 dokkaMermaid = "0.6.0"
 secrets = "2.0.1"
