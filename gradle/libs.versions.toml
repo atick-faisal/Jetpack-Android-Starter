@@ -19,11 +19,11 @@ timber = "5.0.1"
 
 # ... CORE:UI ...
 androidxNavigation = "2.9.0"
-androidxFragment = "1.8.6"
+androidxFragment = "1.8.7"
 androidxAppCompat = "1.7.0"
 androidxActivity = "1.10.1"
 androidxLifecycle = "2.9.0"
-androidxComposeBom = "2025.05.00"
+androidxComposeBom = "2025.05.01"
 androidxComposeCompiler = "1.5.15"
 androidxCoreSplashscreen = "1.0.1"
 androidxHiltNavigationCompose = "1.2.0"
@@ -35,7 +35,7 @@ retrofit = "3.0.0"
 coil = "2.7.0"
 
 # ... STORAGE:PREFERENCES ...
-androidxDataStore = "1.1.6"
+androidxDataStore = "1.1.7"
 
 # ... STORAGE:ROOM ...
 room = "2.7.1"
@@ -46,7 +46,7 @@ androidxCredentials = "1.5.0"
 identityGoogleId = "1.1.1"
 
 # ... FIREBASE ...
-firebaseBom = "33.13.0"
+firebaseBom = "33.14.0"
 firebaseCrashlyticsPlugin = "3.0.3"
 firebasePerfPlugin = "1.4.2"
 
