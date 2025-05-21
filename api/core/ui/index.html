@@ -95,7 +95,7 @@
   <div class="breadcrumbs"></div>
   <div class="cover ">
     <h1 class="cover"><span><span>:core:ui</span></span></h1>
-    <div class="platform-hinted UnderCoverText" data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":core:ui/release"><p class="paragraph">This module contains all the common UI components, theming, and design system elements used throughout the application. It provides a consistent look and feel across all features.</p><h2 class="">Features</h2><ul><li><p class="paragraph">Material3 Design System</p></li><li><p class="paragraph">Common UI Components</p></li><li><p class="paragraph">Theme Configuration</p></li><li><p class="paragraph">Navigation Setup</p></li><li><p class="paragraph">Image Loading</p></li><li><p class="paragraph">Animation Support</p></li></ul><h2 class="">Dependencies Graph</h2><div class="sample-container"><div id="mermaid-container-5pi57rk1kcp8m"></div></div><script>
+    <div class="platform-hinted UnderCoverText" data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":core:ui/release"><p class="paragraph">This module contains all the common UI components, theming, and design system elements used throughout the application. It provides a consistent look and feel across all features.</p><h2 class="">Features</h2><ul><li><p class="paragraph">Material3 Design System</p></li><li><p class="paragraph">Common UI Components</p></li><li><p class="paragraph">Theme Configuration</p></li><li><p class="paragraph">Navigation Setup</p></li><li><p class="paragraph">Image Loading</p></li><li><p class="paragraph">Animation Support</p></li></ul><h2 class="">Dependencies Graph</h2><div class="sample-container"><div id="mermaid-container-778j77e3qrgfr"></div></div><script>
 window.addEventListener('load', function() {
   var graphDef =  `graph TD
     A[core:ui] --> B[core:android]
@@ -117,9 +117,9 @@ window.addEventListener('load', function() {
     style G fill: #64B5F6, stroke: #333, stroke-width: 2px
     style H fill: #64B5F6, stroke: #333, stroke-width: 2px
     style I fill: #64B5F6, stroke: #333, stroke-width: 2px`;
-  var container = document.getElementById('mermaid-container-5pi57rk1kcp8m');
-  container.innerHTML = '<div id="mermaid-target-5pi57rk1kcp8m"></div>';
-  var updateGraph5pi57rk1kcp8m = function() {
+  var container = document.getElementById('mermaid-container-778j77e3qrgfr');
+  container.innerHTML = '<div id="mermaid-target-778j77e3qrgfr"></div>';
+  var updateGraph778j77e3qrgfr = function() {
     // setTimeout required or else the 1st render could be done before mermaid.initialize() has applied the theme.
     // Also required because we can't listen to localStorage events reliably, and it's changed on the same click event...
     setTimeout(() => {
@@ -130,19 +130,19 @@ window.addEventListener('load', function() {
         theme = 'dark';
       }
       mermaid.initialize({'theme': theme});
-      mermaid.render('mermaid-target-5pi57rk1kcp8m', graphDef).then(({ svg, bindFunctions }) => {
+      mermaid.render('mermaid-target-778j77e3qrgfr', graphDef).then(({ svg, bindFunctions }) => {
           container.innerHTML = svg;
           // Trick to make the graph takes only the required height.
-          document.getElementById('mermaid-target-5pi57rk1kcp8m').removeAttribute('height')
+          document.getElementById('mermaid-target-778j77e3qrgfr').removeAttribute('height')
           bindFunctions?.(element);
       });
     }, 0);
   }
-  updateGraph5pi57rk1kcp8m();
+  updateGraph778j77e3qrgfr();
   
   var themeToggleButton = document.getElementById('theme-toggle-button');
   themeToggleButton.addEventListener('click', () => {
-    updateGraph5pi57rk1kcp8m();
+    updateGraph778j77e3qrgfr();
   });
 });</script><h2 class="">Usage</h2><p class="paragraph">This module is used by all feature modules that require UI components:</p><div class="sample-container"><pre><code class="block lang-kotlin" theme="idea">dependencies {<br>    implementation(project(":core:ui"))<br>}</code></pre><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><h3 class="">Key Components</h3><ul><li><p class="paragraph"><strong>Design System</strong>: Common theme, typography, and color schemes</p></li><li><p class="paragraph"><strong>Reusable Components</strong>: Common UI components like buttons, text fields, etc.</p></li><li><p class="paragraph"><strong>Navigation</strong>: Type-safe navigation utilities</p></li><li><p class="paragraph"><strong>Image Loading</strong>: Coil integration for efficient image loading</p></li><li><p class="paragraph"><strong>Animations</strong>: Lottie integration for rich animations</p></li></ul><p class="paragraph">All UI dependencies are exposed as <code class="lang-kotlin">api</code> to ensure consistent versioning across the app.</p></div></div>
   </div>
