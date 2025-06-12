@@ -95,7 +95,7 @@
   <div class="breadcrumbs"></div>
   <div class="cover ">
     <h1 class="cover"><span><span>:data</span></span></h1>
-    <div class="platform-hinted UnderCoverText" data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":data/release"><p class="paragraph">Central data management module that coordinates between local and remote data sources.</p><h2 class="">Dependencies Graph</h2><div class="sample-container"><div id="mermaid-container-2if2p2vfmn38f"></div></div><script>
+    <div class="platform-hinted UnderCoverText" data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":data/release"><p class="paragraph">Central data management module that coordinates between local and remote data sources.</p><h2 class="">Dependencies Graph</h2><div class="sample-container"><div id="mermaid-container-3pjvktaktq07n"></div></div><script>
 window.addEventListener('load', function() {
   var graphDef =  `graph TD
     A[data] --> B[core:android]
@@ -121,9 +121,9 @@ window.addEventListener('load', function() {
     style E fill: #64B5F6, stroke: #333, stroke-width: 2px
     style F fill: #FFA726, stroke: #333, stroke-width: 2px
     style G fill: #FFA726, stroke: #333, stroke-width: 2px`;
-  var container = document.getElementById('mermaid-container-2if2p2vfmn38f');
-  container.innerHTML = '<div id="mermaid-target-2if2p2vfmn38f"></div>';
-  var updateGraph2if2p2vfmn38f = function() {
+  var container = document.getElementById('mermaid-container-3pjvktaktq07n');
+  container.innerHTML = '<div id="mermaid-target-3pjvktaktq07n"></div>';
+  var updateGraph3pjvktaktq07n = function() {
     // setTimeout required or else the 1st render could be done before mermaid.initialize() has applied the theme.
     // Also required because we can't listen to localStorage events reliably, and it's changed on the same click event...
     setTimeout(() => {
@@ -134,19 +134,19 @@ window.addEventListener('load', function() {
         theme = 'dark';
       }
       mermaid.initialize({'theme': theme});
-      mermaid.render('mermaid-target-2if2p2vfmn38f', graphDef).then(({ svg, bindFunctions }) => {
+      mermaid.render('mermaid-target-3pjvktaktq07n', graphDef).then(({ svg, bindFunctions }) => {
           container.innerHTML = svg;
           // Trick to make the graph takes only the required height.
-          document.getElementById('mermaid-target-2if2p2vfmn38f').removeAttribute('height')
+          document.getElementById('mermaid-target-3pjvktaktq07n').removeAttribute('height')
           bindFunctions?.(element);
       });
     }, 0);
   }
-  updateGraph2if2p2vfmn38f();
+  updateGraph3pjvktaktq07n();
   
   var themeToggleButton = document.getElementById('theme-toggle-button');
   themeToggleButton.addEventListener('click', () => {
-    updateGraph2if2p2vfmn38f();
+    updateGraph3pjvktaktq07n();
   });
 });</script><h2 class="">Key Components</h2><ul><li><p class="paragraph">Repository implementations</p></li><li><p class="paragraph">Data models and mappers</p></li><li><p class="paragraph">Offline-first logic</p></li><li><p class="paragraph">Synchronization handling</p></li><li><p class="paragraph">Error management</p></li></ul><h2 class="">Implementation Pattern</h2><div class="sample-container"><pre><code class="block lang-kotlin" theme="idea">interface YourRepository {<br>    fun getData(): Flow&lt;List&lt;Data&gt;&gt;<br>}<br><br>class YourRepositoryImpl @Inject constructor(<br>    private val localDataSource: LocalDataSource,<br>    private val remoteDataSource: RemoteDataSource<br>) : YourRepository {<br>    override fun getData(): Flow&lt;List&lt;Data&gt;&gt; =<br>        networkBoundResource(<br>            query = { localDataSource.getData() },<br>            fetch = { remoteDataSource.getData() },<br>            saveFetchResult = { localDataSource.saveData(it) }<br>        )<br>}</code></pre><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
   </div>
