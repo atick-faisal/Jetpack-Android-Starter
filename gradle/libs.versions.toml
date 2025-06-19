@@ -23,7 +23,7 @@ androidxFragment = "1.8.8"
 androidxAppCompat = "1.7.1"
 androidxActivity = "1.10.1"
 androidxLifecycle = "2.9.1"
-androidxComposeBom = "2025.06.00"
+androidxComposeBom = "2025.06.01"
 androidxComposeCompiler = "1.5.15"
 androidxCoreSplashscreen = "1.0.1"
 androidxHiltNavigationCompose = "1.2.0"
@@ -38,7 +38,7 @@ coil = "2.7.0"
 androidxDataStore = "1.1.7"
 
 # ... STORAGE:ROOM ...
-room = "2.7.1"
+room = "2.7.2"
 
 # ... AUTH ...
 playServicesAuth = "21.3.0"
@@ -62,7 +62,7 @@ googleOssPlugin = "0.10.6"
 leakcanaryAndroid = "2.14"
 
 # ... WORK MANAGER ...
-workVersion = "2.10.1"
+workVersion = "2.10.2"
 
 # ... SDK-CONFIG ...
 minSdk = "24"
