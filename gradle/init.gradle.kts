@@ -14,8 +14,6 @@
  *   limitations under the License.
  */
 
-val ktlintVersion = "1.4.0"
-
 initscript {
     val spotlessVersion = "7.0.4"
 
@@ -29,6 +27,8 @@ initscript {
 }
 
 rootProject {
+    val ktlintVersion = "1.6.0"
+
     subprojects {
         apply<com.diffplug.gradle.spotless.SpotlessPlugin>()
         extensions.configure<com.diffplug.gradle.spotless.SpotlessExtension> {

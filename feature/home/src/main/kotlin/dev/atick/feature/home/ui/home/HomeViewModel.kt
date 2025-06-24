@@ -58,7 +58,7 @@ class HomeViewModel @Inject constructor(
     }
 
     fun deleteJetpack(jetpack: Jetpack) {
-        _homeUiState.updateWith(viewModelScope) {
+        _homeUiState.updateWith {
             homeRepository.markJetpackAsDeleted(jetpack)
         }
     }
