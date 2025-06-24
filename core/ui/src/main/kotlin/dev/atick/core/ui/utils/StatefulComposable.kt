@@ -22,9 +22,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import dev.atick.core.ui.components.JetpackOverlayLoadingWheel
 import dev.atick.core.utils.OneTimeEvent
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -93,15 +94,14 @@ inline fun <T : Any> MutableStateFlow<UiState<T>>.updateState(update: T.() -> T)
  * Extension function to update the state of a MutableStateFlow with a suspend operation.
  *
  * @param T The type of the data.
- * @param scope The CoroutineScope to launch the operation.
  * @param operation A suspend function that returns a Result of the data.
  */
+context(viewModel: ViewModel)
 inline fun <reified T : Any> MutableStateFlow<UiState<T>>.updateStateWith(
-    scope: CoroutineScope,
     crossinline operation: suspend T.() -> Result<T>,
 ) {
     if (value.loading) return
-    scope.launch {
+    viewModel.viewModelScope.launch {
         update { it.copy(loading = true, error = OneTimeEvent(null)) }
 
         val result = value.data.operation()
@@ -135,15 +135,14 @@ inline fun <reified T : Any> MutableStateFlow<UiState<T>>.updateStateWith(
  * Extension function to update the state of a MutableStateFlow with a suspend operation that returns Unit.
  *
  * @param T The type of the data.
- * @param scope The CoroutineScope to launch the operation.
  * @param operation A suspend function that returns a Result of Unit.
  */
+context(viewModel: ViewModel)
 inline fun <T : Any> MutableStateFlow<UiState<T>>.updateWith(
-    scope: CoroutineScope,
     crossinline operation: suspend T.() -> Result<Unit>,
 ) {
     if (value.loading) return
-    scope.launch {
+    viewModel.viewModelScope.launch {
         update { it.copy(loading = true, error = OneTimeEvent(null)) }
 
         val result = value.data.operation()

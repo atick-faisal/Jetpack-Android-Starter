@@ -67,7 +67,7 @@ class ItemViewModel @Inject constructor(
     }
 
     fun createOrUpdateJetpack() {
-        _itemUiState.updateStateWith(viewModelScope) {
+        _itemUiState.updateStateWith {
             val jetpack = Jetpack(
                 id = jetpackId,
                 name = jetpackName.trim(),
