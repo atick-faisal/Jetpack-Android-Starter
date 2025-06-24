@@ -95,7 +95,7 @@
   <div class="breadcrumbs"></div>
   <div class="cover ">
     <h1 class="cover"><span><span>:feature:home</span></span></h1>
-    <div class="platform-hinted UnderCoverText" data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:home/release"><p class="paragraph">Main feature module implementing the home screen with item list and CRUD operations.</p><h2 class="">Features</h2><ul><li><p class="paragraph">Item List Display</p></li><li><p class="paragraph">Create/Edit Items</p></li><li><p class="paragraph">Delete with Undo</p></li><li><p class="paragraph">Offline Support</p></li><li><p class="paragraph">Pull to Refresh</p></li><li><p class="paragraph">Background Sync</p></li></ul><h2 class="">Dependencies Graph</h2><div class="sample-container"><div id="mermaid-container-6snmpi7deubgj"></div></div><script>
+    <div class="platform-hinted UnderCoverText" data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:home/release"><p class="paragraph">Main feature module implementing the home screen with item list and CRUD operations.</p><h2 class="">Features</h2><ul><li><p class="paragraph">Item List Display</p></li><li><p class="paragraph">Create/Edit Items</p></li><li><p class="paragraph">Delete with Undo</p></li><li><p class="paragraph">Offline Support</p></li><li><p class="paragraph">Pull to Refresh</p></li><li><p class="paragraph">Background Sync</p></li></ul><h2 class="">Dependencies Graph</h2><div class="sample-container"><div id="mermaid-container-714r9lv8cm21n"></div></div><script>
 window.addEventListener('load', function() {
   var graphDef =  `graph TD
     A[feature:home] --> B[core:ui]
@@ -110,9 +110,9 @@ window.addEventListener('load', function() {
     style B fill: #64B5F6, stroke: #333, stroke-width: 2px
     style C fill: #64B5F6, stroke: #333, stroke-width: 2px
     style D fill: #64B5F6, stroke: #333, stroke-width: 2px`;
-  var container = document.getElementById('mermaid-container-6snmpi7deubgj');
-  container.innerHTML = '<div id="mermaid-target-6snmpi7deubgj"></div>';
-  var updateGraph6snmpi7deubgj = function() {
+  var container = document.getElementById('mermaid-container-714r9lv8cm21n');
+  container.innerHTML = '<div id="mermaid-target-714r9lv8cm21n"></div>';
+  var updateGraph714r9lv8cm21n = function() {
     // setTimeout required or else the 1st render could be done before mermaid.initialize() has applied the theme.
     // Also required because we can't listen to localStorage events reliably, and it's changed on the same click event...
     setTimeout(() => {
@@ -123,19 +123,19 @@ window.addEventListener('load', function() {
         theme = 'dark';
       }
       mermaid.initialize({'theme': theme});
-      mermaid.render('mermaid-target-6snmpi7deubgj', graphDef).then(({ svg, bindFunctions }) => {
+      mermaid.render('mermaid-target-714r9lv8cm21n', graphDef).then(({ svg, bindFunctions }) => {
           container.innerHTML = svg;
           // Trick to make the graph takes only the required height.
-          document.getElementById('mermaid-target-6snmpi7deubgj').removeAttribute('height')
+          document.getElementById('mermaid-target-714r9lv8cm21n').removeAttribute('height')
           bindFunctions?.(element);
       });
     }, 0);
   }
-  updateGraph6snmpi7deubgj();
+  updateGraph714r9lv8cm21n();
   
   var themeToggleButton = document.getElementById('theme-toggle-button');
   themeToggleButton.addEventListener('click', () => {
-    updateGraph6snmpi7deubgj();
+    updateGraph714r9lv8cm21n();
   });
 });</script><h2 class="">Key Components</h2><ol><li><p class="paragraph"><strong>Home Screen</strong>: Shows the list of items</p><div class="sample-container"><pre><code class="block lang-kotlin" theme="idea">@Composable<br>fun HomeRoute(<br>    onItemClick: (String) -&gt; Unit,<br>    onShowSnackbar: suspend (String, SnackbarAction, Throwable?) -&gt; Boolean<br>)</code></pre><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></li><li><p class="paragraph"><strong>Item Screen</strong>: Create/Edit item screen</p><div class="sample-container"><pre><code class="block lang-kotlin" theme="idea">@Composable<br>fun ItemRoute(<br>   onBackClick: () -&gt; Unit,<br>   onShowSnackbar: suspend (String, SnackbarAction, Throwable?) -&gt; Boolean<br>)</code></pre><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></li></ol></div></div>
   </div>
