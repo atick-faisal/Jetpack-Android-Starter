@@ -22,8 +22,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import dev.atick.core.ui.components.JetpackOverlayLoadingWheel
 import dev.atick.core.utils.OneTimeEvent
 import kotlinx.coroutines.flow.MutableStateFlow
