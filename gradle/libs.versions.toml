@@ -3,9 +3,9 @@
 # ... PROJECT ...
 java = "21"
 kotlin = "2.2.0"
-androidGradlePlugin = "8.10.1"
-gmsPlugin = "4.4.2"
-ksp = "2.1.21-2.0.2"
+androidGradlePlugin = "8.11.0"
+gmsPlugin = "4.4.3"
+ksp = "2.2.0-2.0.2"
 dokka = "2.0.0"
 dokkaMermaid = "0.6.0"
 secrets = "2.0.1"
@@ -13,8 +13,8 @@ secrets = "2.0.1"
 # ... CORE:ANDROID ...
 androidxCore = "1.16.0"
 kotlinxCoroutines = "1.10.2"
-kotlinxDatetime = "0.6.2"
-kotlinxSerializationJson = "1.8.1"
+kotlinxDatetime = "0.7.0-0.6.x-compat"
+kotlinxSerializationJson = "1.9.0"
 timber = "5.0.1"
 
 # ... CORE:UI ...
@@ -46,7 +46,7 @@ androidxCredentials = "1.5.0"
 identityGoogleId = "1.1.1"
 
 # ... FIREBASE ...
-firebaseBom = "33.15.0"
+firebaseBom = "33.16.0"
 firebaseCrashlyticsPlugin = "3.0.4"
 firebasePerfPlugin = "1.4.2"
 
