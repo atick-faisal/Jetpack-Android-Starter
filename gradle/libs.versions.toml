@@ -13,7 +13,7 @@ secrets = "2.0.1"
 # ... CORE:ANDROID ...
 androidxCore = "1.16.0"
 kotlinxCoroutines = "1.10.2"
-kotlinxDatetime = "0.7.0-0.6.x-compat"
+kotlinxDatetime = "0.7.1-0.6.x-compat"
 kotlinxSerializationJson = "1.9.0"
 timber = "5.0.1"
 
@@ -30,7 +30,7 @@ androidxHiltNavigationCompose = "1.2.0"
 lottieCompose = "6.6.7"
 
 # ... NETWORK ...
-okhttp = "5.0.0"
+okhttp = "5.1.0"
 retrofit = "3.0.0"
 coil = "2.7.0"
 
@@ -55,7 +55,7 @@ daggerHilt = "2.56.2"
 daggerHiltExt = "1.2.0"
 
 # ... Open Source Licenses ...
-googleOss = "17.1.0"
+googleOss = "17.2.0"
 googleOssPlugin = "0.10.6"
 
 # ... LEAK CANARY ...
