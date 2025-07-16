@@ -95,7 +95,7 @@
   <div class="breadcrumbs"></div>
   <div class="cover ">
     <h1 class="cover"><span><span>:feature:settings</span></span></h1>
-    <div class="platform-hinted UnderCoverText" data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:settings/release"><p class="paragraph">This module handles user preferences and app settings. It provides a UI for configuring app behavior and managing user preferences.</p><h2 class="">Features</h2><ul><li><p class="paragraph">Theme Configuration (Light/Dark)</p></li><li><p class="paragraph">Dynamic Color Toggle</p></li><li><p class="paragraph">Open Source Licenses</p></li><li><p class="paragraph">User Profile Settings</p></li><li><p class="paragraph">Sign Out Option</p></li><li><p class="paragraph">Preferences Persistence</p></li></ul><h2 class="">Dependencies Graph</h2><div class="sample-container"><div id="mermaid-container-24bfnkv84ov4o"></div></div><script>
+    <div class="platform-hinted UnderCoverText" data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:settings/release"><p class="paragraph">This module handles user preferences and app settings. It provides a UI for configuring app behavior and managing user preferences.</p><h2 class="">Features</h2><ul><li><p class="paragraph">Theme Configuration (Light/Dark)</p></li><li><p class="paragraph">Dynamic Color Toggle</p></li><li><p class="paragraph">Open Source Licenses</p></li><li><p class="paragraph">User Profile Settings</p></li><li><p class="paragraph">Sign Out Option</p></li><li><p class="paragraph">Preferences Persistence</p></li></ul><h2 class="">Dependencies Graph</h2><div class="sample-container"><div id="mermaid-container-10kekd53o5jpr"></div></div><script>
 window.addEventListener('load', function() {
   var graphDef =  `graph TD
     A[feature:settings] --> B[core:ui]
@@ -112,9 +112,9 @@ window.addEventListener('load', function() {
     style C fill: #64B5F6, stroke: #333, stroke-width: 2px
     style D fill: #FF7043, stroke: #333, stroke-width: 2px
     style E fill: #64B5F6, stroke: #333, stroke-width: 2px`;
-  var container = document.getElementById('mermaid-container-24bfnkv84ov4o');
-  container.innerHTML = '<div id="mermaid-target-24bfnkv84ov4o"></div>';
-  var updateGraph24bfnkv84ov4o = function() {
+  var container = document.getElementById('mermaid-container-10kekd53o5jpr');
+  container.innerHTML = '<div id="mermaid-target-10kekd53o5jpr"></div>';
+  var updateGraph10kekd53o5jpr = function() {
     // setTimeout required or else the 1st render could be done before mermaid.initialize() has applied the theme.
     // Also required because we can't listen to localStorage events reliably, and it's changed on the same click event...
     setTimeout(() => {
@@ -125,19 +125,19 @@ window.addEventListener('load', function() {
         theme = 'dark';
       }
       mermaid.initialize({'theme': theme});
-      mermaid.render('mermaid-target-24bfnkv84ov4o', graphDef).then(({ svg, bindFunctions }) => {
+      mermaid.render('mermaid-target-10kekd53o5jpr', graphDef).then(({ svg, bindFunctions }) => {
           container.innerHTML = svg;
           // Trick to make the graph takes only the required height.
-          document.getElementById('mermaid-target-24bfnkv84ov4o').removeAttribute('height')
+          document.getElementById('mermaid-target-10kekd53o5jpr').removeAttribute('height')
           bindFunctions?.(element);
       });
     }, 0);
   }
-  updateGraph24bfnkv84ov4o();
+  updateGraph10kekd53o5jpr();
   
   var themeToggleButton = document.getElementById('theme-toggle-button');
   themeToggleButton.addEventListener('click', () => {
-    updateGraph24bfnkv84ov4o();
+    updateGraph10kekd53o5jpr();
   });
 });</script><h2 class="">Usage</h2><div class="sample-container"><pre><code class="block lang-kotlin" theme="idea">dependencies {<br>    implementation(project(":feature:settings"))<br>}</code></pre><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><h3 class="">Settings Dialog</h3><div class="sample-container"><pre><code class="block lang-kotlin" theme="idea">@Composable<br>fun SettingsDialog(<br>    onDismiss: () -&gt; Unit,<br>    onShowSnackbar: suspend (String, SnackbarAction, Throwable?) -&gt; Boolean<br>)</code></pre><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><h3 class="">Key Features</h3><ol><li><p class="paragraph"><strong>Theme Settings</strong>:</p><div class="sample-container"><pre><code class="block lang-kotlin" theme="idea">@Composable<br>fun ThemeSettings(<br>   darkThemeConfig: DarkThemeConfig,<br>   useDynamicColor: Boolean,<br>   onDarkThemeConfigChange: (DarkThemeConfig) -&gt; Unit,<br>   onUseDynamicColorChange: (Boolean) -&gt; Unit<br>)</code></pre><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></li><li><p class="paragraph"><strong>Profile Settings</strong>:</p><div class="sample-container"><pre><code class="block lang-kotlin" theme="idea">@Composable<br>fun ProfileSettings(<br>   onSignOut: () -&gt; Unit,<br>   onShowLicenses: () -&gt; Unit<br>)</code></pre><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></li></ol><p class="paragraph">The module uses DataStore Preferences for persistent storage of user settings.</p></div></div>
   </div>
