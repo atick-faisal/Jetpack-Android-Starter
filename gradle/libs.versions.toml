@@ -18,12 +18,12 @@ kotlinxSerializationJson = "1.9.0"
 timber = "5.0.1"
 
 # ... CORE:UI ...
-androidxNavigation = "2.9.1"
+androidxNavigation = "2.9.2"
 androidxFragment = "1.8.8"
 androidxAppCompat = "1.7.1"
 androidxActivity = "1.10.1"
-androidxLifecycle = "2.9.1"
-androidxComposeBom = "2025.06.01"
+androidxLifecycle = "2.9.2"
+androidxComposeBom = "2025.07.00"
 androidxComposeCompiler = "1.5.15"
 androidxCoreSplashscreen = "1.0.1"
 androidxHiltNavigationCompose = "1.2.0"
@@ -51,7 +51,7 @@ firebaseCrashlyticsPlugin = "3.0.4"
 firebasePerfPlugin = "1.4.2"
 
 # ... DAGGER-HILT ...
-daggerHilt = "2.56.2"
+daggerHilt = "2.57"
 daggerHiltExt = "1.2.0"
 
 # ... Open Source Licenses ...
