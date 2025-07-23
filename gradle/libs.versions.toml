@@ -41,14 +41,14 @@ androidxDataStore = "1.1.7"
 room = "2.7.2"
 
 # ... AUTH ...
-playServicesAuth = "21.3.0"
+playServicesAuth = "21.4.0"
 androidxCredentials = "1.5.0"
 identityGoogleId = "1.1.1"
 
 # ... FIREBASE ...
-firebaseBom = "33.16.0"
-firebaseCrashlyticsPlugin = "3.0.4"
-firebasePerfPlugin = "1.4.2"
+firebaseBom = "34.0.0"
+firebaseCrashlyticsPlugin = "3.0.5"
+firebasePerfPlugin = "2.0.0"
 
 # ... DAGGER-HILT ...
 daggerHilt = "2.57"
