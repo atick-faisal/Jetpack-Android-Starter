@@ -95,7 +95,7 @@
   <div class="breadcrumbs"></div>
   <div class="cover ">
     <h1 class="cover"><span><span>:core:android</span></span></h1>
-    <div class="platform-hinted UnderCoverText" data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":core:android/release"><p class="paragraph">This module serves as the foundation for all Android-specific functionality in the project. It provides essential utilities, extensions, and base dependencies that are used across the application.</p><h2 class="">Features</h2><ul><li><p class="paragraph">Core Android Extensions and Utils</p></li><li><p class="paragraph">Coroutine Support</p></li><li><p class="paragraph">JSON Serialization</p></li><li><p class="paragraph">Date/Time Utilities</p></li><li><p class="paragraph">Logging Infrastructure</p></li><li><p class="paragraph">Base Hilt Setup</p></li></ul><h2 class="">Dependencies Graph</h2><div class="sample-container"><div id="mermaid-container-4p6hesn1hlhug"></div></div><script>
+    <div class="platform-hinted UnderCoverText" data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":core:android/release"><p class="paragraph">This module serves as the foundation for all Android-specific functionality in the project. It provides essential utilities, extensions, and base dependencies that are used across the application.</p><h2 class="">Features</h2><ul><li><p class="paragraph">Core Android Extensions and Utils</p></li><li><p class="paragraph">Coroutine Support</p></li><li><p class="paragraph">JSON Serialization</p></li><li><p class="paragraph">Date/Time Utilities</p></li><li><p class="paragraph">Logging Infrastructure</p></li><li><p class="paragraph">Base Hilt Setup</p></li></ul><h2 class="">Dependencies Graph</h2><div class="sample-container"><div id="mermaid-container-3c27qk8n0tm6d"></div></div><script>
 window.addEventListener('load', function() {
   var graphDef =  `graph TD
     A[core:android] --> B[androidx.core]
@@ -111,9 +111,9 @@ window.addEventListener('load', function() {
     style E fill: #64B5F6, stroke: #333, stroke-width: 2px
     style F fill: #64B5F6, stroke: #333, stroke-width: 2px
     style G fill: #64B5F6, stroke: #333, stroke-width: 2px`;
-  var container = document.getElementById('mermaid-container-4p6hesn1hlhug');
-  container.innerHTML = '<div id="mermaid-target-4p6hesn1hlhug"></div>';
-  var updateGraph4p6hesn1hlhug = function() {
+  var container = document.getElementById('mermaid-container-3c27qk8n0tm6d');
+  container.innerHTML = '<div id="mermaid-target-3c27qk8n0tm6d"></div>';
+  var updateGraph3c27qk8n0tm6d = function() {
     // setTimeout required or else the 1st render could be done before mermaid.initialize() has applied the theme.
     // Also required because we can't listen to localStorage events reliably, and it's changed on the same click event...
     setTimeout(() => {
@@ -124,19 +124,19 @@ window.addEventListener('load', function() {
         theme = 'dark';
       }
       mermaid.initialize({'theme': theme});
-      mermaid.render('mermaid-target-4p6hesn1hlhug', graphDef).then(({ svg, bindFunctions }) => {
+      mermaid.render('mermaid-target-3c27qk8n0tm6d', graphDef).then(({ svg, bindFunctions }) => {
           container.innerHTML = svg;
           // Trick to make the graph takes only the required height.
-          document.getElementById('mermaid-target-4p6hesn1hlhug').removeAttribute('height')
+          document.getElementById('mermaid-target-3c27qk8n0tm6d').removeAttribute('height')
           bindFunctions?.(element);
       });
     }, 0);
   }
-  updateGraph4p6hesn1hlhug();
+  updateGraph3c27qk8n0tm6d();
   
   var themeToggleButton = document.getElementById('theme-toggle-button');
   themeToggleButton.addEventListener('click', () => {
-    updateGraph4p6hesn1hlhug();
+    updateGraph3c27qk8n0tm6d();
   });
 });</script><h2 class="">Usage</h2><p class="paragraph">This module is typically used as a dependency in other modules that require Android functionality:</p><div class="sample-container"><pre><code class="block lang-kotlin" theme="idea">dependencies {<br>    implementation(project(":core:android"))<br>}</code></pre><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><p class="paragraph">All dependencies in this module are exposed as <code class="lang-kotlin">api</code> to make them available to dependent modules.</p></div></div>
   </div>
