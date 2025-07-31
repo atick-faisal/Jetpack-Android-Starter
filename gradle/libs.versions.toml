@@ -18,7 +18,7 @@ kotlinxSerializationJson = "1.9.0"
 timber = "5.0.1"
 
 # ... CORE:UI ...
-androidxNavigation = "2.9.2"
+androidxNavigation = "2.9.3"
 androidxFragment = "1.8.8"
 androidxAppCompat = "1.7.1"
 androidxActivity = "1.10.1"
@@ -62,7 +62,7 @@ googleOssPlugin = "0.10.6"
 leakcanaryAndroid = "2.14"
 
 # ... WORK MANAGER ...
-workVersion = "2.10.2"
+workVersion = "2.10.3"
 
 # ... SDK-CONFIG ...
 minSdk = "24"
