@@ -96,8 +96,7 @@ inline fun <T : Any> MutableStateFlow<UiState<T>>.updateState(update: T.() -> T)
  * @param T The type of the data.
  * @param operation A suspend function that returns a Result of the data.
  */
-context(viewModel: ViewModel)
-inline fun <reified T : Any> MutableStateFlow<UiState<T>>.updateStateWith(
+context(viewModel: ViewModel) inline fun <reified T : Any> MutableStateFlow<UiState<T>>.updateStateWith(
     crossinline operation: suspend T.() -> Result<T>,
 ) {
     if (value.loading) return
@@ -137,8 +136,7 @@ inline fun <reified T : Any> MutableStateFlow<UiState<T>>.updateStateWith(
  * @param T The type of the data.
  * @param operation A suspend function that returns a Result of Unit.
  */
-context(viewModel: ViewModel)
-inline fun <T : Any> MutableStateFlow<UiState<T>>.updateWith(
+context(viewModel: ViewModel) inline fun <T : Any> MutableStateFlow<UiState<T>>.updateWith(
     crossinline operation: suspend T.() -> Result<Unit>,
 ) {
     if (value.loading) return
