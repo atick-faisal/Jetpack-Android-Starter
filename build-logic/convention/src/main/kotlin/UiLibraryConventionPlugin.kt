@@ -64,6 +64,8 @@ class UiLibraryConventionPlugin : Plugin<Project> {
                         "-opt-in=androidx.compose.material3.ExperimentalMaterial3Api",
                         "-opt-in=androidx.compose.foundation.layout.ExperimentalLayoutApi",
                         "-Xcontext-parameters",
+                        // https://youtrack.jetbrains.com/issue/KT-73255
+                        "-Xannotation-default-target=param-property",
                     )
                 }
             }

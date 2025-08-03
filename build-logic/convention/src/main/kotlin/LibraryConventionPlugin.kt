@@ -55,6 +55,10 @@ class LibraryConventionPlugin : Plugin<Project> {
             extensions.configure<KotlinAndroidProjectExtension> {
                 compilerOptions {
                     jvmTarget.set(JvmTarget.fromTarget(javaVersion))
+                    freeCompilerArgs.addAll(
+                        // https://youtrack.jetbrains.com/issue/KT-73255
+                        "-Xannotation-default-target=param-property",
+                    )
                 }
             }
         }

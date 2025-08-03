@@ -3,9 +3,9 @@
 # ... PROJECT ...
 java = "21"
 kotlin = "2.2.0"
-androidGradlePlugin = "8.10.1"
-gmsPlugin = "4.4.2"
-ksp = "2.1.21-2.0.2"
+androidGradlePlugin = "8.11.1"
+gmsPlugin = "4.4.3"
+ksp = "2.2.0-2.0.2"
 dokka = "2.0.0"
 dokkaMermaid = "0.6.0"
 secrets = "2.0.1"
@@ -13,24 +13,24 @@ secrets = "2.0.1"
 # ... CORE:ANDROID ...
 androidxCore = "1.16.0"
 kotlinxCoroutines = "1.10.2"
-kotlinxDatetime = "0.6.2"
-kotlinxSerializationJson = "1.8.1"
+kotlinxDatetime = "0.7.1-0.6.x-compat"
+kotlinxSerializationJson = "1.9.0"
 timber = "5.0.1"
 
 # ... CORE:UI ...
-androidxNavigation = "2.9.0"
+androidxNavigation = "2.9.3"
 androidxFragment = "1.8.8"
 androidxAppCompat = "1.7.1"
 androidxActivity = "1.10.1"
-androidxLifecycle = "2.9.1"
-androidxComposeBom = "2025.06.01"
+androidxLifecycle = "2.9.2"
+androidxComposeBom = "2025.07.00"
 androidxComposeCompiler = "1.5.15"
 androidxCoreSplashscreen = "1.0.1"
 androidxHiltNavigationCompose = "1.2.0"
 lottieCompose = "6.6.7"
 
 # ... NETWORK ...
-okhttp = "4.12.0"
+okhttp = "5.1.0"
 retrofit = "3.0.0"
 coil = "2.7.0"
 
@@ -41,28 +41,28 @@ androidxDataStore = "1.1.7"
 room = "2.7.2"
 
 # ... AUTH ...
-playServicesAuth = "21.3.0"
+playServicesAuth = "21.4.0"
 androidxCredentials = "1.5.0"
 identityGoogleId = "1.1.1"
 
 # ... FIREBASE ...
-firebaseBom = "33.15.0"
-firebaseCrashlyticsPlugin = "3.0.4"
-firebasePerfPlugin = "1.4.2"
+firebaseBom = "34.0.0"
+firebaseCrashlyticsPlugin = "3.0.5"
+firebasePerfPlugin = "2.0.0"
 
 # ... DAGGER-HILT ...
-daggerHilt = "2.56.2"
+daggerHilt = "2.57"
 daggerHiltExt = "1.2.0"
 
 # ... Open Source Licenses ...
-googleOss = "17.1.0"
+googleOss = "17.2.1"
 googleOssPlugin = "0.10.6"
 
 # ... LEAK CANARY ...
 leakcanaryAndroid = "2.14"
 
 # ... WORK MANAGER ...
-workVersion = "2.10.2"
+workVersion = "2.10.3"
 
 # ... SDK-CONFIG ...
 minSdk = "24"
@@ -162,11 +162,11 @@ identity-google-id = { group = "com.google.android.libraries.identity.googleid",
 
 # ... FIREBASE ...
 firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBom" }
-firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics-ktx" }
-firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics-ktx" }
-firebase-perf = { group = "com.google.firebase", name = "firebase-perf-ktx" }
-firebase-auth = { group = "com.google.firebase", name = "firebase-auth-ktx" }
-firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore-ktx" }
+firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics" }
+firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics" }
+firebase-perf = { group = "com.google.firebase", name = "firebase-perf" }
+firebase-auth = { group = "com.google.firebase", name = "firebase-auth" }
+firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore" }
 
 # ... DAGGER-HILT ...
 dagger-hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "daggerHilt" }
