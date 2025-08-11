@@ -95,7 +95,7 @@
   <div class="breadcrumbs"></div>
   <div class="cover ">
     <h1 class="cover"><span><span>:firebase:firestore</span></span></h1>
-    <div class="platform-hinted UnderCoverText" data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":firebase:firestore/release"><p class="paragraph">This module provides cloud data storage using Firebase Firestore. It handles data synchronization, real-time updates, and offline persistence.</p><h2 class="">Features</h2><ul><li><p class="paragraph">Cloud Data Storage</p></li><li><p class="paragraph">Real-time Updates</p></li><li><p class="paragraph">Offline Persistence</p></li><li><p class="paragraph">Batch Operations</p></li><li><p class="paragraph">Security Rules Integration</p></li><li><p class="paragraph">Data Serialization</p></li></ul><h2 class="">Dependencies Graph</h2><div class="sample-container"><div id="mermaid-container-v8thecsso2rv"></div></div><script>
+    <div class="platform-hinted UnderCoverText" data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":firebase:firestore/release"><p class="paragraph">This module provides cloud data storage using Firebase Firestore. It handles data synchronization, real-time updates, and offline persistence.</p><h2 class="">Features</h2><ul><li><p class="paragraph">Cloud Data Storage</p></li><li><p class="paragraph">Real-time Updates</p></li><li><p class="paragraph">Offline Persistence</p></li><li><p class="paragraph">Batch Operations</p></li><li><p class="paragraph">Security Rules Integration</p></li><li><p class="paragraph">Data Serialization</p></li></ul><h2 class="">Dependencies Graph</h2><div class="sample-container"><div id="mermaid-container-2rcuc1sp2f08u"></div></div><script>
 window.addEventListener('load', function() {
   var graphDef =  `graph TD
     A[firebase:firestore] --> B[core:android]
@@ -105,9 +105,9 @@ window.addEventListener('load', function() {
     style B fill: #64B5F6, stroke: #333, stroke-width: 2px
     style C fill: #FFA726, stroke: #333, stroke-width: 2px
     style D fill: #FFA726, stroke: #333, stroke-width: 2px`;
-  var container = document.getElementById('mermaid-container-v8thecsso2rv');
-  container.innerHTML = '<div id="mermaid-target-v8thecsso2rv"></div>';
-  var updateGraphv8thecsso2rv = function() {
+  var container = document.getElementById('mermaid-container-2rcuc1sp2f08u');
+  container.innerHTML = '<div id="mermaid-target-2rcuc1sp2f08u"></div>';
+  var updateGraph2rcuc1sp2f08u = function() {
     // setTimeout required or else the 1st render could be done before mermaid.initialize() has applied the theme.
     // Also required because we can't listen to localStorage events reliably, and it's changed on the same click event...
     setTimeout(() => {
@@ -118,19 +118,19 @@ window.addEventListener('load', function() {
         theme = 'dark';
       }
       mermaid.initialize({'theme': theme});
-      mermaid.render('mermaid-target-v8thecsso2rv', graphDef).then(({ svg, bindFunctions }) => {
+      mermaid.render('mermaid-target-2rcuc1sp2f08u', graphDef).then(({ svg, bindFunctions }) => {
           container.innerHTML = svg;
           // Trick to make the graph takes only the required height.
-          document.getElementById('mermaid-target-v8thecsso2rv').removeAttribute('height')
+          document.getElementById('mermaid-target-2rcuc1sp2f08u').removeAttribute('height')
           bindFunctions?.(element);
       });
     }, 0);
   }
-  updateGraphv8thecsso2rv();
+  updateGraph2rcuc1sp2f08u();
   
   var themeToggleButton = document.getElementById('theme-toggle-button');
   themeToggleButton.addEventListener('click', () => {
-    updateGraphv8thecsso2rv();
+    updateGraph2rcuc1sp2f08u();
   });
 });</script><h2 class="">Usage</h2><div class="sample-container"><pre><code class="block lang-kotlin" theme="idea">dependencies {<br>    implementation(project(":firebase:firestore"))<br>}</code></pre><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><h3 class="">Data Operations</h3><div class="sample-container"><pre><code class="block lang-kotlin" theme="idea">class FirestoreDataSource @Inject constructor(<br>    firestore: FirebaseFirestore<br>) {<br>    private val collection = firestore<br>        .collection("your_collection")<br><br>    suspend fun getData(userId: String): List&lt;Data&gt; =<br>        collection<br>            .whereEqualTo("userId", userId)<br>            .get()<br>            .await()<br>            .toObjects()<br><br>    suspend fun createData(data: Data) =<br>        collection<br>            .document(data.id)<br>            .set(data)<br>            .await()<br>}</code></pre><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><h3 class="">Security Rules</h3><p class="paragraph">The module expects proper Firestore security rules to be set up. Checkout the <a href="https://firebase.google.com/docs/firestore/security/get-started">Firestore Security Rules</a> documentation for more details.</p><div class="sample-container"><pre><code class="block lang-javascript" theme="idea">rules_version = '2';<br>service cloud.firestore {<br>  match /databases/{database}/documents {<br>    match /{document=**} {<br>      allow read, write: if request.auth != null;<br>    }<br>  }<br>}</code></pre><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><p class="paragraph">All operations are performed with proper security context and error handling.</p></div></div>
   </div>

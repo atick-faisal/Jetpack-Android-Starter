@@ -95,7 +95,7 @@
   <div class="breadcrumbs"></div>
   <div class="cover ">
     <h1 class="cover"><span><span>:core:room</span></span></h1>
-    <div class="platform-hinted UnderCoverText" data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":core:room/release"><p class="paragraph">This module provides local database functionality using Room ORM. It handles data persistence, caching, and offline-first capabilities for the application.</p><h2 class="">Features</h2><ul><li><p class="paragraph">SQLite Database Access</p></li><li><p class="paragraph">Type-safe DAO Operations</p></li><li><p class="paragraph">Reactive Queries with Flow</p></li></ul><h2 class="">Dependencies Graph</h2><div class="sample-container"><div id="mermaid-container-5k8oaaekokeet"></div></div><script>
+    <div class="platform-hinted UnderCoverText" data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":core:room/release"><p class="paragraph">This module provides local database functionality using Room ORM. It handles data persistence, caching, and offline-first capabilities for the application.</p><h2 class="">Features</h2><ul><li><p class="paragraph">SQLite Database Access</p></li><li><p class="paragraph">Type-safe DAO Operations</p></li><li><p class="paragraph">Reactive Queries with Flow</p></li></ul><h2 class="">Dependencies Graph</h2><div class="sample-container"><div id="mermaid-container-3emepe3ojt1l3"></div></div><script>
 window.addEventListener('load', function() {
   var graphDef =  `graph TD
     A[core:room] --> B[core:android]
@@ -112,9 +112,9 @@ window.addEventListener('load', function() {
     style C fill: #FF7043, stroke: #333, stroke-width: 2px
     style D fill: #FF7043, stroke: #333, stroke-width: 2px
     style E fill: #FF7043, stroke: #333, stroke-width: 2px`;
-  var container = document.getElementById('mermaid-container-5k8oaaekokeet');
-  container.innerHTML = '<div id="mermaid-target-5k8oaaekokeet"></div>';
-  var updateGraph5k8oaaekokeet = function() {
+  var container = document.getElementById('mermaid-container-3emepe3ojt1l3');
+  container.innerHTML = '<div id="mermaid-target-3emepe3ojt1l3"></div>';
+  var updateGraph3emepe3ojt1l3 = function() {
     // setTimeout required or else the 1st render could be done before mermaid.initialize() has applied the theme.
     // Also required because we can't listen to localStorage events reliably, and it's changed on the same click event...
     setTimeout(() => {
@@ -125,19 +125,19 @@ window.addEventListener('load', function() {
         theme = 'dark';
       }
       mermaid.initialize({'theme': theme});
-      mermaid.render('mermaid-target-5k8oaaekokeet', graphDef).then(({ svg, bindFunctions }) => {
+      mermaid.render('mermaid-target-3emepe3ojt1l3', graphDef).then(({ svg, bindFunctions }) => {
           container.innerHTML = svg;
           // Trick to make the graph takes only the required height.
-          document.getElementById('mermaid-target-5k8oaaekokeet').removeAttribute('height')
+          document.getElementById('mermaid-target-3emepe3ojt1l3').removeAttribute('height')
           bindFunctions?.(element);
       });
     }, 0);
   }
-  updateGraph5k8oaaekokeet();
+  updateGraph3emepe3ojt1l3();
   
   var themeToggleButton = document.getElementById('theme-toggle-button');
   themeToggleButton.addEventListener('click', () => {
-    updateGraph5k8oaaekokeet();
+    updateGraph3emepe3ojt1l3();
   });
 });</script><h2 class="">Usage</h2><div class="sample-container"><pre><code class="block lang-kotlin" theme="idea">dependencies {<br>    implementation(project(":core:room"))<br>}</code></pre><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><h3 class="">Database Setup</h3><div class="sample-container"><pre><code class="block lang-kotlin" theme="idea">@Entity(tableName = "items")<br>data class ItemEntity(<br>    @PrimaryKey val id: String,<br>    val name: String,<br>    val lastUpdated: Long = System.currentTimeMillis()<br>)<br><br>@Dao<br>interface ItemDao {<br>    @Query("SELECT * FROM items")<br>    fun observeItems(): Flow&lt;List&lt;ItemEntity&gt;&gt;<br><br>    @Insert(onConflict = OnConflictStrategy.REPLACE)<br>    suspend fun insertItem(item: ItemEntity)<br>}</code></pre><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><h3 class="">Room Migration</h3><p class="paragraph">Database migrations are handled automatically through version increments in the <code class="lang-kotlin">@Database</code> annotation.</p></div></div>
   </div>
