@@ -56,7 +56,7 @@ daggerHiltExt = "1.2.0"
 
 # ... Open Source Licenses ...
 googleOss = "17.2.1"
-googleOssPlugin = "0.10.6"
+googleOssPlugin = "0.10.7"
 
 # ... LEAK CANARY ...
 leakcanaryAndroid = "2.14"
