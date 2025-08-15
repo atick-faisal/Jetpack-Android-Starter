@@ -2,16 +2,16 @@
 
 # ... PROJECT ...
 java = "21"
-kotlin = "2.2.0"
+kotlin = "2.2.10"
 androidGradlePlugin = "8.12.0"
 gmsPlugin = "4.4.3"
-ksp = "2.2.0-2.0.2"
+ksp = "2.2.10-2.0.2"
 dokka = "2.0.0"
 dokkaMermaid = "0.6.0"
 secrets = "2.0.1"
 
 # ... CORE:ANDROID ...
-androidxCore = "1.16.0"
+androidxCore = "1.17.0"
 kotlinxCoroutines = "1.10.2"
 kotlinxDatetime = "0.7.1-0.6.x-compat"
 kotlinxSerializationJson = "1.9.0"
@@ -19,11 +19,11 @@ timber = "5.0.1"
 
 # ... CORE:UI ...
 androidxNavigation = "2.9.3"
-androidxFragment = "1.8.8"
+androidxFragment = "1.8.9"
 androidxAppCompat = "1.7.1"
 androidxActivity = "1.10.1"
 androidxLifecycle = "2.9.2"
-androidxComposeBom = "2025.07.00"
+androidxComposeBom = "2025.08.00"
 androidxComposeCompiler = "1.5.15"
 androidxCoreSplashscreen = "1.0.1"
 androidxHiltNavigationCompose = "1.2.0"
@@ -55,7 +55,7 @@ daggerHilt = "2.57"
 daggerHiltExt = "1.2.0"
 
 # ... Open Source Licenses ...
-googleOss = "17.2.1"
+googleOss = "17.2.2"
 googleOssPlugin = "0.10.7"
 
 # ... LEAK CANARY ...
