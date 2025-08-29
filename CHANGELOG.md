@@ -1,4 +1,4 @@
 ### FEATURE UPDATES & BUG FIXES
-- Add firebase sync feature
-- Add multi-language support
-- Restructure the project
+- Migrate to sdk level 36
+- Update dependencies
+- Fix minor bugs and improve performance

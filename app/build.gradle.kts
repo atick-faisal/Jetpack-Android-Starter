@@ -34,7 +34,7 @@ plugins {
 android {
     // ... Application Version ...
     val majorUpdateVersion = 1
-    val minorUpdateVersion = 1
+    val minorUpdateVersion = 2
     val patchVersion = 0
 
     val mVersionCode = majorUpdateVersion.times(10_000)
