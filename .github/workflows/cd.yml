@@ -104,6 +104,16 @@ jobs:
           ruby-version: 3.0
           bundler-cache: true
 
+      - name: 🔑 Set up Signing Key
+        run: |
+          touch app/key.jks
+          echo "${KEYSTORE// /}" | base64 --decode > app/key.jks
+          touch keystore.properties
+          echo "${KEYSTORE_PROPERTIES// /}" | base64 --decode > keystore.properties
+        env:
+          KEYSTORE: ${{ secrets.KEYSTORE }}
+          KEYSTORE_PROPERTIES: ${{ secrets.KEYSTORE_PROPERTIES }}
+
       - name: 📝 Create GitHub Release
         uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/')
