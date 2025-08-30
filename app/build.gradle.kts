@@ -35,7 +35,7 @@ android {
     // ... Application Version ...
     val majorUpdateVersion = 1
     val minorUpdateVersion = 2
-    val patchVersion = 2
+    val patchVersion = 3
 
     val mVersionCode = majorUpdateVersion.times(10_000)
         .plus(minorUpdateVersion.times(100))
