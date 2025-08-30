@@ -62,6 +62,13 @@ jobs:
           KEYSTORE: ${{ secrets.KEYSTORE }}
           KEYSTORE_PROPERTIES: ${{ secrets.KEYSTORE_PROPERTIES }}
 
+      - name: 🔐 Set up Local Properties
+        run: |
+          touch local.properties
+          echo "GOOGLE_WEB_CLIENT_ID=$GOOGLE_WEB_CLIENT_ID" >> local.properties
+        env:
+          GOOGLE_WEB_CLIENT_ID: ${{ secrets.GOOGLE_WEB_CLIENT_ID }}
+
       - name: 🧹 Clean Project
         run: ./gradlew clean
 
@@ -75,8 +82,8 @@ jobs:
           path: app/build/outputs/apk/release/*.apk
           retention-days: 30
 
-  release:
-    name: 🚀 Publish Release
+  github-release:
+    name: 📋 Create GitHub Release
     needs: build  # Runs only if the APK build is successful ✅
     runs-on: ubuntu-latest
     permissions:
@@ -90,6 +97,21 @@ jobs:
         with:
           name: release-apk
           path: ./apk
+
+      - name: 📝 Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          body_path: CHANGELOG.md
+          files: ./apk/*.apk
+
+  play-store-release:
+    name: ☁️ Deploy to Play Store
+    needs: build  # Runs only if the APK build is successful ✅
+    runs-on: ubuntu-latest
+    steps:
+      - name: ⬇️ Checkout Repository
+        uses: actions/checkout@v5
 
       - name: 🏗️ Set up JDK 21
         uses: actions/setup-java@v5
@@ -121,12 +143,12 @@ jobs:
           KEYSTORE: ${{ secrets.KEYSTORE }}
           KEYSTORE_PROPERTIES: ${{ secrets.KEYSTORE_PROPERTIES }}
 
-      - name: 📝 Create GitHub Release
-        uses: softprops/action-gh-release@v2
-        if: startsWith(github.ref, 'refs/tags/')
-        with:
-          body_path: CHANGELOG.md
-          files: ./apk/*.apk
+      - name: 🔐 Set up Local Properties
+        run: |
+          touch local.properties
+          echo "GOOGLE_WEB_CLIENT_ID=$GOOGLE_WEB_CLIENT_ID" >> local.properties
+        env:
+          GOOGLE_WEB_CLIENT_ID: ${{ secrets.GOOGLE_WEB_CLIENT_ID }}
 
       - name: ☁️ Upload to Play Store
         run: |
