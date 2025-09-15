@@ -38,7 +38,7 @@ coil = "2.7.0"
 androidxDataStore = "1.1.7"
 
 # ... STORAGE:ROOM ...
-room = "2.7.2"
+room = "2.8.0"
 
 # ... AUTH ...
 playServicesAuth = "21.4.0"
