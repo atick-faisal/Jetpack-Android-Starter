@@ -14,12 +14,6 @@
  * limitations under the License.
  */
 
-buildscript {
-    dependencies {
-        classpath(libs.google.oss.licenses.plugin)
-    }
-}
-
 plugins {
     alias(libs.plugins.kotlin) apply (false)
     alias(libs.plugins.android.library) apply (false)
@@ -32,6 +26,7 @@ plugins {
     alias(libs.plugins.secrets) apply (false)
     alias(libs.plugins.gms) apply (false)
     alias(libs.plugins.ksp) apply (false)
+    alias(libs.plugins.google.oss.licenses) apply (false)
     alias(libs.plugins.dokka)
 }
 
