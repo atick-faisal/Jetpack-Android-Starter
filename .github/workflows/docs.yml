@@ -21,7 +21,7 @@ jobs:
           fetch-depth: 0  # Ensures full history for mkdocs deployment
 
       - name: ✅ Validate Gradle Wrapper
-        uses: gradle/actions/wrapper-validation@v4
+        uses: gradle/actions/wrapper-validation@v5
 
       - name: 📜 Copy CI gradle.properties
         run: mkdir -p ~/.gradle && cp .github/ci-gradle.properties ~/.gradle/gradle.properties
@@ -34,7 +34,7 @@ jobs:
           cache: gradle
 
       - name: ⚙️ Setup Gradle
-        uses: gradle/actions/setup-gradle@v4
+        uses: gradle/actions/setup-gradle@v5
 
       - name: 🐍 Set up Python
         uses: actions/setup-python@v6
