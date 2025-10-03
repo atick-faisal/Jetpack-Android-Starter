@@ -14,7 +14,7 @@ jobs:
         uses: actions/checkout@v5
 
       - name: ✅ Validate Gradle Wrapper
-        uses: gradle/actions/wrapper-validation@v4
+        uses: gradle/actions/wrapper-validation@v5
 
       - name: 🏗️ Set up JDK 21
         uses: actions/setup-java@v5
@@ -36,7 +36,7 @@ jobs:
         uses: actions/checkout@v5
 
       - name: ✅ Validate Gradle Wrapper
-        uses: gradle/actions/wrapper-validation@v4
+        uses: gradle/actions/wrapper-validation@v5
 
       - name: 🏗️ Set up JDK 21
         uses: actions/setup-java@v5
