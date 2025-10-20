@@ -1,22 +1,22 @@
 <!doctype html>
-<html class="no-js">
+<html class="no-js" lang="en">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
     <title>:app</title>
-<link href="../images/logo-icon.svg" rel="icon" type="image/svg">    <script>var pathToRoot = "../";</script>
-    <script>document.documentElement.classList.replace("no-js","js");</script>
+<link href="../images/logo-icon.svg" rel="icon" type="image/svg"><script>var pathToRoot = "../";</script>
+    <script>document.documentElement.classList.replace("no-js", "js");</script>
     <script>const storage = localStorage.getItem("dokka-dark-mode")
-    if (storage == null) {
+      if (storage == null) {
         const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
         if (osDarkSchemePreferred === true) {
-            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+          document.getElementsByTagName("html")[0].classList.add("theme-dark")
         }
-    } else {
+      } else {
         const savedDarkMode = JSON.parse(storage)
-        if(savedDarkMode === true) {
-            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        if (savedDarkMode === true) {
+          document.getElementsByTagName("html")[0].classList.add("theme-dark")
         }
-    }
+      }
     </script>
 <script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async></script>
 <script type="text/javascript" src="../scripts/sourceset_dependencies.js" async></script>
@@ -24,20 +24,18 @@
 <link href="../styles/main.css" rel="Stylesheet">
 <link href="../styles/prism.css" rel="Stylesheet">
 <link href="../styles/logo-styles.css" rel="Stylesheet">
-<link href="../styles/font-jb-sans-auto.css" rel="Stylesheet">
 <link href="../ui-kit/ui-kit.min.css" rel="Stylesheet">
-<script type="text/javascript" src="../scripts/clipboard.js" async></script>
+<script type="text/javascript" src="../scripts/safe-local-storage_blocking.js"></script>
 <script type="text/javascript" src="../scripts/navigation-loader.js" async></script>
 <script type="text/javascript" src="../scripts/platform-content-handler.js" async></script>
 <script type="text/javascript" src="../scripts/main.js" defer></script>
 <script type="text/javascript" src="../scripts/prism.js" async></script>
 <script type="text/javascript" src="../ui-kit/ui-kit.min.js" defer></script>
-<script type="text/javascript" src="../scripts/symbol-parameters-wrapper_deferred.js" defer></script>
 <script type="text/javascript" src="../dokka-mermaid.js" async></script></head>
 <body>
-    <div class="root">
-    <nav class="navigation theme-dark" id="navigation-wrapper">
-<a class="library-name--link" href="../index.html">
+<div class="root">
+    <header class="navigation theme-dark" id="navigation-wrapper" role="banner">
+<a class="library-name--link" href="../index.html" tabindex="1">
                     Jetpack
             </a>        <button class="navigation-controls--btn navigation-controls--btn_toc ui-kit_mobile-only" id="toc-toggle" type="button">Toggle table of contents
         </button>
@@ -45,57 +43,77 @@
         <div class="library-version" id="library-version">
         </div>
         <div class="navigation-controls">
-        <div class="filter-section filter-section_loading" id="filter-section">
-                <button class="platform-tag platform-selector jvm-like" data-active="" data-filter=":app/release">androidJvm</button>
+        <ul class="filter-section filter-section_loading" id="filter-section" aria-label="Target filter">
+                <button class="platform-tag platform-selector jvm-like" data-active="" aria-pressed="true" data-filter=":app/debug">debug</button>
+                <button class="platform-tag platform-selector jvm-like" data-active="" aria-pressed="true" data-filter=":app/main">androidJvm</button>
+                <button class="platform-tag platform-selector jvm-like" data-active="" aria-pressed="true" data-filter=":app/release">release</button>
             <div class="dropdown filter-section--dropdown" data-role="dropdown" id="filter-section-dropdown">
                 <button class="button button_dropdown filter-section--dropdown-toggle" role="combobox" data-role="dropdown-toggle" aria-controls="platform-tags-listbox" aria-haspopup="listbox" aria-expanded="false" aria-label="Toggle source sets"></button>
-                <ul role="listbox" id="platform-tags-listbox" class="dropdown--list" data-role="dropdown-listbox">
-                    <div class="dropdown--header"><span>Platform filter</span>
-                        <button class="button" data-role="dropdown-toggle" aria-label="Close platform filter">
+                <ul role="listbox" id="platform-tags-listbox" class="dropdown--list" data-role="dropdown-listbox" aria-label="Target filter">
+                    <div class="dropdown--header"><span>Target filter</span>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close target filter">
                             <i class="ui-kit-icon ui-kit-icon_cross"></i>
                         </button>
                     </div>
                         <li role="option" class="dropdown--option platform-selector-option jvm-like" tabindex="0">
                             <label class="checkbox">
-                                <input type="checkbox" class="checkbox--input" id=":app/release" data-filter=":app/release">
+                                <input type="checkbox" class="checkbox--input" id=":app/debug" data-filter=":app/debug">
+                                <span class="checkbox--icon"></span>
+                                debug
+                            </label>
+                        </li>
+                        <li role="option" class="dropdown--option platform-selector-option jvm-like" tabindex="0">
+                            <label class="checkbox">
+                                <input type="checkbox" class="checkbox--input" id=":app/main" data-filter=":app/main">
                                 <span class="checkbox--icon"></span>
                                 androidJvm
+                            </label>
+                        </li>
+                        <li role="option" class="dropdown--option platform-selector-option jvm-like" tabindex="0">
+                            <label class="checkbox">
+                                <input type="checkbox" class="checkbox--input" id=":app/release" data-filter=":app/release">
+                                <span class="checkbox--icon"></span>
+                                release
                             </label>
                         </li>
                 </ul>
                 <div class="dropdown--overlay"></div>
             </div>
-        </div>
+        </ul>
             <button class="navigation-controls--btn navigation-controls--btn_theme" id="theme-toggle-button" type="button">Switch theme
             </button>
             <div class="navigation-controls--btn navigation-controls--btn_search" id="searchBar" role="button">Search in
                 API
             </div>
         </div>
-    </nav>
-        <div id="container">
-            <div class="sidebar" id="leftColumn">
-                <div class="dropdown theme-dark_mobile" data-role="dropdown" id="toc-dropdown">
-                    <ul role="listbox" id="toc-listbox" class="dropdown--list dropdown--list_toc-list" data-role="dropdown-listbox">
-                        <div class="dropdown--header">
+    </header>
+    <div id="container">
+        <nav id="leftColumn" class="sidebar" data-item-type="SECTION" data-item-config="{&quot;defaultSize&quot;: 280, &quot;minSize&quot;: 200, &quot;maxSize&quot;: 400}">
+            <a class="toc--skip-link" href="#main">Skip to content</a>
+            <div class="dropdown theme-dark_mobile" data-role="dropdown" id="toc-dropdown">
+                <ul role="listbox" id="toc-listbox" class="dropdown--list dropdown--list_toc-list" data-role="dropdown-listbox" aria-label="Table of contents">
+                    <div class="dropdown--header">
                             <span>
                                     Jetpack
                             </span>
-                            <button class="button" data-role="dropdown-toggle" aria-label="Close table of contents">
-                                <i class="ui-kit-icon ui-kit-icon_cross"></i>
-                            </button>
-                        </div>
-                        <div class="sidebar--inner" id="sideMenu"></div>
-                    </ul>
-                    <div class="dropdown--overlay"></div>
-                </div>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close table of contents">
+                            <i class="ui-kit-icon ui-kit-icon_cross"></i>
+                        </button>
+                    </div>
+                    <div class="sidebar--inner" id="sideMenu"></div>
+                </ul>
+                <div class="dropdown--overlay"></div>
             </div>
-            <div id="main">
-<div class="main-content" id="content" pageids=":app::////PointingToDeclaration//1259010394">
+        </nav>
+        <div id="resizer" class="resizer" data-item-type="BAR"></div>
+        <div id="main" data-item-type="SECTION" role="main">
+<div class="main-content" id="content" pageids=":app::////PointingToDeclaration//-476713956">
   <div class="breadcrumbs"></div>
   <div class="cover ">
     <h1 class="cover"><span><span>:app</span></span></h1>
-    <div class="platform-hinted UnderCoverText" data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":app/release"><p class="paragraph">Main application module that coordinates feature modules and handles app-level configuration.</p><h2 class="">Dependencies Graph</h2><div class="sample-container"><div id="mermaid-container-43ebtr5g2fsft"></div></div><script>
+    <div class="platform-hinted UnderCoverText with-platform-tabs" data-platform-hinted="data-platform-hinted">
+      <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":app/debug" data-filterable-set=":app/debug" data-active="" data-toggle=":app/debug">debug</button><button class="platform-bookmark" data-filterable-current=":app/main" data-filterable-set=":app/main" data-toggle=":app/main">androidJvm</button><button class="platform-bookmark" data-filterable-current=":app/release" data-filterable-set=":app/release" data-toggle=":app/release">release</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":app/debug"></div><div class="content sourceset-dependent-content" data-togglable=":app/main"><p class="paragraph">Main application module that coordinates feature modules and handles app-level configuration.</p><h2 class="">Dependencies Graph</h2><div class="sample-container"><div id="mermaid-container-2t25m5mkf6vpp"></div></div><script>
 window.addEventListener('load', function() {
   var graphDef =  `graph TD
     A[app] --> B[core:ui]
@@ -117,9 +135,9 @@ window.addEventListener('load', function() {
     style H fill: #FF7043, stroke: #333, stroke-width: 2px
     style I fill: #FFA726, stroke: #333, stroke-width: 2px
     style J fill: #7E57C2, stroke: #333, stroke-width: 2px`;
-  var container = document.getElementById('mermaid-container-43ebtr5g2fsft');
-  container.innerHTML = '<div id="mermaid-target-43ebtr5g2fsft"></div>';
-  var updateGraph43ebtr5g2fsft = function() {
+  var container = document.getElementById('mermaid-container-2t25m5mkf6vpp');
+  container.innerHTML = '<div id="mermaid-target-2t25m5mkf6vpp"></div>';
+  var updateGraph2t25m5mkf6vpp = function() {
     // setTimeout required or else the 1st render could be done before mermaid.initialize() has applied the theme.
     // Also required because we can't listen to localStorage events reliably, and it's changed on the same click event...
     setTimeout(() => {
@@ -130,69 +148,72 @@ window.addEventListener('load', function() {
         theme = 'dark';
       }
       mermaid.initialize({'theme': theme});
-      mermaid.render('mermaid-target-43ebtr5g2fsft', graphDef).then(({ svg, bindFunctions }) => {
+      mermaid.render('mermaid-target-2t25m5mkf6vpp', graphDef).then(({ svg, bindFunctions }) => {
           container.innerHTML = svg;
           // Trick to make the graph takes only the required height.
-          document.getElementById('mermaid-target-43ebtr5g2fsft').removeAttribute('height')
+          document.getElementById('mermaid-target-2t25m5mkf6vpp').removeAttribute('height')
           bindFunctions?.(element);
       });
     }, 0);
   }
-  updateGraph43ebtr5g2fsft();
+  updateGraph2t25m5mkf6vpp();
   
   var themeToggleButton = document.getElementById('theme-toggle-button');
   themeToggleButton.addEventListener('click', () => {
-    updateGraph43ebtr5g2fsft();
+    updateGraph2t25m5mkf6vpp();
   });
-});</script><h2 class="">Key Features</h2><ul><li><p class="paragraph">Main application</p></li><li><p class="paragraph">Feature coordination</p></li><li><p class="paragraph">Analytics setup</p></li><li><p class="paragraph">Splash screen</p></li><li><p class="paragraph">Version management</p></li><li><p class="paragraph">ProGuard rules</p></li></ul><h2 class="">Version Management</h2><div class="sample-container"><pre><code class="block lang-kotlin" theme="idea">// ... Application Version ...<br>val majorUpdateVersion = 1<br>val minorUpdateVersion = 0<br>val patchVersion = 0<br><br>val mVersionCode = majorUpdateVersion.times(10_000)<br>    .plus(minorUpdateVersion.times(100))<br>    .plus(patchVersion)</code></pre><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+});</script><h2 class="">Key Features</h2><ul><li><p class="paragraph">Main application</p></li><li><p class="paragraph">Feature coordination</p></li><li><p class="paragraph">Analytics setup</p></li><li><p class="paragraph">Splash screen</p></li><li><p class="paragraph">Version management</p></li><li><p class="paragraph">ProGuard rules</p></li></ul><h2 class="">Version Management</h2><div class="sample-container"><pre><code class="block lang-kotlin" theme="idea">// ... Application Version ...<br>val majorUpdateVersion = 1<br>val minorUpdateVersion = 0<br>val patchVersion = 0<br><br>val mVersionCode = majorUpdateVersion.times(10_000)<br>    .plus(minorUpdateVersion.times(100))<br>    .plus(patchVersion)</code></pre><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div><div class="content sourceset-dependent-content" data-togglable=":app/release"></div>    </div>
   </div>
   <h2 class="">Packages</h2>
-  <div class="table"><a data-name="-2005797714%2FPackages%2F1259010394" anchor-label="dagger.hilt.internal.aggregatedroot.codegen" id="-2005797714%2FPackages%2F1259010394" data-filterable-set=":app/release"></a>
-    <div class="table-row" data-filterable-current=":app/release" data-filterable-set=":app/release">
+  <div class="table"><a data-name="-2005797714%2FPackages%2F-19934098" anchor-label="dagger.hilt.internal.aggregatedroot.codegen" id="-2005797714%2FPackages%2F-19934098" data-filterable-set=":app/debug,:app/release"></a>
+    <div class="table-row table-row_platform-tagged" data-filterable-current=":app/debug,:app/release" data-filterable-set=":app/debug,:app/release">
       <div>
         <div class="main-subrow ">
           <div class=""><span class="inline-flex">
               <div><a href="dagger.hilt.internal.aggregatedroot.codegen/index.html">dagger.hilt.internal.aggregatedroot.codegen</a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2005797714%2FPackages%2F1259010394"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2005797714%2FPackages%2F-19934098"></span>
                 <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
               </span></span></div>
-          <div class="pull-right">
+          <div class="pull-right platform-tags--wrapper">
             <div class="platform-tags no-gutters">
-              <div class="platform-tag jvm-like">androidJvm</div>
+              <div class="platform-tag jvm-like">debug</div>
+              <div class="platform-tag jvm-like">release</div>
             </div>
           </div>
         </div>
         <div></div>
       </div>
     </div>
-<a data-name="1483555499%2FPackages%2F1259010394" anchor-label="dev.atick.compose" id="1483555499%2FPackages%2F1259010394" data-filterable-set=":app/release"></a>
-    <div class="table-row" data-filterable-current=":app/release" data-filterable-set=":app/release">
+<a data-name="1483555499%2FPackages%2F-476713956" anchor-label="dev.atick.compose" id="1483555499%2FPackages%2F-476713956" data-filterable-set=":app/debug,:app/main,:app/release"></a>
+    <div class="table-row table-row_platform-tagged" data-filterable-current=":app/debug,:app/main,:app/release" data-filterable-set=":app/debug,:app/main,:app/release">
       <div>
         <div class="main-subrow ">
           <div class=""><span class="inline-flex">
               <div><a href="dev.atick.compose/index.html">dev.atick.compose</a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1483555499%2FPackages%2F1259010394"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1483555499%2FPackages%2F-476713956"></span>
                 <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
               </span></span></div>
-          <div class="pull-right">
+          <div class="pull-right platform-tags--wrapper">
             <div class="platform-tags no-gutters">
               <div class="platform-tag jvm-like">androidJvm</div>
+              <div class="platform-tag jvm-like">debug</div>
+              <div class="platform-tag jvm-like">release</div>
             </div>
           </div>
         </div>
         <div></div>
       </div>
     </div>
-<a data-name="-1325006405%2FPackages%2F1259010394" anchor-label="dev.atick.compose.navigation" id="-1325006405%2FPackages%2F1259010394" data-filterable-set=":app/release"></a>
-    <div class="table-row" data-filterable-current=":app/release" data-filterable-set=":app/release">
+<a data-name="-1325006405%2FPackages%2F1606452474" anchor-label="dev.atick.compose.navigation" id="-1325006405%2FPackages%2F1606452474" data-filterable-set=":app/main"></a>
+    <div class="table-row table-row_platform-tagged" data-filterable-current=":app/main" data-filterable-set=":app/main">
       <div>
         <div class="main-subrow ">
           <div class=""><span class="inline-flex">
               <div><a href="dev.atick.compose.navigation/index.html">dev.atick.compose.navigation</a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1325006405%2FPackages%2F1259010394"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1325006405%2FPackages%2F1606452474"></span>
                 <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
               </span></span></div>
-          <div class="pull-right">
+          <div class="pull-right platform-tags--wrapper">
             <div class="platform-tags no-gutters">
               <div class="platform-tag jvm-like">androidJvm</div>
             </div>
@@ -201,16 +222,16 @@ window.addEventListener('load', function() {
         <div></div>
       </div>
     </div>
-<a data-name="-1895433413%2FPackages%2F1259010394" anchor-label="dev.atick.compose.ui" id="-1895433413%2FPackages%2F1259010394" data-filterable-set=":app/release"></a>
-    <div class="table-row" data-filterable-current=":app/release" data-filterable-set=":app/release">
+<a data-name="-1895433413%2FPackages%2F1606452474" anchor-label="dev.atick.compose.ui" id="-1895433413%2FPackages%2F1606452474" data-filterable-set=":app/main"></a>
+    <div class="table-row table-row_platform-tagged" data-filterable-current=":app/main" data-filterable-set=":app/main">
       <div>
         <div class="main-subrow ">
           <div class=""><span class="inline-flex">
               <div><a href="dev.atick.compose.ui/index.html">dev.atick.compose.ui</a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1895433413%2FPackages%2F1259010394"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1895433413%2FPackages%2F1606452474"></span>
                 <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
               </span></span></div>
-          <div class="pull-right">
+          <div class="pull-right platform-tags--wrapper">
             <div class="platform-tags no-gutters">
               <div class="platform-tag jvm-like">androidJvm</div>
             </div>
@@ -219,18 +240,19 @@ window.addEventListener('load', function() {
         <div></div>
       </div>
     </div>
-<a data-name="747026602%2FPackages%2F1259010394" anchor-label="hilt_aggregated_deps" id="747026602%2FPackages%2F1259010394" data-filterable-set=":app/release"></a>
-    <div class="table-row" data-filterable-current=":app/release" data-filterable-set=":app/release">
+<a data-name="747026602%2FPackages%2F-19934098" anchor-label="hilt_aggregated_deps" id="747026602%2FPackages%2F-19934098" data-filterable-set=":app/debug,:app/release"></a>
+    <div class="table-row table-row_platform-tagged" data-filterable-current=":app/debug,:app/release" data-filterable-set=":app/debug,:app/release">
       <div>
         <div class="main-subrow ">
           <div class=""><span class="inline-flex">
               <div><a href="hilt_aggregated_deps/index.html">hilt_aggregated_deps</a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="747026602%2FPackages%2F1259010394"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="747026602%2FPackages%2F-19934098"></span>
                 <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
               </span></span></div>
-          <div class="pull-right">
+          <div class="pull-right platform-tags--wrapper">
             <div class="platform-tags no-gutters">
-              <div class="platform-tag jvm-like">androidJvm</div>
+              <div class="platform-tag jvm-like">debug</div>
+              <div class="platform-tag jvm-like">release</div>
             </div>
           </div>
         </div>
@@ -240,17 +262,21 @@ window.addEventListener('load', function() {
   </div>
 </div>
     <div class="footer">
-        <a href="#content" id="go-to-top-link" class="footer--button footer--button_go-to-top"></a>
-        <span>Made with ❤️ by Atick Faisal</span>
-        <span class="pull-right">
-            <span>Generated by </span>
-            <a class="footer--link footer--link_external" href="https://github.com/Kotlin/dokka">
-                <span>dokka</span>
-            </a>
-        </span>
-    </div>
+        <div class="footer--container">
+            <a href="#content" id="go-to-top-link" class="footer--button footer--button_go-to-top"></a>
+            <div class="footer--content">
+                <div>
+                    <span>Generated by </span>
+                    <a class="footer--link footer--link_external" href="https://github.com/Kotlin/dokka">
+                        Dokka
+                    </a>
+                    <div>Made with ❤️ by Atick Faisal</div>
+                </div>
             </div>
         </div>
     </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>

@@ -1,22 +1,22 @@
 <!doctype html>
-<html class="no-js">
+<html class="no-js" lang="en">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
     <title>dev.atick.core.ui.extensions</title>
-<link href="../../../images/logo-icon.svg" rel="icon" type="image/svg">    <script>var pathToRoot = "../../../";</script>
-    <script>document.documentElement.classList.replace("no-js","js");</script>
+<link href="../../../images/logo-icon.svg" rel="icon" type="image/svg"><script>var pathToRoot = "../../../";</script>
+    <script>document.documentElement.classList.replace("no-js", "js");</script>
     <script>const storage = localStorage.getItem("dokka-dark-mode")
-    if (storage == null) {
+      if (storage == null) {
         const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
         if (osDarkSchemePreferred === true) {
-            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+          document.getElementsByTagName("html")[0].classList.add("theme-dark")
         }
-    } else {
+      } else {
         const savedDarkMode = JSON.parse(storage)
-        if(savedDarkMode === true) {
-            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        if (savedDarkMode === true) {
+          document.getElementsByTagName("html")[0].classList.add("theme-dark")
         }
-    }
+      }
     </script>
 <script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async></script>
 <script type="text/javascript" src="../../../scripts/sourceset_dependencies.js" async></script>
@@ -24,20 +24,18 @@
 <link href="../../../styles/main.css" rel="Stylesheet">
 <link href="../../../styles/prism.css" rel="Stylesheet">
 <link href="../../../styles/logo-styles.css" rel="Stylesheet">
-<link href="../../../styles/font-jb-sans-auto.css" rel="Stylesheet">
 <link href="../../../ui-kit/ui-kit.min.css" rel="Stylesheet">
-<script type="text/javascript" src="../../../scripts/clipboard.js" async></script>
+<script type="text/javascript" src="../../../scripts/safe-local-storage_blocking.js"></script>
 <script type="text/javascript" src="../../../scripts/navigation-loader.js" async></script>
 <script type="text/javascript" src="../../../scripts/platform-content-handler.js" async></script>
 <script type="text/javascript" src="../../../scripts/main.js" defer></script>
 <script type="text/javascript" src="../../../scripts/prism.js" async></script>
 <script type="text/javascript" src="../../../ui-kit/ui-kit.min.js" defer></script>
-<script type="text/javascript" src="../../../scripts/symbol-parameters-wrapper_deferred.js" defer></script>
 <script type="text/javascript" src="../../../dokka-mermaid.js" async></script></head>
 <body>
-    <div class="root">
-    <nav class="navigation theme-dark" id="navigation-wrapper">
-<a class="library-name--link" href="../../../index.html">
+<div class="root">
+    <header class="navigation theme-dark" id="navigation-wrapper" role="banner">
+<a class="library-name--link" href="../../../index.html" tabindex="1">
                     Jetpack
             </a>        <button class="navigation-controls--btn navigation-controls--btn_toc ui-kit_mobile-only" id="toc-toggle" type="button">Toggle table of contents
         </button>
@@ -45,19 +43,19 @@
         <div class="library-version" id="library-version">
         </div>
         <div class="navigation-controls">
-        <div class="filter-section filter-section_loading" id="filter-section">
-                <button class="platform-tag platform-selector jvm-like" data-active="" data-filter=":core:ui/release">androidJvm</button>
+        <ul class="filter-section filter-section_loading" id="filter-section" aria-label="Target filter">
+                <button class="platform-tag platform-selector jvm-like" data-active="" aria-pressed="true" data-filter=":core:ui/main">androidJvm</button>
             <div class="dropdown filter-section--dropdown" data-role="dropdown" id="filter-section-dropdown">
                 <button class="button button_dropdown filter-section--dropdown-toggle" role="combobox" data-role="dropdown-toggle" aria-controls="platform-tags-listbox" aria-haspopup="listbox" aria-expanded="false" aria-label="Toggle source sets"></button>
-                <ul role="listbox" id="platform-tags-listbox" class="dropdown--list" data-role="dropdown-listbox">
-                    <div class="dropdown--header"><span>Platform filter</span>
-                        <button class="button" data-role="dropdown-toggle" aria-label="Close platform filter">
+                <ul role="listbox" id="platform-tags-listbox" class="dropdown--list" data-role="dropdown-listbox" aria-label="Target filter">
+                    <div class="dropdown--header"><span>Target filter</span>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close target filter">
                             <i class="ui-kit-icon ui-kit-icon_cross"></i>
                         </button>
                     </div>
                         <li role="option" class="dropdown--option platform-selector-option jvm-like" tabindex="0">
                             <label class="checkbox">
-                                <input type="checkbox" class="checkbox--input" id=":core:ui/release" data-filter=":core:ui/release">
+                                <input type="checkbox" class="checkbox--input" id=":core:ui/main" data-filter=":core:ui/main">
                                 <span class="checkbox--icon"></span>
                                 androidJvm
                             </label>
@@ -65,33 +63,35 @@
                 </ul>
                 <div class="dropdown--overlay"></div>
             </div>
-        </div>
+        </ul>
             <button class="navigation-controls--btn navigation-controls--btn_theme" id="theme-toggle-button" type="button">Switch theme
             </button>
             <div class="navigation-controls--btn navigation-controls--btn_search" id="searchBar" role="button">Search in
                 API
             </div>
         </div>
-    </nav>
-        <div id="container">
-            <div class="sidebar" id="leftColumn">
-                <div class="dropdown theme-dark_mobile" data-role="dropdown" id="toc-dropdown">
-                    <ul role="listbox" id="toc-listbox" class="dropdown--list dropdown--list_toc-list" data-role="dropdown-listbox">
-                        <div class="dropdown--header">
+    </header>
+    <div id="container">
+        <nav id="leftColumn" class="sidebar" data-item-type="SECTION" data-item-config="{&quot;defaultSize&quot;: 280, &quot;minSize&quot;: 200, &quot;maxSize&quot;: 400}">
+            <a class="toc--skip-link" href="#main">Skip to content</a>
+            <div class="dropdown theme-dark_mobile" data-role="dropdown" id="toc-dropdown">
+                <ul role="listbox" id="toc-listbox" class="dropdown--list dropdown--list_toc-list" data-role="dropdown-listbox" aria-label="Table of contents">
+                    <div class="dropdown--header">
                             <span>
                                     Jetpack
                             </span>
-                            <button class="button" data-role="dropdown-toggle" aria-label="Close table of contents">
-                                <i class="ui-kit-icon ui-kit-icon_cross"></i>
-                            </button>
-                        </div>
-                        <div class="sidebar--inner" id="sideMenu"></div>
-                    </ul>
-                    <div class="dropdown--overlay"></div>
-                </div>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close table of contents">
+                            <i class="ui-kit-icon ui-kit-icon_cross"></i>
+                        </button>
+                    </div>
+                    <div class="sidebar--inner" id="sideMenu"></div>
+                </ul>
+                <div class="dropdown--overlay"></div>
             </div>
-            <div id="main">
-<div class="main-content" data-page-type="package" id="content" pageids=":core:ui::dev.atick.core.ui.extensions////PointingToDeclaration//-110990712">
+        </nav>
+        <div id="resizer" class="resizer" data-item-type="BAR"></div>
+        <div id="main" data-item-type="SECTION" role="main">
+<div class="main-content" data-page-type="package" id="content" pageids=":core:ui::dev.atick.core.ui.extensions////PointingToDeclaration//1090278028">
   <div class="breadcrumbs"><a href="../index.html">:core:ui</a><span class="delimiter">/</span><span class="current">dev.atick.core.ui.extensions</span></div>
   <div class="cover ">
     <h1 class="cover"><span><span>Package-level</span></span> <span><span>declarations</span></span></h1>
@@ -100,18 +100,18 @@
     <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="FUNCTION,EXTENSION_FUNCTION">Functions</button><button class="section-tab" data-togglable="PROPERTY,EXTENSION_PROPERTY">Properties</button></div>
     <div class="tabs-section-body">
       <div data-togglable="EXTENSION_PROPERTY">
-        <h2 class="">Properties</h2>
-        <div class="table"><a data-name="1300175872%2FProperties%2F-110990712" anchor-label="isSystemInDarkTheme" id="1300175872%2FProperties%2F-110990712" data-filterable-set=":core:ui/release"></a>
-          <div class="table-row" data-filterable-current=":core:ui/release" data-filterable-set=":core:ui/release">
+        <h2 class="tableheader">Properties</h2>
+        <div class="table"><a data-name="1300175872%2FProperties%2F1090278028" anchor-label="isSystemInDarkTheme" id="1300175872%2FProperties%2F1090278028" data-filterable-set=":core:ui/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":core:ui/main" data-filterable-set=":core:ui/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="is-system-in-dark-theme.html"><span>is</span><wbr><span>System</span><wbr><span>In</span><wbr><span>Dark</span><wbr><span><span>Theme</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1300175872%2FProperties%2F-110990712"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1300175872%2FProperties%2F1090278028"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":core:ui/release"><div class="symbol monospace"><span class="token keyword">val </span><a href="https://developer.android.com/reference/kotlin/android/content/res/Configuration.html">Configuration</a><span class="token punctuation">.</span><a href="is-system-in-dark-theme.html">isSystemInDarkTheme</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div><div class="brief "><p class="paragraph">Convenience wrapper for dark mode checking</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":core:ui/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="https://developer.android.com/reference/kotlin/android/content/res/Configuration.html">Configuration</a><span class="token punctuation">.</span><a href="is-system-in-dark-theme.html">isSystemInDarkTheme</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div><div class="brief "><p class="paragraph">Convenience wrapper for dark mode checking</p></div></div></div>
                 </div>
               </div>
             </div>
@@ -119,123 +119,123 @@
         </div>
       </div>
       <div data-togglable="EXTENSION_FUNCTION">
-        <h2 class="">Functions</h2>
-        <div class="table"><a data-name="1810735101%2FFunctions%2F-110990712" anchor-label="checkForPermissions" id="1810735101%2FFunctions%2F-110990712" data-filterable-set=":core:ui/release"></a>
-          <div class="table-row" data-filterable-current=":core:ui/release" data-filterable-set=":core:ui/release">
+        <h2 class="tableheader">Functions</h2>
+        <div class="table"><a data-name="1810735101%2FFunctions%2F1090278028" anchor-label="checkForPermissions" id="1810735101%2FFunctions%2F1090278028" data-filterable-set=":core:ui/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":core:ui/main" data-filterable-set=":core:ui/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="check-for-permissions.html"><span>check</span><wbr><span>For</span><wbr><span><span>Permissions</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1810735101%2FFunctions%2F-110990712"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1810735101%2FFunctions%2F1090278028"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":core:ui/release"><div class="symbol monospace"><span class="token keyword">inline </span><span class="token keyword">fun </span><a href="https://developer.android.com/reference/kotlin/androidx/activity/ComponentActivity.html">ComponentActivity</a><span class="token punctuation">.</span><a href="check-for-permissions.html"><span class="token function">checkForPermissions</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">permissions<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">crossinline </span>onSuccess<span class="token operator">: </span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-unit/index.html">Unit</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Check for permissions.</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":core:ui/main"><div class="symbol monospace"><span class="token keyword">inline </span><span class="token keyword">fun </span><a href="https://developer.android.com/reference/kotlin/androidx/activity/ComponentActivity.html">ComponentActivity</a><span class="token punctuation">.</span><a href="check-for-permissions.html"><span class="token function">checkForPermissions</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">permissions<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">crossinline </span>onSuccess<span class="token operator">: </span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-unit/index.html">Unit</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Check for permissions.</p></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-989003059%2FFunctions%2F-110990712" anchor-label="collectWithLifecycle" id="-989003059%2FFunctions%2F-110990712" data-filterable-set=":core:ui/release"></a>
-          <div class="table-row" data-filterable-current=":core:ui/release" data-filterable-set=":core:ui/release">
+<a data-name="-989003059%2FFunctions%2F1090278028" anchor-label="collectWithLifecycle" id="-989003059%2FFunctions%2F1090278028" data-filterable-set=":core:ui/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":core:ui/main" data-filterable-set=":core:ui/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="collect-with-lifecycle.html"><span>collect</span><wbr><span>With</span><wbr><span><span>Lifecycle</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-989003059%2FFunctions%2F-110990712"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-989003059%2FFunctions%2F1090278028"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":core:ui/release"><div class="symbol monospace"><span class="token keyword">inline </span><span class="token keyword">fun </span><span class="token operator">&lt;</span><a href="collect-with-lifecycle.html">T</a><span class="token operator">&gt; </span><a href="https://developer.android.com/reference/kotlin/androidx/lifecycle/LifecycleOwner.html">LifecycleOwner</a><span class="token punctuation">.</span><a href="collect-with-lifecycle.html"><span class="token function">collectWithLifecycle</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">flow<span class="token operator">: </span><span data-unresolved-link="kotlinx.coroutines.flow/Flow///PointingToDeclaration/">Flow</span><span class="token operator">&lt;</span><a href="collect-with-lifecycle.html">T</a><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">crossinline </span>action<span class="token operator">: </span><span class="token punctuation">(</span><a href="collect-with-lifecycle.html">T</a><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-unit/index.html">Unit</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Observe a <span data-unresolved-link="kotlinx.coroutines.flow/Flow///PointingToDeclaration/">Flow</span> and execute an action when the value is changed.</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":core:ui/main"><div class="symbol monospace"><span class="token keyword">inline </span><span class="token keyword">fun </span><span class="token operator">&lt;</span><a href="collect-with-lifecycle.html">T</a><span class="token operator">&gt; </span><a href="https://developer.android.com/reference/kotlin/androidx/lifecycle/LifecycleOwner.html">LifecycleOwner</a><span class="token punctuation">.</span><a href="collect-with-lifecycle.html"><span class="token function">collectWithLifecycle</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">flow<span class="token operator">: </span><span data-unresolved-link="kotlinx.coroutines.flow/Flow///PointingToDeclaration/">Flow</span><span class="token operator">&lt;</span><a href="collect-with-lifecycle.html">T</a><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">crossinline </span>action<span class="token operator">: </span><span class="token punctuation">(</span><a href="collect-with-lifecycle.html">T</a><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-unit/index.html">Unit</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Observe a <span data-unresolved-link="kotlinx.coroutines.flow/Flow///PointingToDeclaration/">Flow</span> and execute an action when the value is changed.</p></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-1846958466%2FFunctions%2F-110990712" anchor-label="isSystemInDarkTheme" id="-1846958466%2FFunctions%2F-110990712" data-filterable-set=":core:ui/release"></a>
-          <div class="table-row" data-filterable-current=":core:ui/release" data-filterable-set=":core:ui/release">
+<a data-name="-1846958466%2FFunctions%2F1090278028" anchor-label="isSystemInDarkTheme" id="-1846958466%2FFunctions%2F1090278028" data-filterable-set=":core:ui/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":core:ui/main" data-filterable-set=":core:ui/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="is-system-in-dark-theme.html"><span>is</span><wbr><span>System</span><wbr><span>In</span><wbr><span>Dark</span><wbr><span><span>Theme</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1846958466%2FFunctions%2F-110990712"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1846958466%2FFunctions%2F1090278028"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":core:ui/release"><div class="symbol monospace"><span class="token keyword">fun </span><a href="https://developer.android.com/reference/kotlin/androidx/activity/ComponentActivity.html">ComponentActivity</a><span class="token punctuation">.</span><a href="is-system-in-dark-theme.html"><span class="token function">isSystemInDarkTheme</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><span data-unresolved-link="kotlinx.coroutines.flow/Flow///PointingToDeclaration/">Flow</span><span class="token operator">&lt;</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Registers listener for configuration changes to retrieve whether system is in dark theme or not. Immediately upon subscribing, it sends the current value and then registers listener for changes.</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":core:ui/main"><div class="symbol monospace"><span class="token keyword">fun </span><a href="https://developer.android.com/reference/kotlin/androidx/activity/ComponentActivity.html">ComponentActivity</a><span class="token punctuation">.</span><a href="is-system-in-dark-theme.html"><span class="token function">isSystemInDarkTheme</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><span data-unresolved-link="kotlinx.coroutines.flow/Flow///PointingToDeclaration/">Flow</span><span class="token operator">&lt;</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Registers listener for configuration changes to retrieve whether system is in dark theme or not. Immediately upon subscribing, it sends the current value and then registers listener for changes.</p></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="1695164656%2FFunctions%2F-110990712" anchor-label="observe" id="1695164656%2FFunctions%2F-110990712" data-filterable-set=":core:ui/release"></a>
-          <div class="table-row" data-filterable-current=":core:ui/release" data-filterable-set=":core:ui/release">
+<a data-name="1695164656%2FFunctions%2F1090278028" anchor-label="observe" id="1695164656%2FFunctions%2F1090278028" data-filterable-set=":core:ui/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":core:ui/main" data-filterable-set=":core:ui/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="observe.html"><span><span>observe</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1695164656%2FFunctions%2F-110990712"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1695164656%2FFunctions%2F1090278028"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":core:ui/release"><div class="symbol monospace"><span class="token keyword">inline </span><span class="token keyword">fun </span><span class="token operator">&lt;</span><a href="observe.html">T</a><span class="token operator">&gt; </span><a href="https://developer.android.com/reference/kotlin/androidx/lifecycle/LifecycleOwner.html">LifecycleOwner</a><span class="token punctuation">.</span><a href="observe.html"><span class="token function">observe</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">liveData<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/androidx/lifecycle/LiveData.html">LiveData</a><span class="token operator">&lt;</span><a href="observe.html">T</a><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">crossinline </span>action<span class="token operator">: </span><span class="token punctuation">(</span><a href="observe.html">T</a><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-unit/index.html">Unit</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Observe a <a href="https://developer.android.com/reference/kotlin/androidx/lifecycle/LiveData.html">LiveData</a> and execute an action when the value is changed.</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":core:ui/main"><div class="symbol monospace"><span class="token keyword">inline </span><span class="token keyword">fun </span><span class="token operator">&lt;</span><a href="observe.html">T</a><span class="token operator">&gt; </span><a href="https://developer.android.com/reference/kotlin/androidx/lifecycle/LifecycleOwner.html">LifecycleOwner</a><span class="token punctuation">.</span><a href="observe.html"><span class="token function">observe</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">liveData<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/androidx/lifecycle/LiveData.html">LiveData</a><span class="token operator">&lt;</span><a href="observe.html">T</a><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">crossinline </span>action<span class="token operator">: </span><span class="token punctuation">(</span><a href="observe.html">T</a><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-unit/index.html">Unit</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Observe a <a href="https://developer.android.com/reference/kotlin/androidx/lifecycle/LiveData.html">LiveData</a> and execute an action when the value is changed.</p></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="228000724%2FFunctions%2F-110990712" anchor-label="observeEvent" id="228000724%2FFunctions%2F-110990712" data-filterable-set=":core:ui/release"></a>
-          <div class="table-row" data-filterable-current=":core:ui/release" data-filterable-set=":core:ui/release">
+<a data-name="228000724%2FFunctions%2F1090278028" anchor-label="observeEvent" id="228000724%2FFunctions%2F1090278028" data-filterable-set=":core:ui/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":core:ui/main" data-filterable-set=":core:ui/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="observe-event.html"><span>observe</span><wbr><span><span>Event</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="228000724%2FFunctions%2F-110990712"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="228000724%2FFunctions%2F1090278028"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":core:ui/release"><div class="symbol monospace"><span class="token keyword">inline </span><span class="token keyword">fun </span><span class="token operator">&lt;</span><a href="observe-event.html">T</a><span class="token operator">&gt; </span><a href="https://developer.android.com/reference/kotlin/androidx/lifecycle/LifecycleOwner.html">LifecycleOwner</a><span class="token punctuation">.</span><a href="observe-event.html"><span class="token function">observeEvent</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">liveData<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/androidx/lifecycle/LiveData.html">LiveData</a><span class="token operator">&lt;</span><a href="../../../core/android/dev.atick.core.utils/-one-time-event/index.html">OneTimeEvent</a><span class="token operator">&lt;</span><a href="observe-event.html">T</a><span class="token operator">&gt;</span><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">crossinline </span>action<span class="token operator">: </span><span class="token punctuation">(</span><a href="observe-event.html">T</a><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-unit/index.html">Unit</a></span></span><span class="token punctuation">)</span></div><div class="symbol monospace"><span class="token keyword">inline </span><span class="token keyword">fun </span><span class="token operator">&lt;</span><a href="observe-event.html">T</a><span class="token operator">&gt; </span><a href="https://developer.android.com/reference/kotlin/androidx/lifecycle/LifecycleOwner.html">LifecycleOwner</a><span class="token punctuation">.</span><a href="observe-event.html"><span class="token function">observeEvent</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">liveData<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/androidx/lifecycle/MutableLiveData.html">MutableLiveData</a><span class="token operator">&lt;</span><a href="../../../core/android/dev.atick.core.utils/-one-time-event/index.html">OneTimeEvent</a><span class="token operator">&lt;</span><a href="observe-event.html">T</a><span class="token operator">&gt;</span><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">crossinline </span>action<span class="token operator">: </span><span class="token punctuation">(</span><a href="observe-event.html">T</a><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-unit/index.html">Unit</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Observe a <a href="https://developer.android.com/reference/kotlin/androidx/lifecycle/LiveData.html">LiveData</a> and execute an action when the value is changed.</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":core:ui/main"><div class="symbol monospace"><span class="token keyword">inline </span><span class="token keyword">fun </span><span class="token operator">&lt;</span><a href="observe-event.html">T</a><span class="token operator">&gt; </span><a href="https://developer.android.com/reference/kotlin/androidx/lifecycle/LifecycleOwner.html">LifecycleOwner</a><span class="token punctuation">.</span><a href="observe-event.html"><span class="token function">observeEvent</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">liveData<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/androidx/lifecycle/LiveData.html">LiveData</a><span class="token operator">&lt;</span><a href="../../../core/android/dev.atick.core.utils/-one-time-event/index.html">OneTimeEvent</a><span class="token operator">&lt;</span><a href="observe-event.html">T</a><span class="token operator">&gt;</span><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">crossinline </span>action<span class="token operator">: </span><span class="token punctuation">(</span><a href="observe-event.html">T</a><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-unit/index.html">Unit</a></span></span><span class="token punctuation">)</span></div><div class="symbol monospace"><span class="token keyword">inline </span><span class="token keyword">fun </span><span class="token operator">&lt;</span><a href="observe-event.html">T</a><span class="token operator">&gt; </span><a href="https://developer.android.com/reference/kotlin/androidx/lifecycle/LifecycleOwner.html">LifecycleOwner</a><span class="token punctuation">.</span><a href="observe-event.html"><span class="token function">observeEvent</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">liveData<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/androidx/lifecycle/MutableLiveData.html">MutableLiveData</a><span class="token operator">&lt;</span><a href="../../../core/android/dev.atick.core.utils/-one-time-event/index.html">OneTimeEvent</a><span class="token operator">&lt;</span><a href="observe-event.html">T</a><span class="token operator">&gt;</span><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">crossinline </span>action<span class="token operator">: </span><span class="token punctuation">(</span><a href="observe-event.html">T</a><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-unit/index.html">Unit</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Observe a <a href="https://developer.android.com/reference/kotlin/androidx/lifecycle/LiveData.html">LiveData</a> and execute an action when the value is changed.</p></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-633898827%2FFunctions%2F-110990712" anchor-label="openPermissionSettings" id="-633898827%2FFunctions%2F-110990712" data-filterable-set=":core:ui/release"></a>
-          <div class="table-row" data-filterable-current=":core:ui/release" data-filterable-set=":core:ui/release">
+<a data-name="-633898827%2FFunctions%2F1090278028" anchor-label="openPermissionSettings" id="-633898827%2FFunctions%2F1090278028" data-filterable-set=":core:ui/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":core:ui/main" data-filterable-set=":core:ui/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="open-permission-settings.html"><span>open</span><wbr><span>Permission</span><wbr><span><span>Settings</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-633898827%2FFunctions%2F-110990712"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-633898827%2FFunctions%2F1090278028"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":core:ui/release"><div class="symbol monospace"><span class="token keyword">fun </span><a href="https://developer.android.com/reference/kotlin/androidx/activity/ComponentActivity.html">ComponentActivity</a><span class="token punctuation">.</span><a href="open-permission-settings.html"><span class="token function">openPermissionSettings</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Open app settings.</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":core:ui/main"><div class="symbol monospace"><span class="token keyword">fun </span><a href="https://developer.android.com/reference/kotlin/androidx/activity/ComponentActivity.html">ComponentActivity</a><span class="token punctuation">.</span><a href="open-permission-settings.html"><span class="token function">openPermissionSettings</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Open app settings.</p></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-2144639963%2FFunctions%2F-110990712" anchor-label="permissionLauncher" id="-2144639963%2FFunctions%2F-110990712" data-filterable-set=":core:ui/release"></a>
-          <div class="table-row" data-filterable-current=":core:ui/release" data-filterable-set=":core:ui/release">
+<a data-name="-2144639963%2FFunctions%2F1090278028" anchor-label="permissionLauncher" id="-2144639963%2FFunctions%2F1090278028" data-filterable-set=":core:ui/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":core:ui/main" data-filterable-set=":core:ui/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="permission-launcher.html"><span>permission</span><wbr><span><span>Launcher</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2144639963%2FFunctions%2F-110990712"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2144639963%2FFunctions%2F1090278028"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":core:ui/release"><div class="symbol monospace"><span class="token keyword">inline </span><span class="token keyword">fun </span><a href="https://developer.android.com/reference/kotlin/androidx/activity/ComponentActivity.html">ComponentActivity</a><span class="token punctuation">.</span><a href="permission-launcher.html"><span class="token function">permissionLauncher</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword">crossinline </span>onSuccess<span class="token operator">: </span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-unit/index.html">Unit</a><span class="token operator"> = </span>{}<span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">crossinline </span>onFailure<span class="token operator">: </span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-unit/index.html">Unit</a><span class="token operator"> = </span>{}</span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/androidx/activity/result/ActivityResultLauncher.html">ActivityResultLauncher</a><span class="token operator">&lt;</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-array/index.html">Array</a><span class="token operator">&lt;</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">&gt;</span><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Launch an activity for permission.</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":core:ui/main"><div class="symbol monospace"><span class="token keyword">inline </span><span class="token keyword">fun </span><a href="https://developer.android.com/reference/kotlin/androidx/activity/ComponentActivity.html">ComponentActivity</a><span class="token punctuation">.</span><a href="permission-launcher.html"><span class="token function">permissionLauncher</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword">crossinline </span>onSuccess<span class="token operator">: </span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-unit/index.html">Unit</a><span class="token operator"> = </span>{}<span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">crossinline </span>onFailure<span class="token operator">: </span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-unit/index.html">Unit</a><span class="token operator"> = </span>{}</span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/androidx/activity/result/ActivityResultLauncher.html">ActivityResultLauncher</a><span class="token operator">&lt;</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-array/index.html">Array</a><span class="token operator">&lt;</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">&gt;</span><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Launch an activity for permission.</p></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-1675809769%2FFunctions%2F-110990712" anchor-label="resultLauncher" id="-1675809769%2FFunctions%2F-110990712" data-filterable-set=":core:ui/release"></a>
-          <div class="table-row" data-filterable-current=":core:ui/release" data-filterable-set=":core:ui/release">
+<a data-name="-1675809769%2FFunctions%2F1090278028" anchor-label="resultLauncher" id="-1675809769%2FFunctions%2F1090278028" data-filterable-set=":core:ui/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":core:ui/main" data-filterable-set=":core:ui/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="result-launcher.html"><span>result</span><wbr><span><span>Launcher</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1675809769%2FFunctions%2F-110990712"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1675809769%2FFunctions%2F1090278028"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":core:ui/release"><div class="symbol monospace"><span class="token keyword">inline </span><span class="token keyword">fun </span><a href="https://developer.android.com/reference/kotlin/androidx/activity/ComponentActivity.html">ComponentActivity</a><span class="token punctuation">.</span><a href="result-launcher.html"><span class="token function">resultLauncher</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword">crossinline </span>onSuccess<span class="token operator">: </span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-unit/index.html">Unit</a><span class="token operator"> = </span>{}<span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">crossinline </span>onFailure<span class="token operator">: </span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-unit/index.html">Unit</a><span class="token operator"> = </span>{}</span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/androidx/activity/result/ActivityResultLauncher.html">ActivityResultLauncher</a><span class="token operator">&lt;</span><a href="https://developer.android.com/reference/kotlin/android/content/Intent.html">Intent</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Launch an activity for result.</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":core:ui/main"><div class="symbol monospace"><span class="token keyword">inline </span><span class="token keyword">fun </span><a href="https://developer.android.com/reference/kotlin/androidx/activity/ComponentActivity.html">ComponentActivity</a><span class="token punctuation">.</span><a href="result-launcher.html"><span class="token function">resultLauncher</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword">crossinline </span>onSuccess<span class="token operator">: </span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-unit/index.html">Unit</a><span class="token operator"> = </span>{}<span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">crossinline </span>onFailure<span class="token operator">: </span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-unit/index.html">Unit</a><span class="token operator"> = </span>{}</span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/androidx/activity/result/ActivityResultLauncher.html">ActivityResultLauncher</a><span class="token operator">&lt;</span><a href="https://developer.android.com/reference/kotlin/android/content/Intent.html">Intent</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Launch an activity for result.</p></div></div></div>
                 </div>
               </div>
             </div>
@@ -246,17 +246,21 @@
   </div>
 </div>
     <div class="footer">
-        <a href="#content" id="go-to-top-link" class="footer--button footer--button_go-to-top"></a>
-        <span>Made with ❤️ by Atick Faisal</span>
-        <span class="pull-right">
-            <span>Generated by </span>
-            <a class="footer--link footer--link_external" href="https://github.com/Kotlin/dokka">
-                <span>dokka</span>
-            </a>
-        </span>
-    </div>
+        <div class="footer--container">
+            <a href="#content" id="go-to-top-link" class="footer--button footer--button_go-to-top"></a>
+            <div class="footer--content">
+                <div>
+                    <span>Generated by </span>
+                    <a class="footer--link footer--link_external" href="https://github.com/Kotlin/dokka">
+                        Dokka
+                    </a>
+                    <div>Made with ❤️ by Atick Faisal</div>
+                </div>
             </div>
         </div>
     </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>

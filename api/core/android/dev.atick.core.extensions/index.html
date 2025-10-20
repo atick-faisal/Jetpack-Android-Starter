@@ -1,22 +1,22 @@
 <!doctype html>
-<html class="no-js">
+<html class="no-js" lang="en">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
     <title>dev.atick.core.extensions</title>
-<link href="../../../images/logo-icon.svg" rel="icon" type="image/svg">    <script>var pathToRoot = "../../../";</script>
-    <script>document.documentElement.classList.replace("no-js","js");</script>
+<link href="../../../images/logo-icon.svg" rel="icon" type="image/svg"><script>var pathToRoot = "../../../";</script>
+    <script>document.documentElement.classList.replace("no-js", "js");</script>
     <script>const storage = localStorage.getItem("dokka-dark-mode")
-    if (storage == null) {
+      if (storage == null) {
         const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
         if (osDarkSchemePreferred === true) {
-            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+          document.getElementsByTagName("html")[0].classList.add("theme-dark")
         }
-    } else {
+      } else {
         const savedDarkMode = JSON.parse(storage)
-        if(savedDarkMode === true) {
-            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        if (savedDarkMode === true) {
+          document.getElementsByTagName("html")[0].classList.add("theme-dark")
         }
-    }
+      }
     </script>
 <script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async></script>
 <script type="text/javascript" src="../../../scripts/sourceset_dependencies.js" async></script>
@@ -24,20 +24,18 @@
 <link href="../../../styles/main.css" rel="Stylesheet">
 <link href="../../../styles/prism.css" rel="Stylesheet">
 <link href="../../../styles/logo-styles.css" rel="Stylesheet">
-<link href="../../../styles/font-jb-sans-auto.css" rel="Stylesheet">
 <link href="../../../ui-kit/ui-kit.min.css" rel="Stylesheet">
-<script type="text/javascript" src="../../../scripts/clipboard.js" async></script>
+<script type="text/javascript" src="../../../scripts/safe-local-storage_blocking.js"></script>
 <script type="text/javascript" src="../../../scripts/navigation-loader.js" async></script>
 <script type="text/javascript" src="../../../scripts/platform-content-handler.js" async></script>
 <script type="text/javascript" src="../../../scripts/main.js" defer></script>
 <script type="text/javascript" src="../../../scripts/prism.js" async></script>
 <script type="text/javascript" src="../../../ui-kit/ui-kit.min.js" defer></script>
-<script type="text/javascript" src="../../../scripts/symbol-parameters-wrapper_deferred.js" defer></script>
 <script type="text/javascript" src="../../../dokka-mermaid.js" async></script></head>
 <body>
-    <div class="root">
-    <nav class="navigation theme-dark" id="navigation-wrapper">
-<a class="library-name--link" href="../../../index.html">
+<div class="root">
+    <header class="navigation theme-dark" id="navigation-wrapper" role="banner">
+<a class="library-name--link" href="../../../index.html" tabindex="1">
                     Jetpack
             </a>        <button class="navigation-controls--btn navigation-controls--btn_toc ui-kit_mobile-only" id="toc-toggle" type="button">Toggle table of contents
         </button>
@@ -45,19 +43,19 @@
         <div class="library-version" id="library-version">
         </div>
         <div class="navigation-controls">
-        <div class="filter-section filter-section_loading" id="filter-section">
-                <button class="platform-tag platform-selector jvm-like" data-active="" data-filter=":core:android/release">androidJvm</button>
+        <ul class="filter-section filter-section_loading" id="filter-section" aria-label="Target filter">
+                <button class="platform-tag platform-selector jvm-like" data-active="" aria-pressed="true" data-filter=":core:android/main">androidJvm</button>
             <div class="dropdown filter-section--dropdown" data-role="dropdown" id="filter-section-dropdown">
                 <button class="button button_dropdown filter-section--dropdown-toggle" role="combobox" data-role="dropdown-toggle" aria-controls="platform-tags-listbox" aria-haspopup="listbox" aria-expanded="false" aria-label="Toggle source sets"></button>
-                <ul role="listbox" id="platform-tags-listbox" class="dropdown--list" data-role="dropdown-listbox">
-                    <div class="dropdown--header"><span>Platform filter</span>
-                        <button class="button" data-role="dropdown-toggle" aria-label="Close platform filter">
+                <ul role="listbox" id="platform-tags-listbox" class="dropdown--list" data-role="dropdown-listbox" aria-label="Target filter">
+                    <div class="dropdown--header"><span>Target filter</span>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close target filter">
                             <i class="ui-kit-icon ui-kit-icon_cross"></i>
                         </button>
                     </div>
                         <li role="option" class="dropdown--option platform-selector-option jvm-like" tabindex="0">
                             <label class="checkbox">
-                                <input type="checkbox" class="checkbox--input" id=":core:android/release" data-filter=":core:android/release">
+                                <input type="checkbox" class="checkbox--input" id=":core:android/main" data-filter=":core:android/main">
                                 <span class="checkbox--icon"></span>
                                 androidJvm
                             </label>
@@ -65,33 +63,35 @@
                 </ul>
                 <div class="dropdown--overlay"></div>
             </div>
-        </div>
+        </ul>
             <button class="navigation-controls--btn navigation-controls--btn_theme" id="theme-toggle-button" type="button">Switch theme
             </button>
             <div class="navigation-controls--btn navigation-controls--btn_search" id="searchBar" role="button">Search in
                 API
             </div>
         </div>
-    </nav>
-        <div id="container">
-            <div class="sidebar" id="leftColumn">
-                <div class="dropdown theme-dark_mobile" data-role="dropdown" id="toc-dropdown">
-                    <ul role="listbox" id="toc-listbox" class="dropdown--list dropdown--list_toc-list" data-role="dropdown-listbox">
-                        <div class="dropdown--header">
+    </header>
+    <div id="container">
+        <nav id="leftColumn" class="sidebar" data-item-type="SECTION" data-item-config="{&quot;defaultSize&quot;: 280, &quot;minSize&quot;: 200, &quot;maxSize&quot;: 400}">
+            <a class="toc--skip-link" href="#main">Skip to content</a>
+            <div class="dropdown theme-dark_mobile" data-role="dropdown" id="toc-dropdown">
+                <ul role="listbox" id="toc-listbox" class="dropdown--list dropdown--list_toc-list" data-role="dropdown-listbox" aria-label="Table of contents">
+                    <div class="dropdown--header">
                             <span>
                                     Jetpack
                             </span>
-                            <button class="button" data-role="dropdown-toggle" aria-label="Close table of contents">
-                                <i class="ui-kit-icon ui-kit-icon_cross"></i>
-                            </button>
-                        </div>
-                        <div class="sidebar--inner" id="sideMenu"></div>
-                    </ul>
-                    <div class="dropdown--overlay"></div>
-                </div>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close table of contents">
+                            <i class="ui-kit-icon ui-kit-icon_cross"></i>
+                        </button>
+                    </div>
+                    <div class="sidebar--inner" id="sideMenu"></div>
+                </ul>
+                <div class="dropdown--overlay"></div>
             </div>
-            <div id="main">
-<div class="main-content" data-page-type="package" id="content" pageids=":core:android::dev.atick.core.extensions////PointingToDeclaration//-1344477217">
+        </nav>
+        <div id="resizer" class="resizer" data-item-type="BAR"></div>
+        <div id="main" data-item-type="SECTION" role="main">
+<div class="main-content" data-page-type="package" id="content" pageids=":core:android::dev.atick.core.extensions////PointingToDeclaration//1720691861">
   <div class="breadcrumbs"><a href="../index.html">:core:android</a><span class="delimiter">/</span><span class="current">dev.atick.core.extensions</span></div>
   <div class="cover ">
     <h1 class="cover"><span><span>Package-level</span></span> <span><span>declarations</span></span></h1>
@@ -100,18 +100,20 @@
     <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="TYPE">Types</button><button class="section-tab" data-togglable="FUNCTION,EXTENSION_FUNCTION">Functions</button></div>
     <div class="tabs-section-body">
       <div data-togglable="TYPE">
-        <h2 class="">Types</h2>
-        <div class="table"><a data-name="1344612520%2FClasslikes%2F-1344477217" anchor-label="Options" id="1344612520%2FClasslikes%2F-1344477217" data-filterable-set=":core:android/release"></a>
-          <div class="table-row" data-filterable-current=":core:android/release" data-filterable-set=":core:android/release">
+        <h2 class="tableheader">Types</h2>
+        <div class="table"><a data-name="1344612520%2FClasslikes%2F1720691861" anchor-label="Options" id="1344612520%2FClasslikes%2F1720691861" data-filterable-set=":core:android/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":core:android/main" data-filterable-set=":core:android/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-options/index.html"><span><span>Options</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1344612520%2FClasslikes%2F-1344477217"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1344612520%2FClasslikes%2F1720691861"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":core:android/release"><div class="symbol monospace"><span class="token keyword">annotation class </span><a href="-options/index.html">Options</a></div><div class="brief "><p class="paragraph">Annotation to define the valid options for notification importance levels.</p></div></div></div>
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":core:android/main" data-filterable-set=":core:android/main" data-active="" data-toggle=":core:android/main">androidJvm</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":core:android/main"><div class="symbol monospace"><span class="token keyword">annotation class </span><a href="-options/index.html">Options</a></div><div class="brief "><p class="paragraph">Annotation to define the valid options for notification importance levels.</p></div></div>                  </div>
                 </div>
               </div>
             </div>
@@ -119,288 +121,326 @@
         </div>
       </div>
       <div data-togglable="EXTENSION_FUNCTION">
-        <h2 class="">Functions</h2>
-        <div class="table"><a data-name="-1764898445%2FFunctions%2F-1344477217" anchor-label="asFormattedDateTime" id="-1764898445%2FFunctions%2F-1344477217" data-filterable-set=":core:android/release"></a>
-          <div class="table-row" data-filterable-current=":core:android/release" data-filterable-set=":core:android/release">
+        <h2 class="tableheader">Functions</h2>
+        <div class="table"><a data-name="-1764898445%2FFunctions%2F1720691861" anchor-label="asFormattedDateTime" id="-1764898445%2FFunctions%2F1720691861" data-filterable-set=":core:android/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":core:android/main" data-filterable-set=":core:android/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="as-formatted-date-time.html"><span>as</span><wbr><span>Formatted</span><wbr><span>Date</span><wbr><span><span>Time</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1764898445%2FFunctions%2F-1344477217"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1764898445%2FFunctions%2F1720691861"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":core:android/release"><div class="symbol monospace"><span class="token keyword">fun </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-long/index.html">Long</a><span class="token punctuation">.</span><a href="as-formatted-date-time.html"><span class="token function">asFormattedDateTime</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div><div class="brief "><p class="paragraph">Formats a Long timestamp to a human-readable date-time string. Uses the system default time zone.</p></div></div></div>
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":core:android/main" data-filterable-set=":core:android/main" data-active="" data-toggle=":core:android/main">androidJvm</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":core:android/main"><div class="symbol monospace"><span class="token keyword">fun </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-long/index.html">Long</a><span class="token punctuation">.</span><a href="as-formatted-date-time.html"><span class="token function">asFormattedDateTime</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div><div class="brief "><p class="paragraph">Formats a Long timestamp to a human-readable date-time string. Uses the system default time zone.</p></div></div>                  </div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-526873827%2FFunctions%2F-1344477217" anchor-label="asOneTimeEvent" id="-526873827%2FFunctions%2F-1344477217" data-filterable-set=":core:android/release"></a>
-          <div class="table-row" data-filterable-current=":core:android/release" data-filterable-set=":core:android/release">
+<a data-name="-526873827%2FFunctions%2F1720691861" anchor-label="asOneTimeEvent" id="-526873827%2FFunctions%2F1720691861" data-filterable-set=":core:android/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":core:android/main" data-filterable-set=":core:android/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="as-one-time-event.html"><span>as</span><wbr><span>One</span><wbr><span>Time</span><wbr><span><span>Event</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-526873827%2FFunctions%2F-1344477217"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-526873827%2FFunctions%2F1720691861"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":core:android/release"><div class="symbol monospace"><span class="token keyword">fun </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-throwable/index.html">Throwable</a><span class="token punctuation">.</span><a href="as-one-time-event.html"><span class="token function">asOneTimeEvent</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../dev.atick.core.utils/-one-time-event/index.html">OneTimeEvent</a><span class="token operator">&lt;</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-throwable/index.html">Throwable</a><span class="token operator">?</span><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Extension function to convert a Throwable into a OneTimeEvent.</p></div></div></div>
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":core:android/main" data-filterable-set=":core:android/main" data-active="" data-toggle=":core:android/main">androidJvm</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":core:android/main"><div class="symbol monospace"><span class="token keyword">fun </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-throwable/index.html">Throwable</a><span class="token punctuation">.</span><a href="as-one-time-event.html"><span class="token function">asOneTimeEvent</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../dev.atick.core.utils/-one-time-event/index.html">OneTimeEvent</a><span class="token operator">&lt;</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-throwable/index.html">Throwable</a><span class="token operator">?</span><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Extension function to convert a Throwable into a OneTimeEvent.</p></div></div>                  </div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="235356439%2FFunctions%2F-1344477217" anchor-label="cancelNotification" id="235356439%2FFunctions%2F-1344477217" data-filterable-set=":core:android/release"></a>
-          <div class="table-row" data-filterable-current=":core:android/release" data-filterable-set=":core:android/release">
+<a data-name="235356439%2FFunctions%2F1720691861" anchor-label="cancelNotification" id="235356439%2FFunctions%2F1720691861" data-filterable-set=":core:android/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":core:android/main" data-filterable-set=":core:android/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="cancel-notification.html"><span>cancel</span><wbr><span><span>Notification</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="235356439%2FFunctions%2F-1344477217"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="235356439%2FFunctions%2F1720691861"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":core:android/release"><div class="symbol monospace"><span class="token keyword">fun </span><a href="https://developer.android.com/reference/kotlin/android/content/Context.html">Context</a><span class="token punctuation">.</span><a href="cancel-notification.html"><span class="token function">cancelNotification</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">notificationId<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Cancels a previously shown notification.</p></div></div></div>
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":core:android/main" data-filterable-set=":core:android/main" data-active="" data-toggle=":core:android/main">androidJvm</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":core:android/main"><div class="symbol monospace"><span class="token keyword">fun </span><a href="https://developer.android.com/reference/kotlin/android/content/Context.html">Context</a><span class="token punctuation">.</span><a href="cancel-notification.html"><span class="token function">cancelNotification</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">notificationId<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Cancels a previously shown notification.</p></div></div>                  </div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-1915230652%2FFunctions%2F-1344477217" anchor-label="createNotification" id="-1915230652%2FFunctions%2F-1344477217" data-filterable-set=":core:android/release"></a>
-          <div class="table-row" data-filterable-current=":core:android/release" data-filterable-set=":core:android/release">
+<a data-name="-1915230652%2FFunctions%2F1720691861" anchor-label="createNotification" id="-1915230652%2FFunctions%2F1720691861" data-filterable-set=":core:android/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":core:android/main" data-filterable-set=":core:android/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="create-notification.html"><span>create</span><wbr><span><span>Notification</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1915230652%2FFunctions%2F-1344477217"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1915230652%2FFunctions%2F1720691861"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":core:android/release"><div class="symbol monospace"><span class="token keyword">fun </span><a href="https://developer.android.com/reference/kotlin/android/content/Context.html">Context</a><span class="token punctuation">.</span><a href="create-notification.html"><span class="token function">createNotification</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">channelId<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter "><span><span class="token annotation builtin">@</span><a href="https://developer.android.com/reference/kotlin/androidx/annotation/StringRes.html"><span class="token annotation builtin">StringRes</span></a>&nbsp;</span>title<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter "><span><span class="token annotation builtin">@</span><a href="https://developer.android.com/reference/kotlin/androidx/annotation/StringRes.html"><span class="token annotation builtin">StringRes</span></a>&nbsp;</span>content<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">icon<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">pendingIntent<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/android/app/PendingIntent.html">PendingIntent</a><span class="token operator">?</span><span class="token operator"> = </span>null</span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/android/app/Notification.html">Notification</a></div><div class="symbol monospace"><span class="token keyword">fun </span><a href="https://developer.android.com/reference/kotlin/android/content/Context.html">Context</a><span class="token punctuation">.</span><a href="create-notification.html"><span class="token function">createNotification</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">channelId<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">title<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">content<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">icon<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">pendingIntent<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/android/app/PendingIntent.html">PendingIntent</a><span class="token operator">?</span><span class="token operator"> = </span>null</span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/android/app/Notification.html">Notification</a></div><div class="brief "><p class="paragraph">Creates a notification using the specified channel ID, title, content, and icon.</p></div></div></div>
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":core:android/main" data-filterable-set=":core:android/main" data-active="" data-toggle=":core:android/main">androidJvm</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":core:android/main"><div class="symbol monospace"><span class="token keyword">fun </span><a href="https://developer.android.com/reference/kotlin/android/content/Context.html">Context</a><span class="token punctuation">.</span><a href="create-notification.html"><span class="token function">createNotification</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">channelId<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter "><span><span class="token annotation builtin">@</span><a href="https://developer.android.com/reference/kotlin/androidx/annotation/StringRes.html"><span class="token annotation builtin">StringRes</span></a>&nbsp;</span>title<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter "><span><span class="token annotation builtin">@</span><a href="https://developer.android.com/reference/kotlin/androidx/annotation/StringRes.html"><span class="token annotation builtin">StringRes</span></a>&nbsp;</span>content<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">icon<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">pendingIntent<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/android/app/PendingIntent.html">PendingIntent</a><span class="token operator">?</span><span class="token operator"> = </span>null</span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/android/app/Notification.html">Notification</a></div><div class="symbol monospace"><span class="token keyword">fun </span><a href="https://developer.android.com/reference/kotlin/android/content/Context.html">Context</a><span class="token punctuation">.</span><a href="create-notification.html"><span class="token function">createNotification</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">channelId<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">title<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">content<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">icon<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">pendingIntent<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/android/app/PendingIntent.html">PendingIntent</a><span class="token operator">?</span><span class="token operator"> = </span>null</span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/android/app/Notification.html">Notification</a></div><div class="brief "><p class="paragraph">Creates a notification using the specified channel ID, title, content, and icon.</p></div></div>                  </div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-1187913803%2FFunctions%2F-1344477217" anchor-label="createNotificationChannel" id="-1187913803%2FFunctions%2F-1344477217" data-filterable-set=":core:android/release"></a>
-          <div class="table-row" data-filterable-current=":core:android/release" data-filterable-set=":core:android/release">
+<a data-name="-1187913803%2FFunctions%2F1720691861" anchor-label="createNotificationChannel" id="-1187913803%2FFunctions%2F1720691861" data-filterable-set=":core:android/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":core:android/main" data-filterable-set=":core:android/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="create-notification-channel.html"><span>create</span><wbr><span>Notification</span><wbr><span><span>Channel</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1187913803%2FFunctions%2F-1344477217"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1187913803%2FFunctions%2F1720691861"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":core:android/release"><div class="symbol monospace"><span class="token keyword">fun </span><a href="https://developer.android.com/reference/kotlin/android/content/Context.html">Context</a><span class="token punctuation">.</span><a href="create-notification-channel.html"><span class="token function">createNotificationChannel</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">channelId<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter "><span><span class="token annotation builtin">@</span><a href="https://developer.android.com/reference/kotlin/androidx/annotation/StringRes.html"><span class="token annotation builtin">StringRes</span></a>&nbsp;</span>channelName<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter "><span><span class="token annotation builtin">@</span><a href="https://developer.android.com/reference/kotlin/androidx/annotation/StringRes.html"><span class="token annotation builtin">StringRes</span></a>&nbsp;</span>channelDescription<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">importance<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Creates a notification channel with the specified channel ID, name, description, and importance.</p></div></div></div>
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":core:android/main" data-filterable-set=":core:android/main" data-active="" data-toggle=":core:android/main">androidJvm</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":core:android/main"><div class="symbol monospace"><span class="token keyword">fun </span><a href="https://developer.android.com/reference/kotlin/android/content/Context.html">Context</a><span class="token punctuation">.</span><a href="create-notification-channel.html"><span class="token function">createNotificationChannel</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">channelId<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter "><span><span class="token annotation builtin">@</span><a href="https://developer.android.com/reference/kotlin/androidx/annotation/StringRes.html"><span class="token annotation builtin">StringRes</span></a>&nbsp;</span>channelName<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter "><span><span class="token annotation builtin">@</span><a href="https://developer.android.com/reference/kotlin/androidx/annotation/StringRes.html"><span class="token annotation builtin">StringRes</span></a>&nbsp;</span>channelDescription<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">importance<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Creates a notification channel with the specified channel ID, name, description, and importance.</p></div></div>                  </div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="169883851%2FFunctions%2F-1344477217" anchor-label="createProgressNotification" id="169883851%2FFunctions%2F-1344477217" data-filterable-set=":core:android/release"></a>
-          <div class="table-row" data-filterable-current=":core:android/release" data-filterable-set=":core:android/release">
+<a data-name="169883851%2FFunctions%2F1720691861" anchor-label="createProgressNotification" id="169883851%2FFunctions%2F1720691861" data-filterable-set=":core:android/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":core:android/main" data-filterable-set=":core:android/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="create-progress-notification.html"><span>create</span><wbr><span>Progress</span><wbr><span><span>Notification</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="169883851%2FFunctions%2F-1344477217"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="169883851%2FFunctions%2F1720691861"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":core:android/release"><div class="symbol monospace"><span class="token keyword">fun </span><a href="https://developer.android.com/reference/kotlin/android/content/Context.html">Context</a><span class="token punctuation">.</span><a href="create-progress-notification.html"><span class="token function">createProgressNotification</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">channelId<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter "><span><span class="token annotation builtin">@</span><a href="https://developer.android.com/reference/kotlin/androidx/annotation/StringRes.html"><span class="token annotation builtin">StringRes</span></a>&nbsp;</span>title<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">total<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">current<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter "><span><span class="token annotation builtin">@</span><a href="https://developer.android.com/reference/kotlin/androidx/annotation/DrawableRes.html"><span class="token annotation builtin">DrawableRes</span></a>&nbsp;</span>icon<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">pendingIntent<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/android/app/PendingIntent.html">PendingIntent</a><span class="token operator">?</span><span class="token operator"> = </span>null</span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/android/app/Notification.html">Notification</a></div><div class="brief "><p class="paragraph">Creates a progress notification using the specified channel ID, title, total, current, and icon.</p></div></div></div>
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":core:android/main" data-filterable-set=":core:android/main" data-active="" data-toggle=":core:android/main">androidJvm</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":core:android/main"><div class="symbol monospace"><span class="token keyword">fun </span><a href="https://developer.android.com/reference/kotlin/android/content/Context.html">Context</a><span class="token punctuation">.</span><a href="create-progress-notification.html"><span class="token function">createProgressNotification</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">channelId<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter "><span><span class="token annotation builtin">@</span><a href="https://developer.android.com/reference/kotlin/androidx/annotation/StringRes.html"><span class="token annotation builtin">StringRes</span></a>&nbsp;</span>title<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">total<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">current<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter "><span><span class="token annotation builtin">@</span><a href="https://developer.android.com/reference/kotlin/androidx/annotation/DrawableRes.html"><span class="token annotation builtin">DrawableRes</span></a>&nbsp;</span>icon<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">pendingIntent<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/android/app/PendingIntent.html">PendingIntent</a><span class="token operator">?</span><span class="token operator"> = </span>null</span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/android/app/Notification.html">Notification</a></div><div class="brief "><p class="paragraph">Creates a progress notification using the specified channel ID, title, total, current, and icon.</p></div></div>                  </div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-2047876209%2FFunctions%2F-1344477217" anchor-label="format" id="-2047876209%2FFunctions%2F-1344477217" data-filterable-set=":core:android/release"></a>
-          <div class="table-row" data-filterable-current=":core:android/release" data-filterable-set=":core:android/release">
+<a data-name="-2047876209%2FFunctions%2F1720691861" anchor-label="format" id="-2047876209%2FFunctions%2F1720691861" data-filterable-set=":core:android/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":core:android/main" data-filterable-set=":core:android/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="format.html"><span><span>format</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2047876209%2FFunctions%2F-1344477217"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2047876209%2FFunctions%2F1720691861"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":core:android/release"><div class="symbol monospace"><span class="token keyword">fun </span><span class="token operator">&lt;</span><a href="format.html">T</a><span class="token operator"> : </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-number/index.html">Number</a>, <a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-comparable/index.html">Comparable</a><span class="token operator">&lt;</span><a href="format.html">T</a><span class="token operator">&gt;</span><span class="token operator">&gt; </span><a href="format.html">T</a><span class="token punctuation">.</span><a href="format.html"><span class="token function">format</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">nDecimal<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">2</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div><div class="brief "><p class="paragraph">Formats a number (Float or Double) to a string with specified number of decimal places. Handles special cases like NaN and Infinity. Uses locale-specific decimal separator. Removes trailing zeros after decimal point.</p></div></div></div>
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":core:android/main" data-filterable-set=":core:android/main" data-active="" data-toggle=":core:android/main">androidJvm</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":core:android/main"><div class="symbol monospace"><span class="token keyword">fun </span><span class="token operator">&lt;</span><a href="format.html">T</a><span class="token operator"> : </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-number/index.html">Number</a>, <a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-comparable/index.html">Comparable</a><span class="token operator">&lt;</span><a href="format.html">T</a><span class="token operator">&gt;</span><span class="token operator">&gt; </span><a href="format.html">T</a><span class="token punctuation">.</span><a href="format.html"><span class="token function">format</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">nDecimal<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">2</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div><div class="brief "><p class="paragraph">Formats a number (Float or Double) to a string with specified number of decimal places. Handles special cases like NaN and Infinity. Uses locale-specific decimal separator. Removes trailing zeros after decimal point.</p></div></div>                  </div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="1524520389%2FFunctions%2F-1344477217" anchor-label="getActivity" id="1524520389%2FFunctions%2F-1344477217" data-filterable-set=":core:android/release"></a>
-          <div class="table-row" data-filterable-current=":core:android/release" data-filterable-set=":core:android/release">
+<a data-name="1524520389%2FFunctions%2F1720691861" anchor-label="getActivity" id="1524520389%2FFunctions%2F1720691861" data-filterable-set=":core:android/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":core:android/main" data-filterable-set=":core:android/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="get-activity.html"><span>get</span><wbr><span><span>Activity</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1524520389%2FFunctions%2F-1344477217"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1524520389%2FFunctions%2F1720691861"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":core:android/release"><div class="symbol monospace"><span class="token keyword">fun </span><a href="https://developer.android.com/reference/kotlin/android/content/Context.html">Context</a><span class="token punctuation">.</span><a href="get-activity.html"><span class="token function">getActivity</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/androidx/activity/ComponentActivity.html">ComponentActivity</a><span class="token operator">?</span></div><div class="brief "><p class="paragraph">Provides the activity from Context (https://stackoverflow.com/a/68423182/12737399)</p></div></div></div>
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":core:android/main" data-filterable-set=":core:android/main" data-active="" data-toggle=":core:android/main">androidJvm</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":core:android/main"><div class="symbol monospace"><span class="token keyword">fun </span><a href="https://developer.android.com/reference/kotlin/android/content/Context.html">Context</a><span class="token punctuation">.</span><a href="get-activity.html"><span class="token function">getActivity</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/androidx/activity/ComponentActivity.html">ComponentActivity</a><span class="token operator">?</span></div><div class="brief "><p class="paragraph">Provides the activity from Context (https://stackoverflow.com/a/68423182/12737399)</p></div></div>                  </div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="2105369111%2FFunctions%2F-1344477217" anchor-label="getFileFromContentUri" id="2105369111%2FFunctions%2F-1344477217" data-filterable-set=":core:android/release"></a>
-          <div class="table-row" data-filterable-current=":core:android/release" data-filterable-set=":core:android/release">
+<a data-name="2105369111%2FFunctions%2F1720691861" anchor-label="getFileFromContentUri" id="2105369111%2FFunctions%2F1720691861" data-filterable-set=":core:android/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":core:android/main" data-filterable-set=":core:android/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="get-file-from-content-uri.html"><span>get</span><wbr><span>File</span><wbr><span>From</span><wbr><span>Content</span><wbr><span><span>Uri</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2105369111%2FFunctions%2F-1344477217"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2105369111%2FFunctions%2F1720691861"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":core:android/release"><div class="symbol monospace"><span class="token keyword">fun </span><a href="https://developer.android.com/reference/kotlin/android/content/Context.html">Context</a><span class="token punctuation">.</span><a href="get-file-from-content-uri.html"><span class="token function">getFileFromContentUri</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">contentUri<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/android/net/Uri.html">Uri</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/java/io/File.html">File</a></div><div class="brief "><p class="paragraph">Retrieves a File object from the given content URI.</p></div></div></div>
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":core:android/main" data-filterable-set=":core:android/main" data-active="" data-toggle=":core:android/main">androidJvm</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":core:android/main"><div class="symbol monospace"><span class="token keyword">fun </span><a href="https://developer.android.com/reference/kotlin/android/content/Context.html">Context</a><span class="token punctuation">.</span><a href="get-file-from-content-uri.html"><span class="token function">getFileFromContentUri</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">contentUri<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/android/net/Uri.html">Uri</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/java/io/File.html">File</a></div><div class="brief "><p class="paragraph">Retrieves a File object from the given content URI.</p></div></div>                  </div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="806425798%2FFunctions%2F-1344477217" anchor-label="getStackTraceString" id="806425798%2FFunctions%2F-1344477217" data-filterable-set=":core:android/release"></a>
-          <div class="table-row" data-filterable-current=":core:android/release" data-filterable-set=":core:android/release">
+<a data-name="806425798%2FFunctions%2F1720691861" anchor-label="getStackTraceString" id="806425798%2FFunctions%2F1720691861" data-filterable-set=":core:android/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":core:android/main" data-filterable-set=":core:android/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="get-stack-trace-string.html"><span>get</span><wbr><span>Stack</span><wbr><span>Trace</span><wbr><span><span>String</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="806425798%2FFunctions%2F-1344477217"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="806425798%2FFunctions%2F1720691861"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":core:android/release"><div class="symbol monospace"><span class="token keyword">fun </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-throwable/index.html">Throwable</a><span class="token punctuation">.</span><a href="get-stack-trace-string.html"><span class="token function">getStackTraceString</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div><div class="brief "><p class="paragraph">Extension function to get the stack trace of a Throwable as a string.</p></div></div></div>
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":core:android/main" data-filterable-set=":core:android/main" data-active="" data-toggle=":core:android/main">androidJvm</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":core:android/main"><div class="symbol monospace"><span class="token keyword">fun </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-throwable/index.html">Throwable</a><span class="token punctuation">.</span><a href="get-stack-trace-string.html"><span class="token function">getStackTraceString</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div><div class="brief "><p class="paragraph">Extension function to get the stack trace of a Throwable as a string.</p></div></div>                  </div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="1031456885%2FFunctions%2F-1344477217" anchor-label="getTmpFileUri" id="1031456885%2FFunctions%2F-1344477217" data-filterable-set=":core:android/release"></a>
-          <div class="table-row" data-filterable-current=":core:android/release" data-filterable-set=":core:android/release">
+<a data-name="1031456885%2FFunctions%2F1720691861" anchor-label="getTmpFileUri" id="1031456885%2FFunctions%2F1720691861" data-filterable-set=":core:android/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":core:android/main" data-filterable-set=":core:android/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="get-tmp-file-uri.html"><span>get</span><wbr><span>Tmp</span><wbr><span>File</span><wbr><span><span>Uri</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1031456885%2FFunctions%2F-1344477217"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1031456885%2FFunctions%2F1720691861"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":core:android/release"><div class="symbol monospace"><span class="token keyword">fun </span><a href="https://developer.android.com/reference/kotlin/android/content/Context.html">Context</a><span class="token punctuation">.</span><a href="get-tmp-file-uri.html"><span class="token function">getTmpFileUri</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">appId<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/android/net/Uri.html">Uri</a></div><div class="brief "><p class="paragraph">Retrieves a temporary file URI for the specified app ID.</p></div></div></div>
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":core:android/main" data-filterable-set=":core:android/main" data-active="" data-toggle=":core:android/main">androidJvm</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":core:android/main"><div class="symbol monospace"><span class="token keyword">fun </span><a href="https://developer.android.com/reference/kotlin/android/content/Context.html">Context</a><span class="token punctuation">.</span><a href="get-tmp-file-uri.html"><span class="token function">getTmpFileUri</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">appId<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/android/net/Uri.html">Uri</a></div><div class="brief "><p class="paragraph">Retrieves a temporary file URI for the specified app ID.</p></div></div>                  </div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="789014491%2FFunctions%2F-1344477217" anchor-label="hasPermission" id="789014491%2FFunctions%2F-1344477217" data-filterable-set=":core:android/release"></a>
-          <div class="table-row" data-filterable-current=":core:android/release" data-filterable-set=":core:android/release">
+<a data-name="789014491%2FFunctions%2F1720691861" anchor-label="hasPermission" id="789014491%2FFunctions%2F1720691861" data-filterable-set=":core:android/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":core:android/main" data-filterable-set=":core:android/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="has-permission.html"><span>has</span><wbr><span><span>Permission</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="789014491%2FFunctions%2F-1344477217"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="789014491%2FFunctions%2F1720691861"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":core:android/release"><div class="symbol monospace"><span class="token keyword">fun </span><a href="https://developer.android.com/reference/kotlin/android/content/Context.html">Context</a><span class="token punctuation">.</span><a href="has-permission.html"><span class="token function">hasPermission</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">permission<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div><div class="brief "><p class="paragraph">Checks if the app has a given permission.</p></div></div></div>
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":core:android/main" data-filterable-set=":core:android/main" data-active="" data-toggle=":core:android/main">androidJvm</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":core:android/main"><div class="symbol monospace"><span class="token keyword">fun </span><a href="https://developer.android.com/reference/kotlin/android/content/Context.html">Context</a><span class="token punctuation">.</span><a href="has-permission.html"><span class="token function">hasPermission</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">permission<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div><div class="brief "><p class="paragraph">Checks if the app has a given permission.</p></div></div>                  </div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-369965672%2FFunctions%2F-1344477217" anchor-label="isAllPermissionsGranted" id="-369965672%2FFunctions%2F-1344477217" data-filterable-set=":core:android/release"></a>
-          <div class="table-row" data-filterable-current=":core:android/release" data-filterable-set=":core:android/release">
+<a data-name="-369965672%2FFunctions%2F1720691861" anchor-label="isAllPermissionsGranted" id="-369965672%2FFunctions%2F1720691861" data-filterable-set=":core:android/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":core:android/main" data-filterable-set=":core:android/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="is-all-permissions-granted.html"><span>is</span><wbr><span>All</span><wbr><span>Permissions</span><wbr><span><span>Granted</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-369965672%2FFunctions%2F-1344477217"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-369965672%2FFunctions%2F1720691861"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":core:android/release"><div class="symbol monospace"><span class="token keyword">fun </span><a href="https://developer.android.com/reference/kotlin/android/content/Context.html">Context</a><span class="token punctuation">.</span><a href="is-all-permissions-granted.html"><span class="token function">isAllPermissionsGranted</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">permissions<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div><div class="brief "><p class="paragraph">Checks if all the given permissions are granted.</p></div></div></div>
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":core:android/main" data-filterable-set=":core:android/main" data-active="" data-toggle=":core:android/main">androidJvm</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":core:android/main"><div class="symbol monospace"><span class="token keyword">fun </span><a href="https://developer.android.com/reference/kotlin/android/content/Context.html">Context</a><span class="token punctuation">.</span><a href="is-all-permissions-granted.html"><span class="token function">isAllPermissionsGranted</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">permissions<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div><div class="brief "><p class="paragraph">Checks if all the given permissions are granted.</p></div></div>                  </div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="1771805978%2FFunctions%2F-1344477217" anchor-label="isEmailValid" id="1771805978%2FFunctions%2F-1344477217" data-filterable-set=":core:android/release"></a>
-          <div class="table-row" data-filterable-current=":core:android/release" data-filterable-set=":core:android/release">
+<a data-name="1771805978%2FFunctions%2F1720691861" anchor-label="isEmailValid" id="1771805978%2FFunctions%2F1720691861" data-filterable-set=":core:android/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":core:android/main" data-filterable-set=":core:android/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="is-email-valid.html"><span>is</span><wbr><span>Email</span><wbr><span><span>Valid</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1771805978%2FFunctions%2F-1344477217"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1771805978%2FFunctions%2F1720691861"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":core:android/release"><div class="symbol monospace"><span class="token keyword">fun </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span><span class="token punctuation">.</span><a href="is-email-valid.html"><span class="token function">isEmailValid</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div><div class="brief "><p class="paragraph">Checks if the string is a valid email address.</p></div></div></div>
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":core:android/main" data-filterable-set=":core:android/main" data-active="" data-toggle=":core:android/main">androidJvm</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":core:android/main"><div class="symbol monospace"><span class="token keyword">fun </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span><span class="token punctuation">.</span><a href="is-email-valid.html"><span class="token function">isEmailValid</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div><div class="brief "><p class="paragraph">Checks if the string is a valid email address.</p></div></div>                  </div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="269858785%2FFunctions%2F-1344477217" anchor-label="isPasswordValid" id="269858785%2FFunctions%2F-1344477217" data-filterable-set=":core:android/release"></a>
-          <div class="table-row" data-filterable-current=":core:android/release" data-filterable-set=":core:android/release">
+<a data-name="269858785%2FFunctions%2F1720691861" anchor-label="isPasswordValid" id="269858785%2FFunctions%2F1720691861" data-filterable-set=":core:android/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":core:android/main" data-filterable-set=":core:android/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="is-password-valid.html"><span>is</span><wbr><span>Password</span><wbr><span><span>Valid</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="269858785%2FFunctions%2F-1344477217"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="269858785%2FFunctions%2F1720691861"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":core:android/release"><div class="symbol monospace"><span class="token keyword">fun </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span><span class="token punctuation">.</span><a href="is-password-valid.html"><span class="token function">isPasswordValid</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div><div class="brief "><p class="paragraph">Checks if the string is a valid password based on the specified criteria.</p></div></div></div>
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":core:android/main" data-filterable-set=":core:android/main" data-active="" data-toggle=":core:android/main">androidJvm</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":core:android/main"><div class="symbol monospace"><span class="token keyword">fun </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span><span class="token punctuation">.</span><a href="is-password-valid.html"><span class="token function">isPasswordValid</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div><div class="brief "><p class="paragraph">Checks if the string is a valid password based on the specified criteria.</p></div></div>                  </div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="1739819660%2FFunctions%2F-1344477217" anchor-label="isValidFullName" id="1739819660%2FFunctions%2F-1344477217" data-filterable-set=":core:android/release"></a>
-          <div class="table-row" data-filterable-current=":core:android/release" data-filterable-set=":core:android/release">
+<a data-name="1739819660%2FFunctions%2F1720691861" anchor-label="isValidFullName" id="1739819660%2FFunctions%2F1720691861" data-filterable-set=":core:android/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":core:android/main" data-filterable-set=":core:android/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="is-valid-full-name.html"><span>is</span><wbr><span>Valid</span><wbr><span>Full</span><wbr><span><span>Name</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1739819660%2FFunctions%2F-1344477217"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1739819660%2FFunctions%2F1720691861"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":core:android/release"><div class="symbol monospace"><span class="token keyword">fun </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span><span class="token punctuation">.</span><a href="is-valid-full-name.html"><span class="token function">isValidFullName</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div><div class="brief "><p class="paragraph">Checks if a given full name is valid.</p></div></div></div>
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":core:android/main" data-filterable-set=":core:android/main" data-active="" data-toggle=":core:android/main">androidJvm</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":core:android/main"><div class="symbol monospace"><span class="token keyword">fun </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span><span class="token punctuation">.</span><a href="is-valid-full-name.html"><span class="token function">isValidFullName</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div><div class="brief "><p class="paragraph">Checks if a given full name is valid.</p></div></div>                  </div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-1137862482%2FFunctions%2F-1344477217" anchor-label="showNotification" id="-1137862482%2FFunctions%2F-1344477217" data-filterable-set=":core:android/release"></a>
-          <div class="table-row" data-filterable-current=":core:android/release" data-filterable-set=":core:android/release">
+<a data-name="-1137862482%2FFunctions%2F1720691861" anchor-label="showNotification" id="-1137862482%2FFunctions%2F1720691861" data-filterable-set=":core:android/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":core:android/main" data-filterable-set=":core:android/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="show-notification.html"><span>show</span><wbr><span><span>Notification</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1137862482%2FFunctions%2F-1344477217"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1137862482%2FFunctions%2F1720691861"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":core:android/release"><div class="symbol monospace"><span class="token keyword">fun </span><a href="https://developer.android.com/reference/kotlin/android/content/Context.html">Context</a><span class="token punctuation">.</span><a href="show-notification.html"><span class="token function">showNotification</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">notificationId<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">notification<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/android/app/Notification.html">Notification</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Shows a notification using the specified notification ID and notification object.</p></div></div></div>
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":core:android/main" data-filterable-set=":core:android/main" data-active="" data-toggle=":core:android/main">androidJvm</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":core:android/main"><div class="symbol monospace"><span class="token keyword">fun </span><a href="https://developer.android.com/reference/kotlin/android/content/Context.html">Context</a><span class="token punctuation">.</span><a href="show-notification.html"><span class="token function">showNotification</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">notificationId<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">notification<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/android/app/Notification.html">Notification</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Shows a notification using the specified notification ID and notification object.</p></div></div>                  </div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="1195221850%2FFunctions%2F-1344477217" anchor-label="showToast" id="1195221850%2FFunctions%2F-1344477217" data-filterable-set=":core:android/release"></a>
-          <div class="table-row" data-filterable-current=":core:android/release" data-filterable-set=":core:android/release">
+<a data-name="1195221850%2FFunctions%2F1720691861" anchor-label="showToast" id="1195221850%2FFunctions%2F1720691861" data-filterable-set=":core:android/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":core:android/main" data-filterable-set=":core:android/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="show-toast.html"><span>show</span><wbr><span><span>Toast</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1195221850%2FFunctions%2F-1344477217"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1195221850%2FFunctions%2F1720691861"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":core:android/release"><div class="symbol monospace"><span class="token keyword">fun </span><a href="https://developer.android.com/reference/kotlin/android/content/Context.html">Context</a><span class="token punctuation">.</span><a href="show-toast.html"><span class="token function">showToast</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">message<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Displays a short toast message.</p></div></div></div>
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":core:android/main" data-filterable-set=":core:android/main" data-active="" data-toggle=":core:android/main">androidJvm</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":core:android/main"><div class="symbol monospace"><span class="token keyword">fun </span><a href="https://developer.android.com/reference/kotlin/android/content/Context.html">Context</a><span class="token punctuation">.</span><a href="show-toast.html"><span class="token function">showToast</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">message<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Displays a short toast message.</p></div></div>                  </div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="108508066%2FFunctions%2F-1344477217" anchor-label="stateInDelayed" id="108508066%2FFunctions%2F-1344477217" data-filterable-set=":core:android/release"></a>
-          <div class="table-row" data-filterable-current=":core:android/release" data-filterable-set=":core:android/release">
+<a data-name="108508066%2FFunctions%2F1720691861" anchor-label="stateInDelayed" id="108508066%2FFunctions%2F1720691861" data-filterable-set=":core:android/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":core:android/main" data-filterable-set=":core:android/main">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="state-in-delayed.html"><span>state</span><wbr><span>In</span><wbr><span><span>Delayed</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="108508066%2FFunctions%2F-1344477217"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="108508066%2FFunctions%2F1720691861"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":core:android/release"><div class="symbol monospace"><span class="token keyword">fun </span><span class="token operator">&lt;</span><a href="state-in-delayed.html">T</a><span class="token operator">&gt; </span><span data-unresolved-link="kotlinx.coroutines.flow/Flow///PointingToDeclaration/">Flow</span><span class="token operator">&lt;</span><a href="state-in-delayed.html">T</a><span class="token operator">&gt;</span><span class="token punctuation">.</span><a href="state-in-delayed.html"><span class="token function">stateInDelayed</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">initialValue<span class="token operator">: </span><a href="state-in-delayed.html">T</a><span class="token punctuation">, </span></span><span class="parameter ">scope<span class="token operator">: </span><span data-unresolved-link="kotlinx.coroutines/CoroutineScope///PointingToDeclaration/">CoroutineScope</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><span data-unresolved-link="kotlinx.coroutines.flow/StateFlow///PointingToDeclaration/">StateFlow</span><span class="token operator">&lt;</span><a href="state-in-delayed.html">T</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Returns a <span data-unresolved-link="kotlinx.coroutines.flow/StateFlow///PointingToDeclaration/">StateFlow</span> that represents the last value emitted by the <span data-unresolved-link="kotlinx.coroutines.flow/Flow///PointingToDeclaration/">Flow</span></p></div></div></div>
+                  <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
+                    <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":core:android/main" data-filterable-set=":core:android/main" data-active="" data-toggle=":core:android/main">androidJvm</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":core:android/main"><div class="symbol monospace"><span class="token keyword">fun </span><span class="token operator">&lt;</span><a href="state-in-delayed.html">T</a><span class="token operator">&gt; </span><span data-unresolved-link="kotlinx.coroutines.flow/Flow///PointingToDeclaration/">Flow</span><span class="token operator">&lt;</span><a href="state-in-delayed.html">T</a><span class="token operator">&gt;</span><span class="token punctuation">.</span><a href="state-in-delayed.html"><span class="token function">stateInDelayed</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">initialValue<span class="token operator">: </span><a href="state-in-delayed.html">T</a><span class="token punctuation">, </span></span><span class="parameter ">scope<span class="token operator">: </span><span data-unresolved-link="kotlinx.coroutines/CoroutineScope///PointingToDeclaration/">CoroutineScope</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><span data-unresolved-link="kotlinx.coroutines.flow/StateFlow///PointingToDeclaration/">StateFlow</span><span class="token operator">&lt;</span><a href="state-in-delayed.html">T</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Returns a <span data-unresolved-link="kotlinx.coroutines.flow/StateFlow///PointingToDeclaration/">StateFlow</span> that represents the last value emitted by the <span data-unresolved-link="kotlinx.coroutines.flow/Flow///PointingToDeclaration/">Flow</span></p></div></div>                  </div>
                 </div>
               </div>
             </div>
@@ -411,17 +451,21 @@
   </div>
 </div>
     <div class="footer">
-        <a href="#content" id="go-to-top-link" class="footer--button footer--button_go-to-top"></a>
-        <span>Made with ❤️ by Atick Faisal</span>
-        <span class="pull-right">
-            <span>Generated by </span>
-            <a class="footer--link footer--link_external" href="https://github.com/Kotlin/dokka">
-                <span>dokka</span>
-            </a>
-        </span>
-    </div>
+        <div class="footer--container">
+            <a href="#content" id="go-to-top-link" class="footer--button footer--button_go-to-top"></a>
+            <div class="footer--content">
+                <div>
+                    <span>Generated by </span>
+                    <a class="footer--link footer--link_external" href="https://github.com/Kotlin/dokka">
+                        Dokka
+                    </a>
+                    <div>Made with ❤️ by Atick Faisal</div>
+                </div>
             </div>
         </div>
     </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>

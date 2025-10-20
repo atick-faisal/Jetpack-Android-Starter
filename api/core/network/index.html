@@ -1,22 +1,22 @@
 <!doctype html>
-<html class="no-js">
+<html class="no-js" lang="en">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
     <title>:core:network</title>
-<link href="../../images/logo-icon.svg" rel="icon" type="image/svg">    <script>var pathToRoot = "../../";</script>
-    <script>document.documentElement.classList.replace("no-js","js");</script>
+<link href="../../images/logo-icon.svg" rel="icon" type="image/svg"><script>var pathToRoot = "../../";</script>
+    <script>document.documentElement.classList.replace("no-js", "js");</script>
     <script>const storage = localStorage.getItem("dokka-dark-mode")
-    if (storage == null) {
+      if (storage == null) {
         const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
         if (osDarkSchemePreferred === true) {
-            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+          document.getElementsByTagName("html")[0].classList.add("theme-dark")
         }
-    } else {
+      } else {
         const savedDarkMode = JSON.parse(storage)
-        if(savedDarkMode === true) {
-            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        if (savedDarkMode === true) {
+          document.getElementsByTagName("html")[0].classList.add("theme-dark")
         }
-    }
+      }
     </script>
 <script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async></script>
 <script type="text/javascript" src="../../scripts/sourceset_dependencies.js" async></script>
@@ -24,20 +24,18 @@
 <link href="../../styles/main.css" rel="Stylesheet">
 <link href="../../styles/prism.css" rel="Stylesheet">
 <link href="../../styles/logo-styles.css" rel="Stylesheet">
-<link href="../../styles/font-jb-sans-auto.css" rel="Stylesheet">
 <link href="../../ui-kit/ui-kit.min.css" rel="Stylesheet">
-<script type="text/javascript" src="../../scripts/clipboard.js" async></script>
+<script type="text/javascript" src="../../scripts/safe-local-storage_blocking.js"></script>
 <script type="text/javascript" src="../../scripts/navigation-loader.js" async></script>
 <script type="text/javascript" src="../../scripts/platform-content-handler.js" async></script>
 <script type="text/javascript" src="../../scripts/main.js" defer></script>
 <script type="text/javascript" src="../../scripts/prism.js" async></script>
 <script type="text/javascript" src="../../ui-kit/ui-kit.min.js" defer></script>
-<script type="text/javascript" src="../../scripts/symbol-parameters-wrapper_deferred.js" defer></script>
 <script type="text/javascript" src="../../dokka-mermaid.js" async></script></head>
 <body>
-    <div class="root">
-    <nav class="navigation theme-dark" id="navigation-wrapper">
-<a class="library-name--link" href="../../index.html">
+<div class="root">
+    <header class="navigation theme-dark" id="navigation-wrapper" role="banner">
+<a class="library-name--link" href="../../index.html" tabindex="1">
                     Jetpack
             </a>        <button class="navigation-controls--btn navigation-controls--btn_toc ui-kit_mobile-only" id="toc-toggle" type="button">Toggle table of contents
         </button>
@@ -45,57 +43,77 @@
         <div class="library-version" id="library-version">
         </div>
         <div class="navigation-controls">
-        <div class="filter-section filter-section_loading" id="filter-section">
-                <button class="platform-tag platform-selector jvm-like" data-active="" data-filter=":core:network/release">androidJvm</button>
+        <ul class="filter-section filter-section_loading" id="filter-section" aria-label="Target filter">
+                <button class="platform-tag platform-selector jvm-like" data-active="" aria-pressed="true" data-filter=":core:network/debug">debug</button>
+                <button class="platform-tag platform-selector jvm-like" data-active="" aria-pressed="true" data-filter=":core:network/main">androidJvm</button>
+                <button class="platform-tag platform-selector jvm-like" data-active="" aria-pressed="true" data-filter=":core:network/release">release</button>
             <div class="dropdown filter-section--dropdown" data-role="dropdown" id="filter-section-dropdown">
                 <button class="button button_dropdown filter-section--dropdown-toggle" role="combobox" data-role="dropdown-toggle" aria-controls="platform-tags-listbox" aria-haspopup="listbox" aria-expanded="false" aria-label="Toggle source sets"></button>
-                <ul role="listbox" id="platform-tags-listbox" class="dropdown--list" data-role="dropdown-listbox">
-                    <div class="dropdown--header"><span>Platform filter</span>
-                        <button class="button" data-role="dropdown-toggle" aria-label="Close platform filter">
+                <ul role="listbox" id="platform-tags-listbox" class="dropdown--list" data-role="dropdown-listbox" aria-label="Target filter">
+                    <div class="dropdown--header"><span>Target filter</span>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close target filter">
                             <i class="ui-kit-icon ui-kit-icon_cross"></i>
                         </button>
                     </div>
                         <li role="option" class="dropdown--option platform-selector-option jvm-like" tabindex="0">
                             <label class="checkbox">
-                                <input type="checkbox" class="checkbox--input" id=":core:network/release" data-filter=":core:network/release">
+                                <input type="checkbox" class="checkbox--input" id=":core:network/debug" data-filter=":core:network/debug">
+                                <span class="checkbox--icon"></span>
+                                debug
+                            </label>
+                        </li>
+                        <li role="option" class="dropdown--option platform-selector-option jvm-like" tabindex="0">
+                            <label class="checkbox">
+                                <input type="checkbox" class="checkbox--input" id=":core:network/main" data-filter=":core:network/main">
                                 <span class="checkbox--icon"></span>
                                 androidJvm
+                            </label>
+                        </li>
+                        <li role="option" class="dropdown--option platform-selector-option jvm-like" tabindex="0">
+                            <label class="checkbox">
+                                <input type="checkbox" class="checkbox--input" id=":core:network/release" data-filter=":core:network/release">
+                                <span class="checkbox--icon"></span>
+                                release
                             </label>
                         </li>
                 </ul>
                 <div class="dropdown--overlay"></div>
             </div>
-        </div>
+        </ul>
             <button class="navigation-controls--btn navigation-controls--btn_theme" id="theme-toggle-button" type="button">Switch theme
             </button>
             <div class="navigation-controls--btn navigation-controls--btn_search" id="searchBar" role="button">Search in
                 API
             </div>
         </div>
-    </nav>
-        <div id="container">
-            <div class="sidebar" id="leftColumn">
-                <div class="dropdown theme-dark_mobile" data-role="dropdown" id="toc-dropdown">
-                    <ul role="listbox" id="toc-listbox" class="dropdown--list dropdown--list_toc-list" data-role="dropdown-listbox">
-                        <div class="dropdown--header">
+    </header>
+    <div id="container">
+        <nav id="leftColumn" class="sidebar" data-item-type="SECTION" data-item-config="{&quot;defaultSize&quot;: 280, &quot;minSize&quot;: 200, &quot;maxSize&quot;: 400}">
+            <a class="toc--skip-link" href="#main">Skip to content</a>
+            <div class="dropdown theme-dark_mobile" data-role="dropdown" id="toc-dropdown">
+                <ul role="listbox" id="toc-listbox" class="dropdown--list dropdown--list_toc-list" data-role="dropdown-listbox" aria-label="Table of contents">
+                    <div class="dropdown--header">
                             <span>
                                     Jetpack
                             </span>
-                            <button class="button" data-role="dropdown-toggle" aria-label="Close table of contents">
-                                <i class="ui-kit-icon ui-kit-icon_cross"></i>
-                            </button>
-                        </div>
-                        <div class="sidebar--inner" id="sideMenu"></div>
-                    </ul>
-                    <div class="dropdown--overlay"></div>
-                </div>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close table of contents">
+                            <i class="ui-kit-icon ui-kit-icon_cross"></i>
+                        </button>
+                    </div>
+                    <div class="sidebar--inner" id="sideMenu"></div>
+                </ul>
+                <div class="dropdown--overlay"></div>
             </div>
-            <div id="main">
-<div class="main-content" id="content" pageids=":core:network::////PointingToDeclaration//-1211372322">
+        </nav>
+        <div id="resizer" class="resizer" data-item-type="BAR"></div>
+        <div id="main" data-item-type="SECTION" role="main">
+<div class="main-content" id="content" pageids=":core:network::////PointingToDeclaration//-1190920388">
   <div class="breadcrumbs"></div>
   <div class="cover ">
     <h1 class="cover"><span><span>:core:network</span></span></h1>
-    <div class="platform-hinted UnderCoverText" data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":core:network/release"><p class="paragraph">This module handles all network-related operations, including API communication, image loading, and network state monitoring. It provides a centralized way to manage network requests and responses.</p><h2 class="">Features</h2><ul><li><p class="paragraph">REST API Communication (Retrofit)</p></li><li><p class="paragraph">Network Interceptors (OkHttp)</p></li><li><p class="paragraph">Image Loading (Coil)</p></li><li><p class="paragraph">Network State Monitoring</p></li><li><p class="paragraph">Secrets Management</p></li></ul><h2 class="">Dependencies Graph</h2><div class="sample-container"><div id="mermaid-container-41guu5bi31t1a"></div></div><script>
+    <div class="platform-hinted UnderCoverText with-platform-tabs" data-platform-hinted="data-platform-hinted">
+      <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":core:network/debug" data-filterable-set=":core:network/debug" data-active="" data-toggle=":core:network/debug">debug</button><button class="platform-bookmark" data-filterable-current=":core:network/main" data-filterable-set=":core:network/main" data-toggle=":core:network/main">androidJvm</button><button class="platform-bookmark" data-filterable-current=":core:network/release" data-filterable-set=":core:network/release" data-toggle=":core:network/release">release</button></div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":core:network/debug"></div><div class="content sourceset-dependent-content" data-togglable=":core:network/main"><p class="paragraph">This module handles all network-related operations, including API communication, image loading, and network state monitoring. It provides a centralized way to manage network requests and responses.</p><h2 class="">Features</h2><ul><li><p class="paragraph">REST API Communication (Retrofit)</p></li><li><p class="paragraph">Network Interceptors (OkHttp)</p></li><li><p class="paragraph">Image Loading (Coil)</p></li><li><p class="paragraph">Network State Monitoring</p></li><li><p class="paragraph">Secrets Management</p></li></ul><h2 class="">Dependencies Graph</h2><div class="sample-container"><div id="mermaid-container-1kct35bjfqp9o"></div></div><script>
 window.addEventListener('load', function() {
   var graphDef =  `graph TD
     A[core:network] --> B[core:android]
@@ -116,9 +134,9 @@ window.addEventListener('load', function() {
     style C fill: #FF7043, stroke: #333, stroke-width: 2px
     style F fill: #FF7043, stroke: #333, stroke-width: 2px
     style H fill: #FF7043, stroke: #333, stroke-width: 2px`;
-  var container = document.getElementById('mermaid-container-41guu5bi31t1a');
-  container.innerHTML = '<div id="mermaid-target-41guu5bi31t1a"></div>';
-  var updateGraph41guu5bi31t1a = function() {
+  var container = document.getElementById('mermaid-container-1kct35bjfqp9o');
+  container.innerHTML = '<div id="mermaid-target-1kct35bjfqp9o"></div>';
+  var updateGraph1kct35bjfqp9o = function() {
     // setTimeout required or else the 1st render could be done before mermaid.initialize() has applied the theme.
     // Also required because we can't listen to localStorage events reliably, and it's changed on the same click event...
     setTimeout(() => {
@@ -129,33 +147,33 @@ window.addEventListener('load', function() {
         theme = 'dark';
       }
       mermaid.initialize({'theme': theme});
-      mermaid.render('mermaid-target-41guu5bi31t1a', graphDef).then(({ svg, bindFunctions }) => {
+      mermaid.render('mermaid-target-1kct35bjfqp9o', graphDef).then(({ svg, bindFunctions }) => {
           container.innerHTML = svg;
           // Trick to make the graph takes only the required height.
-          document.getElementById('mermaid-target-41guu5bi31t1a').removeAttribute('height')
+          document.getElementById('mermaid-target-1kct35bjfqp9o').removeAttribute('height')
           bindFunctions?.(element);
       });
     }, 0);
   }
-  updateGraph41guu5bi31t1a();
+  updateGraph1kct35bjfqp9o();
   
   var themeToggleButton = document.getElementById('theme-toggle-button');
   themeToggleButton.addEventListener('click', () => {
-    updateGraph41guu5bi31t1a();
+    updateGraph1kct35bjfqp9o();
   });
-});</script><h2 class="">Usage</h2><div class="sample-container"><pre><code class="block lang-kotlin" theme="idea">dependencies {<br>    implementation(project(":core:network"))<br>}</code></pre><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><h3 class="">Secret Management</h3><p class="paragraph">Uses Gradle secrets plugin to manage API keys and endpoints:</p><div class="sample-container"><pre><code class="block lang-properties" theme="idea"># secrets.defaults.properties (version controlled)<br>apiKey=dummy-key<br>apiEndpoint=https://example.com<br># local.properties (not version controlled)<br>apiKey=actual-secret-key<br>apiEndpoint=actual-endpoint</code></pre><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+});</script><h2 class="">Usage</h2><div class="sample-container"><pre><code class="block lang-kotlin" theme="idea">dependencies {<br>    implementation(project(":core:network"))<br>}</code></pre><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><h3 class="">Secret Management</h3><p class="paragraph">Uses Gradle secrets plugin to manage API keys and endpoints:</p><div class="sample-container"><pre><code class="block lang-properties" theme="idea"># secrets.defaults.properties (version controlled)<br>apiKey=dummy-key<br>apiEndpoint=https://example.com<br># local.properties (not version controlled)<br>apiKey=actual-secret-key<br>apiEndpoint=actual-endpoint</code></pre><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div><div class="content sourceset-dependent-content" data-togglable=":core:network/release"></div>    </div>
   </div>
   <h2 class="">Packages</h2>
-  <div class="table"><a data-name="1705200342%2FPackages%2F-1211372322" anchor-label="dev.atick.core.network.api" id="1705200342%2FPackages%2F-1211372322" data-filterable-set=":core:network/release"></a>
-    <div class="table-row" data-filterable-current=":core:network/release" data-filterable-set=":core:network/release">
+  <div class="table"><a data-name="1705200342%2FPackages%2F1585176566" anchor-label="dev.atick.core.network.api" id="1705200342%2FPackages%2F1585176566" data-filterable-set=":core:network/main"></a>
+    <div class="table-row table-row_platform-tagged" data-filterable-current=":core:network/main" data-filterable-set=":core:network/main">
       <div>
         <div class="main-subrow ">
           <div class=""><span class="inline-flex">
               <div><a href="dev.atick.core.network.api/index.html">dev.atick.core.network.api</a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1705200342%2FPackages%2F-1211372322"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1705200342%2FPackages%2F1585176566"></span>
                 <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
               </span></span></div>
-          <div class="pull-right">
+          <div class="pull-right platform-tags--wrapper">
             <div class="platform-tags no-gutters">
               <div class="platform-tag jvm-like">androidJvm</div>
             </div>
@@ -164,106 +182,116 @@ window.addEventListener('load', function() {
         <div></div>
       </div>
     </div>
-<a data-name="-312578318%2FPackages%2F-1211372322" anchor-label="dev.atick.core.network.data" id="-312578318%2FPackages%2F-1211372322" data-filterable-set=":core:network/release"></a>
-    <div class="table-row" data-filterable-current=":core:network/release" data-filterable-set=":core:network/release">
+<a data-name="-312578318%2FPackages%2F-1190920388" anchor-label="dev.atick.core.network.data" id="-312578318%2FPackages%2F-1190920388" data-filterable-set=":core:network/debug,:core:network/main,:core:network/release"></a>
+    <div class="table-row table-row_platform-tagged" data-filterable-current=":core:network/debug,:core:network/main,:core:network/release" data-filterable-set=":core:network/debug,:core:network/main,:core:network/release">
       <div>
         <div class="main-subrow ">
           <div class=""><span class="inline-flex">
               <div><a href="dev.atick.core.network.data/index.html">dev.atick.core.network.data</a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-312578318%2FPackages%2F-1211372322"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-312578318%2FPackages%2F-1190920388"></span>
                 <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
               </span></span></div>
-          <div class="pull-right">
+          <div class="pull-right platform-tags--wrapper">
             <div class="platform-tags no-gutters">
               <div class="platform-tag jvm-like">androidJvm</div>
+              <div class="platform-tag jvm-like">debug</div>
+              <div class="platform-tag jvm-like">release</div>
             </div>
           </div>
         </div>
         <div></div>
       </div>
     </div>
-<a data-name="-440508019%2FPackages%2F-1211372322" anchor-label="dev.atick.core.network.di" id="-440508019%2FPackages%2F-1211372322" data-filterable-set=":core:network/release"></a>
-    <div class="table-row" data-filterable-current=":core:network/release" data-filterable-set=":core:network/release">
+<a data-name="-440508019%2FPackages%2F-1190920388" anchor-label="dev.atick.core.network.di" id="-440508019%2FPackages%2F-1190920388" data-filterable-set=":core:network/debug,:core:network/main,:core:network/release"></a>
+    <div class="table-row table-row_platform-tagged" data-filterable-current=":core:network/debug,:core:network/main,:core:network/release" data-filterable-set=":core:network/debug,:core:network/main,:core:network/release">
       <div>
         <div class="main-subrow ">
           <div class=""><span class="inline-flex">
               <div><a href="dev.atick.core.network.di/index.html">dev.atick.core.network.di</a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-440508019%2FPackages%2F-1211372322"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-440508019%2FPackages%2F-1190920388"></span>
                 <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
               </span></span></div>
-          <div class="pull-right">
+          <div class="pull-right platform-tags--wrapper">
             <div class="platform-tags no-gutters">
               <div class="platform-tag jvm-like">androidJvm</div>
+              <div class="platform-tag jvm-like">debug</div>
+              <div class="platform-tag jvm-like">release</div>
             </div>
           </div>
         </div>
         <div></div>
       </div>
     </div>
-<a data-name="-2026239852%2FPackages%2F-1211372322" anchor-label="dev.atick.core.network.di.coil" id="-2026239852%2FPackages%2F-1211372322" data-filterable-set=":core:network/release"></a>
-    <div class="table-row" data-filterable-current=":core:network/release" data-filterable-set=":core:network/release">
+<a data-name="-2026239852%2FPackages%2F-1190920388" anchor-label="dev.atick.core.network.di.coil" id="-2026239852%2FPackages%2F-1190920388" data-filterable-set=":core:network/debug,:core:network/main,:core:network/release"></a>
+    <div class="table-row table-row_platform-tagged" data-filterable-current=":core:network/debug,:core:network/main,:core:network/release" data-filterable-set=":core:network/debug,:core:network/main,:core:network/release">
       <div>
         <div class="main-subrow ">
           <div class=""><span class="inline-flex">
               <div><a href="dev.atick.core.network.di.coil/index.html">dev.atick.core.network.di.coil</a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2026239852%2FPackages%2F-1211372322"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2026239852%2FPackages%2F-1190920388"></span>
                 <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
               </span></span></div>
-          <div class="pull-right">
+          <div class="pull-right platform-tags--wrapper">
             <div class="platform-tags no-gutters">
               <div class="platform-tag jvm-like">androidJvm</div>
+              <div class="platform-tag jvm-like">debug</div>
+              <div class="platform-tag jvm-like">release</div>
             </div>
           </div>
         </div>
         <div></div>
       </div>
     </div>
-<a data-name="490595689%2FPackages%2F-1211372322" anchor-label="dev.atick.core.network.di.okhttp" id="490595689%2FPackages%2F-1211372322" data-filterable-set=":core:network/release"></a>
-    <div class="table-row" data-filterable-current=":core:network/release" data-filterable-set=":core:network/release">
+<a data-name="490595689%2FPackages%2F-1190920388" anchor-label="dev.atick.core.network.di.okhttp" id="490595689%2FPackages%2F-1190920388" data-filterable-set=":core:network/debug,:core:network/main,:core:network/release"></a>
+    <div class="table-row table-row_platform-tagged" data-filterable-current=":core:network/debug,:core:network/main,:core:network/release" data-filterable-set=":core:network/debug,:core:network/main,:core:network/release">
       <div>
         <div class="main-subrow ">
           <div class=""><span class="inline-flex">
               <div><a href="dev.atick.core.network.di.okhttp/index.html">dev.atick.core.network.di.okhttp</a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="490595689%2FPackages%2F-1211372322"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="490595689%2FPackages%2F-1190920388"></span>
                 <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
               </span></span></div>
-          <div class="pull-right">
+          <div class="pull-right platform-tags--wrapper">
             <div class="platform-tags no-gutters">
               <div class="platform-tag jvm-like">androidJvm</div>
+              <div class="platform-tag jvm-like">debug</div>
+              <div class="platform-tag jvm-like">release</div>
             </div>
           </div>
         </div>
         <div></div>
       </div>
     </div>
-<a data-name="-774338504%2FPackages%2F-1211372322" anchor-label="dev.atick.core.network.di.retrofit" id="-774338504%2FPackages%2F-1211372322" data-filterable-set=":core:network/release"></a>
-    <div class="table-row" data-filterable-current=":core:network/release" data-filterable-set=":core:network/release">
+<a data-name="-774338504%2FPackages%2F-1190920388" anchor-label="dev.atick.core.network.di.retrofit" id="-774338504%2FPackages%2F-1190920388" data-filterable-set=":core:network/debug,:core:network/main,:core:network/release"></a>
+    <div class="table-row table-row_platform-tagged" data-filterable-current=":core:network/debug,:core:network/main,:core:network/release" data-filterable-set=":core:network/debug,:core:network/main,:core:network/release">
       <div>
         <div class="main-subrow ">
           <div class=""><span class="inline-flex">
               <div><a href="dev.atick.core.network.di.retrofit/index.html">dev.atick.core.network.di.retrofit</a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-774338504%2FPackages%2F-1211372322"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-774338504%2FPackages%2F-1190920388"></span>
                 <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
               </span></span></div>
-          <div class="pull-right">
+          <div class="pull-right platform-tags--wrapper">
             <div class="platform-tags no-gutters">
               <div class="platform-tag jvm-like">androidJvm</div>
+              <div class="platform-tag jvm-like">debug</div>
+              <div class="platform-tag jvm-like">release</div>
             </div>
           </div>
         </div>
         <div></div>
       </div>
     </div>
-<a data-name="-669591387%2FPackages%2F-1211372322" anchor-label="dev.atick.core.network.model" id="-669591387%2FPackages%2F-1211372322" data-filterable-set=":core:network/release"></a>
-    <div class="table-row" data-filterable-current=":core:network/release" data-filterable-set=":core:network/release">
+<a data-name="-669591387%2FPackages%2F1585176566" anchor-label="dev.atick.core.network.model" id="-669591387%2FPackages%2F1585176566" data-filterable-set=":core:network/main"></a>
+    <div class="table-row table-row_platform-tagged" data-filterable-current=":core:network/main" data-filterable-set=":core:network/main">
       <div>
         <div class="main-subrow ">
           <div class=""><span class="inline-flex">
               <div><a href="dev.atick.core.network.model/index.html">dev.atick.core.network.model</a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-669591387%2FPackages%2F-1211372322"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-669591387%2FPackages%2F1585176566"></span>
                 <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
               </span></span></div>
-          <div class="pull-right">
+          <div class="pull-right platform-tags--wrapper">
             <div class="platform-tags no-gutters">
               <div class="platform-tag jvm-like">androidJvm</div>
             </div>
@@ -272,36 +300,39 @@ window.addEventListener('load', function() {
         <div></div>
       </div>
     </div>
-<a data-name="2017104941%2FPackages%2F-1211372322" anchor-label="dev.atick.core.network.utils" id="2017104941%2FPackages%2F-1211372322" data-filterable-set=":core:network/release"></a>
-    <div class="table-row" data-filterable-current=":core:network/release" data-filterable-set=":core:network/release">
+<a data-name="2017104941%2FPackages%2F-1190920388" anchor-label="dev.atick.core.network.utils" id="2017104941%2FPackages%2F-1190920388" data-filterable-set=":core:network/debug,:core:network/main,:core:network/release"></a>
+    <div class="table-row table-row_platform-tagged" data-filterable-current=":core:network/debug,:core:network/main,:core:network/release" data-filterable-set=":core:network/debug,:core:network/main,:core:network/release">
       <div>
         <div class="main-subrow ">
           <div class=""><span class="inline-flex">
               <div><a href="dev.atick.core.network.utils/index.html">dev.atick.core.network.utils</a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2017104941%2FPackages%2F-1211372322"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2017104941%2FPackages%2F-1190920388"></span>
                 <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
               </span></span></div>
-          <div class="pull-right">
+          <div class="pull-right platform-tags--wrapper">
             <div class="platform-tags no-gutters">
               <div class="platform-tag jvm-like">androidJvm</div>
+              <div class="platform-tag jvm-like">debug</div>
+              <div class="platform-tag jvm-like">release</div>
             </div>
           </div>
         </div>
         <div></div>
       </div>
     </div>
-<a data-name="747026602%2FPackages%2F-1211372322" anchor-label="hilt_aggregated_deps" id="747026602%2FPackages%2F-1211372322" data-filterable-set=":core:network/release"></a>
-    <div class="table-row" data-filterable-current=":core:network/release" data-filterable-set=":core:network/release">
+<a data-name="747026602%2FPackages%2F-1556812220" anchor-label="hilt_aggregated_deps" id="747026602%2FPackages%2F-1556812220" data-filterable-set=":core:network/debug,:core:network/release"></a>
+    <div class="table-row table-row_platform-tagged" data-filterable-current=":core:network/debug,:core:network/release" data-filterable-set=":core:network/debug,:core:network/release">
       <div>
         <div class="main-subrow ">
           <div class=""><span class="inline-flex">
               <div><a href="hilt_aggregated_deps/index.html">hilt_aggregated_deps</a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="747026602%2FPackages%2F-1211372322"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="747026602%2FPackages%2F-1556812220"></span>
                 <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
               </span></span></div>
-          <div class="pull-right">
+          <div class="pull-right platform-tags--wrapper">
             <div class="platform-tags no-gutters">
-              <div class="platform-tag jvm-like">androidJvm</div>
+              <div class="platform-tag jvm-like">debug</div>
+              <div class="platform-tag jvm-like">release</div>
             </div>
           </div>
         </div>
@@ -311,17 +342,21 @@ window.addEventListener('load', function() {
   </div>
 </div>
     <div class="footer">
-        <a href="#content" id="go-to-top-link" class="footer--button footer--button_go-to-top"></a>
-        <span>Made with ❤️ by Atick Faisal</span>
-        <span class="pull-right">
-            <span>Generated by </span>
-            <a class="footer--link footer--link_external" href="https://github.com/Kotlin/dokka">
-                <span>dokka</span>
-            </a>
-        </span>
-    </div>
+        <div class="footer--container">
+            <a href="#content" id="go-to-top-link" class="footer--button footer--button_go-to-top"></a>
+            <div class="footer--content">
+                <div>
+                    <span>Generated by </span>
+                    <a class="footer--link footer--link_external" href="https://github.com/Kotlin/dokka">
+                        Dokka
+                    </a>
+                    <div>Made with ❤️ by Atick Faisal</div>
+                </div>
             </div>
         </div>
     </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>
