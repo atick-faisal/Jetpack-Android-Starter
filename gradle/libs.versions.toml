@@ -2,7 +2,7 @@
 
 # ... PROJECT ...
 java = "21"
-kotlin = "2.2.20"
+kotlin = "2.2.21"
 androidGradlePlugin = "8.13.0"
 gmsPlugin = "4.4.4"
 ksp = "2.2.20-2.0.4"
