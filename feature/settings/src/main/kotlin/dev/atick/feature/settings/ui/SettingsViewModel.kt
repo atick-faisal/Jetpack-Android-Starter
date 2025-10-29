@@ -65,7 +65,7 @@ class SettingsViewModel @Inject constructor(
     }
 
     fun updateDarkThemeConfig(darkThemeConfig: DarkThemeConfig) {
-        _settingsUiState.updateWith(viewModelScope) {
+        _settingsUiState.updateWith {
             settingsRepository.setDarkThemeConfig(
                 darkThemeConfig,
             )
@@ -73,7 +73,7 @@ class SettingsViewModel @Inject constructor(
     }
 
     fun updateDynamicColorPreference(useDynamicColor: Boolean) {
-        _settingsUiState.updateWith(viewModelScope) {
+        _settingsUiState.updateWith {
             settingsRepository.setDynamicColorPreference(useDynamicColor)
         }
     }
@@ -83,7 +83,7 @@ class SettingsViewModel @Inject constructor(
     }
 
     fun signOut() {
-        _settingsUiState.updateWith(viewModelScope) { settingsRepository.signOut() }
+        _settingsUiState.updateWith { settingsRepository.signOut() }
     }
 
     private fun getPreferredLanguage(): Language {
