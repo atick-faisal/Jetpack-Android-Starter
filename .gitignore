@@ -50,3 +50,9 @@ play-store.json
 
 # Mac OS
 .DS_Store
+
+# AI Tools
+.claude/*
+.gemini/*
+GEMINI.local.md
+CLAUDE.local.md

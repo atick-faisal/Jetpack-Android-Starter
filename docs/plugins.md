@@ -13,6 +13,7 @@ Used for the main application module:
 - Sets up Compose
 - Enables BuildConfig
 - Configures Kotlin and Java versions
+- Enables Kotlin context parameters (`-Xcontext-parameters`)
 - Sets up Compose compiler metrics and reports
 
 ```kotlin
@@ -43,6 +44,7 @@ Extended library plugin for UI modules:
 - Includes all Library Plugin features
 - Enables Jetpack Compose
 - Adds Material3 experimental opt-ins
+- Enables Kotlin context parameters (`-Xcontext-parameters`)
 
 ```kotlin
 plugins {

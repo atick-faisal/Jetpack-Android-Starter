@@ -123,7 +123,7 @@ _uiState.updateState {
 }
 
 // Async operations with loading state
-_uiState.updateStateWith(viewModelScope) {
+_uiState.updateStateWith {
     repository.someAsyncOperation()
 }
 ```

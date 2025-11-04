@@ -77,6 +77,7 @@ class ApplicationConventionPlugin : Plugin<Project> {
                     freeCompilerArgs.addAll(
                         "-opt-in=kotlin.RequiresOptIn",
                         "-opt-in=androidx.compose.material3.ExperimentalMaterial3Api",
+                        "-Xcontext-parameters",
                         // https://youtrack.jetbrains.com/issue/KT-73255
                         "-Xannotation-default-target=param-property",
                     )

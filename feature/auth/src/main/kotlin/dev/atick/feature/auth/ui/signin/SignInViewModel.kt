@@ -19,7 +19,6 @@ package dev.atick.feature.auth.ui.signin
 import android.app.Activity
 import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.atick.core.extensions.isEmailValid
 import dev.atick.core.extensions.isPasswordValid
@@ -67,17 +66,17 @@ class SignInViewModel @Inject constructor(
     }
 
     fun signInWithSavedCredentials(activity: Activity) {
-        _signInUiState.updateWith(viewModelScope) {
+        _signInUiState.updateWith {
             authRepository.signInWithSavedCredentials(activity)
         }
     }
 
     fun signInWithGoogle(activity: Activity) {
-        _signInUiState.updateWith(viewModelScope) { authRepository.signInWithGoogle(activity) }
+        _signInUiState.updateWith { authRepository.signInWithGoogle(activity) }
     }
 
     fun loginWithEmailAndPassword() {
-        _signInUiState.updateWith(viewModelScope) {
+        _signInUiState.updateWith {
             authRepository.signInWithEmailAndPassword(
                 email = email.value,
                 password = password.value,

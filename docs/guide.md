@@ -203,7 +203,7 @@ class FeatureViewModel @Inject constructor(
     }
 
     fun createFeature() {
-        _uiState.updateStateWith(viewModelScope) {
+        _uiState.updateStateWith {
             val feature = Feature(
                 id = UUID.randomUUID().toString(),
                 name = newFeatureName

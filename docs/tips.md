@@ -186,12 +186,12 @@ _uiState.updateState {
 }
 
 // Async operations that doesn't return anything
-_uiState.updateWith(viewModelScope) {
+_uiState.updateWith {
     repository.someAsyncOperation()
 }
 
 // Async operations that returns results
-_uiState.updateStateWith(viewModelScope) {
+_uiState.updateStateWith {
     repository.someAsyncOperation()
 }
 ```
@@ -222,7 +222,7 @@ fun YourScreen(
 // In ViewModel
 class ScreenViewModel : ViewModel() {
     fun undoDelete(itemId: String) {
-        _uiState.updateStateWith(viewModelScope) {
+        _uiState.updateStateWith {
             repository.undoDelete(itemId)
         }
     }
