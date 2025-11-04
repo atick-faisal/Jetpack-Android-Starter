@@ -54,11 +54,15 @@ markdown_extensions:
 
 nav:
   - Getting Started: getting-started.md
-  - Development Guide:
-      - Guide: guide.md
+  - Core Concepts:
       - Architecture: architecture.md
-      - Dependencies: dependency.md
       - Philosophy: philosophy.md
+      - State Management: state-management.md
+  - Development Guide:
+      - Adding Features: guide.md
+      - Components: components.md
+      - Dependencies: dependency.md
+      - Quick Reference: quick-reference.md
   - Tools & Configuration:
       - Spotless: spotless.md
       - Fastlane: fastlane.md
