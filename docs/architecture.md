@@ -106,12 +106,18 @@ The project uses a consistent state management pattern:
     ```kotlin
     // Regular state updates
     _uiState.updateState { copy(value = newValue) }
-    
+
     // Async operations
-    _uiState.updateStateWith(viewModelScope) {
+    _uiState.updateStateWith {
         repository.someAsyncOperation()
     }
     ```
+
+> [!TIP]
+> **Kotlin Context Parameters**: The `updateStateWith` and `updateWith` functions use Kotlin's
+> context parameters feature (enabled via `-Xcontext-parameters` compiler flag) to automatically
+> access the ViewModel's scope. You don't need to pass `viewModelScope` explicitly - it's
+> injected via the `context(viewModel: ViewModel)` parameter.
 
 3. **State Display**:
 
