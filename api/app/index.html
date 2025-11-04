@@ -113,7 +113,7 @@
     <h1 class="cover"><span><span>:app</span></span></h1>
     <div class="platform-hinted UnderCoverText with-platform-tabs" data-platform-hinted="data-platform-hinted">
       <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":app/debug" data-filterable-set=":app/debug" data-active="" data-toggle=":app/debug">debug</button><button class="platform-bookmark" data-filterable-current=":app/main" data-filterable-set=":app/main" data-toggle=":app/main">androidJvm</button><button class="platform-bookmark" data-filterable-current=":app/release" data-filterable-set=":app/release" data-toggle=":app/release">release</button></div>
-<div class="content sourceset-dependent-content" data-active="" data-togglable=":app/debug"></div><div class="content sourceset-dependent-content" data-togglable=":app/main"><p class="paragraph">Main application module that coordinates feature modules and handles app-level configuration.</p><h2 class="">Dependencies Graph</h2><div class="sample-container"><div id="mermaid-container-6rtmq56753uec"></div></div><script>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":app/debug"></div><div class="content sourceset-dependent-content" data-togglable=":app/main"><p class="paragraph">Main application module that coordinates feature modules and handles app-level configuration.</p><h2 class="">Dependencies Graph</h2><div class="sample-container"><div id="mermaid-container-s8b7md0ht2a2"></div></div><script>
 window.addEventListener('load', function() {
   var graphDef =  `graph TD
     A[app] --> B[core:ui]
@@ -135,9 +135,9 @@ window.addEventListener('load', function() {
     style H fill: #FF7043, stroke: #333, stroke-width: 2px
     style I fill: #FFA726, stroke: #333, stroke-width: 2px
     style J fill: #7E57C2, stroke: #333, stroke-width: 2px`;
-  var container = document.getElementById('mermaid-container-6rtmq56753uec');
-  container.innerHTML = '<div id="mermaid-target-6rtmq56753uec"></div>';
-  var updateGraph6rtmq56753uec = function() {
+  var container = document.getElementById('mermaid-container-s8b7md0ht2a2');
+  container.innerHTML = '<div id="mermaid-target-s8b7md0ht2a2"></div>';
+  var updateGraphs8b7md0ht2a2 = function() {
     // setTimeout required or else the 1st render could be done before mermaid.initialize() has applied the theme.
     // Also required because we can't listen to localStorage events reliably, and it's changed on the same click event...
     setTimeout(() => {
@@ -148,19 +148,19 @@ window.addEventListener('load', function() {
         theme = 'dark';
       }
       mermaid.initialize({'theme': theme});
-      mermaid.render('mermaid-target-6rtmq56753uec', graphDef).then(({ svg, bindFunctions }) => {
+      mermaid.render('mermaid-target-s8b7md0ht2a2', graphDef).then(({ svg, bindFunctions }) => {
           container.innerHTML = svg;
           // Trick to make the graph takes only the required height.
-          document.getElementById('mermaid-target-6rtmq56753uec').removeAttribute('height')
+          document.getElementById('mermaid-target-s8b7md0ht2a2').removeAttribute('height')
           bindFunctions?.(element);
       });
     }, 0);
   }
-  updateGraph6rtmq56753uec();
+  updateGraphs8b7md0ht2a2();
   
   var themeToggleButton = document.getElementById('theme-toggle-button');
   themeToggleButton.addEventListener('click', () => {
-    updateGraph6rtmq56753uec();
+    updateGraphs8b7md0ht2a2();
   });
 });</script><h2 class="">Key Features</h2><ul><li><p class="paragraph">Main application</p></li><li><p class="paragraph">Feature coordination</p></li><li><p class="paragraph">Analytics setup</p></li><li><p class="paragraph">Splash screen</p></li><li><p class="paragraph">Version management</p></li><li><p class="paragraph">ProGuard rules</p></li></ul><h2 class="">Version Management</h2><div class="sample-container"><pre><code class="block lang-kotlin" theme="idea">// ... Application Version ...<br>val majorUpdateVersion = 1<br>val minorUpdateVersion = 0<br>val patchVersion = 0<br><br>val mVersionCode = majorUpdateVersion.times(10_000)<br>    .plus(minorUpdateVersion.times(100))<br>    .plus(patchVersion)</code></pre><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div><div class="content sourceset-dependent-content" data-togglable=":app/release"></div>    </div>
   </div>
