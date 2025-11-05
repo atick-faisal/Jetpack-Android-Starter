@@ -75,7 +75,9 @@ nav:
   - Best Practices:
       - Performance: performance.md
       - Tips: tips.md
-  - Troubleshooting: troubleshooting.md
+  - Troubleshooting:
+      - Common Issues: troubleshooting.md
+      - FAQ: faq.md
   - 📚 API Reference: api/index.html
   - ⚖️ License: license.md
 
