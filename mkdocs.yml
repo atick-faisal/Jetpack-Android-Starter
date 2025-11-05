@@ -61,6 +61,7 @@ nav:
   - Development Guide:
       - Adding Features: guide.md
       - Components: components.md
+      - Data Flow: data-flow.md
       - Dependencies: dependency.md
       - Quick Reference: quick-reference.md
   - Tools & Configuration:
