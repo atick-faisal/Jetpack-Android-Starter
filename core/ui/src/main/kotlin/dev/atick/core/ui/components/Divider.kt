@@ -33,7 +33,37 @@ import androidx.compose.ui.unit.dp
 /**
  * A divider with text in the middle.
  *
- * @param text The text to display.
+ * A horizontal divider split by centered text, commonly used to separate sections
+ * or alternative options (e.g., "OR" between sign-in methods).
+ *
+ * **Features:**
+ * - Centered text label with equal dividers on both sides
+ * - Material 3 HorizontalDivider styling
+ * - Small typography for subtle visual separation
+ * - 16dp horizontal padding around text
+ *
+ * **Usage Example:**
+ * ```kotlin
+ * Column {
+ *     // Email sign-in form
+ *     JetpackTextFiled(...)
+ *     JetpackPasswordFiled(...)
+ *     JetpackButton(onClick = { ... }) { Text("Sign In") }
+ *
+ *     DividerWithText(text = R.string.or)
+ *
+ *     // Social sign-in buttons
+ *     GoogleSignInButton(onClick = { ... })
+ *     FacebookSignInButton(onClick = { ... })
+ * }
+ * ```
+ *
+ * **When to use:**
+ * - Separating alternative sign-in methods ("OR")
+ * - Breaking up long forms into logical sections
+ * - Showing "More options" between primary and secondary actions
+ *
+ * @param text The string resource for the text to display.
  * @param modifier The modifier to apply to this layout.
  */
 @Composable

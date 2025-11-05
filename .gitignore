@@ -56,3 +56,5 @@ play-store.json
 .gemini/*
 GEMINI.local.md
 CLAUDE.local.md
+CHECKLIST.local.md
+CHANGELOG.local.md
