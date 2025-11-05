@@ -9,9 +9,7 @@ This guide provides a comprehensive overview of navigation in this Android templ
 - [Simple Navigation](#simple-navigation)
 - [Navigation with Arguments](#navigation-with-arguments)
 - [Nested Navigation Graphs](#nested-navigation-graphs)
-- [Deep Linking](#deep-linking)
-- [Bottom Navigation](#bottom-navigation)
-- [Drawer Navigation](#drawer-navigation)
+- [Adaptive Navigation (Bottom Bar / Navigation Rail / Drawer)](#adaptive-navigation-bottom-bar--navigation-rail--drawer)
 - [Back Stack Management](#back-stack-management)
 - [Navigation Testing](#navigation-testing)
 - [Common Patterns](#common-patterns)
@@ -34,20 +32,22 @@ This template uses **Jetpack Navigation Compose** with **type-safe navigation** 
 ### Key Components
 
 ```
-Navigation Layer
+Navigation Layer (in this template)
 ├── Route Definitions (@Serializable objects/data classes)
 ├── Navigation Extensions (NavController.navigateToX())
 ├── Graph Builders (NavGraphBuilder.xScreen())
-└── NavHost (Top-level navigation setup)
+├── Top-Level Destinations (TopLevelDestination enum)
+├── App State (JetpackAppState)
+└── NavHost Setup (JetpackNavHost)
 ```
 
 ### Navigation Flow
 
 ```mermaid
 graph LR
-    A[User Action] --> B[ViewModel/Screen]
+    A[User Action] --> B[Screen Composable]
     B --> C[NavController Extension]
-    C --> D[NavController.navigate]
+    C --> D[JetpackAppState/NavController]
     D --> E[Route Composable]
     E --> F[Screen Composable]
 ```
@@ -58,27 +58,25 @@ graph LR
 
 ### Defining Routes
 
-Routes are defined as `@Serializable` objects or data classes:
+Routes are defined as `@Serializable` objects or data classes in each feature module's `navigation/` directory:
 
 ```kotlin
+// feature/home/navigation/HomeNavigation.kt
+package dev.atick.feature.home.navigation
+
+import kotlinx.serialization.Serializable
+
 // Simple route without arguments
 @Serializable
 data object Home
 
-// Route with required arguments
+// Route with required argument
 @Serializable
-data class ProfileDetail(val userId: String)
-
-// Route with optional arguments
-@Serializable
-data class ArticleDetail(
-    val articleId: String,
-    val scrollToComments: Boolean = false
-)
+data class Item(val itemId: String?)
 
 // Navigation graph
 @Serializable
-data object ProfileNavGraph
+data object HomeNavGraph
 ```
 
 **Why use @Serializable?**
@@ -87,36 +85,39 @@ data object ProfileNavGraph
 - No manual string parsing or type conversion
 - Supports complex types (enums, lists, custom classes)
 
-### Route Organization
+### Route Organization Pattern (Used in This Template)
 
-Organize routes by feature module:
+Each feature module has a `navigation/` directory with a single file defining all routes:
+
+```
+feature/
+├── auth/
+│   └── navigation/
+│       └── AuthNavigation.kt  # AuthNavGraph, SignIn, SignUp
+├── home/
+│   └── navigation/
+│       └── HomeNavigation.kt  # HomeNavGraph, Home, Item
+└── profile/
+    └── navigation/
+        └── ProfileNavigation.kt  # Profile
+```
+
+**Example from this template:**
 
 ```kotlin
-// feature/profile/navigation/ProfileNavigation.kt
-package dev.atick.profile.navigation
+// feature/auth/navigation/AuthNavigation.kt
+package dev.atick.feature.auth.navigation
 
 import kotlinx.serialization.Serializable
 
 @Serializable
-data object ProfileNavGraph
+data object AuthNavGraph
 
 @Serializable
-data object Profile
+data object SignIn
 
 @Serializable
-data class ProfileDetail(val userId: String)
-
-@Serializable
-data class EditProfile(
-    val userId: String,
-    val section: ProfileSection? = null
-)
-
-enum class ProfileSection {
-    BASIC_INFO,
-    CONTACT,
-    PREFERENCES
-}
+data object SignUp
 ```
 
 ---
@@ -125,19 +126,25 @@ enum class ProfileSection {
 
 ### NavController Extension
 
-Create extension functions for type-safe navigation:
+Create extension functions for type-safe navigation in the same file as route definitions:
 
 ```kotlin
 // feature/profile/navigation/ProfileNavigation.kt
-fun NavController.navigateToProfile(navOptions: NavOptions? = null) {
+fun NavController.navigateToProfileScreen(navOptions: NavOptions? = null) {
     navigate(Profile, navOptions)
 }
+```
 
-fun NavController.navigateToProfileDetail(
-    userId: String,
-    navOptions: NavOptions? = null
-) {
-    navigate(ProfileDetail(userId = userId), navOptions)
+**Example from this template:**
+
+```kotlin
+// feature/auth/navigation/AuthNavigation.kt
+fun NavController.navigateToSignInScreen(navOptions: NavOptions? = null) {
+    navigate(SignIn, navOptions)
+}
+
+fun NavController.navigateToSignUpScreen(navOptions: NavOptions? = null) {
+    navigate(SignUp, navOptions)
 }
 ```
 
@@ -154,77 +161,86 @@ Create extension functions to register screens:
 ```kotlin
 // feature/profile/navigation/ProfileNavigation.kt
 fun NavGraphBuilder.profileScreen(
-    onShowSnackbar: suspend (String, SnackbarAction, Throwable?) -> Boolean,
-    onNavigateToDetail: (String) -> Unit
+    onShowSnackbar: suspend (String, SnackbarAction, Throwable?) -> Boolean
 ) {
     composable<Profile> {
-        ProfileRoute(
-            onShowSnackbar = onShowSnackbar,
-            onNavigateToDetail = onNavigateToDetail
-        )
-    }
-}
-
-fun NavGraphBuilder.profileDetailScreen(
-    onShowSnackbar: suspend (String, SnackbarAction, Throwable?) -> Boolean,
-    onNavigateBack: () -> Unit
-) {
-    composable<ProfileDetail> { backStackEntry ->
-        val args = backStackEntry.toRoute<ProfileDetail>()
-        ProfileDetailRoute(
-            userId = args.userId,
-            onShowSnackbar = onShowSnackbar,
-            onNavigateBack = onNavigateBack
+        ProfileScreen(
+            onShowSnackbar = onShowSnackbar
         )
     }
 }
 ```
 
-### NavHost Setup
-
-Wire up navigation in your main activity or top-level composable:
+**Example from this template:**
 
 ```kotlin
-// app/src/main/kotlin/dev/atick/jetpack/ui/JetpackApp.kt
-@Composable
-fun JetpackApp(
-    navController: NavHostController = rememberNavController()
+// feature/auth/navigation/AuthNavigation.kt
+fun NavGraphBuilder.signInScreen(
+    onSignUpClick: () -> Unit,
+    onShowSnackbar: suspend (String, SnackbarAction, Throwable?) -> Boolean,
 ) {
-    val snackbarHostState = remember { SnackbarHostState() }
-
-    Scaffold(
-        snackbarHost = { SnackbarHost(snackbarHostState) }
-    ) { paddingValues ->
-        NavHost(
-            navController = navController,
-            startDestination = Home,
-            modifier = Modifier.padding(paddingValues)
-        ) {
-            homeScreen(
-                onShowSnackbar = { message, action, error ->
-                    // Handle snackbar
-                    true
-                },
-                onNavigateToProfile = { userId ->
-                    navController.navigateToProfileDetail(userId)
-                }
-            )
-
-            profileScreen(
-                onShowSnackbar = { /* ... */ },
-                onNavigateToDetail = { userId ->
-                    navController.navigateToProfileDetail(userId)
-                }
-            )
-
-            profileDetailScreen(
-                onShowSnackbar = { /* ... */ },
-                onNavigateBack = { navController.navigateUp() }
-            )
-        }
+    composable<SignIn> {
+        SignInScreen(
+            onSignUpClick = onSignUpClick,
+            onShowSnackbar = onShowSnackbar,
+        )
     }
 }
 ```
+
+### NavHost Setup (Template Pattern)
+
+This template uses a centralized `JetpackNavHost` composable:
+
+```kotlin
+// app/src/main/kotlin/dev/atick/compose/navigation/NavHost.kt
+@Composable
+fun JetpackNavHost(
+    appState: JetpackAppState,
+    onShowSnackbar: suspend (String, SnackbarAction, Throwable?) -> Boolean,
+    modifier: Modifier = Modifier,
+) {
+    val navController = appState.navController
+    val startDestination =
+        if (appState.isUserLoggedIn) HomeNavGraph::class else AuthNavGraph::class
+
+    NavHost(
+        navController = navController,
+        startDestination = startDestination,
+        modifier = modifier,
+    ) {
+        authNavGraph(
+            nestedNavGraphs = {
+                signInScreen(
+                    onSignUpClick = navController::navigateToSignUpScreen,
+                    onShowSnackbar = onShowSnackbar,
+                )
+                signUpScreen(
+                    onSignInClick = navController::navigateToSignInScreen,
+                    onShowSnackbar = onShowSnackbar,
+                )
+            },
+        )
+        homeNavGraph(
+            nestedNavGraphs = {
+                homeScreen(
+                    onJetpackClick = navController::navigateToItemScreen,
+                    onShowSnackbar = onShowSnackbar,
+                )
+                itemScreen(
+                    onBackClick = navController::popBackStack,
+                    onShowSnackbar = onShowSnackbar,
+                )
+            },
+        )
+        profileScreen(
+            onShowSnackbar = onShowSnackbar,
+        )
+    }
+}
+```
+
+**Key Pattern:** Conditional start destination based on authentication state.
 
 ---
 
@@ -235,39 +251,65 @@ fun JetpackApp(
 Pass required data via constructor parameters:
 
 ```kotlin
-// Define route with required arguments
+// Define route with required argument
 @Serializable
-data class ArticleDetail(
-    val articleId: String,
-    val source: String
-)
+data class Item(val itemId: String?)
 
 // Navigation extension
-fun NavController.navigateToArticleDetail(
-    articleId: String,
-    source: String,
-    navOptions: NavOptions? = null
-) {
-    navigate(
-        ArticleDetail(articleId = articleId, source = source),
-        navOptions
-    )
+fun NavController.navigateToItemScreen(itemId: String?) {
+    navigate(Item(itemId)) { launchSingleTop = true }
 }
 
-// Screen registration
-fun NavGraphBuilder.articleDetailScreen(
+// Screen registration - arguments are extracted automatically
+fun NavGraphBuilder.itemScreen(
+    onBackClick: () -> Unit,
     onShowSnackbar: suspend (String, SnackbarAction, Throwable?) -> Boolean,
-    onNavigateBack: () -> Unit
 ) {
-    composable<ArticleDetail> { backStackEntry ->
-        val args = backStackEntry.toRoute<ArticleDetail>()
-
-        ArticleDetailRoute(
-            articleId = args.articleId,
-            source = args.source,
+    composable<Item> {
+        ItemScreen(
+            onBackClick = onBackClick,
             onShowSnackbar = onShowSnackbar,
-            onNavigateBack = onNavigateBack
         )
+    }
+}
+```
+
+**In the Route/Screen composable**, access arguments via the ViewModel:
+
+```kotlin
+// feature/home/ui/item/ItemScreen.kt
+@Composable
+fun ItemScreen(
+    onBackClick: () -> Unit,
+    onShowSnackbar: suspend (String, SnackbarAction, Throwable?) -> Boolean,
+    viewModel: ItemViewModel = hiltViewModel()
+) {
+    // ViewModel automatically receives itemId via SavedStateHandle
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    StatefulComposable(
+        state = uiState,
+        onShowSnackbar = onShowSnackbar
+    ) { screenData ->
+        // UI implementation
+    }
+}
+```
+
+**In the ViewModel**, access arguments via SavedStateHandle:
+
+```kotlin
+@HiltViewModel
+class ItemViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
+    private val repository: JetpackRepository
+) : ViewModel() {
+    // Navigation arguments are automatically available in SavedStateHandle
+    private val itemId: String? = savedStateHandle.toRoute<Item>().itemId
+
+    // Use itemId to load data
+    init {
+        loadItem(itemId)
     }
 }
 ```
@@ -344,143 +386,59 @@ data class Reports(
 )
 ```
 
-### Argument Validation
-
-Validate arguments in the Route composable:
-
-```kotlin
-@Composable
-fun ArticleDetailRoute(
-    articleId: String,
-    onShowSnackbar: suspend (String, SnackbarAction, Throwable?) -> Boolean,
-    onNavigateBack: () -> Unit,
-    viewModel: ArticleDetailViewModel = hiltViewModel()
-) {
-    // Validate arguments
-    LaunchedEffect(articleId) {
-        if (articleId.isBlank()) {
-            onShowSnackbar("Invalid article ID", SnackbarAction.DISMISS, null)
-            onNavigateBack()
-            return@LaunchedEffect
-        }
-        viewModel.loadArticle(articleId)
-    }
-
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-
-    StatefulComposable(
-        state = uiState,
-        onShowSnackbar = onShowSnackbar
-    ) { screenData ->
-        ArticleDetailScreen(
-            screenData = screenData,
-            onNavigateBack = onNavigateBack
-        )
-    }
-}
-```
-
 ---
 
 ## Nested Navigation Graphs
 
-### Defining Nested Graphs
+### Template Pattern for Nested Graphs
 
-Group related screens into navigation graphs:
-
-```kotlin
-// feature/profile/navigation/ProfileNavigation.kt
-@Serializable
-data object ProfileNavGraph
-
-@Serializable
-data object Profile
-
-@Serializable
-data class ProfileDetail(val userId: String)
-
-@Serializable
-data class EditProfile(val userId: String)
-
-// feature/settings/navigation/SettingsNavigation.kt
-@Serializable
-data object SettingsNavGraph
-
-@Serializable
-data object Settings
-
-@Serializable
-data object AccountSettings
-
-@Serializable
-data object PrivacySettings
-```
-
-### Creating Nested Graphs
-
-Use `navigation()` to create nested graphs:
+This template uses a specific pattern for nested navigation graphs:
 
 ```kotlin
-fun NavGraphBuilder.profileGraph(
-    onShowSnackbar: suspend (String, SnackbarAction, Throwable?) -> Boolean,
-    navController: NavController
+// feature/auth/navigation/AuthNavigation.kt
+fun NavGraphBuilder.authNavGraph(
+    nestedNavGraphs: NavGraphBuilder.() -> Unit,
 ) {
-    navigation<ProfileNavGraph>(
-        startDestination = Profile
-    ) {
-        profileScreen(
-            onShowSnackbar = onShowSnackbar,
-            onNavigateToDetail = { userId ->
-                navController.navigateToProfileDetail(userId)
-            }
-        )
-
-        profileDetailScreen(
-            onShowSnackbar = onShowSnackbar,
-            onNavigateToEdit = { userId ->
-                navController.navigateToEditProfile(userId)
-            },
-            onNavigateBack = { navController.navigateUp() }
-        )
-
-        editProfileScreen(
-            onShowSnackbar = onShowSnackbar,
-            onNavigateBack = { navController.navigateUp() }
-        )
+    navigation<AuthNavGraph>(startDestination = SignIn) {
+        nestedNavGraphs()
     }
 }
 ```
+
+**Key Pattern:**
+- The graph builder accepts a lambda (`nestedNavGraphs`) that defines child screens
+- This allows the NavHost to control which screens are included in the graph
 
 ### Using Nested Graphs
 
 Include nested graphs in the main NavHost:
 
 ```kotlin
-@Composable
-fun JetpackApp(
-    navController: NavHostController = rememberNavController()
+// app/src/main/kotlin/dev/atick/compose/navigation/NavHost.kt
+NavHost(
+    navController = navController,
+    startDestination = startDestination,
+    modifier = modifier,
 ) {
-    NavHost(
-        navController = navController,
-        startDestination = Home
-    ) {
-        homeScreen(
-            onShowSnackbar = { /* ... */ },
-            onNavigateToProfile = {
-                navController.navigate(ProfileNavGraph)
-            }
-        )
-
-        profileGraph(
-            onShowSnackbar = { /* ... */ },
-            navController = navController
-        )
-
-        settingsGraph(
-            onShowSnackbar = { /* ... */ },
-            navController = navController
-        )
-    }
+    authNavGraph(
+        nestedNavGraphs = {
+            signInScreen(
+                onSignUpClick = navController::navigateToSignUpScreen,
+                onShowSnackbar = onShowSnackbar,
+            )
+            signUpScreen(
+                onSignInClick = navController::navigateToSignInScreen,
+                onShowSnackbar = onShowSnackbar,
+            )
+        },
+    )
+    homeNavGraph(
+        nestedNavGraphs = {
+            homeScreen(/* ... */)
+            itemScreen(/* ... */)
+        },
+    )
+    profileScreen(/* ... */)
 }
 ```
 
@@ -489,397 +447,170 @@ fun JetpackApp(
 Navigate to the root of a nested graph:
 
 ```kotlin
-// Navigate to ProfileNavGraph (starts at Profile screen)
-navController.navigate(ProfileNavGraph)
+// Navigate to HomeNavGraph extension
+fun NavController.navigateToHomeNavGraph(navOptions: NavOptions? = null) {
+    navigate(HomeNavGraph, navOptions)
+}
 
 // Navigate directly to a specific screen in the graph
-navController.navigateToProfileDetail("user-123")
+navController.navigateToItemScreen("item-123")
 ```
 
-### Shared ViewModels in Nested Graphs
+### Conditional Start Destination
 
-Share ViewModels across screens in a nested graph:
+This template demonstrates conditional navigation based on authentication:
 
 ```kotlin
-@Composable
-fun ProfileDetailRoute(
-    userId: String,
-    onShowSnackbar: suspend (String, SnackbarAction, Throwable?) -> Boolean,
-    onNavigateBack: () -> Unit
+val startDestination =
+    if (appState.isUserLoggedIn) HomeNavGraph::class else AuthNavGraph::class
+
+NavHost(
+    navController = navController,
+    startDestination = startDestination,
+    modifier = modifier,
 ) {
-    val navBackStackEntry = LocalNavController.current
-        .getBackStackEntry<ProfileNavGraph>()
-
-    // Shared ViewModel scoped to ProfileNavGraph
-    val sharedViewModel: ProfileSharedViewModel = hiltViewModel(navBackStackEntry)
-
-    // Screen-specific ViewModel
-    val viewModel: ProfileDetailViewModel = hiltViewModel()
-
-    // Use both ViewModels...
+    // ...
 }
 ```
 
 ---
 
-## Deep Linking
+## Adaptive Navigation (Bottom Bar / Navigation Rail / Drawer)
 
-### Defining Deep Links
+### NavigationSuiteScaffold Pattern
 
-Deep links allow external sources to navigate directly into your app:
+This template uses **NavigationSuiteScaffold** for adaptive navigation that automatically switches between:
+- **Bottom navigation bar** (compact screens)
+- **Navigation rail** (medium screens)
+- **Navigation drawer** (expanded screens)
 
-```kotlin
-// feature/article/navigation/ArticleNavigation.kt
-@Serializable
-data class ArticleDetail(val articleId: String)
+### Top-Level Destinations
 
-fun NavGraphBuilder.articleDetailScreen(
-    onShowSnackbar: suspend (String, SnackbarAction, Throwable?) -> Boolean,
-    onNavigateBack: () -> Unit
-) {
-    composable<ArticleDetail>(
-        deepLinks = listOf(
-            navDeepLink<ArticleDetail>(
-                basePath = "https://example.com/article"
-            ),
-            navDeepLink<ArticleDetail>(
-                basePath = "example://article"
-            )
-        )
-    ) { backStackEntry ->
-        val args = backStackEntry.toRoute<ArticleDetail>()
-
-        ArticleDetailRoute(
-            articleId = args.articleId,
-            onShowSnackbar = onShowSnackbar,
-            onNavigateBack = onNavigateBack
-        )
-    }
-}
-```
-
-### Android Manifest Configuration
-
-Declare deep links in `AndroidManifest.xml`:
-
-```xml
-<activity
-    android:name=".MainActivity"
-    android:exported="true">
-
-    <!-- App Links (HTTPS) -->
-    <intent-filter android:autoVerify="true">
-        <action android:name="android.intent.action.VIEW" />
-        <category android:name="android.intent.category.DEFAULT" />
-        <category android:name="android.intent.category.BROWSABLE" />
-
-        <data
-            android:scheme="https"
-            android:host="example.com"
-            android:pathPrefix="/article" />
-    </intent-filter>
-
-    <!-- Custom URI Scheme -->
-    <intent-filter>
-        <action android:name="android.intent.action.VIEW" />
-        <category android:name="android.intent.category.DEFAULT" />
-        <category android:name="android.intent.category.BROWSABLE" />
-
-        <data
-            android:scheme="example"
-            android:host="article" />
-    </intent-filter>
-</activity>
-```
-
-### Testing Deep Links
-
-**ADB Command:**
-```bash
-# HTTPS deep link
-adb shell am start -W -a android.intent.action.VIEW \
-  -d "https://example.com/article/article-123"
-
-# Custom URI scheme
-adb shell am start -W -a android.intent.action.VIEW \
-  -d "example://article/article-123"
-```
-
-**From Code:**
-```kotlin
-val intent = Intent(Intent.ACTION_VIEW).apply {
-    data = Uri.parse("https://example.com/article/article-123")
-}
-startActivity(intent)
-```
-
-### Handling Deep Link Arguments
-
-Extract arguments from the route as usual:
+Define top-level destinations in an enum:
 
 ```kotlin
-composable<ArticleDetail>(
-    deepLinks = listOf(/* ... */)
-) { backStackEntry ->
-    val args = backStackEntry.toRoute<ArticleDetail>()
-
-    // args.articleId contains the value from the deep link
-    ArticleDetailRoute(
-        articleId = args.articleId,
-        // ...
-    )
-}
-```
-
-### App Links Verification
-
-For HTTPS deep links (App Links), create a Digital Asset Links file:
-
-**Host at:** `https://example.com/.well-known/assetlinks.json`
-
-```json
-[{
-  "relation": ["delegate_permission/common.handle_all_urls"],
-  "target": {
-    "namespace": "android_app",
-    "package_name": "dev.atick.jetpack",
-    "sha256_cert_fingerprints": [
-      "YOUR_RELEASE_KEY_SHA256"
-    ]
-  }
-}]
-```
-
-**Get SHA-256 fingerprint:**
-```bash
-keytool -list -v -keystore /path/to/keystore.jks
-```
-
----
-
-## Bottom Navigation
-
-### Bottom Navigation Setup
-
-Create a bottom navigation bar with multiple top-level destinations:
-
-```kotlin
-// Define bottom navigation destinations
+// app/src/main/kotlin/dev/atick/compose/navigation/TopLevelDestination.kt
 enum class TopLevelDestination(
-    val route: Any,
-    val icon: ImageVector,
-    val label: String
+    val selectedIcon: ImageVector,
+    val unselectedIcon: ImageVector,
+    @StringRes val iconTextId: Int,
+    @StringRes val titleTextId: Int,
+    val route: KClass<*>,
 ) {
     HOME(
-        route = Home,
-        icon = Icons.Default.Home,
-        label = "Home"
-    ),
-    EXPLORE(
-        route = Explore,
-        icon = Icons.Default.Search,
-        label = "Explore"
+        selectedIcon = Icons.Filled.Home,
+        unselectedIcon = Icons.Outlined.Home,
+        iconTextId = R.string.home,
+        titleTextId = R.string.home,
+        route = Home::class,
     ),
     PROFILE(
-        route = Profile,
-        icon = Icons.Default.Person,
-        label = "Profile"
+        selectedIcon = Icons.Filled.Person,
+        unselectedIcon = Icons.Outlined.Person,
+        iconTextId = R.string.profile,
+        titleTextId = R.string.profile,
+        route = Profile::class,
+    ),
+}
+```
+
+### JetpackAppState Pattern
+
+Centralize navigation logic in an app state holder:
+
+```kotlin
+// app/src/main/kotlin/dev/atick/compose/ui/JetpackAppState.kt
+@Stable
+class JetpackAppState(
+    val isUserLoggedIn: Boolean,
+    val navController: NavHostController,
+    // ...
+) {
+    val currentDestination: NavDestination?
+        @Composable get() = /* ... */
+
+    val currentTopLevelDestination: TopLevelDestination?
+        @Composable get() = TopLevelDestination.entries.firstOrNull { topLevelDestination ->
+            currentDestination?.hasRoute(route = topLevelDestination.route) == true
+        }
+
+    val topLevelDestinations: List<TopLevelDestination> = TopLevelDestination.entries
+
+    fun navigateToTopLevelDestination(topLevelDestination: TopLevelDestination) {
+        val topLevelNavOptions = navOptions {
+            popUpTo(navController.graph.findStartDestination().id) {
+                saveState = true
+            }
+            launchSingleTop = true
+            restoreState = true
+        }
+
+        when (topLevelDestination) {
+            TopLevelDestination.HOME -> navController.navigateToHomeNavGraph(topLevelNavOptions)
+            TopLevelDestination.PROFILE -> navController.navigateToProfileScreen(topLevelNavOptions)
+        }
+    }
+}
+```
+
+### NavigationSuiteScaffold Setup
+
+```kotlin
+// app/src/main/kotlin/dev/atick/compose/ui/JetpackApp.kt
+JetpackNavigationSuiteScaffold(
+    navigationSuiteItems = {
+        appState.topLevelDestinations.forEach { destination ->
+            val selected = currentDestination.isTopLevelDestinationInHierarchy(destination)
+
+            item(
+                selected = selected,
+                onClick = { appState.navigateToTopLevelDestination(destination) },
+                icon = {
+                    Icon(
+                        imageVector = destination.unselectedIcon,
+                        contentDescription = null,
+                    )
+                },
+                selectedIcon = {
+                    Icon(
+                        imageVector = destination.selectedIcon,
+                        contentDescription = null,
+                    )
+                },
+                label = { Text(stringResource(destination.iconTextId)) }
+            )
+        }
+    },
+    windowAdaptiveInfo = windowAdaptiveInfo,
+) {
+    JetpackScaffold(
+        appState = appState,
+        snackbarHostState = snackbarHostState,
+        onTopAppBarActionClick = onTopAppBarActionClick,
+        modifier = modifier,
     )
 }
-
-@Composable
-fun JetpackApp(
-    navController: NavHostController = rememberNavController()
-) {
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentDestination = navBackStackEntry?.destination
-
-    Scaffold(
-        bottomBar = {
-            // Only show bottom bar for top-level destinations
-            val showBottomBar = TopLevelDestination.entries.any { destination ->
-                currentDestination?.hasRoute(destination.route::class) == true
-            }
-
-            if (showBottomBar) {
-                NavigationBar {
-                    TopLevelDestination.entries.forEach { destination ->
-                        val selected = currentDestination?.hasRoute(
-                            destination.route::class
-                        ) == true
-
-                        NavigationBarItem(
-                            selected = selected,
-                            onClick = {
-                                navController.navigate(destination.route) {
-                                    // Pop to start destination to avoid stack buildup
-                                    popUpTo(navController.graph.findStartDestination().id) {
-                                        saveState = true
-                                    }
-                                    // Avoid multiple copies of same destination
-                                    launchSingleTop = true
-                                    // Restore state when reselecting a previously selected item
-                                    restoreState = true
-                                }
-                            },
-                            icon = {
-                                Icon(
-                                    imageVector = destination.icon,
-                                    contentDescription = destination.label
-                                )
-                            },
-                            label = { Text(destination.label) }
-                        )
-                    }
-                }
-            }
-        }
-    ) { paddingValues ->
-        NavHost(
-            navController = navController,
-            startDestination = Home,
-            modifier = Modifier.padding(paddingValues)
-        ) {
-            // Register screens...
-        }
-    }
-}
 ```
 
-### Bottom Navigation Best Practices
+**Benefits:**
+- Automatically adapts to different screen sizes
+- Consistent navigation UX across device types
+- Single source of truth for navigation items
+- Built-in state preservation
 
-**State Preservation:**
-```kotlin
-navController.navigate(destination) {
-    popUpTo(navController.graph.findStartDestination().id) {
-        saveState = true  // Save state when navigating away
-    }
-    launchSingleTop = true  // Avoid duplicates
-    restoreState = true  // Restore state when returning
-}
-```
+### Conditional Navigation UI
 
-**Conditional Bottom Bar:**
-```kotlin
-// Hide bottom bar for detail screens
-val hideBottomBarDestinations = setOf(
-    ProfileDetail::class,
-    ArticleDetail::class,
-    EditProfile::class
-)
-
-val showBottomBar = hideBottomBarDestinations.none { route ->
-    currentDestination?.hasRoute(route) == true
-}
-```
-
----
-
-## Drawer Navigation
-
-### Drawer Setup
-
-Create a navigation drawer for additional destinations:
+Show navigation only for top-level destinations:
 
 ```kotlin
-@Composable
-fun JetpackApp(
-    navController: NavHostController = rememberNavController()
-) {
-    val drawerState = rememberDrawerState(DrawerValue.Closed)
-    val scope = rememberCoroutineScope()
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentDestination = navBackStackEntry?.destination
-
-    ModalNavigationDrawer(
-        drawerState = drawerState,
-        drawerContent = {
-            ModalDrawerSheet {
-                Text(
-                    text = "My App",
-                    modifier = Modifier.padding(16.dp),
-                    style = MaterialTheme.typography.titleLarge
-                )
-
-                HorizontalDivider()
-
-                DrawerDestination.entries.forEach { destination ->
-                    val selected = currentDestination?.hasRoute(
-                        destination.route::class
-                    ) == true
-
-                    NavigationDrawerItem(
-                        icon = {
-                            Icon(
-                                imageVector = destination.icon,
-                                contentDescription = null
-                            )
-                        },
-                        label = { Text(destination.label) },
-                        selected = selected,
-                        onClick = {
-                            navController.navigate(destination.route) {
-                                popUpTo(navController.graph.findStartDestination().id)
-                                launchSingleTop = true
-                            }
-                            scope.launch {
-                                drawerState.close()
-                            }
-                        },
-                        modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
-                    )
-                }
-            }
-        }
-    ) {
-        Scaffold(
-            topBar = {
-                TopAppBar(
-                    title = { Text("Home") },
-                    navigationIcon = {
-                        IconButton(
-                            onClick = {
-                                scope.launch {
-                                    drawerState.open()
-                                }
-                            }
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Menu,
-                                contentDescription = "Open drawer"
-                            )
-                        }
-                    }
-                )
-            }
-        ) { paddingValues ->
-            NavHost(
-                navController = navController,
-                startDestination = Home,
-                modifier = Modifier.padding(paddingValues)
-            ) {
-                // Register screens...
-            }
-        }
-    }
+if (appState.currentTopLevelDestination == null) {
+    // No navigation UI (e.g., auth screens, detail screens)
+    JetpackScaffold(/* ... */)
+    return
 }
-```
 
-### Drawer Destinations
-
-Define drawer navigation items:
-
-```kotlin
-enum class DrawerDestination(
-    val route: Any,
-    val icon: ImageVector,
-    val label: String
-) {
-    HOME(Home, Icons.Default.Home, "Home"),
-    FAVORITES(Favorites, Icons.Default.Favorite, "Favorites"),
-    SETTINGS(Settings, Icons.Default.Settings, "Settings"),
-    ABOUT(About, Icons.Default.Info, "About")
-}
+// Show NavigationSuiteScaffold for top-level destinations
+JetpackNavigationSuiteScaffold(/* ... */)
 ```
 
 ---
@@ -891,8 +622,8 @@ enum class DrawerDestination(
 The back stack is a LIFO (Last In, First Out) stack of destinations:
 
 ```
-[Home] -> [Profile] -> [ProfileDetail] -> [EditProfile]
-                                          ↑ Current
+[Home] -> [Profile] -> [Item] -> [Detail]
+                                 ↑ Current
 ```
 
 ### Navigating Up
@@ -901,13 +632,20 @@ Go back one step in the back stack:
 
 ```kotlin
 // In your composable
-IconButton(onClick = { navController.navigateUp() }) {
-    Icon(Icons.Default.ArrowBack, contentDescription = "Back")
-}
+onBackClick = { navController.popBackStack() }
 
-// navigateUp() vs popBackStack()
-navController.navigateUp() // Preferred: handles up navigation properly
-navController.popBackStack() // Lower-level, less safe
+// Or use navigateUp() for proper up navigation
+onBackClick = { navController.navigateUp() }
+```
+
+**Example from this template:**
+
+```kotlin
+// feature/home/navigation/HomeNavigation.kt
+itemScreen(
+    onBackClick = navController::popBackStack,
+    onShowSnackbar = onShowSnackbar,
+)
 ```
 
 ### Pop to Destination
@@ -921,14 +659,36 @@ navController.navigate(Home) {
         inclusive = true // Include Home itself in the pop
     }
 }
+```
 
-// Example: Logout flow - clear entire back stack
-navController.navigate(Login) {
-    popUpTo(navController.graph.id) {
-        inclusive = true
+### Top-Level Navigation Pattern
+
+This template uses a consistent pattern for top-level navigation:
+
+```kotlin
+fun navigateToTopLevelDestination(topLevelDestination: TopLevelDestination) {
+    val topLevelNavOptions = navOptions {
+        // Pop up to the start destination to avoid stack buildup
+        popUpTo(navController.graph.findStartDestination().id) {
+            saveState = true
+        }
+        // Avoid multiple copies of the same destination
+        launchSingleTop = true
+        // Restore state when re-selecting a previously selected item
+        restoreState = true
+    }
+
+    when (topLevelDestination) {
+        TopLevelDestination.HOME -> navController.navigateToHomeNavGraph(topLevelNavOptions)
+        TopLevelDestination.PROFILE -> navController.navigateToProfileScreen(topLevelNavOptions)
     }
 }
 ```
+
+**Key aspects:**
+- `saveState = true`: Preserves screen state when navigating away
+- `launchSingleTop = true`: Prevents duplicate destinations
+- `restoreState = true`: Restores saved state when returning
 
 ### Single Top Launch Mode
 
@@ -940,37 +700,11 @@ navController.navigate(Profile) {
 }
 ```
 
-### Clearing the Back Stack
-
-Useful for login/logout flows:
+**Example from this template:**
 
 ```kotlin
-// After successful login - navigate to Home and clear login screens
-navController.navigate(Home) {
-    popUpTo(navController.graph.id) {
-        inclusive = true
-    }
-}
-
-// After logout - navigate to Login and clear everything
-navController.navigate(Login) {
-    popUpTo(navController.graph.id) {
-        inclusive = true
-    }
-}
-```
-
-### Save and Restore State
-
-Preserve state when navigating:
-
-```kotlin
-navController.navigate(destination) {
-    popUpTo(navController.graph.findStartDestination().id) {
-        saveState = true
-    }
-    launchSingleTop = true
-    restoreState = true
+fun NavController.navigateToItemScreen(itemId: String?) {
+    navigate(Item(itemId)) { launchSingleTop = true }
 }
 ```
 
@@ -1028,7 +762,7 @@ Test that navigation happens correctly:
 
 ```kotlin
 @OptIn(ExperimentalTestApi::class)
-class ProfileNavigationTest {
+class HomeNavigationTest {
 
     @get:Rule
     val composeTestRule = createAndroidComposeRule<ComponentActivity>()
@@ -1042,41 +776,41 @@ class ProfileNavigationTest {
                 navigatorProvider.addNavigator(ComposeNavigator())
             }
 
-            NavHost(navController = navController, startDestination = Profile) {
-                profileScreen(
-                    onShowSnackbar = { _, _, _ -> true },
-                    onNavigateToDetail = { userId ->
-                        navController.navigateToProfileDetail(userId)
-                    }
+            NavHost(navController = navController, startDestination = Home) {
+                homeScreen(
+                    onJetpackClick = { itemId ->
+                        navController.navigateToItemScreen(itemId)
+                    },
+                    onShowSnackbar = { _, _, _ -> true }
                 )
 
-                profileDetailScreen(
-                    onShowSnackbar = { _, _, _ -> true },
-                    onNavigateBack = { navController.navigateUp() }
+                itemScreen(
+                    onBackClick = { navController.popBackStack() },
+                    onShowSnackbar = { _, _, _ -> true }
                 )
             }
         }
     }
 
     @Test
-    fun navigateToDetail_updatesCurrentDestination() {
-        // Navigate to detail
+    fun navigateToItem_updatesCurrentDestination() {
+        // Navigate to item
         composeTestRule.runOnUiThread {
-            navController.navigateToProfileDetail("user-123")
+            navController.navigateToItemScreen("item-123")
         }
 
         // Verify current destination
         composeTestRule.runOnUiThread {
-            val currentRoute = navController.currentBackStackEntry?.toRoute<ProfileDetail>()
-            assertEquals("user-123", currentRoute?.userId)
+            val currentRoute = navController.currentBackStackEntry?.toRoute<Item>()
+            assertEquals("item-123", currentRoute?.itemId)
         }
     }
 
     @Test
     fun clickBackButton_navigatesUp() {
-        // Navigate to detail
+        // Navigate to item
         composeTestRule.runOnUiThread {
-            navController.navigateToProfileDetail("user-123")
+            navController.navigateToItemScreen("item-123")
         }
 
         // Click back button
@@ -1084,44 +818,10 @@ class ProfileNavigationTest {
 
         // Verify navigation
         composeTestRule.runOnUiThread {
-            val currentRoute = navController.currentBackStackEntry?.destination?.hasRoute<Profile>()
+            val currentRoute = navController.currentBackStackEntry?.destination?.hasRoute<Home>()
             assertTrue(currentRoute == true)
         }
     }
-}
-```
-
-### Testing Deep Links
-
-Test that deep links navigate correctly:
-
-```kotlin
-@Test
-fun deepLink_navigatesToArticleDetail() {
-    val uri = "https://example.com/article/article-123"
-
-    composeTestRule.setContent {
-        val navController = rememberNavController()
-
-        NavHost(navController = navController, startDestination = Home) {
-            homeScreen(/* ... */)
-
-            articleDetailScreen(
-                onShowSnackbar = { _, _, _ -> true },
-                onNavigateBack = { navController.navigateUp() }
-            )
-        }
-
-        // Simulate deep link
-        LaunchedEffect(Unit) {
-            navController.handleDeepLink(
-                Intent(Intent.ACTION_VIEW, Uri.parse(uri))
-            )
-        }
-    }
-
-    // Verify article detail is shown
-    composeTestRule.onNodeWithText("Article Detail").assertIsDisplayed()
 }
 ```
 
@@ -1168,7 +868,6 @@ Navigate based on state:
 fun HomeRoute(
     onShowSnackbar: suspend (String, SnackbarAction, Throwable?) -> Boolean,
     onNavigateToAuth: () -> Unit,
-    onNavigateToMain: () -> Unit,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     val isAuthenticated by viewModel.isAuthenticated.collectAsStateWithLifecycle()
@@ -1215,112 +914,31 @@ fun CreateArticleRoute(
 }
 ```
 
-### Multi-Step Flow
+### Accessing Navigation Arguments in ViewModel
 
-Implement a multi-step wizard or onboarding flow:
-
-```kotlin
-// Define steps
-@Serializable
-data object OnboardingStep1
-
-@Serializable
-data object OnboardingStep2
-
-@Serializable
-data object OnboardingStep3
-
-// Shared ViewModel for the entire flow
-@HiltViewModel
-class OnboardingViewModel @Inject constructor(
-    private val userRepository: UserRepository
-) : ViewModel() {
-    private val _userData = MutableStateFlow(OnboardingData())
-    val userData = _userData.asStateFlow()
-
-    fun updateStep1(name: String, email: String) {
-        _userData.update { it.copy(name = name, email = email) }
-    }
-
-    fun updateStep2(preferences: Preferences) {
-        _userData.update { it.copy(preferences = preferences) }
-    }
-
-    suspend fun completeOnboarding(): Result<Unit> = suspendRunCatching {
-        userRepository.saveOnboardingData(_userData.value)
-    }
-}
-
-// Share ViewModel across steps
-@Composable
-fun OnboardingStep1Route(
-    onNavigateToStep2: () -> Unit
-) {
-    val navBackStackEntry = LocalNavController.current
-        .getBackStackEntry<OnboardingNavGraph>()
-
-    val sharedViewModel: OnboardingViewModel = hiltViewModel(navBackStackEntry)
-
-    OnboardingStep1Screen(
-        onNext = { name, email ->
-            sharedViewModel.updateStep1(name, email)
-            onNavigateToStep2()
-        }
-    )
-}
-```
-
-### Result Passing Between Screens
-
-Pass results back to the previous screen:
+Use `SavedStateHandle.toRoute<T>()` to access navigation arguments:
 
 ```kotlin
-// Using SavedStateHandle to pass results
 @HiltViewModel
-class SelectItemViewModel @Inject constructor(
-    private val savedStateHandle: SavedStateHandle
+class ItemViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
+    private val repository: JetpackRepository
 ) : ViewModel() {
-    fun selectItem(itemId: String) {
-        savedStateHandle["selected_item_id"] = itemId
-    }
-}
+    // Extract navigation arguments
+    private val itemId: String? = savedStateHandle.toRoute<Item>().itemId
 
-@Composable
-fun SelectItemRoute(
-    onNavigateBack: () -> Unit,
-    viewModel: SelectItemViewModel = hiltViewModel()
-) {
-    SelectItemScreen(
-        onItemClick = { itemId ->
-            viewModel.selectItem(itemId)
-            onNavigateBack()
-        }
-    )
-}
+    private val _uiState = MutableStateFlow(UiState(ItemScreenData()))
+    val uiState = _uiState.asStateFlow()
 
-// Retrieve result in previous screen
-@Composable
-fun ParentRoute(
-    onNavigateToSelectItem: () -> Unit,
-    viewModel: ParentViewModel = hiltViewModel()
-) {
-    val navController = LocalNavController.current
-    val navBackStackEntry = navController.currentBackStackEntry
-
-    val selectedItemId = navBackStackEntry
-        ?.savedStateHandle
-        ?.getStateFlow<String?>("selected_item_id", null)
-        ?.collectAsState()
-
-    LaunchedEffect(selectedItemId?.value) {
-        selectedItemId?.value?.let { itemId ->
-            viewModel.handleSelectedItem(itemId)
-            // Clear the result
-            navBackStackEntry.savedStateHandle.remove<String>("selected_item_id")
-        }
+    init {
+        loadItem(itemId)
     }
 
-    // Screen content...
+    private fun loadItem(itemId: String?) {
+        _uiState.updateStateWith {
+            repository.getItem(itemId)
+        }
+    }
 }
 ```
 
@@ -1333,42 +951,56 @@ fun ParentRoute(
 ✅ **Use type-safe navigation**
 ```kotlin
 // Good: Type-safe
-navController.navigate(ProfileDetail(userId = "123"))
+navController.navigate(Item(itemId = "123"))
 
 // Avoid: String-based routes
-navController.navigate("profile/123")
+navController.navigate("item/123")
 ```
 
 ✅ **Create navigation extensions**
 ```kotlin
 // Centralize navigation logic
-fun NavController.navigateToProfile(userId: String) {
-    navigate(ProfileDetail(userId = userId))
+fun NavController.navigateToItem(itemId: String?) {
+    navigate(Item(itemId = itemId)) { launchSingleTop = true }
 }
 ```
 
 ✅ **Separate Route and Screen composables**
 ```kotlin
-// Route: Handles ViewModel and navigation
+// Route: Handles ViewModel and navigation callbacks
 @Composable
-fun ProfileRoute(
-    onNavigateBack: () -> Unit,
-    viewModel: ProfileViewModel = hiltViewModel()
+fun ItemScreen(
+    onBackClick: () -> Unit,
+    onShowSnackbar: suspend (String, SnackbarAction, Throwable?) -> Boolean,
+    viewModel: ItemViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     StatefulComposable(uiState, onShowSnackbar) { screenData ->
-        ProfileScreen(screenData, onNavigateBack)
+        ItemScreenContent(screenData, onBackClick)
     }
 }
 
-// Screen: Pure UI, no navigation knowledge
+// Screen content: Pure UI, no navigation knowledge
 @Composable
-fun ProfileScreen(
-    screenData: ProfileScreenData,
-    onNavigateBack: () -> Unit
+private fun ItemScreenContent(
+    screenData: ItemScreenData,
+    onBackClick: () -> Unit
 ) {
     // UI only
+}
+```
+
+✅ **Use JetpackAppState pattern for top-level navigation**
+```kotlin
+// Centralize navigation state and logic
+class JetpackAppState(
+    val navController: NavHostController,
+    // ...
+) {
+    fun navigateToTopLevelDestination(destination: TopLevelDestination) {
+        // Consistent navigation logic
+    }
 }
 ```
 
@@ -1380,68 +1012,72 @@ navController.navigate(Home) {
 }
 ```
 
-✅ **Handle back press with BackHandler**
+✅ **Pass callbacks, not NavController**
 ```kotlin
-BackHandler(enabled = hasUnsavedChanges) {
-    showConfirmationDialog = true
+// Good: Pass specific callbacks
+fun NavGraphBuilder.itemScreen(
+    onBackClick: () -> Unit,
+    onShowSnackbar: suspend (String, SnackbarAction, Throwable?) -> Boolean
+) {
+    composable<Item> {
+        ItemScreen(onBackClick, onShowSnackbar)
+    }
 }
+
+// Avoid: Passing NavController
+fun NavGraphBuilder.itemScreen(navController: NavController) { }
 ```
 
 ### Don'ts
 
-❌ **Don't pass NavController to composables**
+❌ **Don't pass NavController to Screen composables**
 ```kotlin
 // Bad: Screen shouldn't know about NavController
 @Composable
-fun ProfileScreen(navController: NavController) { }
+fun ItemScreen(navController: NavController) { }
 
 // Good: Use callbacks
 @Composable
-fun ProfileScreen(onNavigateBack: () -> Unit) { }
+fun ItemScreen(onBackClick: () -> Unit) { }
 ```
 
 ❌ **Don't use string-based routes**
 ```kotlin
 // Avoid
-composable("profile/{userId}") { }
+composable("item/{itemId}") { }
 
 // Use type-safe routes instead
-composable<ProfileDetail> { }
+composable<Item> { }
 ```
 
 ❌ **Don't navigate in ViewModels**
 ```kotlin
 // Bad: ViewModel shouldn't know about navigation
-class ProfileViewModel : ViewModel() {
-    fun onBackClick(navController: NavController) {
+class ItemViewModel(private val navController: NavController) : ViewModel() {
+    fun onBackClick() {
         navController.navigateUp()
     }
 }
 
-// Good: Use events or callbacks
-class ProfileViewModel : ViewModel() {
-    private val _navigationEvent = MutableSharedFlow<NavigationEvent>()
-    val navigationEvent = _navigationEvent.asSharedFlow()
-
-    fun onBackClick() {
-        viewModelScope.launch {
-            _navigationEvent.emit(NavigationEvent.NavigateBack)
-        }
-    }
+// Good: Use events or rely on callbacks from composables
+class ItemViewModel : ViewModel() {
+    // ViewModel focuses on business logic only
+    // Navigation is handled by composables via callbacks
 }
 ```
 
-❌ **Don't forget to handle configuration changes**
+❌ **Don't forget state preservation for top-level navigation**
 ```kotlin
-// Navigation state is preserved automatically by Navigation Compose
-// But ensure you use rememberNavController() properly
+// Avoid: Loses state when switching tabs
+navController.navigate(Profile)
 
-@Composable
-fun JetpackApp() {
-    // Good: Navigation state survives config changes
-    val navController = rememberNavController()
-
-    NavHost(navController = navController, /* ... */)
+// Use: Preserves state
+navController.navigate(Profile) {
+    popUpTo(navController.graph.findStartDestination().id) {
+        saveState = true
+    }
+    launchSingleTop = true
+    restoreState = true
 }
 ```
 
@@ -1451,20 +1087,20 @@ fun JetpackApp() {
 
 ### Common Issues
 
-#### Issue: Arguments not passed correctly
+#### Issue: Arguments not accessible in ViewModel
 
-**Problem:** Arguments are null or have wrong values.
+**Problem:** Navigation arguments are null in ViewModel.
 
 **Solution:**
 ```kotlin
-// Ensure route is defined with correct parameter names
-@Serializable
-data class ProfileDetail(val userId: String) // Parameter name matters
-
-// Use toRoute<T>() to extract arguments
-composable<ProfileDetail> { backStackEntry ->
-    val args = backStackEntry.toRoute<ProfileDetail>()
-    // args.userId is now available
+// Use SavedStateHandle.toRoute<T>() to extract arguments
+@HiltViewModel
+class ItemViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
+    private val repository: JetpackRepository
+) : ViewModel() {
+    // Extract route arguments
+    private val itemId: String? = savedStateHandle.toRoute<Item>().itemId
 }
 ```
 
@@ -1489,43 +1125,32 @@ navController.navigate(Home) {
 }
 ```
 
-#### Issue: Deep links not working
+#### Issue: Nested graph not found
 
-**Problem:** App doesn't open when clicking deep links.
-
-**Solution:**
-1. Verify AndroidManifest.xml has correct intent filters
-2. Check android:autoVerify="true" for App Links
-3. Verify assetlinks.json is accessible
-4. Test with ADB:
-```bash
-adb shell am start -W -a android.intent.action.VIEW \
-  -d "https://example.com/article/123"
-```
-
-#### Issue: Bottom bar shows on detail screens
-
-**Problem:** Bottom navigation bar visible on screens where it shouldn't be.
+**Problem:** Can't navigate to screens within nested graph.
 
 **Solution:**
 ```kotlin
-val hideBottomBarDestinations = setOf(
-    ProfileDetail::class,
-    EditProfile::class
-)
-
-val showBottomBar = hideBottomBarDestinations.none { route ->
-    currentDestination?.hasRoute(route) == true
-}
-
-if (showBottomBar) {
-    NavigationBar { /* ... */ }
+// Ensure nested graph is registered in NavHost
+NavHost(navController = navController, startDestination = startDestination) {
+    authNavGraph(
+        nestedNavGraphs = {
+            signInScreen(/* ... */)
+            signUpScreen(/* ... */)
+        }
+    )
+    homeNavGraph(
+        nestedNavGraphs = {
+            homeScreen(/* ... */)
+            itemScreen(/* ... */)
+        }
+    )
 }
 ```
 
-#### Issue: State not preserved
+#### Issue: State not preserved in bottom navigation
 
-**Problem:** Screen state is lost when navigating back.
+**Problem:** Screen state is lost when switching tabs.
 
 **Solution:**
 ```kotlin
@@ -1535,33 +1160,25 @@ navController.navigate(destination) {
         saveState = true
     }
     restoreState = true
+    launchSingleTop = true
 }
-
-// Use rememberSaveable for screen state
-var searchQuery by rememberSaveable { mutableStateOf("") }
 ```
 
-#### Issue: Nested graph navigation not working
+#### Issue: Navigation UI showing on non-top-level screens
 
-**Problem:** Can't navigate within nested graphs.
+**Problem:** Bottom bar or navigation rail visible on detail screens.
 
 **Solution:**
 ```kotlin
-// Pass NavController to nested graph builder
-fun NavGraphBuilder.profileGraph(
-    navController: NavController,
-    onShowSnackbar: suspend (String, SnackbarAction, Throwable?) -> Boolean
-) {
-    navigation<ProfileNavGraph>(startDestination = Profile) {
-        profileScreen(
-            onShowSnackbar = onShowSnackbar,
-            onNavigateToDetail = { userId ->
-                // Use the passed NavController
-                navController.navigateToProfileDetail(userId)
-            }
-        )
-    }
+// Check currentTopLevelDestination in JetpackApp
+if (appState.currentTopLevelDestination == null) {
+    // No navigation UI for auth screens, detail screens, etc.
+    JetpackScaffold(/* ... */)
+    return
 }
+
+// Show NavigationSuiteScaffold only for top-level destinations
+JetpackNavigationSuiteScaffold(/* ... */)
 ```
 
 ---
@@ -1570,7 +1187,6 @@ fun NavGraphBuilder.profileGraph(
 
 - **Jetpack Navigation Compose Docs**: [Official Documentation](https://developer.android.com/jetpack/compose/navigation)
 - **Type-Safe Navigation**: [Kotlin Serialization Navigation](https://developer.android.com/guide/navigation/design/type-safety)
-- **Deep Linking Guide**: [Android Deep Links](https://developer.android.com/training/app-links)
 - **API Reference**: See the [Dokka API Documentation](/api/) for detailed navigation function signatures
 - **Quick Reference**: See [Quick Reference Guide](quick-reference.md#navigation) for navigation cheat sheet
 
@@ -1580,23 +1196,23 @@ fun NavGraphBuilder.profileGraph(
 
 This guide covered:
 - ✅ Type-safe navigation with Kotlin Serialization
-- ✅ Simple and complex navigation patterns
-- ✅ Navigation with required and optional arguments
-- ✅ Nested navigation graphs
-- ✅ Deep linking (HTTPS and custom schemes)
-- ✅ Bottom navigation setup
-- ✅ Navigation drawer implementation
+- ✅ Navigation patterns used in this template
+- ✅ Simple and complex navigation with arguments
+- ✅ Nested navigation graphs (template pattern)
+- ✅ Adaptive navigation with NavigationSuiteScaffold
+- ✅ JetpackAppState pattern for centralized navigation
 - ✅ Back stack management
 - ✅ Navigation testing strategies
 - ✅ Common navigation patterns
-- ✅ Best practices and anti-patterns
+- ✅ Best practices specific to this template
 - ✅ Troubleshooting common issues
 
 **Key Takeaways:**
 1. Always use type-safe navigation with `@Serializable` routes
-2. Separate navigation logic (Route) from UI (Screen)
-3. Create navigation extension functions for consistency
-4. Use NavOptions for complex back stack manipulation
-5. Test navigation flows with TestNavHostController
-6. Never pass NavController to composables - use callbacks
-7. Handle back press with BackHandler when needed
+2. Follow the template's nested graph pattern with `nestedNavGraphs` lambda
+3. Use JetpackAppState for centralized top-level navigation logic
+4. Use NavigationSuiteScaffold for adaptive navigation UI
+5. Access navigation arguments in ViewModel via `SavedStateHandle.toRoute<T>()`
+6. Pass callbacks to composables, never NavController
+7. Use conditional start destination for auth flows
+8. Preserve state with saveState/restoreState for top-level navigation
