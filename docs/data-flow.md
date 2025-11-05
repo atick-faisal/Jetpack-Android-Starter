@@ -1355,14 +1355,27 @@ class PostsViewModelTest {
    - Test repository logic with unit tests
    - Test ViewModel state updates with `runTest`
 
-### For More Details
+---
 
-- **State Management**: [docs/state-management.md](./state-management.md)
-- **Architecture Overview**: [docs/architecture.md](./architecture.md)
-- **Quick Reference**: [docs/quick-reference.md](./quick-reference.md)
-- **API Documentation**: [Dokka API Docs](../api/index.html)
-- **Module READMEs**:
-  - [core/room/README.md](../core/room/README.md)
-  - [core/network/README.md](../core/network/README.md)
-  - [core/preferences/README.md](../core/preferences/README.md)
-  - [data/README.md](../data/README.md)
+## Summary
+
+This guide covered three main data flow patterns:
+
+- **Network-Only**: For real-time data that doesn't need offline access
+- **Local-Only**: For preferences and settings using DataStore
+- **Offline-First**: For user-generated content with Room as single source of truth
+
+All patterns use:
+- **Repositories** as the interface to ViewModels
+- **Data Sources** for external system interaction
+- **Result** type for error handling
+- **Flow** for reactive data streams
+
+Choose the pattern that matches your feature's requirements.
+
+## Further Reading
+
+- [State Management](state-management.md) - Learn about ViewModel state patterns
+- [Architecture Overview](architecture.md) - Understand the two-layer architecture
+- [Adding Features](guide.md) - Step-by-step implementation guide
+- [Quick Reference](quick-reference.md) - Common data flow patterns cheat sheet

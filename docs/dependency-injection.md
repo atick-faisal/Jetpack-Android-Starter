@@ -790,7 +790,7 @@ class B @Inject constructor(val a: A)
 
 ## Best Practices
 
-### ✅ Do
+### Do's
 
 1. **Use constructor injection** whenever possible
    ```kotlin
@@ -840,7 +840,7 @@ class B @Inject constructor(val a: A)
    }
    ```
 
-### ❌ Don't
+### Don'ts
 
 1. **Don't use field injection** when constructor injection is possible
    ```kotlin

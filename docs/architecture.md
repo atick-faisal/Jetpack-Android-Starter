@@ -29,9 +29,9 @@ graph TD
 
 The UI layer follows MVVM pattern and consists of:
 
-1. **Composable UI**: Pure UI components built with Jetpack Compose
-2. **ViewModel**: Manages UI state and business logic
-3. **UI State**: Immutable data classes representing screen state
+1. **Composables**: Pure UI components built with Jetpack Compose
+2. **ViewModels**: Manage UI state and business logic
+3. **Screen Data**: Immutable data classes representing screen state
 
 Example UI Layer structure:
 
@@ -51,7 +51,7 @@ class HomeViewModel @Inject constructor(
 
 @Composable
 fun HomeScreen(
-    uiState: HomeScreenData,
+    screenData: HomeScreenData,
     onAction: (HomeAction) -> Unit
 ) {
 }
@@ -182,7 +182,10 @@ class GetDataUseCase @Inject constructor(
 > - Business rules become complex
 > - You need to transform data between layers
 
-## Testing Strategy (Upcoming 🚧)
+## Testing Strategy
+
+> [!NOTE]
+> Testing infrastructure is planned but not yet implemented in this template.
 
 The architecture enables different types of tests:
 
@@ -193,17 +196,30 @@ The architecture enables different types of tests:
 
 ## Best Practices
 
-1. **Keep UI State Simple**: Only include what's needed for the UI
+1. **Keep Screen Data Simple**: Only include what's needed for the UI
 2. **Single Responsibility**: Each class should have one clear purpose
-3. **Error Handling**: Use Result type for operations that can fail
+3. **Error Handling**: Use `Result` type for operations that can fail
 4. **Coroutines**: Use structured concurrency with proper scoping
 5. **Immutable Data**: Use data classes for state and models
 
+---
+
+## Summary
+
+This template uses a **two-layer architecture** (UI + Data) for simplicity:
+
+- **UI Layer**: Composables + ViewModels with UiState wrapper
+- **Data Layer**: Repositories + Data Sources (Network, Local, Firebase)
+- **State Management**: Centralized with `updateState` and `updateStateWith` functions
+- **Dependency Injection**: Hilt with feature-based modules
+- **Unidirectional Data Flow**: User actions → ViewModel → Repository → Data Sources → UI
+
+The architecture is intentionally simple but allows for growth when needed.
+
 ## Further Reading
-- [Design Philosophy](philosophy.md): Understand the design principles behind the architecture
-- [Adding New Features](guide.md): Learn how to add new features to the project
-- [CI/CD Setup](github.md): Set up continuous integration and deployment for the project
-- [Performance Optimization](performance.md): Optimize the app for speed and efficiency
-- [Useful Tips & Tricks](tips.md): Get useful tips for development and debugging
-- [Convention Plugins](plugins.md): Learn about custom Gradle plugins used in the project
-- [Code Style with Spotless](spotless.md): Follow code formatting guidelines for the project
+
+- [Design Philosophy](philosophy.md) - Understand the design principles behind the architecture
+- [State Management](state-management.md) - Deep dive into the UiState pattern
+- [Adding Features](guide.md) - Step-by-step guide to implementing new features
+- [Data Flow](data-flow.md) - Understand data flow patterns (offline-first, caching, sync)
+- [Dependency Injection](dependency-injection.md) - Complete guide to Hilt setup and patterns

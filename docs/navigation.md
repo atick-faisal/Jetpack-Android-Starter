@@ -948,7 +948,8 @@ class ItemViewModel @Inject constructor(
 
 ### Do's
 
-✅ **Use type-safe navigation**
+**Use type-safe navigation**
+
 ```kotlin
 // Good: Type-safe
 navController.navigate(Item(itemId = "123"))
@@ -957,7 +958,8 @@ navController.navigate(Item(itemId = "123"))
 navController.navigate("item/123")
 ```
 
-✅ **Create navigation extensions**
+**Create navigation extensions**
+
 ```kotlin
 // Centralize navigation logic
 fun NavController.navigateToItem(itemId: String?) {
@@ -965,7 +967,7 @@ fun NavController.navigateToItem(itemId: String?) {
 }
 ```
 
-✅ **Separate Route and Screen composables**
+**Separate Route and Screen composables**
 ```kotlin
 // Route: Handles ViewModel and navigation callbacks
 @Composable
@@ -991,7 +993,8 @@ private fun ItemScreenContent(
 }
 ```
 
-✅ **Use JetpackAppState pattern for top-level navigation**
+**Use JetpackAppState pattern for top-level navigation**
+
 ```kotlin
 // Centralize navigation state and logic
 class JetpackAppState(
@@ -1004,7 +1007,8 @@ class JetpackAppState(
 }
 ```
 
-✅ **Use NavOptions for complex navigation**
+**Use NavOptions for complex navigation**
+
 ```kotlin
 navController.navigate(Home) {
     popUpTo(Login) { inclusive = true }
@@ -1012,7 +1016,8 @@ navController.navigate(Home) {
 }
 ```
 
-✅ **Pass callbacks, not NavController**
+**Pass callbacks, not NavController**
+
 ```kotlin
 // Good: Pass specific callbacks
 fun NavGraphBuilder.itemScreen(
@@ -1030,7 +1035,7 @@ fun NavGraphBuilder.itemScreen(navController: NavController) { }
 
 ### Don'ts
 
-❌ **Don't pass NavController to Screen composables**
+**Don't pass NavController to Screen composables**
 ```kotlin
 // Bad: Screen shouldn't know about NavController
 @Composable
@@ -1041,7 +1046,8 @@ fun ItemScreen(navController: NavController) { }
 fun ItemScreen(onBackClick: () -> Unit) { }
 ```
 
-❌ **Don't use string-based routes**
+**Don't use string-based routes**
+
 ```kotlin
 // Avoid
 composable("item/{itemId}") { }
@@ -1050,7 +1056,8 @@ composable("item/{itemId}") { }
 composable<Item> { }
 ```
 
-❌ **Don't navigate in ViewModels**
+**Don't navigate in ViewModels**
+
 ```kotlin
 // Bad: ViewModel shouldn't know about navigation
 class ItemViewModel(private val navController: NavController) : ViewModel() {
@@ -1066,7 +1073,8 @@ class ItemViewModel : ViewModel() {
 }
 ```
 
-❌ **Don't forget state preservation for top-level navigation**
+**Don't forget state preservation for top-level navigation**
+
 ```kotlin
 // Avoid: Loses state when switching tabs
 navController.navigate(Profile)
@@ -1183,31 +1191,24 @@ JetpackNavigationSuiteScaffold(/* ... */)
 
 ---
 
-## Additional Resources
-
-- **Jetpack Navigation Compose Docs**: [Official Documentation](https://developer.android.com/jetpack/compose/navigation)
-- **Type-Safe Navigation**: [Kotlin Serialization Navigation](https://developer.android.com/guide/navigation/design/type-safety)
-- **API Reference**: See the [Dokka API Documentation](/api/) for detailed navigation function signatures
-- **Quick Reference**: See [Quick Reference Guide](quick-reference.md#navigation) for navigation cheat sheet
-
----
-
 ## Summary
 
 This guide covered:
-- ✅ Type-safe navigation with Kotlin Serialization
-- ✅ Navigation patterns used in this template
-- ✅ Simple and complex navigation with arguments
-- ✅ Nested navigation graphs (template pattern)
-- ✅ Adaptive navigation with NavigationSuiteScaffold
-- ✅ JetpackAppState pattern for centralized navigation
-- ✅ Back stack management
-- ✅ Navigation testing strategies
-- ✅ Common navigation patterns
-- ✅ Best practices specific to this template
-- ✅ Troubleshooting common issues
+
+- Type-safe navigation with Kotlin Serialization
+- Navigation patterns used in this template
+- Simple and complex navigation with arguments
+- Nested navigation graphs (template pattern)
+- Adaptive navigation with NavigationSuiteScaffold
+- JetpackAppState pattern for centralized navigation
+- Back stack management
+- Navigation testing strategies
+- Common navigation patterns
+- Best practices specific to this template
+- Troubleshooting common issues
 
 **Key Takeaways:**
+
 1. Always use type-safe navigation with `@Serializable` routes
 2. Follow the template's nested graph pattern with `nestedNavGraphs` lambda
 3. Use JetpackAppState for centralized top-level navigation logic
@@ -1216,3 +1217,10 @@ This guide covered:
 6. Pass callbacks to composables, never NavController
 7. Use conditional start destination for auth flows
 8. Preserve state with saveState/restoreState for top-level navigation
+
+## Further Reading
+
+- [Architecture Overview](architecture.md) - Understand where navigation fits in the architecture
+- [State Management](state-management.md) - Learn how to pass state through navigation
+- [Adding Features](guide.md) - Step-by-step guide including navigation setup
+- [Quick Reference](quick-reference.md#navigation) - Navigation patterns cheat sheet

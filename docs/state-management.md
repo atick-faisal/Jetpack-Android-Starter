@@ -992,7 +992,9 @@ class NewViewModel @Inject constructor(
 4. **StatefulComposable handles UI boilerplate** - Automatic loading and error display
 5. **Single source of truth** - One `StateFlow<UiState<ScreenData>>` per screen
 
-**For more details:**
-- API Documentation: [StatefulComposable.kt](../core/ui/src/main/kotlin/dev/atick/core/ui/utils/StatefulComposable.kt)
-- Quick Reference: [docs/quick-reference.md](./quick-reference.md)
-- Architecture Overview: [docs/architecture.md](./architecture.md)
+## Further Reading
+
+- [Quick Reference](quick-reference.md) - Cheat sheet for state management patterns
+- [Architecture Overview](architecture.md) - Understand the two-layer architecture
+- [Adding Features](guide.md) - Step-by-step implementation guide
+- API Documentation: [`StatefulComposable.kt`](../core/ui/src/main/kotlin/dev/atick/core/ui/utils/StatefulComposable.kt)

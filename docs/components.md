@@ -887,17 +887,12 @@ JetpackButton(
 )
 ```
 
-## Additional Resources
-
-- **API Reference**: See [Dokka documentation](../api/core/ui/index.html) for complete API details
-- **Material 3 Guidelines**: [m3.material.io](https://m3.material.io/)
-- **Compose Documentation**: [developer.android.com/compose](https://developer.android.com/compose)
-- **Theme Customization**: See `core/ui/README.md` for theme architecture
-- **Source Code**: Browse `core/ui/src/main/kotlin/dev/atick/core/ui/components/` for implementation details
+---
 
 ## Summary
 
 The component library provides:
+
 - **Consistent UI** across your app with minimal effort
 - **Accessibility** features built-in
 - **Material 3** theming and dynamic colors
@@ -905,3 +900,11 @@ The component library provides:
 - **Performance** optimizations for common patterns
 
 Follow the patterns in this guide to build beautiful, accessible, and performant UIs with minimal boilerplate.
+
+## Further Reading
+
+- [Architecture Overview](architecture.md) - Understand where components fit in the architecture
+- [State Management](state-management.md) - Learn how to manage component state
+- [Adding Features](guide.md) - Step-by-step guide to building features with components
+- [Material 3 Guidelines](https://m3.material.io/) - Official Material Design 3 documentation
+- API Reference: See [`core/ui`](../core/ui/README.md) for module architecture
