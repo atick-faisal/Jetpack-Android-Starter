@@ -1,5 +1,11 @@
 # GitHub CI/CD Setup
 
+## Summary
+
+This guide explains the project's three GitHub Actions workflows: Build (runs on PRs with Spotless checks), Documentation (deploys to GitHub Pages), and Release (builds signed APKs and deploys to Play Store). Learn how to set up required secrets, create releases with tags, and troubleshoot failed workflows.
+
+---
+
 This project uses GitHub Actions for continuous integration and deployment. We have three main
 workflows:
 
@@ -104,4 +110,7 @@ If the release workflow fails, check:
 > the workflow file.
 
 ## Further Reading
-- [Publishing to Play Store](fastlane.md): Learn how to publish your app to the Google Play Store
+
+- **[Fastlane Setup](fastlane.md)** - Play Store deployment automation used by release workflow
+- **[Firebase Setup](firebase.md)** - Firebase configuration needed for release builds
+- **[Spotless](spotless.md)** - Code formatting checked by build workflow

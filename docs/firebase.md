@@ -1,5 +1,11 @@
 # Firebase Setup
 
+## Summary
+
+This guide walks you through setting up Firebase for this project, including Authentication (Google Sign-In and Email/Password), Firestore database, and Analytics. Learn how to configure the Firebase Console, download and protect `google-services.json`, set up security rules, and troubleshoot common Firebase issues.
+
+---
+
 This project uses Firebase for authentication, Firestore database, and analytics. Follow this guide
 to set up Firebase for your project.
 
@@ -187,6 +193,7 @@ These rules implement several security features:
 > scratch.
 
 ## Further Reading
-- [Dependency Management](dependency.md): Learn how to manage dependencies in the project
-- [Architecture Overview](architecture.md): Understand the architecture and design principles
-- [Adding New Features](guide.md): Get started with adding new features to the project
+
+- **[Troubleshooting](troubleshooting.md)** - Solutions for common Firebase setup and runtime issues
+- **[GitHub CI/CD Setup](github.md)** - CI/CD workflow that uses Firebase secrets
+- **[FAQ](faq.md)** - Firebase setup questions and Google Sign-In troubleshooting

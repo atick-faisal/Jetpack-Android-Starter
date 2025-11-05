@@ -1,5 +1,11 @@
 # Fastlane and Play Store Setup
 
+## Summary
+
+This guide explains how to set up Fastlane for automated Play Store deployments. Learn how to configure Play Store authentication with service account JSON, manage metadata and changelogs, deploy updates to different tracks (internal/alpha/beta/production), and troubleshoot common deployment issues.
+
+---
+
 This project uses Fastlane to automate Play Store deployments. This guide will help you set up
 Fastlane for your deployment needs.
 
@@ -12,6 +18,9 @@ Before you begin, make sure you have:
 3. A Google Play Console account with access to your app
 4. A Play Store API service account (JSON key file)
 
+> [!NOTE]
+> For detailed instructions about setting up Fastlane for Android, refer to the [official Android setup guide](https://docs.fastlane.tools/getting-started/android/setup/).
+
 ## Initial Setup
 
 1. Install Fastlane:
@@ -20,18 +29,11 @@ Before you begin, make sure you have:
    ```
 
 2. Set up Play Store authentication:
-	- Follow
-	  the [Fastlane Play Store Setup Guide](https://docs.fastlane.tools/actions/upload_to_play_store/)
-	  to create and download your `play-store.json` service account key
+	- Follow the [Fastlane Play Store Setup Guide](https://docs.fastlane.tools/actions/upload_to_play_store/) to create and download your `play-store.json` service account key
 	- Place the `play-store.json` file in your fastlane directory
 
-> [!NOTE]
-> For detailed instructions about setting up Fastlane for Android, refer to
-> the [official Android setup guide](https://docs.fastlane.tools/getting-started/android/setup/).
-
 > [!WARNING]
-> Never commit your `play-store.json` file to the repository. Make sure it's included in your
-> `.gitignore`.
+> Never commit your `play-store.json` file to the repository. Make sure it's included in your `.gitignore`.
 
 ## Configure Fastlane Files
 
@@ -135,5 +137,10 @@ fastlane supply init
 	- Ensure screenshot dimensions meet Play Store requirements
 
 > [!NOTE]
-> For more detailed information about Fastlane commands and options, refer to
-> the [Fastlane supply action documentation](https://docs.fastlane.tools/actions/supply/).
+> For more detailed information about Fastlane commands and options, refer to the [Fastlane supply action documentation](https://docs.fastlane.tools/actions/supply/).
+
+## Further Reading
+
+- **[GitHub CI/CD Setup](github.md)** - Automated release workflow that uses Fastlane
+- **[Troubleshooting](troubleshooting.md)** - Solutions for common deployment issues
+- **[FAQ](faq.md)** - Release preparation and deployment questions

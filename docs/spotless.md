@@ -1,5 +1,11 @@
 # Spotless Linting Setup
 
+## Summary
+
+This guide explains the project's code formatting and license header management using Spotless with ktlint. Learn how to check and apply formatting, customize copyright headers, configure IDE integration, and ensure your code passes CI checks. Always run `spotlessApply` before committing to avoid CI failures.
+
+---
+
 This project uses Spotless for code formatting and license header management. Spotless is configured
 to work with Kotlin, Groovy, Gradle KTS files, and XML files.
 
@@ -119,5 +125,7 @@ The configuration includes similar setups for:
 > shortcut for quick formatting.
 
 ## Further Reading
-- [Useful Tips & Tricks](tips.md): Get useful tips for development and debugging
-- [CI/CD Setup](github.md): Set up continuous integration and deployment for the project
+
+- **[GitHub CI/CD Setup](github.md)** - Continuous integration workflow that runs spotlessCheck
+- **[Troubleshooting](troubleshooting.md)** - Solutions for common Spotless formatting issues
+- **[Convention Plugins](plugins.md)** - Build logic that configures Spotless
