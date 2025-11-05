@@ -63,6 +63,7 @@ nav:
       - Components: components.md
       - Data Flow: data-flow.md
       - Navigation: navigation.md
+      - Dependency Injection: dependency-injection.md
       - Dependencies: dependency.md
       - Quick Reference: quick-reference.md
   - Tools & Configuration:
