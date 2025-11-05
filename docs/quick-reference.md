@@ -1,6 +1,24 @@
 # Quick Reference
 
-A quick reference guide for the most commonly used patterns, utilities, and functions in this template.
+Quick reference guide for the most commonly used patterns, utilities, and functions in this template.
+
+---
+
+## Summary
+
+This quick reference provides:
+
+- **State Management** - UiState wrapper, update functions, StatefulComposable pattern
+- **Navigation** - Type-safe routes with Kotlin Serialization
+- **Dependency Injection** - Hilt patterns, module setup, injected dispatchers
+- **Error Handling** - suspendRunCatching in repositories, automatic error display
+- **Coroutines & Threading** - ViewModel scope, lifecycle-aware collection, context switching
+- **Common Extensions** - StateFlow updates, Flow collection, context utilities
+- **Complete Example** - End-to-end feature implementation
+
+For detailed explanations, see the [full documentation](index.md) or [API reference](../api/index.html).
+
+---
 
 ## Table of Contents
 
@@ -10,6 +28,8 @@ A quick reference guide for the most commonly used patterns, utilities, and func
 - [Error Handling](#error-handling)
 - [Coroutines & Threading](#coroutines--threading)
 - [Common Extensions](#common-extensions)
+- [Complete Example](#complete-example-feature-implementation)
+- [Quick Commands](#quick-commands)
 
 ---
 
@@ -475,14 +495,21 @@ fun NavGraphBuilder.profileScreen(
 
 ---
 
-## Additional Resources
+---
 
-- **[Full API Documentation](../api/index.html)** - Detailed KDoc for all APIs
-- **[Architecture Guide](architecture.md)** - Deep dive into architecture decisions
-- **[Getting Started](getting-started.md)** - Step-by-step setup guide
-- **[Development Guide](guide.md)** - Comprehensive development patterns
-- **[Tips & Tricks](tips.md)** - Best practices and advanced techniques
-- **[Troubleshooting](troubleshooting.md)** - Common issues and solutions (coming soon)
+## Further Reading
+
+- [Full API Documentation](../api/index.html) - Detailed KDoc for all APIs
+- [Architecture Guide](architecture.md) - Deep dive into architecture decisions
+- [Getting Started](getting-started.md) - Step-by-step setup guide
+- [Development Guide](guide.md) - Comprehensive development patterns
+- [State Management](state-management.md) - Complete state management guide
+- [Data Flow](data-flow.md) - Data flow patterns
+- [Navigation](navigation.md) - Type-safe navigation deep dive
+- [Dependency Injection](dependency-injection.md) - Complete DI guide
+- [Troubleshooting](troubleshooting.md) - Common issues and solutions
+- [FAQ](faq.md) - Frequently asked questions
+- [Tips & Tricks](tips.md) - Best practices and advanced techniques
 
 ---
 
@@ -522,4 +549,9 @@ fun NavGraphBuilder.profileScreen(
 
 ---
 
-**Need help?** Check the [full documentation](../README.md) or open an issue on GitHub.
+## Need Help?
+
+- Check the [full documentation](index.md) for detailed guides
+- Review the [Troubleshooting Guide](troubleshooting.md) for common issues
+- See the [FAQ](faq.md) for frequently asked questions
+- Open an issue on [GitHub](https://github.com/atick-faisal/Jetpack-Android-Starter/issues)

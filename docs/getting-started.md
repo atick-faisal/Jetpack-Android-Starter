@@ -1,25 +1,40 @@
 # Getting Started
 
-This guide will help you set up and run the project on your local machine.
+This guide helps you set up and run the project on your local machine. You'll learn how to clone the repository, configure Firebase, and prepare for release builds.
+
+---
+
+## Summary
+
+Get started quickly with the Jetpack Android Starter template:
+
+1. Clone the repository and open in Android Studio
+2. Build and run the debug variant out of the box
+3. Optionally configure Firebase for authentication and Firestore
+4. Set up signing configuration for release builds
+
+The debug variant works immediately with minimal setup. Firebase configuration and release builds are optional until you're ready to use those features.
+
+---
 
 ## Quick Start
 
-1. Clone the repository (with depth 1 to reduce clone size):
+**Clone the repository** (with depth 1 to reduce clone size):
 
-	```bash
-	git clone --depth 1 -b main https://github.com/atick-faisal/Jetpack-Android-Starter.git
-	```
+```bash
+git clone --depth 1 -b main https://github.com/atick-faisal/Jetpack-Android-Starter.git
+```
 
-2. Open the project in Android Studio Hedgehog or newer
+**Open the project** in Android Studio Hedgehog or newer
 
-3. Run the debug build variant:
+**Run the debug build variant:**
 
-	```bash
-	./gradlew assembleDebug
-	```
+```bash
+./gradlew assembleDebug
+```
 
 > [!NOTE]
-> The debug variant should work out of the box with the template `google-services.json` file.
+> The debug variant works out of the box with the template `google-services.json` file.
 > However, Firebase features like authentication and Firestore won't be functional until you set up
 > your own Firebase project.
 
@@ -29,104 +44,124 @@ This guide will help you set up and run the project on your local machine.
 - JDK 21
 - An Android device or emulator running API 24 (Android 7.0) or higher
 
+---
+
 ## Setting Up Firebase Features
 
 To use Firebase authentication, Firestore, and analytics:
 
-1. Follow our [Firebase Setup Guide](firebase.md) to:
-	- Create your Firebase project
-	- Configure Authentication
-	- Set up Firestore
-	- Get your `google-services.json`
+**Follow the Firebase Setup Guide** - See our [Firebase Setup Guide](firebase.md) to:
+- Create your Firebase project
+- Configure Authentication
+- Set up Firestore
+- Get your `google-services.json`
 
-2. Before replacing the template `google-services.json`, prevent Git from tracking changes:
+**Prevent Git from tracking changes** to your Firebase configuration:
 
-	```bash
-	git update-index --skip-worktree app/google-services.json
-	```
+```bash
+git update-index --skip-worktree app/google-services.json
+```
 
-3. Replace the template file at `app/google-services.json` with your own
+**Replace the template file** at `app/google-services.json` with your own
+
+---
 
 ## Release Build Setup
 
-To create release builds, you'll need to set up signing:
+To create release builds, you need to set up signing:
 
-1. Create a keystore file
-2. Create `keystore.properties` in the project root:
+**Create a keystore file** using Android Studio's "Generate Signed Bundle/APK" tool
 
-	```properties
-	storePassword=your-store-password
-	keyPassword=your-key-password
-	keyAlias=your-key-alias
-	storeFile=your-keystore-file.jks
-	```
+**Create `keystore.properties`** in the project root:
 
-3. Place your keystore file in the `app/` directory
-4. Build the release variant:
+```properties
+storePassword=your-store-password
+keyPassword=your-key-password
+keyAlias=your-key-alias
+storeFile=your-keystore-file.jks
+```
 
-    ```bash
-    ./gradlew assembleRelease
-    ```
+**Place your keystore file** in the `app/` directory
+
+**Build the release variant:**
+
+```bash
+./gradlew assembleRelease
+```
 
 > [!TIP]
-> Use Android Studio's "Generate Signed Bundle/APK" tool to help create your keystore if you
-> don't
+> Use Android Studio's "Generate Signed Bundle/APK" tool to create your keystore if you don't
 > have one.
+
+---
 
 ## Next Steps
 
-1. **Understand the Architecture**: Read our [Architecture Overview](architecture.md) to understand
-   how the app is structured
+After getting the project running, continue with these guides:
 
-2. **Setup CI/CD**: Follow the [GitHub CI/CD Guide](github.md) to set up automation
+**Understand the Architecture** - Read the [Architecture Overview](architecture.md) to understand
+how the app is structured
 
-3. **Code Style**: Review the [Spotless Setup](spotless.md) for code formatting guidelines
+**Setup CI/CD** - Follow the [GitHub CI/CD Guide](github.md) to set up automation
+
+**Code Style** - Review the [Spotless Setup](spotless.md) for code formatting guidelines
+
+---
 
 ## Common Issues
 
-1. **Build Fails**:
-	- Ensure you have JDK 21 set in Android Studio
-	- Run `./gradlew clean` and try again
-	- Check if all dependencies are resolved
+**Build Fails:**
+- Ensure you have JDK 21 set in Android Studio
+- Run `./gradlew clean` and try again
+- Check if all dependencies are resolved
 
-2. **Firebase Features Not Working**:
-	- Verify you've replaced `google-services.json`
-	- Check Firebase Console for proper setup
-	- Ensure SHA-1 is added for authentication
+**Firebase Features Not Working:**
+- Verify you've replaced `google-services.json`
+- Check Firebase Console for proper setup
+- Ensure SHA-1 is added for authentication
 
-3. **Release Build Fails**:
-	- Verify keystore.properties exists and has correct values
-	- Confirm keystore file is in the correct location
-	- Check signing configuration in build.gradle
+**Release Build Fails:**
+- Verify `keystore.properties` exists and has correct values
+- Confirm keystore file is in the correct location
+- Check signing configuration in `app/build.gradle.kts`
 
 > [!IMPORTANT]
 > Never commit sensitive files like `keystore.properties`, your keystore file, or your real
-`google-services.json` to version control.
+> `google-services.json` to version control.
+
+For more troubleshooting help, see the [Troubleshooting Guide](troubleshooting.md).
+
+---
 
 ## IDE Setup
 
 For the best development experience:
 
-1. **Enable Compose Preview**:
-	- Ensure "Live Edit of Literals" is enabled
-	- Configure appropriate preview devices
+**Enable Compose Preview:**
+- Ensure "Live Edit of Literals" is enabled
+- Configure appropriate preview devices
 
-2. **Run Configurations**:
-	- Use provided run configurations for common tasks
-	- Signing Report configuration helps get SHA-1 for Firebase
+**Run Configurations:**
+- Use provided run configurations for common tasks
+- Signing Report configuration helps get SHA-1 for Firebase
 
-3. **Code Style**:
-	- Import the project's `.editorconfig`
-	- Enable "Format on Save" for Kotlin files
-	- Use the Spotless plugin for consistent formatting
+**Code Style:**
+- Import the project's `.editorconfig`
+- Enable "Format on Save" for Kotlin files
+- Use the Spotless plugin for consistent formatting
+
+---
 
 ## Further Reading
-- [Firebase Setup Guide](firebase.md): Learn how to set up Firebase features in your project
-- [Dependency Management](dependency.md): Understand how dependencies are managed in the project
-- [Architecture Overview](architecture.md): Learn about the app's architecture
-- [Design Philosophy](philosophy.md): Understand the design principles behind the architecture
-- [Adding New Features](guide.md): Learn how to add new features to the project
-- [Convention Plugins](plugins.md): Learn about custom Gradle plugins used in the project
-- [Performance Optimization](performance.md): Optimize the app for speed and efficiency
-- [Useful Tips & Tricks](tips.md): Get useful tips for development and debugging
-- [Publishing to Play Store](fastlane.md): Learn how to publish your app to the Google Play Store
+
+- [Firebase Setup Guide](firebase.md) - Configure Firebase features in your project
+- [Architecture Overview](architecture.md) - Learn about the app's architecture
+- [Design Philosophy](philosophy.md) - Understand the design principles
+- [Adding New Features](guide.md) - Step-by-step feature implementation guide
+- [Dependency Management](dependency.md) - Understand dependency management
+- [Convention Plugins](plugins.md) - Learn about custom Gradle plugins
+- [Spotless Setup](spotless.md) - Code formatting and style enforcement
+- [GitHub CI/CD](github.md) - Continuous integration and deployment
+- [Performance Optimization](performance.md) - Optimize app speed and efficiency
+- [Tips & Tricks](tips.md) - Useful development and debugging tips
+- [Publishing to Play Store](fastlane.md) - Deploy your app to Google Play
