@@ -402,7 +402,7 @@ com.google.android.gms.common.api.ApiException: 10:
 5. Rebuild and reinstall app
 
 **References:**
-- [Firebase Setup Guide](firebase.md#authentication-setup)
+- [Firebase Setup Guide](firebase.md)
 - firebase/auth/src/main/kotlin/dev/atick/firebase/auth/data/AuthDataSource.kt
 
 ---
@@ -455,7 +455,7 @@ PERMISSION_DENIED: Missing or insufficient permissions
 
 **References:**
 - firebase/firestore/src/main/kotlin/dev/atick/firebase/firestore/data/FirebaseDataSource.kt
-- [Firebase Setup Guide](firebase.md#firestore-setup)
+- [Firebase Setup Guide](firebase.md#firestore-security-rules)
 
 ---
 

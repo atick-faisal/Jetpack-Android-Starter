@@ -1328,50 +1328,21 @@ class PostsViewModelTest {
 
 ## Summary
 
-### Key Takeaways
-
-1. **Choose the Right Pattern**:
-   - Network-Only for always-fresh data
-   - Local-Only for preferences/settings
-   - Offline-First for core app data with sync
-
-2. **Room is the Single Source of Truth** for offline-first:
-   - UI observes `Flow<T>` from local database
-   - Network updates happen in background
-   - Sync metadata tracks changes
-
-3. **Use Proper Threading**:
-   - Inject `@IoDispatcher` for data source operations
-   - Use `withContext(ioDispatcher)` for blocking calls
-   - Let Flow handle threading for reactive operations
-
-4. **Error Handling is Centralized**:
-   - Repository uses `suspendRunCatching`
-   - ViewModel uses `updateStateWith`/`updateWith`
-   - UI uses `StatefulComposable` for automatic error display
-
-5. **Testing is Straightforward**:
-   - Use fake implementations for data sources
-   - Test repository logic with unit tests
-   - Test ViewModel state updates with `runTest`
-
----
-
-## Summary
-
 This guide covered three main data flow patterns:
 
-- **Network-Only**: For real-time data that doesn't need offline access
-- **Local-Only**: For preferences and settings using DataStore
-- **Offline-First**: For user-generated content with Room as single source of truth
+- **Network-Only**: For real-time data that doesn't need offline access (weather, stock prices)
+- **Local-Only**: For preferences and settings using DataStore (theme, notifications)
+- **Offline-First**: For user-generated content with Room as single source of truth (posts, profiles)
 
-All patterns use:
-- **Repositories** as the interface to ViewModels
-- **Data Sources** for external system interaction
-- **Result** type for error handling
-- **Flow** for reactive data streams
+**Key Takeaways:**
 
-Choose the pattern that matches your feature's requirements.
+1. **Choose the Right Pattern** based on feature requirements
+2. **Room is the Single Source of Truth** for offline-first - UI observes local database, network updates happen in background
+3. **Use Proper Threading** - Inject `@IoDispatcher` and use `withContext(ioDispatcher)` for blocking calls
+4. **Error Handling is Centralized** - Repository uses `suspendRunCatching`, ViewModel uses `updateStateWith`/`updateWith`, UI uses `StatefulComposable`
+5. **Testing is Straightforward** - Use fake implementations for data sources and test with `runTest`
+
+All patterns use **Repositories** as the interface to ViewModels, **Data Sources** for external system interaction, **Result** type for error handling, and **Flow** for reactive data streams.
 
 ## Further Reading
 
