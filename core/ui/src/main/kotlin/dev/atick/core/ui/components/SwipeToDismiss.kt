@@ -37,11 +37,35 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 /**
- * A composable that allows swiping to dismiss an item.
+ * A composable that allows swiping from end to start to dismiss an item.
+ *
+ * This component provides:
+ * - **End-to-start swipe only**: Prevents accidental dismissal from start-to-end
+ * - **Visual feedback**: Shows delete icon with error container background color during swipe
+ * - **Animated background**: Background color animates based on swipe progress
+ * - **Confirmation**: onDelete is only called when swipe completes the threshold
+ *
+ * Common use cases include:
+ * - Dismissing items in a LazyColumn list
+ * - Removing notifications
+ * - Deleting messages or emails
+ *
+ * Usage example:
+ * ```kotlin
+ * LazyColumn {
+ *     items(items) { item ->
+ *         SwipeToDismiss(
+ *             onDelete = { viewModel.deleteItem(item.id) },
+ *         ) {
+ *             ItemCard(item = item)
+ *         }
+ *     }
+ * }
+ * ```
  *
  * @param onDelete The callback to be invoked when the item is swiped to dismiss.
  * @param modifier The modifier to be applied to the composable.
- * @param content The content to be displayed.
+ * @param content The content to be displayed (the item being dismissed).
  */
 @Composable
 fun SwipeToDismiss(
