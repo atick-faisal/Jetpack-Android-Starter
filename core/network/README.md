@@ -1,60 +1,57 @@
-# Core Network Module
+# Module :core:network
 
-**Purpose:** Provides network communication infrastructure, REST API setup, and network monitoring for the entire application.
+**Purpose:** Provides network communication infrastructure, REST API setup, and network monitoring
+for the entire application.
 
 ## Overview
 
-The `core:network` module handles all network-related operations including HTTP communication via Retrofit and OkHttp. It provides standardized patterns for making API calls, handling network errors, and managing network state.
+The `core:network` module handles all network-related operations including HTTP communication via
+Retrofit and OkHttp. It provides standardized patterns for making API calls, handling network
+errors, and managing network state.
 
 ## Key Concepts
 
 ### 1. Network Data Source Pattern
+
 - **`NetworkDataSource`**: Interface for network operations
 - Clean separation between network and repository layers
 - Automatic error handling with Kotlin Result
 - Thread-safe with injected IO dispatcher
 
 ### 2. Retrofit Configuration
+
 - Kotlin serialization for JSON parsing
 - OkHttp interceptors for logging and authentication
 - Base URL configuration via BuildConfig
 - Timeout and retry policies
 
 ### 3. Network Utilities
+
 - **`NetworkUtils`**: Connectivity monitoring
 - Network state observation with Flow
 - Offline detection for caching strategies
 
 ## When to Use This Module
 
-✅ **Use `core:network` when:**
+**Use `core:network` when:**
+
 - Making REST API calls
 - Need network connectivity monitoring
 - Implementing remote data sources
 - Need HTTP interceptors (auth, logging)
 - Loading images from network
 
-❌ **Don't use `core:network` for:**
+**Don't use `core:network` for:**
+
 - Local database operations (use `core:room`)
 - Local preferences (use `core:preferences`)
 - UI components (use `core:ui`)
 - Firebase operations (use `firebase:*` modules)
 
-## Module Structure
-
-```
-core/network/
-├── di/
-│   └── NetworkModule.kt          # Retrofit, OkHttp providers
-├── model/
-│   └── NetworkModels.kt          # API response models
-└── utils/
-    └── NetworkUtils.kt           # Connectivity utilities
-```
-
 ## Common Patterns
 
 ### Implementing a Network Data Source
+
 ```kotlin
 interface UserNetworkDataSource {
     suspend fun getUsers(): List<UserDto>
@@ -81,6 +78,7 @@ class RetrofitUserNetworkDataSource @Inject constructor(
 ```
 
 ### Repository Using Network Data Source
+
 ```kotlin
 class UserRepositoryImpl @Inject constructor(
     private val networkDataSource: UserNetworkDataSource,
@@ -94,6 +92,7 @@ class UserRepositoryImpl @Inject constructor(
 ```
 
 ### Network State Monitoring
+
 ```kotlin
 @HiltViewModel
 class MyViewModel @Inject constructor(
@@ -105,6 +104,7 @@ class MyViewModel @Inject constructor(
 ```
 
 ### Defining API Interface
+
 ```kotlin
 interface UserApi {
     @GET("users")
@@ -152,13 +152,13 @@ This module uses the Gradle Secrets plugin to manage API keys and endpoints secu
 # secrets.defaults.properties (version controlled)
 apiKey=dummy-key
 apiEndpoint=https://example.com
-
 # local.properties (not version controlled, add your real secrets)
 apiKey=actual-secret-key
 apiEndpoint=actual-endpoint
 ```
 
 Access in code via BuildConfig:
+
 ```kotlin
 BuildConfig.API_KEY
 BuildConfig.API_ENDPOINT
@@ -169,6 +169,7 @@ BuildConfig.API_ENDPOINT
 For detailed API documentation, see the [Dokka-generated API reference](../../docs/api/).
 
 Key APIs:
+
 - [NetworkUtils](../../docs/api/core/network/dev.atick.core.network.utils/-network-utils.html)
 - [NetworkDataSource](../../docs/api/core/network/dev.atick.core.network.model/-network-data-source.html)
 
@@ -188,6 +189,7 @@ override suspend fun getData(): Result<Data> = suspendRunCatching {
 ```
 
 Common HTTP errors are handled automatically:
+
 - **401/403**: Authentication errors
 - **404**: Resource not found
 - **500**: Server errors

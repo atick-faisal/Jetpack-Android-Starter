@@ -1,26 +1,32 @@
-# Core Preferences Module
+# Module :core:preferences
 
-**Purpose:** Provides type-safe local preferences storage using DataStore for user settings and app configuration.
+**Purpose:** Provides type-safe local preferences storage using DataStore for user settings and app
+configuration.
 
 ## Overview
 
-The `core:preferences` module handles lightweight data persistence using Jetpack DataStore. It provides reactive, type-safe access to user preferences like theme settings, authentication tokens, and app configuration.
+The `core:preferences` module handles lightweight data persistence using Jetpack DataStore. It
+provides reactive, type-safe access to user preferences like theme settings, authentication tokens,
+and app configuration.
 
 ## Key Concepts
 
 ### 1. DataStore Preferences
+
 - **Type-safe** storage with Kotlin serialization
 - **Reactive** updates with Flow
 - **Transactional** updates (all-or-nothing)
 - **No runtime exceptions** (unlike SharedPreferences)
 
 ### 2. User Preferences Data Source
+
 - **`UserPreferencesDataSource`**: Interface for preference operations
 - Centralized preference management
 - Observable preference changes
 - Clean separation from business logic
 
 ### 3. Preference Types
+
 - Simple values (Boolean, Int, String)
 - Enums (Theme, Language)
 - Custom serializable objects
@@ -28,34 +34,25 @@ The `core:preferences` module handles lightweight data persistence using Jetpack
 
 ## When to Use This Module
 
-✅ **Use `core:preferences` when:**
+**Use `core:preferences` when:**
+
 - Storing user settings (theme, language, notifications)
 - Persisting authentication tokens
 - Saving simple app configuration
 - Need reactive preference updates
 - Storing lightweight key-value data
 
-❌ **Don't use `core:preferences` for:**
+**Don't use `core:preferences` for:**
+
 - Large datasets (use `core:room`)
 - Complex relational data (use `core:room`)
 - Temporary state (use StateFlow in ViewModels)
 - Sensitive data without encryption (use EncryptedSharedPreferences)
 
-## Module Structure
-
-```
-core/preferences/
-├── di/
-│   └── PreferencesModule.kt     # DataStore providers
-├── model/
-│   └── UserPreferences.kt       # Preference data models
-└── utils/
-    └── UserPreferencesDataSource.kt  # Preferences interface
-```
-
 ## Common Patterns
 
 ### Defining Preferences Data Class
+
 ```kotlin
 @Serializable
 data class UserPreferences(
@@ -73,6 +70,7 @@ enum class ThemeMode {
 ```
 
 ### Implementing Preferences Data Source
+
 ```kotlin
 interface UserPreferencesDataSource {
     val preferences: Flow<UserPreferences>
@@ -117,6 +115,7 @@ class DataStoreUserPreferencesDataSource @Inject constructor(
 ```
 
 ### Using Preferences in Repository
+
 ```kotlin
 class SettingsRepositoryImpl @Inject constructor(
     private val preferencesDataSource: UserPreferencesDataSource
@@ -131,6 +130,7 @@ class SettingsRepositoryImpl @Inject constructor(
 ```
 
 ### Using Preferences in ViewModel
+
 ```kotlin
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
@@ -148,6 +148,7 @@ class SettingsViewModel @Inject constructor(
 ```
 
 ### Authentication State Management
+
 ```kotlin
 class AuthRepositoryImpl @Inject constructor(
     private val preferencesDataSource: UserPreferencesDataSource
@@ -191,6 +192,7 @@ graph TD
 ## DataStore Setup
 
 ### Providing DataStore Instance
+
 ```kotlin
 @Module
 @InstallIn(SingletonComponent::class)
@@ -209,6 +211,7 @@ object PreferencesModule {
 ```
 
 ### Custom Serializer
+
 ```kotlin
 object UserPreferencesSerializer : Serializer<UserPreferences> {
     override val defaultValue: UserPreferences = UserPreferences()
@@ -237,6 +240,7 @@ object UserPreferencesSerializer : Serializer<UserPreferences> {
 For detailed API documentation, see the [Dokka-generated API reference](../../docs/api/).
 
 Key APIs:
+
 - [UserPreferencesDataSource](../../docs/api/core/preferences/dev.atick.core.preferences.utils/-user-preferences-data-source.html)
 - [UserPreferences](../../docs/api/core/preferences/dev.atick.core.preferences.model/-user-preferences.html)
 
@@ -248,15 +252,17 @@ Key APIs:
 ## DataStore vs SharedPreferences
 
 **Use DataStore (this module) for:**
-- ✅ Type safety
-- ✅ Asynchronous operations
-- ✅ Error handling with Flow
-- ✅ Data consistency guarantees
-- ✅ Support for complex objects
+
+- Type safety
+- Asynchronous operations
+- Error handling with Flow
+- Data consistency guarantees
+- Support for complex objects
 
 **Use SharedPreferences for:**
-- ❌ Legacy code only
-- ❌ Not recommended for new features
+
+- Legacy code only
+- Not recommended for new features
 
 ## Best Practices
 

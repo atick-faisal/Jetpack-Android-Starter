@@ -1,24 +1,30 @@
-# Core Android Module
+# Module :core:android
 
-**Purpose:** Provides essential Android utilities, extension functions, coroutine utilities, and dependency injection setup for the entire application.
+**Purpose:** Provides essential Android utilities, extension functions, coroutine utilities, and
+dependency injection setup for the entire application.
 
 ## Overview
 
-The `core:android` module serves as the foundation for common Android functionality across all modules. It contains utilities that don't depend on UI or domain-specific logic, making it the lowest-level shared module in the application.
+The `core:android` module serves as the foundation for common Android functionality across all
+modules. It contains utilities that don't depend on UI or domain-specific logic, making it the
+lowest-level shared module in the application.
 
 ## Key Concepts
 
 ### 1. Coroutine Utilities
+
 - **`suspendRunCatching`**: Safer alternative to `runCatching` for suspend functions
 - **`suspendCoroutineWithTimeout`**: Timeout-aware coroutine suspension
 - Thread-safe error handling for asynchronous operations
 
 ### 2. State Management Primitives
+
 - **`OneTimeEvent`**: Thread-safe wrapper for one-time events (navigation, messages)
 - **`Resource`**: Offline-first data wrapper with Success/Error/Loading states
 - **`networkBoundResource`**: Complete offline-first pattern implementation
 
 ### 3. Extension Functions
+
 - **Flow Extensions**: `stateInDelayed` for performance optimization
 - **String Extensions**: Email, password, full name validation
 - **Number Extensions**: Formatting, timestamp conversion
@@ -26,12 +32,14 @@ The `core:android` module serves as the foundation for common Android functional
 - **Throwable Extensions**: Error message extraction, state management integration
 
 ### 4. Dependency Injection (Hilt)
+
 - **Dispatcher Qualifiers**: `@IoDispatcher`, `@DefaultDispatcher`, `@MainDispatcher`
 - Always use injected dispatchers for testability and consistency
 
 ## When to Use This Module
 
-✅ **Use `core:android` when:**
+**Use `core:android` when:**
+
 - You need Android-specific utilities (Context, Resources)
 - Working with coroutines and need timeout or safe error handling
 - Implementing repositories with offline-first patterns
@@ -39,33 +47,17 @@ The `core:android` module serves as the foundation for common Android functional
 - Managing one-time events (navigation, snackbar messages)
 - Need thread-safe dispatchers for background work
 
-❌ **Don't use `core:android` for:**
+**Don't use `core:android` for:**
+
 - UI components or Compose utilities (use `core:ui`)
 - Network operations (use `core:network`)
 - Database operations (use `core:room`)
 - Preferences/settings (use `core:preferences`)
 
-## Module Structure
-
-```
-core/android/
-├── di/
-│   └── DispatcherModule.kt       # Coroutine dispatcher providers
-├── extensions/
-│   ├── ContextExtensions.kt      # Context utility functions
-│   ├── FlowExtensions.kt         # Flow operators
-│   ├── NumberExtensions.kt       # Number formatting
-│   ├── StringExtensions.kt       # String validation
-│   └── ThrowableExtensions.kt    # Error handling
-└── utils/
-    ├── CoroutineUtils.kt         # Coroutine helpers
-    ├── OneTimeEvent.kt           # One-time event wrapper
-    └── Resource.kt               # Offline-first pattern
-```
-
 ## Common Patterns
 
 ### Repository with Offline-First Pattern
+
 ```kotlin
 class MyRepositoryImpl @Inject constructor(
     private val localDataSource: LocalDataSource,
@@ -84,6 +76,7 @@ class MyRepositoryImpl @Inject constructor(
 ```
 
 ### ViewModel with OneTimeEvent
+
 ```kotlin
 @HiltViewModel
 class MyViewModel @Inject constructor(
@@ -100,6 +93,7 @@ class MyViewModel @Inject constructor(
 ```
 
 ### Using Injected Dispatchers
+
 ```kotlin
 class MyDataSource @Inject constructor(
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher
@@ -134,6 +128,7 @@ graph TD
 For detailed API documentation, see the [Dokka-generated API reference](../../docs/api/).
 
 Key APIs:
+
 - [CoroutineUtils](../../docs/api/core/android/dev.atick.core.android.utils/-coroutine-utils.html)
 - [OneTimeEvent](../../docs/api/core/android/dev.atick.core.android.utils/-one-time-event.html)
 - [Resource](../../docs/api/core/android/dev.atick.core.android.utils/-resource.html)

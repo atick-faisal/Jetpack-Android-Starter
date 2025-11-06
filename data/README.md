@@ -1,27 +1,34 @@
-# Data Module
+# Module :data
 
-**Purpose:** Provides repository implementations that coordinate between local and remote data sources, implementing the single source of truth pattern.
+**Purpose:** Provides repository implementations that coordinate between local and remote data
+sources, implementing the single source of truth pattern.
 
 ## Overview
 
-The `data` module is the central data management layer that implements the **Repository Pattern**. It coordinates between local (Room, DataStore) and remote (Network, Firebase) data sources to provide a unified, reactive API for the UI layer.
+The `data` module is the central data management layer that implements the **Repository Pattern**.
+It coordinates between local (Room, DataStore) and remote (Network, Firebase) data sources to
+provide a unified, reactive API for the UI layer.
 
 ## Key Concepts
 
 ### 1. Repository Pattern
+
 - **Single source of truth**: Local database is always the source of truth
 - **Offline-first**: UI always reads from local database
 - **Background sync**: Network data updates local database
 - **Reactive**: Exposes data as Flow for automatic UI updates
 
 ### 2. Two-Layer Architecture
+
 This template intentionally uses a **two-layer architecture** (UI + Data):
+
 - **NO domain layer** by design
 - ViewModels call repositories directly
 - Reduces complexity and boilerplate
 - Sufficient for most applications
 
 ### 3. Data Flow
+
 ```
 Network/Firebase → Repository → Local Database → Flow → ViewModel → UI
                        ↓
@@ -30,36 +37,24 @@ Network/Firebase → Repository → Local Database → Flow → ViewModel → UI
 
 ## When to Use This Module
 
-✅ **Use `data` module for:**
+**Use `data` module for:**
+
 - Implementing repository interfaces
 - Coordinating local and remote data sources
 - Offline-first data management
 - Data transformation (DTO ↔ Entity ↔ Domain Model)
 - Caching strategies
 
-❌ **Don't use `data` module for:**
+**Don't use `data` module for:**
+
 - UI logic (use feature modules)
 - Direct database access (use repositories)
 - Business logic without data access (consider if you need a domain layer)
 
-## Module Structure
-
-```
-data/
-├── di/
-│   └── RepositoryModule.kt      # Repository DI bindings
-├── model/
-│   └── DomainModels.kt          # Optional domain models
-├── repository/
-│   ├── JetpackRepository.kt     # Repository interface
-│   └── JetpackRepositoryImpl.kt # Repository implementation
-└── mapper/
-    └── DataMappers.kt           # Entity/DTO/Domain conversions
-```
-
 ## Common Patterns
 
 ### Repository Interface
+
 ```kotlin
 interface UserRepository {
     // Observe data (reactive)
@@ -75,6 +70,7 @@ interface UserRepository {
 ```
 
 ### Repository Implementation (Offline-First)
+
 ```kotlin
 class UserRepositoryImpl @Inject constructor(
     private val localDataSource: UserLocalDataSource,
@@ -126,6 +122,7 @@ class UserRepositoryImpl @Inject constructor(
 ```
 
 ### Using `networkBoundResource` Helper
+
 ```kotlin
 class UserRepositoryImpl @Inject constructor(
     private val localDataSource: UserLocalDataSource,
@@ -153,6 +150,7 @@ class UserRepositoryImpl @Inject constructor(
 ```
 
 ### Data Transformation (Mappers)
+
 ```kotlin
 // DTO (from network) → Entity (Room)
 fun UserDto.toEntity(): UserEntity = UserEntity(
@@ -218,6 +216,7 @@ graph TD
 ```
 
 ## Hilt Module Setup
+
 ```kotlin
 @Module
 @InstallIn(SingletonComponent::class)
@@ -244,6 +243,7 @@ For detailed API documentation, see the [Dokka-generated API reference](../docs/
 ## Repository Patterns
 
 ### 1. Network-Only Repository
+
 ```kotlin
 class RemoteOnlyRepositoryImpl @Inject constructor(
     private val networkDataSource: NetworkDataSource
@@ -255,6 +255,7 @@ class RemoteOnlyRepositoryImpl @Inject constructor(
 ```
 
 ### 2. Local-Only Repository
+
 ```kotlin
 class LocalOnlyRepositoryImpl @Inject constructor(
     private val localDataSource: LocalDataSource
@@ -266,6 +267,7 @@ class LocalOnlyRepositoryImpl @Inject constructor(
 ```
 
 ### 3. Offline-First with Manual Sync
+
 ```kotlin
 class OfflineFirstRepositoryImpl @Inject constructor(
     private val localDataSource: LocalDataSource,
@@ -285,6 +287,7 @@ class OfflineFirstRepositoryImpl @Inject constructor(
 ```
 
 ### 4. Offline-First with Automatic Sync (using `networkBoundResource`)
+
 See example above using `networkBoundResource` helper.
 
 ## Best Practices
@@ -305,12 +308,14 @@ See example above using `networkBoundResource` helper.
 This template follows a **pragmatic simplicity** approach:
 
 **Two-layer architecture (UI + Data):**
+
 - ViewModels call repositories directly
 - Repositories return domain models (simple data classes)
 - Reduces boilerplate and indirection
 - Easier to understand and maintain
 
 **When to add a domain layer:**
+
 - Complex business logic that doesn't fit in repositories
 - Multiple UI representations of the same data
 - Shared business rules across features

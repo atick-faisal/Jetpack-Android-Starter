@@ -1,37 +1,46 @@
-# Core UI Module
+# Module :core:ui
 
-**Purpose:** Provides UI components, state management utilities, Compose helpers, and Material3 theming for the entire application.
+**Purpose:** Provides UI components, state management utilities, Compose helpers, and Material3
+theming for the entire application.
 
 ## Overview
 
-The `core:ui` module contains everything related to the user interface layer that is shared across features. This includes the state management pattern (`UiState`, `StatefulComposable`), common Compose components, Material3 theme, and UI utilities.
+The `core:ui` module contains everything related to the user interface layer that is shared across
+features. This includes the state management pattern (`UiState`, `StatefulComposable`), common
+Compose components, Material3 theme, and UI utilities.
 
 ## Key Concepts
 
 ### 1. State Management Pattern
+
 - **`UiState<T>`**: Wrapper for screen state with loading, data, and error
 - **`StatefulComposable`**: Centralized loading and error handling for all screens
-- **State Update Functions**: `updateState`, `updateStateWith`, `updateWith` with Kotlin context parameters
+- **State Update Functions**: `updateState`, `updateStateWith`, `updateWith` with Kotlin context
+  parameters
 - **`OneTimeEvent`**: Thread-safe one-time event handling for navigation and messages
 
 ### 2. UI Utilities
+
 - **`UiText`**: Type-safe, testable text handling (strings, resources, dynamic)
 - **`SnackbarAction`**: Standardized snackbar action pattern
 - **`TextFieldData`**: Form field state management with validation
 - **Preview Annotations**: `@PreviewDevices`, `@PreviewThemes` for multi-configuration previews
 
 ### 3. Compose Extensions
+
 - **Activity Extensions**: Activity results, permissions, dark theme detection
 - **Lifecycle Extensions**: Flow collection, LiveData observation with lifecycle awareness
 
 ### 4. Theme System
+
 - **Material3 Design System**: Complete theme with dynamic colors
 - **Typography**: Predefined text styles
 - **Color Schemes**: Light and dark themes
 
 ## When to Use This Module
 
-✅ **Use `core:ui` when:**
+**Use `core:ui` when:**
+
 - Building screens with Jetpack Compose
 - Managing screen state with UiState pattern
 - Need common UI components (buttons, text fields, etc.)
@@ -40,37 +49,17 @@ The `core:ui` module contains everything related to the user interface layer tha
 - Need Material3 theming
 - Requesting permissions or activity results
 
-❌ **Don't use `core:ui` for:**
+**Don't use `core:ui` for:**
+
 - Non-UI utilities (use `core:android`)
 - Network operations (use `core:network`)
 - Database operations (use `core:room`)
 - Business logic (implement in repositories/ViewModels)
 
-## Module Structure
-
-```
-core/ui/
-├── extensions/
-│   ├── ActivityExtensions.kt     # Activity utilities (permissions, results)
-│   └── LifecycleExtensions.kt    # Lifecycle-aware Flow/LiveData
-├── theme/
-│   ├── Color.kt                  # Color definitions
-│   ├── Theme.kt                  # Material3 theme setup
-│   └── Type.kt                   # Typography definitions
-└── utils/
-    ├── StatefulComposable.kt     # UiState pattern implementation
-    ├── UiText.kt                 # Type-safe text handling
-    ├── SnackbarAction.kt         # Snackbar action model
-    ├── TextFieldData.kt          # Form field state
-    ├── PreviewDevices.kt         # Multi-device previews
-    ├── PreviewThemes.kt          # Multi-theme previews
-    ├── LocaleUtils.kt            # Locale management
-    └── TakePictureActivityContract.kt  # Camera integration
-```
-
 ## Common Patterns
 
 ### Screen with State Management
+
 ```kotlin
 // Screen data class
 data class MyScreenData(
@@ -131,6 +120,7 @@ private fun MyScreen(
 ```
 
 ### Type-Safe Text Handling
+
 ```kotlin
 // ViewModel
 fun validateInput(text: String) {
@@ -154,6 +144,7 @@ fun MyComposable(errorMessage: UiText?) {
 ```
 
 ### Permission Handling
+
 ```kotlin
 // Activity or Fragment
 val permissionLauncher = rememberLauncherForActivityResult(
@@ -204,6 +195,7 @@ graph TD
 For detailed API documentation, see the [Dokka-generated API reference](../../docs/api/).
 
 Key APIs:
+
 - [StatefulComposable & UiState](../../docs/api/core/ui/dev.atick.core.ui.utils/-stateful-composable.html)
 - [UiText](../../docs/api/core/ui/dev.atick.core.ui.utils/-ui-text.html)
 - [UI Extensions](../../docs/api/core/ui/dev.atick.core.ui.extensions/)
@@ -218,18 +210,24 @@ Key APIs:
 ## Philosophy
 
 ### Separation of Concerns
+
 This module enforces a clear separation between:
+
 - **Route composables**: Connect to ViewModels, handle state observation
 - **Screen composables**: Pure UI, no ViewModel dependency, fully testable
 
 ### Centralized Error Handling
+
 `StatefulComposable` ensures:
+
 - Consistent loading indicators across all screens
 - Standardized error messages via snackbar
 - One-time event consumption (no duplicate messages)
 
 ### Testable UI
+
 By using `UiText` instead of direct strings:
+
 - ViewModels don't need Context
 - Business logic is fully testable
 - Localization is handled at the UI layer

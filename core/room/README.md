@@ -1,26 +1,32 @@
-# Core Room Module
+# Module :core:room
 
-**Purpose:** Provides local database infrastructure using Room ORM for offline-first data persistence and caching.
+**Purpose:** Provides local database infrastructure using Room ORM for offline-first data
+persistence and caching.
 
 ## Overview
 
-The `core:room` module handles all local database operations using Room. It provides type-safe database access, reactive queries with Flow, and supports the offline-first architecture pattern with sync metadata.
+The `core:room` module handles all local database operations using Room. It provides type-safe
+database access, reactive queries with Flow, and supports the offline-first architecture pattern
+with sync metadata.
 
 ## Key Concepts
 
 ### 1. Local Data Source Pattern
+
 - **`LocalDataSource`**: Interface for database operations
 - Clean separation between database and repository layers
 - Observable queries with Kotlin Flow
 - Thread-safe with injected IO dispatcher
 
 ### 2. Sync-Aware Entities
+
 - **`JetpackEntity`**: Base entity with sync metadata
 - Sync state tracking (`SyncAction`: NONE, CREATE, UPDATE, DELETE)
 - Timestamp management (`lastUpdated`, `lastSynced`)
 - Soft delete support with `deleted` flag
 
 ### 3. Room Database
+
 - SQLite wrapper with compile-time query verification
 - Type converters for complex data types
 - Database migrations
@@ -28,39 +34,25 @@ The `core:room` module handles all local database operations using Room. It prov
 
 ## When to Use This Module
 
-✅ **Use `core:room` when:**
+**Use `core:room` when:**
+
 - Storing data locally for offline access
 - Implementing caching strategies
 - Need reactive database queries
 - Tracking sync state for bidirectional sync
 - Implementing offline-first patterns
 
-❌ **Don't use `core:room` for:**
+**Don't use `core:room` for:**
+
 - Network operations (use `core:network`)
 - Simple preferences (use `core:preferences`)
 - UI state (use StateFlow in ViewModels)
 - Temporary data (use in-memory collections)
 
-## Module Structure
-
-```
-core/room/
-├── dao/
-│   └── JetpackDao.kt            # Example DAO
-├── database/
-│   └── JetpackDatabase.kt       # Database definition
-├── entity/
-│   └── JetpackEntity.kt         # Entity with sync metadata
-├── di/
-│   └── DatabaseModule.kt        # Database providers
-└── utils/
-    ├── LocalDataSource.kt       # Data source interface
-    └── SyncAction.kt            # Sync state enum
-```
-
 ## Common Patterns
 
 ### Defining an Entity with Sync Metadata
+
 ```kotlin
 @Entity(tableName = "users")
 data class UserEntity(
@@ -77,6 +69,7 @@ data class UserEntity(
 ```
 
 ### Implementing a Local Data Source
+
 ```kotlin
 interface UserLocalDataSource {
     fun observeUsers(): Flow<List<UserEntity>>
@@ -116,6 +109,7 @@ class RoomUserLocalDataSource @Inject constructor(
 ```
 
 ### Defining a DAO
+
 ```kotlin
 @Dao
 interface UserDao {
@@ -140,6 +134,7 @@ interface UserDao {
 ```
 
 ### Repository with Offline-First Pattern
+
 ```kotlin
 class UserRepositoryImpl @Inject constructor(
     private val localDataSource: UserLocalDataSource,
@@ -196,6 +191,7 @@ graph TD
 ## Sync Metadata Explained
 
 ### SyncAction Enum
+
 ```kotlin
 enum class SyncAction {
     NONE,     // No pending changes
@@ -206,12 +202,15 @@ enum class SyncAction {
 ```
 
 ### Timestamp Fields
+
 - **`lastUpdated`**: Local modification timestamp
 - **`lastSynced`**: Last successful server sync timestamp
 - **`deleted`**: Soft delete flag (preserves data for sync)
 
 ### Soft Delete Pattern
+
 Instead of deleting records immediately:
+
 ```kotlin
 // Mark as deleted (preserves for sync)
 suspend fun deleteUser(id: String) {
@@ -250,8 +249,8 @@ fun provideDatabase(@ApplicationContext context: Context): AppDatabase {
         AppDatabase::class.java,
         "app-database"
     )
-    .addMigrations(MIGRATION_1_2)
-    .build()
+        .addMigrations(MIGRATION_1_2)
+        .build()
 }
 ```
 
@@ -260,6 +259,7 @@ fun provideDatabase(@ApplicationContext context: Context): AppDatabase {
 For detailed API documentation, see the [Dokka-generated API reference](../../docs/api/).
 
 Key APIs:
+
 - [LocalDataSource](../../docs/api/core/room/dev.atick.core.room.utils/-local-data-source.html)
 - [JetpackEntity](../../docs/api/core/room/dev.atick.core.room.entity/-jetpack-entity.html)
 - [SyncAction](../../docs/api/core/room/dev.atick.core.room.utils/-sync-action.html)
