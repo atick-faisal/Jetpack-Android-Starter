@@ -79,7 +79,7 @@ fun JetpackTopAppBar(
     actionIcon: ImageVector,
     actionIconContentDescription: String?,
     modifier: Modifier = Modifier,
-    colors: TopAppBarColors = TopAppBarDefaults.centerAlignedTopAppBarColors(),
+    colors: TopAppBarColors = TopAppBarDefaults.topAppBarColors(),
     onNavigationClick: () -> Unit = {},
     onActionClick: () -> Unit = {},
 ) {
@@ -138,7 +138,7 @@ fun JetpackTopAppBar(
     actionIcon: ImageVector,
     actionIconContentDescription: String?,
     modifier: Modifier = Modifier,
-    colors: TopAppBarColors = TopAppBarDefaults.centerAlignedTopAppBarColors(),
+    colors: TopAppBarColors = TopAppBarDefaults.topAppBarColors(),
     onActionClick: () -> Unit = {},
 ) {
     CenterAlignedTopAppBar(
@@ -189,7 +189,7 @@ fun JetpackTopAppBarWithAvatar(
     avatarUri: String?,
     avatarContentDescription: String?,
     modifier: Modifier = Modifier,
-    colors: TopAppBarColors = TopAppBarDefaults.centerAlignedTopAppBarColors(),
+    colors: TopAppBarColors = TopAppBarDefaults.topAppBarColors(),
     onAvatarClick: () -> Unit = {},
 ) {
     CenterAlignedTopAppBar(

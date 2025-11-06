@@ -73,19 +73,12 @@ fun SwipeToDismiss(
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit,
 ) {
-    val dismissState = rememberSwipeToDismissBoxState(
-        confirmValueChange = { dismissValue ->
-            when (dismissValue) {
-                SwipeToDismissBoxValue.StartToEnd -> false
-                SwipeToDismissBoxValue.EndToStart -> {
-                    onDelete()
-                    true
-                }
+    val dismissState = rememberSwipeToDismissBoxState()
 
-                SwipeToDismissBoxValue.Settled -> false
-            }
-        },
-    )
+    // Handle dismiss confirmation without deprecated confirmValueChange
+    if (dismissState.currentValue == SwipeToDismissBoxValue.EndToStart) {
+        onDelete()
+    }
 
     SwipeToDismissBox(
         state = dismissState,
