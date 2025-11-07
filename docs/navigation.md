@@ -1220,7 +1220,15 @@ This guide covered:
 
 ## Further Reading
 
+### Concept Guides
+
 - [Architecture Overview](architecture.md) - Understand where navigation fits in the architecture
 - [State Management](state-management.md) - Learn how to pass state through navigation
 - [Adding Features](guide.md) - Step-by-step guide including navigation setup
 - [Quick Reference](quick-reference.md#navigation) - Navigation patterns cheat sheet
+
+### Module Documentation
+
+- [App Module](../app/README.md) - Main app navigation setup and JetpackAppState
+- [Feature Auth Module](../feature/auth/README.md) - Example of authentication navigation flow
+- [Feature Home Module](../feature/home/README.md) - Example of nested navigation graph

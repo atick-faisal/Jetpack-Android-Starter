@@ -218,8 +218,16 @@ The architecture is intentionally simple but allows for growth when needed.
 
 ## Further Reading
 
+### Concept Guides
+
 - [Design Philosophy](philosophy.md) - Understand the design principles behind the architecture
 - [State Management](state-management.md) - Deep dive into the UiState pattern
 - [Adding Features](guide.md) - Step-by-step guide to implementing new features
 - [Data Flow](data-flow.md) - Understand data flow patterns (offline-first, caching, sync)
 - [Dependency Injection](dependency-injection.md) - Complete guide to Hilt setup and patterns
+
+### Module Documentation
+
+- [Core UI Module](../core/ui/README.md) - State management utilities and UI components
+- [Data Layer Module](../data/README.md) - Repository patterns and implementations
+- [App Module](../app/README.md) - Application architecture and MainActivity setup

@@ -922,7 +922,19 @@ class NewViewModel @Inject constructor(
 
 ## Further Reading
 
+### Concept Guides
+
 - [Quick Reference](quick-reference.md) - Cheat sheet for state management patterns
 - [Architecture Overview](architecture.md) - Understand the two-layer architecture
 - [Adding Features](guide.md) - Step-by-step implementation guide
-- API Documentation: [`StatefulComposable.kt`](../core/ui/src/main/kotlin/dev/atick/core/ui/utils/StatefulComposable.kt)
+- [Navigation Deep Dive](navigation.md) - Learn how navigation integrates with state
+
+### Module Documentation
+
+- [Core UI Module](../core/ui/README.md) - State management utilities and UiState wrapper
+- [Data Layer Module](../data/README.md) - Repository patterns and data flow
+- [Feature Modules](../feature/home/README.md) - Examples of state management in practice
+
+### API Documentation
+
+- [`StatefulComposable.kt`](../core/ui/src/main/kotlin/dev/atick/core/ui/utils/StatefulComposable.kt) - Stateful composable implementation

@@ -1455,8 +1455,19 @@ Follow the patterns in this guide to build beautiful, accessible, and performant
 
 ## Further Reading
 
+### Concept Guides
+
 - [Architecture Overview](architecture.md) - Understand where components fit in the architecture
 - [State Management](state-management.md) - Learn how to manage component state
 - [Adding Features](guide.md) - Step-by-step guide to building features with components
+- [Quick Reference](quick-reference.md) - Cheat sheet for common component patterns
+
+### Module Documentation
+
+- [Core UI Module](../core/ui/README.md) - Component architecture and state management utilities
+- [Feature Auth Module](../feature/auth/README.md) - Example of form components and authentication UI
+- [Feature Home Module](../feature/home/README.md) - Example of list components and data display
+
+### External Resources
+
 - [Material 3 Guidelines](https://m3.material.io/) - Official Material Design 3 documentation
-- API Reference: See [`core/ui`](../core/ui/README.md) for module architecture

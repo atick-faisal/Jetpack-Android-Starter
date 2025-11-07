@@ -378,3 +378,17 @@ Read more about automatic locale generation [here](https://developer.android.com
 > [!TIP]
 > Explore the `core` modules thoroughly - they contain many utilities that can save you time and
 > ensure consistency across your app.
+
+---
+
+## Further Reading
+
+- [Core UI Module](../core/ui/README.md) - UI components, state management utilities, and theming
+- [Core Android Module](../core/android/README.md) - Android utilities, extensions, and DI qualifiers
+- [Core Network Module](../core/network/README.md) - Network utilities and connection monitoring
+- [Data Layer](../data/README.md) - Repository patterns and data source management
+- [Sync Module](../sync/README.md) - Background synchronization with WorkManager
+- [State Management Guide](state-management.md) - Deep dive into state patterns and best practices
+- [Components Guide](components.md) - Comprehensive guide to all available components
+- [Performance Optimization](performance.md) - Performance best practices and optimization techniques
+- [Quick Reference](quick-reference.md) - Cheat sheet for common patterns and utilities

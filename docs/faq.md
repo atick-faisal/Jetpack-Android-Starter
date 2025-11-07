@@ -1325,6 +1325,8 @@ See [troubleshooting.md](./troubleshooting.md#firebase-issues) for more solution
 
 ## Additional Resources
 
+### Documentation Guides
+
 - **Architecture**: [architecture.md](./architecture.md)
 - **State Management**: [state-management.md](./state-management.md)
 - **Components**: [components.md](./components.md)
@@ -1333,6 +1335,15 @@ See [troubleshooting.md](./troubleshooting.md#firebase-issues) for more solution
 - **Dependency Injection**: [dependency-injection.md](./dependency-injection.md)
 - **Troubleshooting**: [troubleshooting.md](./troubleshooting.md)
 - **Quick Reference**: [quick-reference.md](./quick-reference.md)
+
+### Module Documentation
+
+- **Core UI**: [core/ui/README.md](../core/ui/README.md) - UI components and state management utilities
+- **Data Layer**: [data/README.md](../data/README.md) - Repository patterns and data sources
+- **Firebase Auth**: [firebase/auth/README.md](../firebase/auth/README.md) - Firebase Authentication integration
+- **Firebase Firestore**: [firebase/firestore/README.md](../firebase/firestore/README.md) - Cloud Firestore integration
+- **Sync**: [sync/README.md](../sync/README.md) - Background data synchronization
+- **App Module**: [app/README.md](../app/README.md) - Main application architecture
 
 > [!NOTE]
 > **API Documentation** is available after running `./gradlew dokkaGeneratePublicationHtml`. The generated docs will be at `build/dokka/html/index.html`.
