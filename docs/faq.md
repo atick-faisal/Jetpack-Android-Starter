@@ -1333,7 +1333,9 @@ See [troubleshooting.md](./troubleshooting.md#firebase-issues) for more solution
 - **Dependency Injection**: [dependency-injection.md](./dependency-injection.md)
 - **Troubleshooting**: [troubleshooting.md](./troubleshooting.md)
 - **Quick Reference**: [quick-reference.md](./quick-reference.md)
-- **API Documentation**: [Dokka Docs](../api/index.html)
+
+> [!NOTE]
+> **API Documentation** is available after running `./gradlew dokkaGeneratePublicationHtml`. The generated docs will be at `build/dokka/html/index.html`.
 
 ---
 

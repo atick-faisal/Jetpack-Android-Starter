@@ -16,7 +16,10 @@ This quick reference provides:
 - **Common Extensions** - StateFlow updates, Flow collection, context utilities
 - **Complete Example** - End-to-end feature implementation
 
-For detailed explanations, see the [full documentation](index.md) or [API reference](../api/index.html).
+For detailed explanations, see the [full documentation](index.md).
+
+> [!NOTE]
+> API documentation is available after running `./gradlew dokkaGeneratePublicationHtml`. The generated docs will be at `build/dokka/html/index.html` and can be deployed to `docs/api/` for viewing at `../api/index.html`.
 
 ---
 
@@ -123,7 +126,10 @@ fun FeatureScreen(
 }
 ```
 
-**[📚 Full API Documentation](../api/index.html)**
+**[📚 Full API Documentation](state-management.md)** - See State Management guide for detailed UiState patterns
+
+> [!NOTE]
+> Complete API documentation is available after running `./gradlew dokkaGeneratePublicationHtml`.
 
 ---
 
@@ -499,11 +505,10 @@ fun NavGraphBuilder.profileScreen(
 
 ## Further Reading
 
-- [Full API Documentation](../api/index.html) - Detailed KDoc for all APIs
 - [Architecture Guide](architecture.md) - Deep dive into architecture decisions
 - [Getting Started](getting-started.md) - Step-by-step setup guide
 - [Development Guide](guide.md) - Comprehensive development patterns
-- [State Management](state-management.md) - Complete state management guide
+- [State Management](state-management.md) - Complete state management guide with detailed UiState patterns
 - [Data Flow](data-flow.md) - Data flow patterns
 - [Navigation](navigation.md) - Type-safe navigation deep dive
 - [Dependency Injection](dependency-injection.md) - Complete DI guide
@@ -542,7 +547,7 @@ fun NavGraphBuilder.profileScreen(
 
 ```bash
 # Generate API docs
-./gradlew dokkaHtml
+./gradlew dokkaGeneratePublicationHtml
 
 # View at: build/dokka/html/index.html
 ```
