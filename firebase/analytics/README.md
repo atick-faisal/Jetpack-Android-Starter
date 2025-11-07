@@ -45,3 +45,13 @@ class YourClass @Inject constructor(
 
 The module integrates with the app's error handling system to automatically report uncaught
 exceptions to Firebase Crashlytics.
+
+## Setup
+
+> [!NOTE]
+> For Firebase setup instructions, including enabling Crashlytics in the Firebase Console, see the [Firebase Setup Guide](../../docs/firebase.md).
+
+## Related Documentation
+
+- **[Firebase Setup Guide](../../docs/firebase.md)** - Complete Firebase Console and local project setup
+- **[Firebase Crashlytics Docs](https://firebase.google.com/docs/crashlytics)** - Official Firebase Crashlytics documentation

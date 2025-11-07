@@ -59,9 +59,7 @@ class FirestoreDataSource @Inject constructor(
 
 ### Security Rules
 
-The module expects proper Firestore security rules to be set up. Checkout
-the [Firestore Security Rules](https://firebase.google.com/docs/firestore/security/get-started)
-documentation for more details.
+The module expects proper Firestore security rules to be set up. Here's a basic example:
 
 ```javascript
 rules_version = '2';
@@ -74,4 +72,17 @@ service cloud.firestore {
 }
 ```
 
+> [!NOTE]
+> For complete Firestore setup and production-ready security rules examples, see the [Firebase Setup Guide](../../docs/firebase.md#firestore-security-rules).
+
 All operations are performed with proper security context and error handling.
+
+## Setup
+
+> [!NOTE]
+> For Firebase Firestore setup instructions, including enabling Firestore in the Firebase Console and configuring security rules, see the [Firebase Setup Guide](../../docs/firebase.md).
+
+## Related Documentation
+
+- **[Firebase Setup Guide](../../docs/firebase.md)** - Complete Firebase Console and Firestore setup
+- **[Firestore Security Rules](https://firebase.google.com/docs/firestore/security/get-started)** - Official Firebase security rules documentation

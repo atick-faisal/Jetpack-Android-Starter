@@ -48,21 +48,16 @@ git clone --depth 1 -b main https://github.com/atick-faisal/Jetpack-Android-Star
 
 ## Setting Up Firebase Features
 
-To use Firebase authentication, Firestore, and analytics:
+This project includes Firebase integration for authentication, Firestore, and analytics. The debug variant works out of the box with a template `google-services.json`, but Firebase features won't be functional until you configure your own Firebase project.
 
-**Follow the Firebase Setup Guide** - See our [Firebase Setup Guide](firebase.md) to:
-- Create your Firebase project
-- Configure Authentication
-- Set up Firestore
-- Get your `google-services.json`
-
-**Prevent Git from tracking changes** to your Firebase configuration:
-
-```bash
-git update-index --skip-worktree app/google-services.json
-```
-
-**Replace the template file** at `app/google-services.json` with your own
+> [!NOTE]
+> For complete Firebase setup instructions, see the [Firebase Setup Guide](firebase.md). The guide covers:
+> - Creating your Firebase project
+> - Configuring Authentication (Google Sign-In and Email/Password)
+> - Setting up Firestore database
+> - Downloading and configuring `google-services.json`
+> - Setting up security rules
+> - Troubleshooting common Firebase issues
 
 ---
 

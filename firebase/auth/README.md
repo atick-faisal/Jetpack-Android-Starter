@@ -68,3 +68,13 @@ class AuthDataSource @Inject constructor(
 ### Credential Management
 
 The module uses Android's Credential Manager API for secure credential storage and retrieval.
+
+## Setup
+
+> [!NOTE]
+> For Firebase Authentication setup instructions, including enabling Google Sign-In and Email/Password authentication in the Firebase Console, see the [Firebase Setup Guide](../../docs/firebase.md).
+
+## Related Documentation
+
+- **[Firebase Setup Guide](../../docs/firebase.md)** - Complete Firebase Console and local project setup
+- **[Troubleshooting Guide](../../docs/troubleshooting.md)** - Firebase authentication issues and solutions
