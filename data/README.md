@@ -235,7 +235,8 @@ For detailed API documentation, see the [Dokka-generated API reference](../docs/
 
 ## Related Documentation
 
-- [Quick Reference Guide](../docs/quick-reference.md) - Repository patterns
+- [Data Flow Guide](../docs/data-flow.md) - Comprehensive data flow patterns and examples
+- [Quick Reference Guide](../docs/quick-reference.md) - Repository patterns cheat sheet
 - [Architecture Overview](../docs/architecture.md) - Two-layer architecture explained
 - [Core Room Module](../core/room/README.md) - Local data source patterns
 - [Core Network Module](../core/network/README.md) - Remote data source patterns
@@ -290,6 +291,161 @@ class OfflineFirstRepositoryImpl @Inject constructor(
 
 See example above using `networkBoundResource` helper.
 
+## Error Handling
+
+This template uses a **layered error handling approach** with `Result<T>` and centralized error management.
+
+### Repository-Level Error Handling
+
+All repository operations use `suspendRunCatching` to wrap errors in `Result<T>`:
+
+```kotlin
+override suspend fun createPost(post: Post): Result<Unit> {
+    return suspendRunCatching {
+        val userId = preferencesDataSource.getUserIdOrThrow()
+
+        // This can throw exceptions
+        localDataSource.upsertPost(
+            post.toEntity().copy(
+                userId = userId,
+                lastUpdated = System.currentTimeMillis(),
+                needsSync = true,
+                syncAction = SyncAction.UPSERT
+            )
+        )
+
+        // This can also throw
+        syncManager.requestSync()
+    }
+}
+```
+
+> [!IMPORTANT]
+> Always use `suspendRunCatching` in repositories. Never let exceptions bubble up to ViewModels.
+
+### ViewModel-Level Error Handling
+
+Use `updateStateWith` or `updateWith` for automatic error handling:
+
+```kotlin
+fun createPost(title: String, content: String) {
+    val newPost = Post(title = title, content = content)
+
+    // Errors are automatically caught and set in UiState.error
+    _uiState.updateWith {
+        postsRepository.createPost(newPost)
+    }
+}
+```
+
+The `updateStateWith` and `updateWith` functions automatically:
+- Set `loading = true` before the operation
+- Set `loading = false` after completion
+- Capture exceptions and set `error` field in UiState
+- Transform successful results into new state
+
+### UI-Level Error Handling
+
+`StatefulComposable` automatically displays errors via snackbar:
+
+```kotlin
+@Composable
+fun PostsRoute(
+    onShowSnackbar: suspend (String, SnackbarAction, Throwable?) -> Boolean,
+    viewModel: PostsViewModel = hiltViewModel()
+) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    StatefulComposable(
+        state = uiState,
+        onShowSnackbar = onShowSnackbar // Errors are shown automatically
+    ) { screenData ->
+        PostsScreen(
+            posts = screenData.posts,
+            onCreatePost = viewModel::createPost
+        )
+    }
+}
+```
+
+When an error occurs, `StatefulComposable`:
+1. Displays a snackbar with the error message
+2. Provides an optional "Retry" action
+3. Logs the error for debugging
+4. Maintains the current UI state (no crash)
+
+### Network-Specific Error Handling
+
+Handle specific network errors in repository:
+
+```kotlin
+override suspend fun syncPosts(): Result<Unit> {
+    return suspendRunCatching {
+        // Check network availability first
+        networkUtils.getCurrentState().first().let { state ->
+            if (state != NetworkState.CONNECTED) {
+                throw IOException("No network connection available")
+            }
+        }
+
+        // Proceed with sync
+        val userId = preferencesDataSource.getUserIdOrThrow()
+
+        // ... sync logic
+    }.onFailure { error ->
+        when (error) {
+            is IOException -> {
+                // Network error - data will sync later
+                Timber.w(error, "Network error during sync, will retry later")
+            }
+            is HttpException -> {
+                // Server error
+                Timber.e(error, "Server error during sync: ${error.code()}")
+            }
+            else -> {
+                // Unknown error
+                Timber.e(error, "Unknown error during sync")
+            }
+        }
+    }
+}
+```
+
+### Common HTTP Error Codes
+
+Network errors from Retrofit are converted to appropriate exceptions:
+
+| Error Code | Exception Type | Meaning | Typical Action |
+|------------|---------------|---------|----------------|
+| 401/403 | `HttpException` | Authentication failure | Sign user out, refresh token |
+| 404 | `HttpException` | Resource not found | Show "not found" message |
+| 500 | `HttpException` | Server error | Retry with backoff |
+| Network failure | `IOException` | No connectivity | Use cached data, retry later |
+
+### Error Flow Diagram
+
+```
+Repository Operation
+        ↓
+suspendRunCatching { ... }
+        ↓
+    [Success or Failure]
+        ↓
+    Result<T>
+        ↓
+    ViewModel
+        ↓
+updateStateWith/updateWith
+        ↓
+    [Auto-handle Result]
+        ↓
+    UiState (data or error)
+        ↓
+StatefulComposable
+        ↓
+[Show content or error snackbar]
+```
+
 ## Best Practices
 
 1. **Always use `suspendRunCatching`** for error handling in repositories
@@ -300,6 +456,8 @@ See example above using `networkBoundResource` helper.
 6. **Prefer local database as source of truth** for offline-first
 7. **Update sync metadata** when modifying local data
 8. **Return domain models** from repositories (hide DTOs and Entities)
+9. **Never let exceptions escape repositories** - wrap all operations in `suspendRunCatching`
+10. **Use specific error types** when possible (IOException for network, IllegalStateException for invalid states)
 
 ## Philosophy
 
@@ -330,29 +488,5 @@ This module is used by all feature modules that need data access:
 ```kotlin
 dependencies {
     implementation(project(":data"))
-}
-```
-
-## Testing Repositories
-
-```kotlin
-class UserRepositoryImplTest {
-    private lateinit var localDataSource: FakeUserLocalDataSource
-    private lateinit var networkDataSource: FakeUserNetworkDataSource
-    private lateinit var repository: UserRepositoryImpl
-
-    @Test
-    fun `observeUsers returns local data`() = runTest {
-        // Given
-        val entity = UserEntity(id = "1", name = "Test")
-        localDataSource.emit(listOf(entity))
-
-        // When
-        val users = repository.observeUsers().first()
-
-        // Then
-        assertEquals(1, users.size)
-        assertEquals("Test", users[0].name)
-    }
 }
 ```

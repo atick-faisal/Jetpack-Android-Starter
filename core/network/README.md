@@ -180,7 +180,7 @@ Key APIs:
 
 ## Error Handling
 
-Network errors are automatically converted to Kotlin `Result` in repositories:
+Network data sources throw exceptions on errors, which are caught by repositories using `suspendRunCatching`:
 
 ```kotlin
 override suspend fun getData(): Result<Data> = suspendRunCatching {
@@ -188,12 +188,10 @@ override suspend fun getData(): Result<Data> = suspendRunCatching {
 }
 ```
 
-Common HTTP errors are handled automatically:
+For comprehensive error handling patterns including HTTP error codes, error flow diagrams, and ViewModel/UI error handling, see:
 
-- **401/403**: Authentication errors
-- **404**: Resource not found
-- **500**: Server errors
-- **No network**: IOException
+> [!NOTE]
+> Complete error handling documentation is available in the [Data Module README](../../data/README.md#error-handling).
 
 ## Best Practices
 

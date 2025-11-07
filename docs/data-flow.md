@@ -14,7 +14,6 @@ This guide explains how data flows through the application layers, covering diff
 6. [Real-Time Data Updates](#real-time-data-updates)
 7. [Caching Strategies](#caching-strategies)
 8. [Error Handling](#error-handling)
-9. [Testing Data Flow](#testing-data-flow)
 
 ---
 
@@ -1086,243 +1085,16 @@ override fun observePosts(): Flow<Resource<List<Post>>> {
 
 ## Error Handling
 
-### Repository-Level Error Handling
+All data layer operations use a **layered error handling approach** with `Result<T>` for error propagation:
 
-All repository operations use `suspendRunCatching` to wrap errors in `Result<T>`:
+- **Repository Layer**: Uses `suspendRunCatching` to wrap all operations
+- **ViewModel Layer**: Uses `updateStateWith`/`updateWith` for automatic error capture
+- **UI Layer**: Uses `StatefulComposable` for automatic error display via snackbar
 
-```kotlin
-override suspend fun createPost(post: Post): Result<Unit> {
-    return suspendRunCatching {
-        val userId = preferencesDataSource.getUserIdOrThrow()
+For comprehensive error handling patterns including network-specific errors, HTTP error codes, and error flow diagrams, see:
 
-        // This can throw exceptions
-        localDataSource.upsertPost(
-            post.toEntity().copy(
-                userId = userId,
-                lastUpdated = System.currentTimeMillis(),
-                needsSync = true,
-                syncAction = SyncAction.UPSERT
-            )
-        )
-
-        // This can also throw
-        syncManager.requestSync()
-    }
-}
-```
-
-### ViewModel-Level Error Handling
-
-Use `updateStateWith` or `updateWith` for automatic error handling:
-
-```kotlin
-fun createPost(title: String, content: String) {
-    val newPost = Post(title = title, content = content)
-
-    // Errors are automatically caught and set in UiState.error
-    _uiState.updateWith {
-        postsRepository.createPost(newPost)
-    }
-}
-```
-
-### UI-Level Error Handling
-
-`StatefulComposable` automatically displays errors via snackbar:
-
-```kotlin
-@Composable
-fun PostsRoute(
-    onShowSnackbar: suspend (String, SnackbarAction, Throwable?) -> Boolean,
-    viewModel: PostsViewModel = hiltViewModel()
-) {
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-
-    StatefulComposable(
-        state = uiState,
-        onShowSnackbar = onShowSnackbar // Errors are shown automatically
-    ) { screenData ->
-        PostsScreen(
-            posts = screenData.posts,
-            onCreatePost = viewModel::createPost
-        )
-    }
-}
-```
-
-### Network-Specific Error Handling
-
-Handle specific network errors in repository:
-
-```kotlin
-override suspend fun syncPosts(): Result<Unit> {
-    return suspendRunCatching {
-        // Check network availability first
-        networkUtils.getCurrentState().first().let { state ->
-            if (state != NetworkState.CONNECTED) {
-                throw IOException("No network connection available")
-            }
-        }
-
-        // Proceed with sync
-        val userId = preferencesDataSource.getUserIdOrThrow()
-
-        // ... sync logic
-    }.onFailure { error ->
-        when (error) {
-            is IOException -> {
-                // Network error - data will sync later
-                Timber.w(error, "Network error during sync, will retry later")
-            }
-            is HttpException -> {
-                // Server error
-                Timber.e(error, "Server error during sync: ${error.code()}")
-            }
-            else -> {
-                // Unknown error
-                Timber.e(error, "Unknown error during sync")
-            }
-        }
-    }
-}
-```
-
----
-
-## Testing Data Flow
-
-### Testing Repositories
-
-```kotlin
-class PostsRepositoryImplTest {
-    @get:Rule
-    val mainDispatcherRule = MainDispatcherRule()
-
-    private lateinit var repository: PostsRepositoryImpl
-    private lateinit var fakeLocalDataSource: FakeLocalDataSource
-    private lateinit var fakeNetworkDataSource: FakePostsNetworkDataSource
-    private lateinit var fakePreferencesDataSource: FakeUserPreferencesDataSource
-
-    @Before
-    fun setup() {
-        fakeLocalDataSource = FakeLocalDataSource()
-        fakeNetworkDataSource = FakePostsNetworkDataSource()
-        fakePreferencesDataSource = FakeUserPreferencesDataSource()
-
-        repository = PostsRepositoryImpl(
-            localDataSource = fakeLocalDataSource,
-            networkDataSource = fakeNetworkDataSource,
-            preferencesDataSource = fakePreferencesDataSource,
-            syncManager = FakeSyncManager()
-        )
-    }
-
-    @Test
-    fun `observePosts emits local data immediately`() = runTest {
-        // Given
-        val testPosts = listOf(
-            PostEntity(id = "1", title = "Test Post", content = "Content")
-        )
-        fakeLocalDataSource.setPosts(testPosts)
-
-        // When
-        val posts = repository.observePosts().first()
-
-        // Then
-        assertEquals(1, posts.size)
-        assertEquals("Test Post", posts[0].title)
-    }
-
-    @Test
-    fun `createPost marks entity for sync`() = runTest {
-        // Given
-        val newPost = Post(title = "New Post", content = "Content")
-
-        // When
-        val result = repository.createOrUpdatePost(newPost)
-
-        // Then
-        assertTrue(result.isSuccess)
-        val savedPost = fakeLocalDataSource.getPosts("user-id").first()
-        assertTrue(savedPost.needsSync)
-        assertEquals(SyncAction.UPSERT, savedPost.syncAction)
-    }
-
-    @Test
-    fun `syncPosts pushes local changes and pulls remote updates`() = runTest {
-        // Given
-        val unsyncedPost = PostEntity(
-            id = "1",
-            title = "Unsynced",
-            content = "Content",
-            needsSync = true,
-            syncAction = SyncAction.UPSERT
-        )
-        fakeLocalDataSource.setPosts(listOf(unsyncedPost))
-
-        val remotePost = PostResponse(id = "2", title = "Remote", content = "Content")
-        fakeNetworkDataSource.setRemotePosts(listOf(remotePost))
-
-        // When
-        val result = repository.syncPosts()
-
-        // Then
-        assertTrue(result.isSuccess)
-
-        // Verify local post was pushed
-        assertEquals(1, fakeNetworkDataSource.createdPosts.size)
-
-        // Verify remote post was pulled
-        val localPosts = fakeLocalDataSource.getPosts("user-id")
-        assertEquals(2, localPosts.size)
-        assertTrue(localPosts.any { it.id == "2" })
-    }
-}
-```
-
-### Testing ViewModels with Data Flow
-
-```kotlin
-class PostsViewModelTest {
-    @get:Rule
-    val mainDispatcherRule = MainDispatcherRule()
-
-    private lateinit var viewModel: PostsViewModel
-    private lateinit var fakeRepository: FakePostsRepository
-
-    @Before
-    fun setup() {
-        fakeRepository = FakePostsRepository()
-        viewModel = PostsViewModel(fakeRepository)
-    }
-
-    @Test
-    fun `uiState reflects posts from repository`() = runTest {
-        // Given
-        val testPosts = listOf(
-            Post(id = "1", title = "Test", content = "Content")
-        )
-        fakeRepository.setPosts(testPosts)
-
-        // When
-        advanceUntilIdle()
-
-        // Then
-        assertEquals(testPosts, viewModel.uiState.value.data.posts)
-    }
-
-    @Test
-    fun `createPost triggers repository operation`() = runTest {
-        // When
-        viewModel.createPost("New Post", "Content")
-        advanceUntilIdle()
-
-        // Then
-        assertEquals(1, fakeRepository.createdPosts.size)
-        assertEquals("New Post", fakeRepository.createdPosts[0].title)
-    }
-}
-```
+> [!NOTE]
+> Complete error handling documentation is available in the [Data Module README](../data/README.md#error-handling).
 
 ---
 
@@ -1340,12 +1112,12 @@ This guide covered three main data flow patterns:
 2. **Room is the Single Source of Truth** for offline-first - UI observes local database, network updates happen in background
 3. **Use Proper Threading** - Inject `@IoDispatcher` and use `withContext(ioDispatcher)` for blocking calls
 4. **Error Handling is Centralized** - Repository uses `suspendRunCatching`, ViewModel uses `updateStateWith`/`updateWith`, UI uses `StatefulComposable`
-5. **Testing is Straightforward** - Use fake implementations for data sources and test with `runTest`
 
 All patterns use **Repositories** as the interface to ViewModels, **Data Sources** for external system interaction, **Result** type for error handling, and **Flow** for reactive data streams.
 
 ## Further Reading
 
+- [Data Module README](../data/README.md) - Repository patterns and error handling reference
 - [State Management](state-management.md) - Learn about ViewModel state patterns
 - [Architecture Overview](architecture.md) - Understand the two-layer architecture
 - [Adding Features](guide.md) - Step-by-step implementation guide
