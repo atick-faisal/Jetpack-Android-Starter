@@ -203,6 +203,7 @@ Key APIs:
 
 ## Related Documentation
 
+- [Component Usage Guide](../../docs/components.md) - Detailed guide for all UI components
 - [State Management Guide](../../docs/state-management.md) - Complete state management deep dive
 - [Quick Reference Guide](../../docs/quick-reference.md) - Common patterns cheat sheet
 - [Architecture Overview](../../docs/architecture.md) - Overall application architecture
