@@ -58,4 +58,5 @@ exceptions to Firebase Crashlytics.
 ## Related Documentation
 
 - **[Firebase Setup Guide](../../docs/firebase.md)** - Complete Firebase Console and local project setup
+- **[Troubleshooting Guide](../../docs/troubleshooting.md)** - Firebase Crashlytics issues and solutions
 - **[Firebase Crashlytics Docs](https://firebase.google.com/docs/crashlytics)** - Official Firebase Crashlytics documentation

@@ -236,6 +236,7 @@ For detailed API documentation, see the [Dokka-generated API reference](../docs/
 ## Related Documentation
 
 - [Data Flow Guide](../docs/data-flow.md) - Comprehensive data flow patterns and examples
+- [Adding a Feature Guide](../docs/guide.md) - Step-by-step guide with repository implementation example
 - [Quick Reference Guide](../docs/quick-reference.md) - Repository patterns cheat sheet
 - [Architecture Overview](../docs/architecture.md) - Two-layer architecture explained
 - [Core Room Module](../core/room/README.md) - Local data source patterns

@@ -77,3 +77,9 @@ fun SettingsDialog(
 	```
 
 The module uses DataStore Preferences for persistent storage of user settings.
+
+## Related Documentation
+
+- **[Adding a Feature Guide](../../docs/guide.md)** - Step-by-step template for creating new features
+- **[State Management](../../docs/state-management.md)** - UiState pattern and ViewModel best practices
+- **[Core Preferences](../../core/preferences/README.md)** - DataStore implementation for settings persistence

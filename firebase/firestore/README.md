@@ -85,4 +85,5 @@ All operations are performed with proper security context and error handling.
 ## Related Documentation
 
 - **[Firebase Setup Guide](../../docs/firebase.md)** - Complete Firebase Console and Firestore setup
+- **[Troubleshooting Guide](../../docs/troubleshooting.md)** - Firebase Firestore issues and solutions
 - **[Firestore Security Rules](https://firebase.google.com/docs/firestore/security/get-started)** - Official Firebase security rules documentation

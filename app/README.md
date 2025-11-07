@@ -152,3 +152,9 @@ val mVersionCode = majorUpdateVersion.times(10_000)
     .plus(minorUpdateVersion.times(100))
     .plus(patchVersion)
 ```
+
+## Related Documentation
+
+- [Navigation Deep Dive](../docs/navigation.md) - Type-safe navigation patterns and implementation
+- [Architecture Overview](../docs/architecture.md) - Overall application architecture and design decisions
+- [Dependency Injection Guide](../docs/dependency-injection.md) - Comprehensive Hilt setup and patterns

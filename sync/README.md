@@ -330,3 +330,8 @@ adb exec-out run-as dev.atick.jetpack sqlite3 /data/data/dev.atick.jetpack/datab
 - **[Firebase Setup](../docs/firebase.md)** - Firestore setup and security rules
 - **[Data Repository Patterns](../data/README.md)** - Repository implementation patterns
 - **[WorkManager Documentation](https://developer.android.com/topic/libraries/architecture/workmanager)** - Official Android WorkManager guide
+
+### Implementation Reference
+
+- **SyncWorker**: `sync/src/main/kotlin/dev/atick/sync/worker/SyncWorker.kt`
+- **SyncManager**: `sync/src/main/kotlin/dev/atick/sync/SyncManager.kt`
