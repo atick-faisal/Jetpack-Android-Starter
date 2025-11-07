@@ -96,118 +96,17 @@ The template supports three main data flow patterns. Choose based on your featur
 ### Architecture
 
 ```
-ViewModel → Repository → NetworkDataSource (Retrofit) → API
+ ViewModel → Repository → NetworkDataSource (Retrofit) → API
      ↑_______________|
        Result<T>
 ```
 
-### Implementation
-
-#### 1. Define Network Model
-
-```kotlin
-// core/network/src/main/kotlin/.../model/WeatherResponse.kt
-@Serializable
-data class WeatherResponse(
-    val temperature: Double,
-    val description: String,
-    val humidity: Int
-)
-```
-
-#### 2. Create Retrofit API Interface
-
-```kotlin
-// core/network/src/main/kotlin/.../api/WeatherApi.kt
-interface WeatherApi {
-    @GET("weather")
-    suspend fun getCurrentWeather(
-        @Query("city") city: String
-    ): WeatherResponse
-}
-```
-
-#### 3. Implement Network Data Source
-
-```kotlin
-// core/network/src/main/kotlin/.../data/WeatherNetworkDataSource.kt
-interface WeatherNetworkDataSource {
-    suspend fun getCurrentWeather(city: String): Result<WeatherResponse>
-}
-
-internal class WeatherNetworkDataSourceImpl @Inject constructor(
-    private val weatherApi: WeatherApi,
-    @IoDispatcher private val ioDispatcher: CoroutineDispatcher
-) : WeatherNetworkDataSource {
-    override suspend fun getCurrentWeather(city: String): Result<WeatherResponse> {
-        return withContext(ioDispatcher) {
-            suspendRunCatching {
-                weatherApi.getCurrentWeather(city)
-            }
-        }
-    }
-}
-```
-
-#### 4. Create Repository
-
-```kotlin
-// data/src/main/kotlin/.../repository/WeatherRepository.kt
-interface WeatherRepository {
-    suspend fun getCurrentWeather(city: String): Result<Weather>
-}
-
-internal class WeatherRepositoryImpl @Inject constructor(
-    private val networkDataSource: WeatherNetworkDataSource
-) : WeatherRepository {
-    override suspend fun getCurrentWeather(city: String): Result<Weather> {
-        return suspendRunCatching {
-            networkDataSource.getCurrentWeather(city)
-                .map { it.toDomain() }
-                .getOrThrow()
-        }
-    }
-}
-
-// Extension function to convert network model to domain model
-private fun WeatherResponse.toDomain() = Weather(
-    temperature = temperature,
-    description = description,
-    humidity = humidity
-)
-```
-
-#### 5. Use in ViewModel
-
-```kotlin
-// feature/weather/src/main/kotlin/.../WeatherViewModel.kt
-data class WeatherScreenData(
-    val weather: Weather? = null
-)
-
-@HiltViewModel
-class WeatherViewModel @Inject constructor(
-    private val weatherRepository: WeatherRepository
-) : ViewModel() {
-    private val _uiState = MutableStateFlow(UiState(WeatherScreenData()))
-    val uiState = _uiState.asStateFlow()
-
-    fun loadWeather(city: String) {
-        _uiState.updateStateWith {
-            weatherRepository.getCurrentWeather(city).map { weather ->
-                copy(weather = weather)
-            }
-        }
-    }
-}
-```
-
-### Network-Only Flow Diagram
+### Data Flow Diagram
 
 ```
 User taps "Refresh"
         ↓
-ViewModel.loadWeather()
+ ViewModel.loadWeather()
         ↓
 Repository.getCurrentWeather()
         ↓
@@ -219,6 +118,16 @@ ViewModel updates UiState
         ↓
 UI recomposes with new data
 ```
+
+### Key Characteristics
+
+- **No local caching** - Data fetched directly from network
+- **Always fresh** - Every request goes to the server
+- **No offline support** - Requires active network connection
+- **Returns Result<T>** - One-shot operations for network calls
+
+> [!NOTE]
+> For complete repository implementation examples including interface definitions, data sources, and mapper functions, see the [Data Module README](../data/README.md#repository-patterns).
 
 ---
 
@@ -239,161 +148,12 @@ ViewModel → Repository → DataStore / Room → Local Storage
        Flow<T>
 ```
 
-### Implementation
-
-#### 1. Define DataStore Schema (for Preferences)
-
-```kotlin
-// core/preferences/src/main/kotlin/.../UserPreferences.kt
-data class UserPreferences(
-    val theme: ThemePreference = ThemePreference.SYSTEM,
-    val notificationsEnabled: Boolean = true,
-    val language: String = "en"
-)
-
-enum class ThemePreference {
-    LIGHT, DARK, SYSTEM
-}
-```
-
-#### 2. Create DataStore Data Source
-
-```kotlin
-// core/preferences/src/main/kotlin/.../UserPreferencesDataSource.kt
-interface UserPreferencesDataSource {
-    fun observePreferences(): Flow<UserPreferences>
-    suspend fun updateTheme(theme: ThemePreference): Result<Unit>
-    suspend fun toggleNotifications(enabled: Boolean): Result<Unit>
-}
-
-internal class UserPreferencesDataSourceImpl @Inject constructor(
-    private val dataStore: DataStore<Preferences>,
-    @IoDispatcher private val ioDispatcher: CoroutineDispatcher
-) : UserPreferencesDataSource {
-
-    override fun observePreferences(): Flow<UserPreferences> {
-        return dataStore.data.map { preferences ->
-            UserPreferences(
-                theme = preferences[THEME_KEY]?.let { ThemePreference.valueOf(it) }
-                    ?: ThemePreference.SYSTEM,
-                notificationsEnabled = preferences[NOTIFICATIONS_KEY] ?: true,
-                language = preferences[LANGUAGE_KEY] ?: "en"
-            )
-        }
-    }
-
-    override suspend fun updateTheme(theme: ThemePreference): Result<Unit> {
-        return withContext(ioDispatcher) {
-            suspendRunCatching {
-                dataStore.edit { preferences ->
-                    preferences[THEME_KEY] = theme.name
-                }
-            }
-        }
-    }
-
-    override suspend fun toggleNotifications(enabled: Boolean): Result<Unit> {
-        return withContext(ioDispatcher) {
-            suspendRunCatching {
-                dataStore.edit { preferences ->
-                    preferences[NOTIFICATIONS_KEY] = enabled
-                }
-            }
-        }
-    }
-
-    companion object {
-        private val THEME_KEY = stringPreferencesKey("theme")
-        private val NOTIFICATIONS_KEY = booleanPreferencesKey("notifications")
-        private val LANGUAGE_KEY = stringPreferencesKey("language")
-    }
-}
-```
-
-#### 3. Create Repository
-
-```kotlin
-// data/src/main/kotlin/.../repository/SettingsRepository.kt
-interface SettingsRepository {
-    fun observeSettings(): Flow<UserPreferences>
-    suspend fun updateTheme(theme: ThemePreference): Result<Unit>
-    suspend fun toggleNotifications(enabled: Boolean): Result<Unit>
-}
-
-internal class SettingsRepositoryImpl @Inject constructor(
-    private val preferencesDataSource: UserPreferencesDataSource
-) : SettingsRepository {
-
-    override fun observeSettings(): Flow<UserPreferences> {
-        return preferencesDataSource.observePreferences()
-    }
-
-    override suspend fun updateTheme(theme: ThemePreference): Result<Unit> {
-        return preferencesDataSource.updateTheme(theme)
-    }
-
-    override suspend fun toggleNotifications(enabled: Boolean): Result<Unit> {
-        return preferencesDataSource.toggleNotifications(enabled)
-    }
-}
-```
-
-#### 4. Use in ViewModel
-
-```kotlin
-// feature/settings/src/main/kotlin/.../SettingsViewModel.kt
-data class SettingsScreenData(
-    val theme: ThemePreference = ThemePreference.SYSTEM,
-    val notificationsEnabled: Boolean = true,
-    val language: String = "en"
-)
-
-@HiltViewModel
-class SettingsViewModel @Inject constructor(
-    private val settingsRepository: SettingsRepository
-) : ViewModel() {
-    private val _uiState = MutableStateFlow(UiState(SettingsScreenData()))
-    val uiState = _uiState.asStateFlow()
-
-    init {
-        observeSettings()
-    }
-
-    private fun observeSettings() {
-        viewModelScope.launch {
-            settingsRepository.observeSettings()
-                .collect { preferences ->
-                    _uiState.updateState {
-                        copy(
-                            theme = preferences.theme,
-                            notificationsEnabled = preferences.notificationsEnabled,
-                            language = preferences.language
-                        )
-                    }
-                }
-        }
-    }
-
-    fun updateTheme(theme: ThemePreference) {
-        _uiState.updateWith {
-            settingsRepository.updateTheme(theme)
-        }
-    }
-
-    fun toggleNotifications() {
-        _uiState.updateWith {
-            settingsRepository.toggleNotifications(!uiState.value.data.notificationsEnabled)
-        }
-    }
-}
-```
-
-### Local-Only Flow Diagram
+### Data Flow Diagram
 
 ```
 App Launch
     ↓
-ViewModel.observeSettings()
+ ViewModel.observeSettings()
     ↓
 Repository.observeSettings()
     ↓
@@ -415,6 +175,17 @@ Flow emits new preferences
     ↓
 UI updates automatically
 ```
+
+### Key Characteristics
+
+- **Fully offline** - No network dependency
+- **Reactive with Flow** - UI automatically updates when data changes
+- **Immediate persistence** - Changes saved to local storage instantly
+- **DataStore for preferences** - Type-safe, reactive preferences storage
+- **Room for complex data** - Use Room if data structure is complex
+
+> [!TIP]
+> Use DataStore for simple key-value preferences and Room for structured local data with relationships.
 
 ---
 
@@ -447,333 +218,7 @@ UI updates automatically
 3. **Sync Metadata**: Track sync state (lastUpdated, lastSynced, needsSync)
 4. **Soft Deletes**: Mark as deleted locally, sync deletion, then remove
 
-### Implementation
-
-#### 1. Define Room Entity with Sync Metadata
-
-```kotlin
-// core/room/src/main/kotlin/.../model/PostEntity.kt
-@Entity(tableName = "posts")
-data class PostEntity(
-    @PrimaryKey val id: String = UUID.randomUUID().toString(),
-    val title: String,
-    val content: String,
-    val authorId: String,
-
-    // Sync metadata
-    val userId: String = "",  // For multi-user filtering
-    val lastUpdated: Long = 0,  // Local modification timestamp
-    val lastSynced: Long = 0,   // Last successful sync timestamp
-    val needsSync: Boolean = false,  // Has pending changes
-    val deleted: Boolean = false,    // Soft delete flag
-    val syncAction: SyncAction = SyncAction.NONE
-)
-
-enum class SyncAction {
-    NONE,    // Already synced
-    UPSERT,  // Create or update on remote
-    DELETE   // Delete on remote
-}
-```
-
-#### 2. Create Room DAO
-
-```kotlin
-// core/room/src/main/kotlin/.../dao/PostDao.kt
-@Dao
-interface PostDao {
-    // Observe all non-deleted posts for a user
-    @Query("SELECT * FROM posts WHERE userId = :userId AND deleted = 0 ORDER BY lastUpdated DESC")
-    fun observePosts(userId: String): Flow<List<PostEntity>>
-
-    // Get single post
-    @Query("SELECT * FROM posts WHERE id = :id")
-    fun observePost(id: String): Flow<PostEntity>
-
-    // Insert or update
-    @Upsert
-    suspend fun upsert(post: PostEntity)
-
-    // Get unsynced posts
-    @Query("SELECT * FROM posts WHERE userId = :userId AND needsSync = 1")
-    suspend fun getUnsyncedPosts(userId: String): List<PostEntity>
-
-    // Mark as synced
-    @Query("UPDATE posts SET needsSync = 0, syncAction = 'NONE', lastSynced = :timestamp WHERE id = :id")
-    suspend fun markAsSynced(id: String, timestamp: Long)
-
-    // Soft delete
-    @Query("UPDATE posts SET deleted = 1, needsSync = 1, syncAction = 'DELETE', lastUpdated = :timestamp WHERE id = :id")
-    suspend fun markAsDeleted(id: String, timestamp: Long)
-
-    // Get latest sync timestamp (for incremental sync)
-    @Query("SELECT MAX(lastSynced) FROM posts WHERE userId = :userId")
-    suspend fun getLatestSyncTimestamp(userId: String): Long?
-}
-```
-
-#### 3. Create Local Data Source
-
-```kotlin
-// core/room/src/main/kotlin/.../data/LocalDataSource.kt
-interface LocalDataSource {
-    fun observePosts(userId: String): Flow<List<PostEntity>>
-    fun observePost(id: String): Flow<PostEntity>
-    suspend fun upsertPost(post: PostEntity)
-    suspend fun markPostAsDeleted(id: String)
-    suspend fun getUnsyncedPosts(userId: String): List<PostEntity>
-    suspend fun markAsSynced(id: String)
-    suspend fun getLatestSyncTimestamp(userId: String): Long
-}
-
-internal class LocalDataSourceImpl @Inject constructor(
-    private val postDao: PostDao,
-    @IoDispatcher private val ioDispatcher: CoroutineDispatcher
-) : LocalDataSource {
-
-    override fun observePosts(userId: String): Flow<List<PostEntity>> {
-        return postDao.observePosts(userId)
-    }
-
-    override fun observePost(id: String): Flow<PostEntity> {
-        return postDao.observePost(id)
-    }
-
-    override suspend fun upsertPost(post: PostEntity) {
-        withContext(ioDispatcher) {
-            postDao.upsert(post)
-        }
-    }
-
-    override suspend fun markPostAsDeleted(id: String) {
-        withContext(ioDispatcher) {
-            postDao.markAsDeleted(id, System.currentTimeMillis())
-        }
-    }
-
-    override suspend fun getUnsyncedPosts(userId: String): List<PostEntity> {
-        return withContext(ioDispatcher) {
-            postDao.getUnsyncedPosts(userId)
-        }
-    }
-
-    override suspend fun markAsSynced(id: String) {
-        withContext(ioDispatcher) {
-            postDao.markAsSynced(id, System.currentTimeMillis())
-        }
-    }
-
-    override suspend fun getLatestSyncTimestamp(userId: String): Long {
-        return withContext(ioDispatcher) {
-            postDao.getLatestSyncTimestamp(userId) ?: 0L
-        }
-    }
-}
-```
-
-#### 4. Create Network Data Source
-
-```kotlin
-// core/network/src/main/kotlin/.../data/PostsNetworkDataSource.kt
-interface PostsNetworkDataSource {
-    suspend fun getPosts(userId: String, since: Long): Result<List<PostResponse>>
-    suspend fun createOrUpdatePost(post: PostRequest): Result<Unit>
-    suspend fun deletePost(postId: String): Result<Unit>
-}
-
-internal class PostsNetworkDataSourceImpl @Inject constructor(
-    private val postsApi: PostsApi,
-    @IoDispatcher private val ioDispatcher: CoroutineDispatcher
-) : PostsNetworkDataSource {
-
-    override suspend fun getPosts(userId: String, since: Long): Result<List<PostResponse>> {
-        return withContext(ioDispatcher) {
-            suspendRunCatching {
-                postsApi.getPosts(userId, since)
-            }
-        }
-    }
-
-    override suspend fun createOrUpdatePost(post: PostRequest): Result<Unit> {
-        return withContext(ioDispatcher) {
-            suspendRunCatching {
-                postsApi.upsertPost(post)
-            }
-        }
-    }
-
-    override suspend fun deletePost(postId: String): Result<Unit> {
-        return withContext(ioDispatcher) {
-            suspendRunCatching {
-                postsApi.deletePost(postId)
-            }
-        }
-    }
-}
-```
-
-#### 5. Create Repository (Offline-First)
-
-```kotlin
-// data/src/main/kotlin/.../repository/PostsRepository.kt
-interface PostsRepository {
-    fun observePosts(): Flow<List<Post>>
-    fun observePost(id: String): Flow<Post>
-    suspend fun createOrUpdatePost(post: Post): Result<Unit>
-    suspend fun deletePost(post: Post): Result<Unit>
-    suspend fun syncPosts(): Result<Unit>
-}
-
-internal class PostsRepositoryImpl @Inject constructor(
-    private val localDataSource: LocalDataSource,
-    private val networkDataSource: PostsNetworkDataSource,
-    private val preferencesDataSource: UserPreferencesDataSource,
-    private val syncManager: SyncManager
-) : PostsRepository {
-
-    // Observe local database (single source of truth)
-    override fun observePosts(): Flow<List<Post>> {
-        return flow {
-            val userId = preferencesDataSource.getUserIdOrThrow()
-
-            // Trigger background sync
-            syncManager.requestSync()
-
-            // Emit local data immediately
-            emitAll(
-                localDataSource.observePosts(userId)
-                    .map { entities -> entities.map { it.toDomain() } }
-            )
-        }
-    }
-
-    override fun observePost(id: String): Flow<Post> {
-        return localDataSource.observePost(id)
-            .map { it.toDomain() }
-    }
-
-    // Create or update locally, mark for sync
-    override suspend fun createOrUpdatePost(post: Post): Result<Unit> {
-        return suspendRunCatching {
-            val userId = preferencesDataSource.getUserIdOrThrow()
-
-            localDataSource.upsertPost(
-                post.toEntity().copy(
-                    userId = userId,
-                    lastUpdated = System.currentTimeMillis(),
-                    needsSync = true,
-                    syncAction = SyncAction.UPSERT
-                )
-            )
-
-            // Request background sync
-            syncManager.requestSync()
-        }
-    }
-
-    // Soft delete locally, mark for sync
-    override suspend fun deletePost(post: Post): Result<Unit> {
-        return suspendRunCatching {
-            localDataSource.markPostAsDeleted(post.id)
-            syncManager.requestSync()
-        }
-    }
-
-    // Bidirectional sync: Push local changes, pull remote changes
-    override suspend fun syncPosts(): Result<Unit> {
-        return suspendRunCatching {
-            val userId = preferencesDataSource.getUserIdOrThrow()
-
-            // Step 1: Push local changes to remote
-            val unsyncedPosts = localDataSource.getUnsyncedPosts(userId)
-            unsyncedPosts.forEach { unsyncedPost ->
-                when (unsyncedPost.syncAction) {
-                    SyncAction.UPSERT -> {
-                        networkDataSource.createOrUpdatePost(
-                            unsyncedPost.toNetworkRequest()
-                        ).getOrThrow()
-                    }
-                    SyncAction.DELETE -> {
-                        networkDataSource.deletePost(unsyncedPost.id).getOrThrow()
-                    }
-                    SyncAction.NONE -> {
-                        // Skip
-                    }
-                }
-                localDataSource.markAsSynced(unsyncedPost.id)
-            }
-
-            // Step 2: Pull remote changes (incremental sync)
-            val lastSyncTimestamp = localDataSource.getLatestSyncTimestamp(userId)
-            val remotePosts = networkDataSource.getPosts(userId, lastSyncTimestamp)
-                .getOrThrow()
-
-            // Update local database with remote changes
-            remotePosts.forEach { remotePost ->
-                localDataSource.upsertPost(
-                    remotePost.toEntity().copy(
-                        userId = userId,
-                        lastSynced = System.currentTimeMillis(),
-                        needsSync = false,
-                        syncAction = SyncAction.NONE
-                    )
-                )
-            }
-        }
-    }
-}
-```
-
-#### 6. Use in ViewModel
-
-```kotlin
-// feature/posts/src/main/kotlin/.../PostsViewModel.kt
-data class PostsScreenData(
-    val posts: List<Post> = emptyList()
-)
-
-@HiltViewModel
-class PostsViewModel @Inject constructor(
-    private val postsRepository: PostsRepository
-) : ViewModel() {
-    private val _uiState = MutableStateFlow(UiState(PostsScreenData()))
-    val uiState = _uiState.asStateFlow()
-
-    init {
-        observePosts()
-    }
-
-    private fun observePosts() {
-        viewModelScope.launch {
-            postsRepository.observePosts()
-                .collect { posts ->
-                    _uiState.updateState {
-                        copy(posts = posts)
-                    }
-                }
-        }
-    }
-
-    fun createPost(title: String, content: String) {
-        val newPost = Post(
-            title = title,
-            content = content,
-            authorId = "current-user-id"
-        )
-        _uiState.updateWith {
-            postsRepository.createOrUpdatePost(newPost)
-        }
-    }
-
-    fun deletePost(post: Post) {
-        _uiState.updateWith {
-            postsRepository.deletePost(post)
-        }
-    }
-}
-```
-
-### Offline-First Flow Diagram
+### Data Flow Diagram
 
 ```
 App Launch / User navigates to screen
@@ -819,104 +264,63 @@ App Launch / User navigates to screen
     UI updates automatically (reactive!)
 ```
 
+### Key Characteristics
+
+- **Room as Single Source of Truth** - UI always observes local database
+- **Immediate UI updates** - Local changes reflected instantly
+- **Background synchronization** - Network sync happens asynchronously
+- **Conflict resolution** - Last-write-wins (server timestamp based)
+- **Bidirectional sync** - Push local changes, pull remote changes
+- **Incremental sync** - Only fetch data modified since last sync
+
+> [!IMPORTANT]
+> The offline-first pattern requires careful sync metadata tracking. Always include `lastUpdated`, `lastSynced`, `needsSync`, and `syncAction` fields in your Room entities.
+
+For detailed offline-first repository implementation with sync metadata, see the [Data Module README](../data/README.md#repository-patterns).
+
 ---
 
 ## Real-Time Data Updates
 
 For real-time updates (e.g., Firebase Firestore snapshots, WebSocket), use Firebase's snapshot listeners or similar mechanisms.
 
-### Firebase Firestore Real-Time Example
+### Firebase Firestore Real-Time Flow
 
-```kotlin
-// firebase/firestore/src/main/kotlin/.../FirebaseDataSource.kt
-interface FirebaseDataSource {
-    fun observePosts(userId: String): Flow<List<FirebasePost>>
-    suspend fun createOrUpdatePost(post: FirebasePost): Result<Unit>
-    suspend fun deletePost(postId: String): Result<Unit>
-}
-
-internal class FirebaseDataSourceImpl @Inject constructor(
-    private val firestore: FirebaseFirestore,
-    @IoDispatcher private val ioDispatcher: CoroutineDispatcher
-) : FirebaseDataSource {
-
-    override fun observePosts(userId: String): Flow<List<FirebasePost>> = callbackFlow {
-        val listener = firestore.collection("posts")
-            .whereEqualTo("userId", userId)
-            .addSnapshotListener { snapshot, error ->
-                if (error != null) {
-                    close(error)
-                    return@addSnapshotListener
-                }
-
-                val posts = snapshot?.documents?.mapNotNull { doc ->
-                    doc.toObject(FirebasePost::class.java)
-                } ?: emptyList()
-
-                trySend(posts)
-            }
-
-        awaitClose { listener.remove() }
-    }.flowOn(ioDispatcher)
-
-    override suspend fun createOrUpdatePost(post: FirebasePost): Result<Unit> {
-        return withContext(ioDispatcher) {
-            suspendRunCatching {
-                firestore.collection("posts")
-                    .document(post.id)
-                    .set(post)
-                    .await()
-            }
-        }
-    }
-
-    override suspend fun deletePost(postId: String): Result<Unit> {
-        return withContext(ioDispatcher) {
-            suspendRunCatching {
-                firestore.collection("posts")
-                    .document(postId)
-                    .delete()
-                    .await()
-            }
-        }
-    }
-}
+```
+Firebase Firestore (Cloud)
+        ↓
+   Snapshot Listener
+        ↓
+callbackFlow { ... }
+        ↓
+   Repository observes
+        ↓
+Updates Local Database (Room)
+        ↓
+   Room emits Flow
+        ↓
+   ViewModel observes
+        ↓
+   UI updates
 ```
 
-### Using Real-Time Data in Repository
+### Key Pattern: Firestore → Room → UI
 
-```kotlin
-// Combine Firestore real-time updates with local database
-override fun observePosts(): Flow<List<Post>> {
-    return flow {
-        val userId = preferencesDataSource.getUserIdOrThrow()
+Even with real-time updates, maintain **Room as the single source of truth**:
 
-        // Start listening to Firestore real-time updates
-        viewModelScope.launch {
-            firebaseDataSource.observePosts(userId)
-                .collect { firestorePosts ->
-                    // Update local database with Firestore changes
-                    firestorePosts.forEach { firebasePost ->
-                        localDataSource.upsertPost(
-                            firebasePost.toEntity().copy(
-                                userId = userId,
-                                lastSynced = System.currentTimeMillis(),
-                                needsSync = false,
-                                syncAction = SyncAction.NONE
-                            )
-                        )
-                    }
-                }
-        }
+1. **Firestore snapshot listener** emits changes
+2. **Repository** updates local Room database
+3. **UI observes Room Flow** (not Firestore directly)
+4. **Result**: Consistent data access pattern across app
 
-        // Emit from local database (single source of truth)
-        emitAll(
-            localDataSource.observePosts(userId)
-                .map { entities -> entities.map { it.toDomain() } }
-        )
-    }
-}
-```
+This approach ensures:
+- Offline access to last known data
+- Consistent data access APIs
+- Easy testing (mock Room, not Firestore)
+- Works even if Firebase connection fails
+
+> [!NOTE]
+> For Firebase Firestore integration examples, see the [Firebase Module README](../firebase/firestore/README.md).
 
 ---
 
@@ -924,162 +328,77 @@ override fun observePosts(): Flow<List<Post>> {
 
 ### 1. Time-Based Cache Invalidation
 
-Fetch fresh data from network if cache is older than a threshold:
+Fetch fresh data from network if cache is older than a threshold.
 
-```kotlin
-class PostsRepositoryImpl @Inject constructor(
-    private val localDataSource: LocalDataSource,
-    private val networkDataSource: PostsNetworkDataSource
-) : PostsRepository {
-
-    companion object {
-        private const val CACHE_EXPIRATION_MS = 5 * 60 * 1000 // 5 minutes
-    }
-
-    override fun observePosts(): Flow<List<Post>> {
-        return flow {
-            val userId = preferencesDataSource.getUserIdOrThrow()
-
-            // Check if cache is stale
-            val lastSyncTimestamp = localDataSource.getLatestSyncTimestamp(userId)
-            val isCacheStale = System.currentTimeMillis() - lastSyncTimestamp > CACHE_EXPIRATION_MS
-
-            if (isCacheStale) {
-                // Fetch fresh data in background
-                viewModelScope.launch {
-                    syncPosts()
-                }
-            }
-
-            // Emit local data immediately
-            emitAll(
-                localDataSource.observePosts(userId)
-                    .map { entities -> entities.map { it.toDomain() } }
-            )
-        }
-    }
-}
+**Flow:**
 ```
+Repository checks lastSyncTimestamp
+    ↓
+Is cache stale? (current time - lastSync > threshold)
+    ↓ YES: Trigger background sync
+    ↓ NO: Use cached data
+    ↓
+Emit local data immediately (offline-first!)
+```
+
+**Use When:**
+- Data changes infrequently
+- Staleness tolerance is acceptable (e.g., 5 minutes)
+- Want to reduce network calls
 
 ### 2. Manual Refresh (Pull-to-Refresh)
 
-Allow user to manually trigger sync:
+Allow user to manually trigger sync.
 
-```kotlin
-// In ViewModel
-fun refreshPosts() {
-    _uiState.updateWith {
-        postsRepository.syncPosts()
-    }
-}
-
-// In UI
-@Composable
-fun PostsScreen(
-    posts: List<Post>,
-    isRefreshing: Boolean,
-    onRefresh: () -> Unit
-) {
-    val pullRefreshState = rememberPullRefreshState(
-        refreshing = isRefreshing,
-        onRefresh = onRefresh
-    )
-
-    Box(Modifier.pullRefresh(pullRefreshState)) {
-        LazyColumn {
-            items(posts) { post ->
-                PostCard(post = post)
-            }
-        }
-
-        PullRefreshIndicator(
-            refreshing = isRefreshing,
-            state = pullRefreshState,
-            modifier = Modifier.align(Alignment.TopCenter)
-        )
-    }
-}
+**Flow:**
 ```
+User pulls to refresh
+    ↓
+ViewModel.refreshPosts()
+    ↓
+Repository.syncPosts() (with loading state)
+    ↓
+Fetch from network
+    ↓
+Update local database
+    ↓
+Room emits updated data
+    ↓
+UI updates, loading indicator dismisses
+```
+
+**Use When:**
+- User wants to ensure fresh data
+- Complementary to time-based caching
+- Provides user control
 
 ### 3. Network-Bound Resource Pattern
 
-Utility for coordinating network + local data with automatic caching:
+Utility for coordinating network + local data with automatic caching.
 
-```kotlin
-// core/android/src/main/kotlin/.../utils/Resource.kt
-
-/**
- * Fetch data from network, save to local database, and observe local database.
- *
- * @param query Function to query local database
- * @param fetch Function to fetch from network
- * @param saveFetchResult Function to save network result to local database
- * @param shouldFetch Predicate to determine if network fetch is needed
- */
-inline fun <ResultType, RequestType> networkBoundResource(
-    crossinline query: () -> Flow<ResultType>,
-    crossinline fetch: suspend () -> RequestType,
-    crossinline saveFetchResult: suspend (RequestType) -> Unit,
-    crossinline shouldFetch: (ResultType?) -> Boolean = { true }
-): Flow<Resource<ResultType>> = flow {
-    // Emit loading state
-    emit(Resource.Loading())
-
-    // Query local database first
-    val localData = query().first()
-
-    // Check if we should fetch from network
-    if (shouldFetch(localData)) {
-        // Emit local data as loading state
-        emit(Resource.Loading(localData))
-
-        try {
-            // Fetch from network
-            val networkData = fetch()
-
-            // Save to local database
-            saveFetchResult(networkData)
-
-            // Emit success with fresh data from local database
-            query().collect { freshData ->
-                emit(Resource.Success(freshData))
-            }
-        } catch (throwable: Throwable) {
-            // Emit error with stale local data
-            query().collect { staleData ->
-                emit(Resource.Error(throwable, staleData))
-            }
-        }
-    } else {
-        // Use cached data
-        query().collect { data ->
-            emit(Resource.Success(data))
-        }
-    }
-}
-
-// Usage in Repository
-override fun observePosts(): Flow<Resource<List<Post>>> {
-    return networkBoundResource(
-        query = {
-            localDataSource.observePosts(userId)
-                .map { entities -> entities.map { it.toDomain() } }
-        },
-        fetch = {
-            networkDataSource.getPosts(userId, 0).getOrThrow()
-        },
-        saveFetchResult = { networkPosts ->
-            networkPosts.forEach { networkPost ->
-                localDataSource.upsertPost(networkPost.toEntity())
-            }
-        },
-        shouldFetch = { cachedPosts ->
-            // Fetch if cache is empty or stale
-            cachedPosts.isNullOrEmpty() || isCacheStale()
-        }
-    )
-}
+**Flow:**
 ```
+1. Emit Loading state
+2. Query local database first
+3. Emit Loading with local data
+4. Should fetch from network?
+   YES:
+     - Fetch from network
+     - Save to local database
+     - Emit Success with fresh data
+   NO:
+     - Emit Success with cached data
+5. On network error:
+   - Emit Error with stale local data
+```
+
+**Use When:**
+- Want automatic cache-then-network pattern
+- Need loading states with cached data
+- Want to show stale data on network errors
+
+> [!NOTE]
+> For `networkBoundResource` implementation and usage examples, see the [Data Module README](../data/README.md#caching-strategies).
 
 ---
 
@@ -1091,7 +410,31 @@ All data layer operations use a **layered error handling approach** with `Result
 - **ViewModel Layer**: Uses `updateStateWith`/`updateWith` for automatic error capture
 - **UI Layer**: Uses `StatefulComposable` for automatic error display via snackbar
 
-For comprehensive error handling patterns including network-specific errors, HTTP error codes, and error flow diagrams, see:
+### Error Flow Diagram
+
+```
+Repository Operation
+        ↓
+suspendRunCatching { ... }
+        ↓
+    [Success or Failure]
+        ↓
+    Result<T>
+        ↓
+    ViewModel
+        ↓
+updateStateWith/updateWith
+        ↓
+    [Auto-handle Result]
+        ↓
+    UiState (data or error)
+        ↓
+StatefulComposable
+        ↓
+[Show content or error snackbar]
+```
+
+For comprehensive error handling patterns including network-specific errors, HTTP error codes, and detailed examples, see:
 
 > [!NOTE]
 > Complete error handling documentation is available in the [Data Module README](../data/README.md#error-handling).
@@ -1112,12 +455,14 @@ This guide covered three main data flow patterns:
 2. **Room is the Single Source of Truth** for offline-first - UI observes local database, network updates happen in background
 3. **Use Proper Threading** - Inject `@IoDispatcher` and use `withContext(ioDispatcher)` for blocking calls
 4. **Error Handling is Centralized** - Repository uses `suspendRunCatching`, ViewModel uses `updateStateWith`/`updateWith`, UI uses `StatefulComposable`
+5. **Flow for Reactive Data** - Observe local database with Flow, UI updates automatically
+6. **Result for Operations** - One-shot operations return Result<T> for error handling
 
 All patterns use **Repositories** as the interface to ViewModels, **Data Sources** for external system interaction, **Result** type for error handling, and **Flow** for reactive data streams.
 
 ## Further Reading
 
-- [Data Module README](../data/README.md) - Repository patterns and error handling reference
+- [Data Module README](../data/README.md) - Repository patterns, implementations, and error handling reference
 - [State Management](state-management.md) - Learn about ViewModel state patterns
 - [Architecture Overview](architecture.md) - Understand the two-layer architecture
 - [Adding Features](guide.md) - Step-by-step implementation guide

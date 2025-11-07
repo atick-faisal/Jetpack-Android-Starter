@@ -186,6 +186,9 @@ class FeatureRepositoryImpl @Inject constructor(
 > [!TIP]
 > Use `suspendRunCatching` in repositories to handle errors consistently.
 
+> [!NOTE]
+> This is a minimal repository example for the tutorial. For detailed repository patterns including offline-first with sync metadata, network-only, local-only, error handling, and caching strategies, see the [Data Module README](../data/README.md#repository-patterns).
+
 ---
 
 ## Step 4: UI Layer
