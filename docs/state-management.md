@@ -12,9 +12,8 @@ This guide provides a comprehensive understanding of the state management patter
 4. [Kotlin Context Parameters](#kotlin-context-parameters)
 5. [Complete Examples](#complete-examples)
 6. [Advanced Patterns](#advanced-patterns)
-7. [Testing State Management](#testing-state-management)
-8. [Anti-Patterns to Avoid](#anti-patterns-to-avoid)
-9. [Migration Guide](#migration-guide)
+7. [Anti-Patterns to Avoid](#anti-patterns-to-avoid)
+8. [Migration Guide](#migration-guide)
 
 ---
 
@@ -704,77 +703,6 @@ fun likePost(post: Post) {
                 it.copy(error = OneTimeEvent(Exception("Failed to like post")))
             }
         }
-    }
-}
-```
-
----
-
-## Testing State Management
-
-### Testing ViewModels
-
-```kotlin
-class PostsViewModelTest {
-    @get:Rule
-    val mainDispatcherRule = MainDispatcherRule()
-
-    private lateinit var viewModel: PostsViewModel
-    private val fakeRepository = FakePostsRepository()
-
-    @Before
-    fun setup() {
-        viewModel = PostsViewModel(fakeRepository)
-    }
-
-    @Test
-    fun `initial state is empty`() = runTest {
-        val state = viewModel.uiState.value
-        assertEquals(emptyList<Post>(), state.data.posts)
-        assertFalse(state.loading)
-        assertNull(state.error.get())
-    }
-
-    @Test
-    fun `loadPosts sets loading and updates data`() = runTest {
-        val testPosts = listOf(
-            Post(id = "1", title = "Test Post")
-        )
-        fakeRepository.setPostsResult(Result.success(testPosts))
-
-        viewModel.loadPosts()
-
-        // Check loading state
-        assertTrue(viewModel.uiState.value.loading)
-
-        // Wait for completion
-        advanceUntilIdle()
-
-        // Check final state
-        val finalState = viewModel.uiState.value
-        assertFalse(finalState.loading)
-        assertEquals(testPosts, finalState.data.posts)
-        assertNull(finalState.error.get())
-    }
-
-    @Test
-    fun `loadPosts handles error`() = runTest {
-        val error = IOException("Network error")
-        fakeRepository.setPostsResult(Result.failure(error))
-
-        viewModel.loadPosts()
-        advanceUntilIdle()
-
-        val state = viewModel.uiState.value
-        assertFalse(state.loading)
-        assertEquals(error, state.error.get())
-    }
-
-    @Test
-    fun `onSearchQueryChanged updates state synchronously`() {
-        viewModel.onSearchQueryChanged("test")
-
-        assertEquals("test", viewModel.uiState.value.data.searchQuery)
     }
 }
 ```
