@@ -395,7 +395,199 @@ if (isRefreshing) {
 
 ---
 
-## Further Reading
+## Git Workflow Tips
+
+### Commit Message Convention
+
+This project follows the [Conventional Commits](https://www.conventionalcommits.org/) standard:
+
+```bash
+<type>(<scope>): <description>
+
+[optional body]
+
+[optional footer]
+```
+
+**Commit Types**:
+- `feat` - New feature for the user
+- `fix` - Bug fix
+- `docs` - Documentation changes
+- `refactor` - Code change that neither fixes a bug nor adds a feature
+- `test` - Adding or updating tests
+- `chore` - Maintenance tasks, dependency updates
+- `style` - Code style changes (formatting, missing semi-colons, etc.)
+- `perf` - Performance improvements
+
+**Examples**:
+
+```bash
+# Feature addition
+feat(auth): add password reset functionality
+
+# Bug fix
+fix(home): resolve crash on empty data
+
+# Documentation update
+docs: update repository pattern guide
+
+# Refactoring
+refactor(ui): simplify state management utilities
+```
+
+> [!TIP]
+> Following Conventional Commits enables automatic changelog generation and semantic versioning.
+
+### Pre-commit Workflow
+
+Always run these commands before committing:
+
+```bash
+# 1. Format code with Spotless
+./gradlew spotlessApply
+
+# 2. Build to check for compilation errors
+./gradlew build
+
+# 3. Stage and commit with conventional commit message
+git add .
+git commit -m "docs: update tips documentation"
+```
+
+> [!IMPORTANT]
+> The CI workflow runs `spotlessCheck` on pull requests. Your PR will fail if code is not properly formatted.
+
+### Git Ignore Configuration
+
+The `.gitignore` is pre-configured to exclude:
+- Build artifacts (`build/`, `*.apk`)
+- Local configuration (`local.properties`, `keystore.properties`)
+- IDE files (`.idea/`, `*.iml`)
+- Firebase config (`google-services.json`)
+- Keystore files (`*.jks`, `*.keystore`)
+- AI tool configs (`.claude/`, `.gemini/`)
+
+> [!WARNING]
+> Never commit `keystore.properties`, keystore files, or production `google-services.json` to version control.
+
+---
+
+## Android Studio Productivity
+
+### IDE Run Configurations
+
+The project includes pre-configured run configurations in the `.run` directory:
+
+**Spotless Check** (`Spotless Check.run.xml`)
+- Verifies if all files conform to formatting rules
+- Run from toolbar or with `./gradlew spotlessCheck`
+
+**Spotless Apply** (`Spotless Apply.run.xml`)
+- Automatically formats all files
+- Run from toolbar or with `./gradlew spotlessApply`
+- **Always run before committing**
+
+**Generate Docs** (`Generate Docs.run.xml`)
+- Generates Dokka HTML documentation
+- Run from toolbar or with `./gradlew dokkaGeneratePublicationHtml`
+
+**Signing Report** (`Signing Report.run.xml`)
+- Displays SHA-1 fingerprint for Firebase setup
+- Run from toolbar or with `./gradlew signingReport`
+
+> [!TIP]
+> Bind frequently-used run configurations to keyboard shortcuts for faster access. Go to Settings → Keymap → External Tools.
+
+### EditorConfig Integration
+
+The project includes `.editorconfig` for consistent code style:
+
+```editorconfig
+[*.{kt,kts}]
+ij_kotlin_allow_trailing_comma=true
+ij_kotlin_allow_trailing_comma_on_call_site=true
+ktlint_function_naming_ignore_when_annotated_with=Composable, Test
+```
+
+**Features**:
+- Trailing commas enabled for cleaner diffs
+- Composable functions exempt from standard naming rules
+- Automatic ktlint configuration for Spotless
+
+> [!NOTE]
+> Android Studio automatically applies EditorConfig settings. No additional setup required.
+
+---
+
+## Debugging Tips
+
+### LeakCanary Memory Leak Detection
+
+LeakCanary is automatically included in debug builds:
+
+```kotlin
+// app/build.gradle.kts
+debugImplementation(libs.leakcanary.android)
+```
+
+**What it does**:
+- Automatically detects memory leaks in debug builds
+- Shows notification when leaks are found
+- Provides detailed leak trace in the app
+
+**Usage**:
+1. Run debug build on device/emulator
+2. Use the app normally
+3. LeakCanary notifies you if it detects leaks
+4. Tap notification to view leak trace
+5. Fix the leak based on the trace information
+
+> [!TIP]
+> LeakCanary only runs in debug builds - zero overhead in release builds.
+
+### Compose Preview Optimization
+
+Use multi-preview annotations for efficient preview generation:
+
+```kotlin
+@Composable
+@PreviewThemes     // Generates 2 previews (light + dark)
+@PreviewDevices    // Generates 4 previews (phone, landscape, foldable, tablet)
+fun YourComposablePreview() {
+    JetpackTheme {
+        YourComposable()
+    }
+}
+```
+
+**Combining both annotations generates 8 previews** (4 devices × 2 themes) automatically!
+
+> [!TIP]
+> In Android Studio, use "Pin" to keep specific previews visible while editing for instant visual feedback.
+
+### Build Performance
+
+**Enable Gradle parallel execution** in `gradle.properties`:
+
+```properties
+org.gradle.parallel=true
+org.gradle.caching=true
+```
+
+**Use build cache**:
+
+```bash
+# Clean build with cache
+./gradlew clean build --build-cache
+
+# Check what tasks are cached
+./gradlew build --scan
+```
+
+> [!NOTE]
+> These settings are already configured in the template's `gradle.properties`.
+
+---
 
 ### Module Documentation
 
