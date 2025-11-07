@@ -284,6 +284,8 @@ private fun FeatureScreen(
 
 ## Step 5: Navigation
 
+This section shows the minimal navigation code needed when adding a new feature. For comprehensive navigation patterns and best practices, see the [Navigation Deep Dive](navigation.md) guide.
+
 ---
 
 ```kotlin
