@@ -32,9 +32,20 @@ import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 
 /**
- * [ViewModel] for [SignInScreen].
+ * ViewModel for the sign-in screen, managing authentication state and validation.
  *
- * @param authRepository [AuthRepository].
+ * This ViewModel demonstrates form validation with [TextFiledData] and uses [updateState]
+ * for synchronous field updates and [updateWith] for async authentication operations.
+ * Field validation uses extension functions from core module (isEmailValid, isPasswordValid).
+ *
+ * @param authRepository Repository providing authentication operations.
+ *
+ * @see SignInScreenData Immutable data class representing form state
+ * @see UiState State wrapper with loading and error handling
+ * @see updateState Extension function for synchronous state updates
+ * @see updateWith Extension function for async operations
+ * @see TextFiledData Data class for text field state with validation
+ * @see AuthRepository Data layer interface for authentication
  */
 @HiltViewModel
 class SignInViewModel @Inject constructor(
@@ -86,10 +97,17 @@ class SignInViewModel @Inject constructor(
 }
 
 /**
- * Data for [SignInScreen].
+ * Immutable data class representing the state of the sign-in form.
  *
- * @param email [TextFiledData].
- * @param password [TextFiledData].
+ * This class uses [TextFiledData] for form fields to encapsulate both the field value and
+ * validation error messages. Being immutable enables efficient Compose recomposition.
+ *
+ * @param email Email field state with validation error message.
+ * @param password Password field state with validation error message.
+ *
+ * @see SignInViewModel ViewModel that manages this screen data
+ * @see TextFiledData Data class for text field state with validation
+ * @see UiState Wrapper providing loading and error state
  */
 @Immutable
 data class SignInScreenData(

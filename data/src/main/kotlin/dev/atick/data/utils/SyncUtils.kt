@@ -18,6 +18,15 @@ package dev.atick.data.utils
 
 import kotlinx.coroutines.flow.Flow
 
+/**
+ * Manager interface for controlling application-wide data synchronization.
+ *
+ * This is typically implemented by the sync module and injected into the app layer
+ * to provide access to sync status and manual sync triggering.
+ *
+ * @see SyncManagerImpl Implementation in the sync module
+ * @see Syncable Interface implemented by repositories that support sync
+ */
 interface SyncManager {
     /**
      * Flow that emits a boolean value indicating whether the sync operation is in progress.
@@ -32,6 +41,25 @@ interface SyncManager {
 
 /**
  * Interface representing a syncable entity.
+ *
+ * Repositories that implement this interface can be synchronized in the background
+ * by SyncWorker. The [sync] method should handle fetching remote data and updating
+ * the local database while emitting progress updates.
+ *
+ * ## Implementation Pattern
+ * ```kotlin
+ * override suspend fun sync(): Flow<SyncProgress> = flow {
+ *     emit(SyncProgress(total = 100, current = 0, message = "Starting sync"))
+ *     // Fetch from network
+ *     val data = networkDataSource.getData()
+ *     // Update local database
+ *     localDataSource.saveData(data)
+ *     emit(SyncProgress(total = 100, current = 100, message = "Sync complete"))
+ * }
+ * ```
+ *
+ * @see SyncProgress For progress reporting
+ * @see SyncManager For triggering sync operations
  */
 interface Syncable {
     /**
@@ -45,9 +73,14 @@ interface Syncable {
 /**
  * Data class that represents the progress of a sync operation.
  *
+ * This is emitted by [Syncable.sync] implementations to report progress to SyncWorker,
+ * which displays it in a foreground service notification.
+ *
  * @param total The total number of items to sync.
  * @param current The current number of items synced.
  * @param message The message to display during the sync operation.
+ *
+ * @see Syncable Interface implemented by syncable repositories
  */
 data class SyncProgress(
     val total: Int = 0,

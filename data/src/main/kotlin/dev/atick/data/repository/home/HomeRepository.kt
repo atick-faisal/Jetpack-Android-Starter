@@ -22,6 +22,18 @@ import kotlinx.coroutines.flow.Flow
 
 /**
  * Interface defining operations for interacting with the home repository.
+ *
+ * This repository follows the offline-first pattern where the local database serves as the
+ * single source of truth. Network operations update the local database, and UI observes
+ * local data via Flow.
+ *
+ * ## Synchronization
+ * This repository implements [Syncable] to support background sync via WorkManager.
+ * See [sync] for details on the sync implementation.
+ *
+ * @see HomeRepositoryImpl Implementation class with network and local data sources
+ * @see Syncable For background sync interface
+ * @see SyncProgress For sync progress tracking
  */
 interface HomeRepository : Syncable {
     /**
