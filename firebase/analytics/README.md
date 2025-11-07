@@ -1,7 +1,11 @@
 # Module :firebase:analytics
 
-This module handles crash reporting and analytics through Firebase Crashlytics. It provides a
-centralized way to track app crashes and report exceptions.
+This module handles crash reporting through Firebase Crashlytics. It provides a centralized way
+to track app crashes and report exceptions.
+
+> [!NOTE]
+> Despite the module name `firebase:analytics`, this module provides **Crashlytics** (crash reporting),
+> not Firebase Analytics (event tracking). Firebase Analytics is not included in this template.
 
 ## Features
 
