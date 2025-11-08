@@ -58,6 +58,8 @@ interface SyncManager {
  * }
  * ```
  *
+ * @sample dev.atick.data.repository.home.HomeRepositoryImpl.sync Complete sync implementation with push/pull
+ *
  * @see SyncProgress For progress reporting
  * @see SyncManager For triggering sync operations
  */
@@ -66,6 +68,7 @@ interface Syncable {
      * Synchronizes data and returns a Flow emitting the progress of the sync operation.
      *
      * @return A Flow emitting SyncProgress objects representing the progress of the sync operation.
+     * @sample dev.atick.data.repository.home.HomeRepositoryImpl.sync Complete sync implementation
      */
     suspend fun sync(): Flow<SyncProgress>
 }
