@@ -152,6 +152,6 @@ object DatabaseModule {
             appContext,
             JetpackDatabase::class.java,
             ROOM_DATABASE_NAME,
-        ).fallbackToDestructiveMigration(true).build()  // TODO: Replace with proper migrations before production
+        ).fallbackToDestructiveMigration(true).build() // TODO: Replace with proper migrations before production
     }
 }

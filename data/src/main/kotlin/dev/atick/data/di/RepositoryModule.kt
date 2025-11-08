@@ -37,7 +37,7 @@ import javax.inject.Singleton
  *
  * This module follows the **Dependency Inversion Principle** by:
  * 1. Defining repository contracts as interfaces (in `:data/repository`)
- * 2. Implementing those contracts (in `:data/repository/*Impl`)
+ * 2. Implementing those contracts (in `:data/repository/<Repository>Impl`)
  * 3. Binding implementations to interfaces via Hilt
  *
  * ## Benefits of Interface + Implementation Pattern
