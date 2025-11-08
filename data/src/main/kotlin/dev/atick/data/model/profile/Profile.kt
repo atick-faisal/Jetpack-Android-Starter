@@ -20,10 +20,36 @@ import dev.atick.core.preferences.model.PreferencesUserProfile
 import dev.atick.core.preferences.model.UserDataPreferences
 
 /**
- * Data class representing a user profile.
+ * Domain model representing a user's profile information in the application's data layer.
  *
- * @property userName The name of the user.
- * @property profilePictureUri The URI of the user's profile picture.
+ * This model represents authenticated user profile data, primarily sourced from Firebase Auth
+ * and cached locally in DataStore via [UserDataPreferences]. Unlike [dev.atick.data.model.home.Jetpack],
+ * this model doesn't use Room database storage; instead, it relies on DataStore for lightweight
+ * preference-based caching.
+ *
+ * Profile data flow:
+ * - Firebase Auth provides initial profile data (name, photo) after sign-in
+ * - [dev.atick.data.repository.profile.ProfileRepository] observes Firebase Auth state
+ * - Profile is cached in DataStore for offline access and quick app startup
+ * - UI layer observes profile via [dev.atick.feature.profile.ui.ProfileViewModel]
+ *
+ * Mapping extensions are provided for layer conversion:
+ * - [UserDataPreferences.toProfile]: Convert from DataStore preferences to domain model
+ * - [toPreferencesUserProfile]: Convert from domain model to DataStore preferences
+ *
+ * Usage context:
+ * - Displayed in profile screen showing user name and avatar
+ * - Used in settings screen to show current user information
+ * - Updated when user changes profile via Firebase Auth methods
+ * - Cached locally for offline display and fast app startup
+ *
+ * @property userName Display name of the authenticated user (default: empty string).
+ * @property profilePictureUri Optional URI string pointing to the user's profile picture.
+ *
+ * @see UserDataPreferences DataStore preferences model for local caching
+ * @see PreferencesUserProfile Subset of preferences specifically for profile data
+ * @see dev.atick.data.repository.profile.ProfileRepository Repository providing profile operations
+ * @see dev.atick.feature.profile.ui.ProfileViewModel ViewModel consuming profile data
  */
 data class Profile(
     val userName: String = String(),

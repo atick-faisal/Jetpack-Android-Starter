@@ -40,10 +40,27 @@ import java.util.UUID
 import javax.inject.Inject
 
 /**
- * Item view model.
+ * ViewModel for the create/edit item screen, managing Jetpack library creation and updates.
  *
- * @param homeRepository [HomeRepository].
- * @param savedStateHandle [SavedStateHandle].
+ * This ViewModel handles both creating new Jetpack items and editing existing ones. It uses
+ * [SavedStateHandle] to retrieve the optional item ID from navigation arguments. If an ID is
+ * present, the screen operates in edit mode; otherwise, it creates a new item with a generated UUID.
+ *
+ * The ViewModel demonstrates:
+ * - Navigation argument handling via [SavedStateHandle.toRoute]
+ * - Form state management with [updateState] for field updates
+ * - Navigation events using [OneTimeEvent] to trigger back navigation after save
+ * - Async operations with [updateStateWith] for create/update operations
+ *
+ * @param homeRepository Repository providing Jetpack data operations.
+ * @param savedStateHandle Navigation state containing optional item ID from route.
+ *
+ * @see ItemScreenData Immutable data class representing form state
+ * @see UiState State wrapper with loading and error handling
+ * @see updateState Extension function for synchronous state updates
+ * @see updateStateWith Extension function for async operations with state updates
+ * @see OneTimeEvent Ensures navigation events are consumed only once
+ * @see HomeRepository Data layer interface for home screen operations
  */
 @HiltViewModel
 class ItemViewModel @Inject constructor(
@@ -97,12 +114,31 @@ class ItemViewModel @Inject constructor(
 }
 
 /**
- * Item screen data.
+ * Immutable data class representing the state of the create/edit item form.
  *
- * @param jetpackId The jetpack ID.
- * @param jetpackName The jetpack name.
- * @param jetpackPrice The jetpack price.
- * @param navigateBack The navigate back event.
+ * This class manages form state for both creating new Jetpack items and editing existing ones.
+ * When creating a new item, [jetpackId] is pre-populated with a random UUID. When editing,
+ * the ID and other fields are loaded from the repository via [ItemViewModel.getJetpack].
+ *
+ * The [navigateBack] event is triggered after a successful create/update operation and is
+ * consumed by the Route composable to navigate back to the home screen. Being wrapped in
+ * [OneTimeEvent] ensures the navigation only happens once, even if the state is re-emitted.
+ *
+ * Usage context:
+ * - Route composable observes [ItemViewModel.itemUiState] which wraps this data class
+ * - Form fields bind to [jetpackName] and [jetpackPrice] with two-way data flow
+ * - Save button triggers [ItemViewModel.createOrUpdateJetpack] which sets [navigateBack]
+ * - Navigation observer consumes [navigateBack] event to pop the back stack
+ *
+ * @param jetpackId Unique identifier for the Jetpack item (UUID for new items).
+ * @param jetpackName Display name of the Jetpack library (e.g., "Compose", "Room").
+ * @param jetpackPrice Price value for the Jetpack library.
+ * @param navigateBack One-time event to trigger back navigation after successful save.
+ *
+ * @see ItemViewModel ViewModel that manages this screen data
+ * @see UiState Wrapper providing loading and error state
+ * @see OneTimeEvent Ensures events are consumed only once
+ * @see Jetpack Domain model created from this form data
  */
 @Immutable
 data class ItemScreenData(
