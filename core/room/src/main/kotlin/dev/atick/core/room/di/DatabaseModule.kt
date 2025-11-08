@@ -27,19 +27,121 @@ import dev.atick.core.room.data.JetpackDatabase
 import javax.inject.Singleton
 
 /**
- * Dagger module for database.
+ * Hilt module providing the Room database instance.
+ *
+ * ## Why This Module Exists
+ *
+ * Room databases require explicit initialization with context and configuration.
+ * This module centralizes database creation to ensure:
+ *
+ * 1. **Single Instance**: Database is created once and shared across the app (Singleton)
+ * 2. **Proper Configuration**: Migration strategy is consistently applied
+ * 3. **Testability**: Tests can provide a fake database implementation
+ * 4. **Lazy Initialization**: Database is only created when first needed
+ *
+ * ## Architecture Decision: Destructive Migration
+ *
+ * This template uses `.fallbackToDestructiveMigration(true)`, which means:
+ *
+ * ### What It Does
+ * When the database schema changes (entity fields added/removed/modified):
+ * 1. Room detects a schema mismatch
+ * 2. **Deletes the existing database** (all local data is lost)
+ * 3. Creates a new database with the new schema
+ * 4. Starts fresh with no data
+ *
+ * ### Why This Is Acceptable During Development
+ * - **Rapid Iteration**: Schema can change frequently during development
+ * - **Firebase Sync**: This template syncs data with Firebase, so local data can be re-fetched
+ * - **Simpler Development**: No need to write migration code for every schema change
+ * - **Fresh Start**: Avoids corrupted data from incomplete migrations
+ *
+ * ### Why This Is NOT Acceptable for Production
+ * - **Data Loss**: Users would lose all locally cached data on app update
+ * - **Poor UX**: Users would see empty screens until re-sync completes
+ * - **Network Usage**: All data must be re-downloaded after each schema change
+ *
+ * ## Migration Strategy for Production
+ *
+ * Before releasing to production, you MUST implement proper migrations:
+ *
+ * ```kotlin
+ * val MIGRATION_1_2 = object : Migration(1, 2) {
+ *     override fun migrate(db: SupportSQLiteDatabase) {
+ *         db.execSQL("ALTER TABLE jetpack ADD COLUMN new_field TEXT")
+ *     }
+ * }
+ *
+ * Room.databaseBuilder(...)
+ *     .addMigrations(MIGRATION_1_2)
+ *     .build()
+ * ```
+ *
+ * ### Testing Migrations
+ * ```kotlin
+ * @Test
+ * fun testMigration1To2() {
+ *     helper.createDatabase(DB_NAME, 1).apply {
+ *         // Insert data with schema v1
+ *         close()
+ *     }
+ *     helper.runMigrationsAndValidate(DB_NAME, 2, true, MIGRATION_1_2)
+ * }
+ * ```
+ *
+ * ## When to Remove Destructive Migration
+ *
+ * Remove `.fallbackToDestructiveMigration(true)` and add proper migrations when:
+ * - Preparing for the first production release
+ * - Users have accumulated significant local data
+ * - Offline-first functionality becomes critical
+ * - Network re-sync is too slow or expensive
+ *
+ * @see JetpackDatabase
+ * @see Migration
  */
 @Module
 @InstallIn(SingletonComponent::class)
 object DatabaseModule {
 
+    /**
+     * The database name used for Room persistence.
+     *
+     * This name is used to create the SQLite database file on disk.
+     * Changing this name will create a new database file.
+     */
     private const val ROOM_DATABASE_NAME = "dev.atick.jetpack.room"
 
     /**
-     * Get the database for Jetpack.
+     * Provides the singleton Room database instance.
      *
-     * @param appContext The application context.
-     * @return The database for Jetpack.
+     * This database:
+     * - Is created once and shared across the entire application
+     * - Uses destructive migration (development-only - see class KDoc)
+     * - Lives in the app's private storage directory
+     * - Is automatically closed when the app is killed
+     *
+     * ## Development Configuration
+     * - **Destructive Migration Enabled**: Schema changes delete and recreate the database
+     * - **Safe for Development**: Firebase sync allows data to be re-fetched
+     *
+     * ## Production Configuration Required
+     * Before production release:
+     * 1. Remove `.fallbackToDestructiveMigration(true)`
+     * 2. Add explicit migrations with `.addMigrations(MIGRATION_X_Y)`
+     * 3. Test migrations thoroughly with `MigrationTestHelper`
+     *
+     * ## Example Migration (for production)
+     * ```kotlin
+     * val MIGRATION_1_2 = object : Migration(1, 2) {
+     *     override fun migrate(db: SupportSQLiteDatabase) {
+     *         db.execSQL("ALTER TABLE jetpack ADD COLUMN is_favorite INTEGER NOT NULL DEFAULT 0")
+     *     }
+     * }
+     * ```
+     *
+     * @param appContext The application context for database creation
+     * @return The singleton [JetpackDatabase] instance
      */
     @Singleton
     @Provides
@@ -50,6 +152,6 @@ object DatabaseModule {
             appContext,
             JetpackDatabase::class.java,
             ROOM_DATABASE_NAME,
-        ).fallbackToDestructiveMigration(true).build()
+        ).fallbackToDestructiveMigration(true).build()  // TODO: Replace with proper migrations before production
     }
 }
