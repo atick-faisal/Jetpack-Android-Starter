@@ -345,11 +345,12 @@ class MainActivity : AppCompatActivity() {
 }
 ```
 
-**Important Notes:**
-- Use `lateinit var` for field injection
-- Fields must not be private
-- Injection happens before `onCreate()` for Activities
-- For ViewModels, use `by viewModels()` delegate (Hilt integration)
+> [!IMPORTANT]
+> **Field Injection Requirements:**
+> - Use `lateinit var` for field injection
+> - Fields must not be private
+> - Injection happens before `onCreate()` for Activities
+> - For ViewModels, use `by viewModels()` delegate (Hilt integration)
 
 ### AssistedInject (For Workers)
 
@@ -381,7 +382,8 @@ class SyncWorker @AssistedInject constructor(
 - Mark WorkManager-provided params with `@Assisted`
 - Regular dependencies are injected normally
 
-**Note:** You must also use `DelegatingWorker` when enqueuing:
+> [!NOTE]
+> You must also use `DelegatingWorker` when enqueuing:
 ```kotlin
 fun startUpSyncWork(): OneTimeWorkRequest {
     return OneTimeWorkRequestBuilder<DelegatingWorker>()
