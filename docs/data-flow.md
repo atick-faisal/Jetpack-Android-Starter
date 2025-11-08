@@ -57,6 +57,27 @@ This template intentionally uses a simplified **two-layer architecture** (UI + D
 
 Data flows in **one direction** through the layers:
 
+```mermaid
+graph LR
+    A[User Interaction] -->|event| B[UI Layer]
+    B -->|action| C[ViewModel]
+    C -->|call| D[Repository]
+    D -->|query| E[Data Sources]
+    E -->|data| D
+    D -->|Flow/Result| C
+    C -->|StateFlow| B
+    B -->|recompose| F[UI Rendered]
+
+    style A fill:#FFE082,stroke:#FF6F00,stroke-width:2px
+    style B fill:#E8F5E9,stroke:#4CAF50,stroke-width:2px
+    style C fill:#E8F5E9,stroke:#4CAF50,stroke-width:2px
+    style D fill:#E3F2FD,stroke:#1976D2,stroke-width:2px
+    style E fill:#E3F2FD,stroke:#1976D2,stroke-width:2px
+    style F fill:#E8F5E9,stroke:#4CAF50,stroke-width:2px
+```
+
+**Flow Steps:**
+
 1. **User Interaction** → UI Layer
 2. **ViewModel** → Calls Repository
 3. **Repository** → Coordinates Data Sources (Room/Retrofit/Firebase/DataStore)
@@ -200,15 +221,30 @@ UI updates automatically
 
 ### Architecture
 
-```
-                   ViewModel
-                      ↓
-                  Repository
-                   ↙     ↘
-        LocalDataSource  NetworkDataSource
-             (Room)        (Retrofit/Firebase)
-                ↓               ↓
-         Local Database      API/Firestore
+```mermaid
+graph TB
+    VM[ViewModel]
+    Repo[Repository<br/>Single Source of Truth]
+    Local[LocalDataSource<br/>Room Database]
+    Network[NetworkDataSource<br/>Retrofit/Firebase]
+    DB[(Local Database<br/>SQLite)]
+    API[Remote API<br/>Firestore]
+
+    VM -->|observeData| Repo
+    Repo -->|Flow&lt;T&gt;| VM
+    Repo -->|observes| Local
+    Local -->|Flow&lt;Entity&gt;| Repo
+    Repo -.sync.-> Network
+    Network -.fetch.-> API
+    Local <-->|read/write| DB
+    Network --> Local
+
+    style VM fill:#E8F5E9,stroke:#4CAF50,stroke-width:2px
+    style Repo fill:#E3F2FD,stroke:#1976D2,stroke-width:2px
+    style Local fill:#E3F2FD,stroke:#1976D2,stroke-width:2px
+    style Network fill:#E3F2FD,stroke:#1976D2,stroke-width:2px
+    style DB fill:#FFF3E0,stroke:#FF9800,stroke-width:2px
+    style API fill:#FFF3E0,stroke:#FF9800,stroke-width:2px
 ```
 
 ### Key Concepts

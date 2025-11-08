@@ -19,6 +19,46 @@ The architecture is built on several key principles:
 The app uses a two-layer architecture:
 
 ```mermaid
+graph TB
+    subgraph UI["UI Layer"]
+        direction TB
+        Composable["Composables<br/>(Pure UI)"]
+        ViewModel["ViewModels<br/>(State Management)"]
+        ScreenData["Screen Data<br/>(Immutable State)"]
+        UiState["UiState&lt;T&gt;<br/>(Wrapper)"]
+
+        Composable -.observes.- UiState
+        ViewModel -->|manages| UiState
+        UiState -->|wraps| ScreenData
+    end
+
+    subgraph Data["Data Layer"]
+        direction TB
+        Repository["Repositories<br/>(Single Source of Truth)"]
+        LocalDS["Local Data Sources<br/>(Room, DataStore)"]
+        NetworkDS["Network Data Sources<br/>(Retrofit, Firebase)"]
+
+        Repository -->|reads/writes| LocalDS
+        Repository -->|fetches| NetworkDS
+        NetworkDS -.syncs.-> LocalDS
+    end
+
+    subgraph DI["Dependency Injection"]
+        Hilt["Hilt<br/>(Provides Dependencies)"]
+    end
+
+    ViewModel -->|calls| Repository
+    Hilt -.injects.-> ViewModel
+    Hilt -.injects.-> Repository
+
+    style UI fill:#E8F5E9,stroke:#4CAF50,stroke-width:2px
+    style Data fill:#E3F2FD,stroke:#1976D2,stroke-width:2px
+    style DI fill:#FFF3E0,stroke:#FF9800,stroke-width:2px
+```
+
+**Simplified View**:
+
+```mermaid
 graph TD
     A[UI Layer] --> B[Data Layer]
     style A fill: #4CAF50, stroke: #333, stroke-width: 2px

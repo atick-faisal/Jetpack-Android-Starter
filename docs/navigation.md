@@ -52,6 +52,57 @@ graph LR
     E --> F[Screen Composable]
 ```
 
+### Complete Navigation Graph
+
+This diagram shows the complete navigation graph structure used in this template:
+
+```mermaid
+graph TB
+    subgraph NavHost["NavHost (app/navigation/NavHost.kt)"]
+        Start{{"Conditional Start Destination<br/>(Auth vs Home)"}}
+    end
+
+    subgraph AuthGraph["AuthNavGraph"]
+        SignIn["SignIn<br/>(No arguments)"]
+        SignUp["SignUp<br/>(No arguments)"]
+
+        SignIn -.navigate.-> SignUp
+        SignUp -.navigate.-> SignIn
+    end
+
+    subgraph HomeGraph["HomeNavGraph"]
+        Home["Home<br/>(No arguments)"]
+        Item["Item<br/>(itemId: String?)"]
+
+        Home -->|onJetpackClick| Item
+        Item -->|onBackClick| Home
+    end
+
+    Profile["Profile<br/>(Top-level destination)"]
+
+    Start -->|isUserLoggedIn = false| AuthGraph
+    Start -->|isUserLoggedIn = true| HomeGraph
+
+    SignIn -.auth success.-> HomeGraph
+    SignUp -.auth success.-> HomeGraph
+
+    HomeGraph <-.bottom nav.-> Profile
+    Profile <-.bottom nav.-> HomeGraph
+
+    style Start fill:#FFF3E0,stroke:#FF9800,stroke-width:3px
+    style AuthGraph fill:#FFEBEE,stroke:#F44336,stroke-width:2px
+    style HomeGraph fill:#E8F5E9,stroke:#4CAF50,stroke-width:2px
+    style Profile fill:#E8F5E9,stroke:#4CAF50,stroke-width:2px
+    style NavHost fill:#E3F2FD,stroke:#1976D2,stroke-width:2px
+```
+
+**Legend:**
+- **Solid arrows** (→): Direct navigation within a graph
+- **Dotted arrows** (-.->): Navigation between graphs or conditional navigation
+- **Orange box**: Conditional routing logic
+- **Red box**: Authentication graph (not logged in)
+- **Green boxes**: Main app destinations (logged in)
+
 ---
 
 ## Type-Safe Navigation

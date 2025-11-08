@@ -232,6 +232,103 @@ Each module has a `README.md` file documenting its architecture and usage:
 - **[Feature: Profile](../feature/profile/README.md)** - User profile screen
 - **[Feature: Settings](../feature/settings/README.md)** - App settings screen
 
+### 📦 Module Dependency Graph
+
+This diagram shows how all modules in the project depend on each other:
+
+```mermaid
+graph TB
+    subgraph app["App Layer"]
+        App["app<br/>(Application)"]
+    end
+
+    subgraph feature["Feature Layer"]
+        FeatureAuth["feature:auth"]
+        FeatureHome["feature:home"]
+        FeatureProfile["feature:profile"]
+        FeatureSettings["feature:settings"]
+    end
+
+    subgraph data["Data Layer"]
+        Data["data<br/>(Repositories)"]
+    end
+
+    subgraph firebase["Firebase Layer"]
+        FBAuth["firebase:auth"]
+        FBFirestore["firebase:firestore"]
+        FBAnalytics["firebase:analytics"]
+    end
+
+    subgraph core["Core Layer"]
+        CoreUI["core:ui"]
+        CoreNetwork["core:network"]
+        CoreRoom["core:room"]
+        CorePrefs["core:preferences"]
+        CoreAndroid["core:android"]
+    end
+
+    subgraph sync["Sync Layer"]
+        Sync["sync<br/>(WorkManager)"]
+    end
+
+    %% App dependencies
+    App --> FeatureAuth
+    App --> FeatureHome
+    App --> FeatureProfile
+    App --> FeatureSettings
+    App --> CoreUI
+    App --> Data
+    App --> Sync
+
+    %% Feature dependencies
+    FeatureAuth --> CoreUI
+    FeatureAuth --> Data
+    FeatureHome --> CoreUI
+    FeatureHome --> Data
+    FeatureProfile --> CoreUI
+    FeatureProfile --> Data
+    FeatureSettings --> CoreUI
+    FeatureSettings --> Data
+
+    %% Data dependencies
+    Data --> CoreNetwork
+    Data --> CoreRoom
+    Data --> CorePrefs
+    Data --> CoreAndroid
+    Data --> FBAuth
+    Data --> FBFirestore
+
+    %% Firebase dependencies
+    FBAuth --> CoreAndroid
+    FBFirestore --> CoreAndroid
+    FBAnalytics --> CoreAndroid
+
+    %% Sync dependencies
+    Sync --> Data
+    Sync --> CoreAndroid
+
+    %% Core dependencies
+    CoreUI --> CoreAndroid
+    CoreNetwork --> CoreAndroid
+    CoreRoom --> CoreAndroid
+    CorePrefs --> CoreAndroid
+
+    style app fill:#E8F5E9,stroke:#4CAF50,stroke-width:3px
+    style feature fill:#E1F5FE,stroke:#03A9F4,stroke-width:2px
+    style data fill:#F3E5F5,stroke:#9C27B0,stroke-width:2px
+    style firebase fill:#FFF3E0,stroke:#FF9800,stroke-width:2px
+    style core fill:#FFEBEE,stroke:#F44336,stroke-width:2px
+    style sync fill:#E0F2F1,stroke:#009688,stroke-width:2px
+```
+
+**Key Dependency Rules:**
+- **Feature modules** → Never depend on other feature modules (isolated)
+- **Feature modules** → Always depend on `:core:ui` and `:data`
+- **Data module** → Depends on all core modules and Firebase modules
+- **Core modules** → Never depend on feature, data, or firebase modules (reusable)
+- **Firebase modules** → Only depend on `:core:android` (lightweight wrappers)
+- **Sync module** → Only depends on `:data` and `:core:android` (background operations)
+
 ### 🔗 Cross-References & Integration
 
 Understanding how systems work together:
