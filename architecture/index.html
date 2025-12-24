@@ -1791,8 +1791,7 @@ some pragmatic adaptations to keep the codebase simple and maintainable.</p>
         ViewModel["ViewModels&lt;br/&gt;(State Management)"]
         ScreenData["Screen Data&lt;br/&gt;(Immutable State)"]
         UiState["UiState&amp;lt;T&amp;gt;&lt;br/&gt;(Wrapper)"]
-
-        Composable -.observes.- UiState
+        Composable -. observes .-&gt; UiState
         ViewModel --&gt;|manages| UiState
         UiState --&gt;|wraps| ScreenData
     end
@@ -1802,10 +1801,9 @@ some pragmatic adaptations to keep the codebase simple and maintainable.</p>
         Repository["Repositories&lt;br/&gt;(Single Source of Truth)"]
         LocalDS["Local Data Sources&lt;br/&gt;(Room, DataStore)"]
         NetworkDS["Network Data Sources&lt;br/&gt;(Retrofit, Firebase)"]
-
         Repository --&gt;|reads/writes| LocalDS
         Repository --&gt;|fetches| NetworkDS
-        NetworkDS -.syncs.-&gt; LocalDS
+        NetworkDS -. syncs .-&gt; LocalDS
     end
 
     subgraph DI["Dependency Injection"]
@@ -1813,17 +1811,11 @@ some pragmatic adaptations to keep the codebase simple and maintainable.</p>
     end
 
     ViewModel --&gt;|calls| Repository
-    Hilt -.injects.-&gt; ViewModel
-    Hilt -.injects.-&gt; Repository
-
-    style UI fill:#E8F5E9,stroke:#4CAF50,stroke-width:2px
-    style Data fill:#E3F2FD,stroke:#1976D2,stroke-width:2px
-    style DI fill:#FFF3E0,stroke:#FF9800,stroke-width:2px</code></pre>
+    Hilt -. injects .-&gt; ViewModel
+    Hilt -. injects .-&gt; Repository</code></pre>
 <p><strong>Simplified View</strong>:</p>
 <pre class="mermaid"><code>graph TD
-    A[UI Layer] --&gt; B[Data Layer]
-    style A fill: #4CAF50, stroke: #333, stroke-width: 2px
-    style B fill: #1976D2, stroke: #333, stroke-width: 2px</code></pre>
+    A[UI Layer] --&gt; B[Data Layer]</code></pre>
 <h3 id="ui-layer">UI Layer</h3>
 <p>The UI layer follows MVVM pattern and consists of:</p>
 <ol>
@@ -1903,13 +1895,13 @@ logic between multiple ViewModels.</p>
 </span></code></pre></div>
 </li>
 </ol>
-<div class="admonition tip">
-<p class="admonition-title">Tip</p>
-<p><strong>Kotlin Context Parameters</strong>: The <code>updateStateWith</code> and <code>updateWith</code> functions use Kotlin's
+<blockquote>
+<p>[!TIP]
+<strong>Kotlin Context Parameters</strong>: The <code>updateStateWith</code> and <code>updateWith</code> functions use Kotlin's
 context parameters feature (enabled via <code>-Xcontext-parameters</code> compiler flag) to automatically
 access the ViewModel's scope. You don't need to pass <code>viewModelScope</code> explicitly - it's
 injected via the <code>context(viewModel: ViewModel)</code> parameter.</p>
-</div>
+</blockquote>
 <ol>
 <li>
 <p><strong>State Display</strong>:</p>
@@ -1989,9 +1981,11 @@ injected via the <code>context(viewModel: ViewModel)</code> parameter.</p>
 </ol>
 <hr />
 <h2 id="integration-patterns">Integration Patterns</h2>
-<p>Understanding how different architectural components work together is crucial for building features effectively. This section explains the key integration patterns in the template.</p>
+<p>Understanding how different architectural components work together is crucial for building features
+effectively. This section explains the key integration patterns in the template.</p>
 <h3 id="navigation-state-management-integration">Navigation + State Management Integration</h3>
-<p>Navigation and state management work together to create a seamless user experience with proper state preservation.</p>
+<p>Navigation and state management work together to create a seamless user experience with proper state
+preservation.</p>
 <p><strong>Pattern</strong>: Type-safe navigation with state restoration</p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1">// 1. Define navigation route with parameters</span>
 </span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nd">@Serializable</span>
@@ -2033,17 +2027,21 @@ injected via the <code>context(viewModel: ViewModel)</code> parameter.</p>
 </span><span id="__span-6-38"><a id="__codelineno-6-38" name="__codelineno-6-38" href="#__codelineno-6-38"></a><span class="w">    </span><span class="p">}</span>
 </span><span id="__span-6-39"><a id="__codelineno-6-39" name="__codelineno-6-39" href="#__codelineno-6-39"></a><span class="p">}</span>
 </span></code></pre></div>
-<p><strong>Key Integration Points</strong>:
-- <code>SavedStateHandle</code> provides navigation arguments to ViewModel
-- <code>toRoute&lt;T&gt;()</code> converts type-safe route to data class
-- State survives configuration changes automatically
-- Back stack preservation handled by Navigation Compose</p>
+<p><strong>Key Integration Points</strong>:</p>
+<ul>
+<li><code>SavedStateHandle</code> provides navigation arguments to ViewModel</li>
+<li><code>toRoute&lt;T&gt;()</code> converts type-safe route to data class</li>
+<li>State survives configuration changes automatically</li>
+<li>Back stack preservation handled by Navigation Compose</li>
+</ul>
 <div class="admonition tip">
 <p class="admonition-title">Tip</p>
-<p>For detailed navigation patterns, see <a href="../navigation/">Navigation Deep Dive</a>. For state management patterns, see <a href="../state-management/">State Management Guide</a>.</p>
+<p>For detailed navigation patterns, see <a href="../navigation/">Navigation Deep Dive</a>. For state management
+patterns, see <a href="../state-management/">State Management Guide</a>.</p>
 </div>
 <h3 id="firebase-data-layer-integration">Firebase + Data Layer Integration</h3>
-<p>Firebase services integrate with the repository pattern to provide seamless authentication and cloud data access.</p>
+<p>Firebase services integrate with the repository pattern to provide seamless authentication and cloud
+data access.</p>
 <p><strong>Pattern</strong>: Firebase authentication flow with repository pattern</p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1">// 1. Firebase wrapper abstracts Firebase SDK</span>
 </span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="kd">class</span><span class="w"> </span><span class="nc">FirebaseAuthWrapper</span><span class="w"> </span><span class="nd">@Inject</span><span class="w"> </span><span class="k">constructor</span><span class="p">(</span>
@@ -2092,14 +2090,17 @@ injected via the <code>context(viewModel: ViewModel)</code> parameter.</p>
 </span><span id="__span-7-45"><a id="__codelineno-7-45" name="__codelineno-7-45" href="#__codelineno-7-45"></a><span class="w">        </span><span class="p">)</span>
 </span><span id="__span-7-46"><a id="__codelineno-7-46" name="__codelineno-7-46" href="#__codelineno-7-46"></a><span class="p">}</span>
 </span></code></pre></div>
-<p><strong>Key Integration Points</strong>:
-- Firebase wrappers provide reactive Flow-based APIs
-- Repositories coordinate between Firebase and local database
-- ViewModels observe repositories using StateFlow
-- Local database serves as cache for offline access</p>
+<p><strong>Key Integration Points</strong>:</p>
+<ul>
+<li>Firebase wrappers provide reactive Flow-based APIs</li>
+<li>Repositories coordinate between Firebase and local database</li>
+<li>ViewModels observe repositories using StateFlow</li>
+<li>Local database serves as cache for offline access</li>
+</ul>
 <div class="admonition tip">
 <p class="admonition-title">Tip</p>
-<p>For Firebase setup, see <a href="../firebase/">Firebase Setup Guide</a>. For repository patterns, see <a href="../data/README.md">Data Layer Guide</a>.</p>
+<p>For Firebase setup, see <a href="../firebase/">Firebase Setup Guide</a>. For repository patterns,
+see <a href="../data/README.md">Data Layer Guide</a>.</p>
 </div>
 <h3 id="dependency-injection-integration">Dependency Injection Integration</h3>
 <p>Hilt ties all architectural components together by providing dependencies throughout the app.</p>
@@ -2145,18 +2146,22 @@ injected via the <code>context(viewModel: ViewModel)</code> parameter.</p>
 </span><span id="__span-8-39"><a id="__codelineno-8-39" name="__codelineno-8-39" href="#__codelineno-8-39"></a><span class="w">    </span><span class="c1">// Use ViewModel</span>
 </span><span id="__span-8-40"><a id="__codelineno-8-40" name="__codelineno-8-40" href="#__codelineno-8-40"></a><span class="p">}</span>
 </span></code></pre></div>
-<p><strong>Key Integration Points</strong>:
-- Data sources provided in Singleton scope
-- Repositories use <code>@Binds</code> for interface-to-implementation mapping
-- ViewModels annotated with <code>@HiltViewModel</code> for automatic injection
-- <code>hiltViewModel()</code> retrieves ViewModels in Composables
-- <code>@AndroidEntryPoint</code> enables injection in Activities/Fragments</p>
+<p><strong>Key Integration Points</strong>:</p>
+<ul>
+<li>Data sources provided in Singleton scope</li>
+<li>Repositories use <code>@Binds</code> for interface-to-implementation mapping</li>
+<li>ViewModels annotated with <code>@HiltViewModel</code> for automatic injection</li>
+<li><code>hiltViewModel()</code> retrieves ViewModels in Composables</li>
+<li><code>@AndroidEntryPoint</code> enables injection in Activities/Fragments</li>
+</ul>
 <div class="admonition tip">
 <p class="admonition-title">Tip</p>
-<p>For complete DI patterns, see <a href="../dependency-injection/">Dependency Injection Guide</a> (993 lines of comprehensive guidance).</p>
+<p>For complete DI patterns, see <a href="../dependency-injection/">Dependency Injection Guide</a> (993 lines of
+comprehensive guidance).</p>
 </div>
 <h3 id="sync-repositories-integration">Sync + Repositories Integration</h3>
-<p>WorkManager-based sync integrates with repositories to keep local data synchronized with remote sources.</p>
+<p>WorkManager-based sync integrates with repositories to keep local data synchronized with remote
+sources.</p>
 <p><strong>Pattern</strong>: Background sync with repository coordination</p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1">// 1. Repository implements Syncable interface</span>
 </span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="kd">class</span><span class="w"> </span><span class="nc">ContentRepositoryImpl</span><span class="w"> </span><span class="nd">@Inject</span><span class="w"> </span><span class="k">constructor</span><span class="p">(</span>
@@ -2210,15 +2215,17 @@ injected via the <code>context(viewModel: ViewModel)</code> parameter.</p>
 </span><span id="__span-9-50"><a id="__codelineno-9-50" name="__codelineno-9-50" href="#__codelineno-9-50"></a><span class="w">    </span><span class="p">}</span>
 </span><span id="__span-9-51"><a id="__codelineno-9-51" name="__codelineno-9-51" href="#__codelineno-9-51"></a><span class="p">}</span>
 </span></code></pre></div>
-<p><strong>Key Integration Points</strong>:
-- Repositories implement <code>sync()</code> method returning <code>Flow&lt;SyncProgress&gt;</code>
-- <code>SyncWorker</code> receives repository via Hilt dependency injection
-- <code>setForeground()</code> displays progress notification as sync runs
-- <code>Sync.initialize()</code> sets up periodic WorkManager sync
-- Local database updated in background
-- UI automatically reflects changes via Flow observation
-- Network constraints ensure sync only runs when connected
-- Retry logic with exponential backoff (up to 3 attempts)</p>
+<p><strong>Key Integration Points</strong>:</p>
+<ul>
+<li>Repositories implement <code>sync()</code> method returning <code>Flow&lt;SyncProgress&gt;</code></li>
+<li><code>SyncWorker</code> receives repository via Hilt dependency injection</li>
+<li><code>setForeground()</code> displays progress notification as sync runs</li>
+<li><code>Sync.initialize()</code> sets up periodic WorkManager sync</li>
+<li>Local database updated in background</li>
+<li>UI automatically reflects changes via Flow observation</li>
+<li>Network constraints ensure sync only runs when connected</li>
+<li>Retry logic with exponential backoff (up to 3 attempts)</li>
+</ul>
 <div class="admonition tip">
 <p class="admonition-title">Tip</p>
 <p>For sync patterns and troubleshooting, see <a href="../sync/README.md">Sync Module README</a>.</p>
@@ -2232,62 +2239,66 @@ injected via the <code>context(viewModel: ViewModel)</code> parameter.</p>
     participant Local as Local DB
     participant Remote as Remote API
     participant Sync as SyncWorker
-
-    Note over UI,Sync: User Opens Screen
-    UI-&gt;&gt;VM: hiltViewModel() injection
-    VM-&gt;&gt;Repo: observeData()
-    Repo-&gt;&gt;Local: observeDataEntities()
-    Local--&gt;&gt;Repo: Flow&lt;List&lt;Entity&gt;&gt;
-    Repo--&gt;&gt;VM: Flow&lt;List&lt;Domain&gt;&gt;
-    VM--&gt;&gt;UI: StateFlow&lt;UiState&lt;Data&gt;&gt;
-
-    Note over UI,Sync: Background Sync (Periodic)
-    Sync-&gt;&gt;Repo: sync()
-    Repo-&gt;&gt;Remote: fetchData()
-    Remote--&gt;&gt;Repo: List&lt;DTO&gt;
-    Repo-&gt;&gt;Local: saveData(entities)
-    Local--&gt;&gt;Repo: Success
-    Note over Local,UI: Flow emits new data
-    Local--&gt;&gt;Repo: Updated Flow
-    Repo--&gt;&gt;VM: Updated Flow
-    VM--&gt;&gt;UI: Updated State
-    UI-&gt;&gt;UI: Recomposition</code></pre>
+    Note over UI, Sync: User Opens Screen
+    UI -&gt;&gt; VM: hiltViewModel() injection
+    VM -&gt;&gt; Repo: observeData()
+    Repo -&gt;&gt; Local: observeDataEntities()
+    Local --&gt;&gt; Repo: Flow&lt;List&lt;Entity&gt;&gt;
+    Repo --&gt;&gt; VM: Flow&lt;List&lt;Domain&gt;&gt;
+    VM --&gt;&gt; UI: StateFlow&lt;UiState&lt;Data&gt;&gt;
+    Note over UI, Sync: Background Sync (Periodic)
+    Sync -&gt;&gt; Repo: sync()
+    Repo -&gt;&gt; Remote: fetchData()
+    Remote --&gt;&gt; Repo: List&lt;DTO&gt;
+    Repo -&gt;&gt; Local: saveData(entities)
+    Local --&gt;&gt; Repo: Success
+    Note over Local, UI: Flow emits new data
+    Local --&gt;&gt; Repo: Updated Flow
+    Repo --&gt;&gt; VM: Updated Flow
+    VM --&gt;&gt; UI: Updated State
+    UI -&gt;&gt; UI: Recomposition</code></pre>
 <p><strong>Flow Breakdown</strong>:</p>
 <ol>
-<li><strong>Screen Opens</strong>:</li>
+<li>
+<p><strong>Screen Opens</strong>:</p>
+<ul>
 <li>Hilt injects ViewModel with Repository dependencies</li>
 <li>ViewModel starts observing repository data</li>
-<li>
-<p>Repository returns Flow from local database (single source of truth)</p>
+<li>Repository returns Flow from local database (single source of truth)</li>
+</ul>
 </li>
 <li>
 <p><strong>Initial Display</strong>:</p>
-</li>
+<ul>
 <li>UI receives StateFlow with cached data</li>
-<li>
-<p>Screen displays immediately (offline-first)</p>
+<li>Screen displays immediately (offline-first)</li>
+</ul>
 </li>
 <li>
 <p><strong>Background Sync</strong>:</p>
-</li>
+<ul>
 <li>WorkManager triggers SyncWorker periodically</li>
 <li>SyncWorker calls <code>sync()</code> on all repositories</li>
-<li>
-<p>Repository fetches from remote and updates local database</p>
+<li>Repository fetches from remote and updates local database</li>
+</ul>
 </li>
 <li>
 <p><strong>Automatic Update</strong>:</p>
-</li>
+<ul>
 <li>Local database change triggers Flow emission</li>
 <li>ViewModel receives updated data</li>
 <li>UI automatically recomposes with new data</li>
+</ul>
+</li>
 </ol>
-<p><strong>Key Benefits</strong>:
-- <strong>Offline-first</strong>: App works without network
-- <strong>Automatic updates</strong>: No manual refresh needed
-- <strong>Type safety</strong>: Compile-time navigation and DI
-- <strong>Separation of concerns</strong>: Each layer has clear responsibility
-- <strong>Testability</strong>: Dependencies easily mocked via Hilt</p>
+<p><strong>Key Benefits</strong>:</p>
+<ul>
+<li><strong>Offline-first</strong>: App works without network</li>
+<li><strong>Automatic updates</strong>: No manual refresh needed</li>
+<li><strong>Type safety</strong>: Compile-time navigation and DI</li>
+<li><strong>Separation of concerns</strong>: Each layer has clear responsibility</li>
+<li><strong>Testability</strong>: Dependencies easily mocked via Hilt</li>
+</ul>
 <hr />
 <h2 id="summary">Summary</h2>
 <p>This template uses a <strong>two-layer architecture</strong> (UI + Data) for simplicity:</p>

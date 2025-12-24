@@ -1816,7 +1816,8 @@
 
 
 <h1 id="adding-a-new-feature">Adding a New Feature</h1>
-<p>This guide walks you through the complete process of adding a new feature to the app, following established patterns and best practices.</p>
+<p>This guide walks you through the complete process of adding a new feature to the app, following
+established patterns and best practices.</p>
 <hr />
 <h2 id="summary">Summary</h2>
 <p>To add a new feature to this template, follow this workflow:</p>
@@ -1828,7 +1829,8 @@
 <li><strong>Set up navigation</strong> - Define type-safe routes and navigation extensions</li>
 <li><strong>Configure DI</strong> - Wire everything together with Hilt modules</li>
 </ol>
-<p>This guide provides complete code examples for each step, showing the exact patterns used in this template.</p>
+<p>This guide provides complete code examples for each step, showing the exact patterns used in this
+template.</p>
 <hr />
 <h2 id="overview-of-steps">Overview of Steps</h2>
 <ol>
@@ -1843,7 +1845,8 @@
 <h2 id="step-1-data-models">Step 1: Data Models</h2>
 <hr />
 <h3 id="11-data-source-models">1.1 Data Source Models</h3>
-<p>Create models in the appropriate core module (for example, <code>core:network</code> or <code>core:room</code>). Create new core modules if needed:</p>
+<p>Create models in the appropriate core module (for example, <code>core:network</code> or <code>core:room</code>). Create
+new core modules if needed:</p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1">// core/network/src/main/kotlin/dev/atick/core/network/model/NetworkFeature.kt</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nd">@Serializable</span>
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="kd">data</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nc">NetworkFeature</span><span class="p">(</span>
@@ -1976,7 +1979,9 @@
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>This is a minimal repository example for the tutorial. For detailed repository patterns including offline-first with sync metadata, network-only, local-only, error handling, and caching strategies, see the <a href="../data/README.md#repository-patterns">Data Module README</a>.</p>
+<p>This is a minimal repository example for the tutorial. For detailed repository patterns including
+offline-first with sync metadata, network-only, local-only, error handling, and caching strategies,
+see the <a href="../data/README.md#repository-patterns">Data Module README</a>.</p>
 </div>
 <hr />
 <h2 id="step-4-ui-layer">Step 4: UI Layer</h2>
@@ -2062,7 +2067,8 @@
 </span></code></pre></div>
 <hr />
 <h2 id="step-5-navigation">Step 5: Navigation</h2>
-<p>This section shows the minimal navigation code needed when adding a new feature. For comprehensive navigation patterns and best practices, see the <a href="../navigation/">Navigation Deep Dive</a> guide.</p>
+<p>This section shows the minimal navigation code needed when adding a new feature. For comprehensive
+navigation patterns and best practices, see the <a href="../navigation/">Navigation Deep Dive</a> guide.</p>
 <hr />
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1">// feature/feature-name/src/main/kotlin/dev/atick/feature/navigation/</span>
 </span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nd">@Serializable</span>
@@ -2122,22 +2128,30 @@
 </span></code></pre></div>
 <hr />
 <h2 id="best-practices-reminder">Best Practices Reminder</h2>
-<p><strong>Data Sources:</strong>
-- Use <code>withContext(ioDispatcher)</code> for IO operations
-- Handle raw data models
-- One responsibility per data source</p>
-<p><strong>Repositories:</strong>
-- Use <code>suspendRunCatching</code> for error handling
-- Convert between data models
-- Coordinate between data sources</p>
-<p><strong>ViewModels:</strong>
-- Use <code>updateState</code>, <code>updateStateWith</code>, and <code>updateWith</code> utilities
-- Handle UI logic and state management
-- Convert to Screen Data</p>
-<p><strong>UI Components:</strong>
-- Use <code>StatefulComposable</code> for consistent loading/error handling
-- Keep composables pure and state-driven
-- Separate route from screen implementation</p>
+<p><strong>Data Sources:</strong></p>
+<ul>
+<li>Use <code>withContext(ioDispatcher)</code> for IO operations</li>
+<li>Handle raw data models</li>
+<li>One responsibility per data source</li>
+</ul>
+<p><strong>Repositories:</strong></p>
+<ul>
+<li>Use <code>suspendRunCatching</code> for error handling</li>
+<li>Convert between data models</li>
+<li>Coordinate between data sources</li>
+</ul>
+<p><strong>ViewModels:</strong></p>
+<ul>
+<li>Use <code>updateState</code>, <code>updateStateWith</code>, and <code>updateWith</code> utilities</li>
+<li>Handle UI logic and state management</li>
+<li>Convert to Screen Data</li>
+</ul>
+<p><strong>UI Components:</strong></p>
+<ul>
+<li>Use <code>StatefulComposable</code> for consistent loading/error handling</li>
+<li>Keep composables pure and state-driven</li>
+<li>Separate route from screen implementation</li>
+</ul>
 <div class="admonition warning">
 <p class="admonition-title">Important</p>
 <p>Always follow the unidirectional data flow pattern: UI Events → ViewModel → Repository → Data

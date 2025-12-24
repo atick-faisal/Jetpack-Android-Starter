@@ -1488,7 +1488,8 @@
 
 
 <h1 id="getting-started">Getting Started</h1>
-<p>This guide helps you set up and run the project on your local machine. You'll learn how to clone the repository, configure Firebase, and prepare for release builds.</p>
+<p>This guide helps you set up and run the project on your local machine. You'll learn how to clone the
+repository, configure Firebase, and prepare for release builds.</p>
 <hr />
 <h2 id="summary">Summary</h2>
 <p>Get started quickly with the Jetpack Android Starter template:</p>
@@ -1498,7 +1499,8 @@
 <li>Optionally configure Firebase for authentication and Firestore</li>
 <li>Set up signing configuration for release builds</li>
 </ol>
-<p>The debug variant works immediately with minimal setup. Firebase configuration and release builds are optional until you're ready to use those features.</p>
+<p>The debug variant works immediately with minimal setup. Firebase configuration and release builds
+are optional until you're ready to use those features.</p>
 <hr />
 <h2 id="quick-start">Quick Start</h2>
 <p><strong>Clone the repository</strong> (with depth 1 to reduce clone size):</p>
@@ -1522,10 +1524,13 @@ your own Firebase project.</p>
 </ul>
 <hr />
 <h2 id="setting-up-firebase-features">Setting Up Firebase Features</h2>
-<p>This project includes Firebase integration for authentication, Firestore, and analytics. The debug variant works out of the box with a template <code>google-services.json</code>, but Firebase features won't be functional until you configure your own Firebase project.</p>
+<p>This project includes Firebase integration for authentication, Firestore, and analytics. The debug
+variant works out of the box with a template <code>google-services.json</code>, but Firebase features won't be
+functional until you configure your own Firebase project.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>For complete Firebase setup instructions, see the <a href="../firebase/">Firebase Setup Guide</a>. The guide covers:
+<p>For complete Firebase setup instructions, see the <a href="../firebase/">Firebase Setup Guide</a>. The guide
+covers:
 - Creating your Firebase project
 - Configuring Authentication (Google Sign-In and Email/Password)
 - Setting up Firestore database
@@ -1561,18 +1566,24 @@ how the app is structured</p>
 <p><strong>Code Style</strong> - Review the <a href="../spotless/">Spotless Setup</a> for code formatting guidelines</p>
 <hr />
 <h2 id="common-issues">Common Issues</h2>
-<p><strong>Build Fails:</strong>
-- Ensure you have JDK 21 set in Android Studio
-- Run <code>./gradlew clean</code> and try again
-- Check if all dependencies are resolved</p>
-<p><strong>Firebase Features Not Working:</strong>
-- Verify you've replaced <code>google-services.json</code>
-- Check Firebase Console for proper setup
-- Ensure SHA-1 is added for authentication</p>
-<p><strong>Release Build Fails:</strong>
-- Verify <code>keystore.properties</code> exists and has correct values
-- Confirm keystore file is in the correct location
-- Check signing configuration in <code>app/build.gradle.kts</code></p>
+<p><strong>Build Fails:</strong></p>
+<ul>
+<li>Ensure you have JDK 21 set in Android Studio</li>
+<li>Run <code>./gradlew clean</code> and try again</li>
+<li>Check if all dependencies are resolved</li>
+</ul>
+<p><strong>Firebase Features Not Working:</strong></p>
+<ul>
+<li>Verify you've replaced <code>google-services.json</code></li>
+<li>Check Firebase Console for proper setup</li>
+<li>Ensure SHA-1 is added for authentication</li>
+</ul>
+<p><strong>Release Build Fails:</strong></p>
+<ul>
+<li>Verify <code>keystore.properties</code> exists and has correct values</li>
+<li>Confirm keystore file is in the correct location</li>
+<li>Check signing configuration in <code>app/build.gradle.kts</code></li>
+</ul>
 <div class="admonition warning">
 <p class="admonition-title">Important</p>
 <p>Never commit sensitive files like <code>keystore.properties</code>, your keystore file, or your real
@@ -1582,16 +1593,22 @@ how the app is structured</p>
 <hr />
 <h2 id="ide-setup">IDE Setup</h2>
 <p>For the best development experience:</p>
-<p><strong>Enable Compose Preview:</strong>
-- Ensure "Live Edit of Literals" is enabled
-- Configure appropriate preview devices</p>
-<p><strong>Run Configurations:</strong>
-- Use provided run configurations for common tasks
-- Signing Report configuration helps get SHA-1 for Firebase</p>
-<p><strong>Code Style:</strong>
-- Import the project's <code>.editorconfig</code>
-- Enable "Format on Save" for Kotlin files
-- Use the Spotless plugin for consistent formatting</p>
+<p><strong>Enable Compose Preview:</strong></p>
+<ul>
+<li>Ensure "Live Edit of Literals" is enabled</li>
+<li>Configure appropriate preview devices</li>
+</ul>
+<p><strong>Run Configurations:</strong></p>
+<ul>
+<li>Use provided run configurations for common tasks</li>
+<li>Signing Report configuration helps get SHA-1 for Firebase</li>
+</ul>
+<p><strong>Code Style:</strong></p>
+<ul>
+<li>Import the project's <code>.editorconfig</code></li>
+<li>Enable "Format on Save" for Kotlin files</li>
+<li>Use the Spotless plugin for consistent formatting</li>
+</ul>
 <hr />
 <h2 id="further-reading">Further Reading</h2>
 <ul>

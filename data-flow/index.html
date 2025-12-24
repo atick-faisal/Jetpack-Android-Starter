@@ -2104,7 +2104,8 @@
 
 
 <h1 id="data-flow-guide">Data Flow Guide</h1>
-<p>This guide explains how data flows through the application layers, covering different architectural patterns for network-only, local-only, and offline-first (network + local) data sources.</p>
+<p>This guide explains how data flows through the application layers, covering different architectural
+patterns for network-only, local-only, and offline-first (network + local) data sources.</p>
 <hr />
 <h2 id="table-of-contents">Table of Contents</h2>
 <ol>
@@ -2120,28 +2121,22 @@
 <hr />
 <h2 id="architecture-overview">Architecture Overview</h2>
 <h3 id="two-layer-architecture">Two-Layer Architecture</h3>
-<p>This template intentionally uses a simplified <strong>two-layer architecture</strong> (UI + Data) instead of the traditional three-layer approach. There is <strong>no domain layer</strong> by design to reduce complexity.</p>
+<p>This template intentionally uses a simplified <strong>two-layer architecture</strong> (UI + Data) instead of the
+traditional three-layer approach. There is <strong>no domain layer</strong> by design to reduce complexity.</p>
 <pre class="mermaid"><code>graph TB
-subgraph UI["UI Layer (MVVM)"]
-VM[ViewModel&lt;br/&gt;- Manages UI state UiState&amp;lt;ScreenData&amp;gt;&lt;br/&gt;- Calls repositories directly&lt;br/&gt;- Transforms data for UI]
-end
+    subgraph UI["UI Layer (MVVM)"]
+        VM[ViewModel&lt;br/&gt;- Manages UI state UiState&amp;ltScreenData&amp;gt&lt;br/&gt;- Calls repositories directly&lt;br/&gt;- Transforms data for UI]
+    end
 
-subgraph Data["Data Layer"]
-Repo[Repository&lt;br/&gt;Interface + Implementation&lt;br/&gt;- Coordinates data sources&lt;br/&gt;- Implements business logic&lt;br/&gt;- Returns Flow&amp;lt;T&amp;gt; for reactive data&lt;br/&gt;- Returns Result&amp;lt;T&amp;gt; for one-shot operations]
-Local[LocalDataSource&lt;br/&gt;Room]
-Network[NetworkDataSource&lt;br/&gt;Retrofit]
-end
+    subgraph Data["Data Layer"]
+        Repo[Repository&lt;br/&gt;Interface + Implementation&lt;br/&gt;- Coordinates data sources&lt;br/&gt;- Implements business logic&lt;br/&gt;- Returns Flow&amp;ltT&amp;gt for reactive data&lt;br/&gt;- Returns Result&amp;ltT&amp;gt for one-shot operations]
+        Local[LocalDataSource&lt;br/&gt;Room]
+        Network[NetworkDataSource&lt;br/&gt;Retrofit]
+    end
 
-UI --&gt;|Result&amp;lt; T&amp;gt ; / Flow&amp;lt ; T&amp;gt ;|Data
-Repo --&gt; Local
-Repo --&gt; Network
-
-style UI fill: #E8F5E9, stroke: #4CAF50,stroke-width: 2px
-style Data fill: #E3F2FD,stroke: #1976D2, stroke-width: 2px
-style VM fill: #C8E6C9, stroke: #388E3C
-style Repo fill: #BBDEFB, stroke: #1565C0
-style Local fill: #BBDEFB, stroke: #1565C0
-style Network fill: #BBDEFB, stroke: #1565C0</code></pre>
+    UI --&gt;|Result&amp;lt T&amp;gt / Flow&amp;lt T&amp;gt| Data
+    Repo --&gt; Local
+    Repo --&gt; Network</code></pre>
 <h3 id="unidirectional-data-flow">Unidirectional Data Flow</h3>
 <p>Data flows in <strong>one direction</strong> through the layers:</p>
 <pre class="mermaid"><code>graph LR
@@ -2152,14 +2147,7 @@ style Network fill: #BBDEFB, stroke: #1565C0</code></pre>
     E --&gt;|data| D
     D --&gt;|Flow/Result| C
     C --&gt;|StateFlow| B
-    B --&gt;|recompose| F[UI Rendered]
-
-    style A fill:#FFE082,stroke:#FF6F00,stroke-width:2px
-    style B fill:#E8F5E9,stroke:#4CAF50,stroke-width:2px
-    style C fill:#E8F5E9,stroke:#4CAF50,stroke-width:2px
-    style D fill:#E3F2FD,stroke:#1976D2,stroke-width:2px
-    style E fill:#E3F2FD,stroke:#1976D2,stroke-width:2px
-    style F fill:#E8F5E9,stroke:#4CAF50,stroke-width:2px</code></pre>
+    B --&gt;|recompose| F[UI Rendered]</code></pre>
 <p><strong>Flow Steps:</strong></p>
 <ol>
 <li><strong>User Interaction</strong> → UI Layer</li>
@@ -2174,7 +2162,8 @@ style Network fill: #BBDEFB, stroke: #1565C0</code></pre>
 <li><strong>Repositories Expose Flow</strong>: Observable data uses <code>Flow&lt;T&gt;</code>, one-shot operations use <code>Result&lt;T&gt;</code></li>
 <li><strong>ViewModels Call Repositories Directly</strong>: No domain layer, repositories contain business logic</li>
 <li><strong>Offline-First</strong>: Local data is displayed immediately, network updates happen in background</li>
-<li><strong>Error Handling</strong>: Use <code>Result&lt;T&gt;</code> for error propagation, <code>suspendRunCatching</code> for repository operations</li>
+<li><strong>Error Handling</strong>: Use <code>Result&lt;T&gt;</code> for error propagation, <code>suspendRunCatching</code> for repository
+  operations</li>
 </ul>
 <hr />
 <h2 id="data-flow-patterns">Data Flow Patterns</h2>
@@ -2222,14 +2211,9 @@ style Network fill: #BBDEFB, stroke: #1565C0</code></pre>
     VM[ViewModel] --&gt; Repo[Repository]
     Repo --&gt; Network[NetworkDataSource&lt;br/&gt;Retrofit]
     Network --&gt; API[API]
-    API --&gt;|Result&amp;lt;T&amp;gt;| Network
+    API --&gt;|Result&amp;ltT&amp;gt| Network
     Network --&gt; Repo
-    Repo --&gt; VM
-
-    style VM fill:#E8F5E9,stroke:#4CAF50,stroke-width:2px
-    style Repo fill:#E3F2FD,stroke:#1976D2,stroke-width:2px
-    style Network fill:#E3F2FD,stroke:#1976D2,stroke-width:2px
-    style API fill:#FFF3E0,stroke:#FF9800,stroke-width:2px</code></pre>
+    Repo --&gt; VM</code></pre>
 <h3 id="data-flow-diagram">Data Flow Diagram</h3>
 <pre class="mermaid"><code>sequenceDiagram
     participant User
@@ -2238,18 +2222,17 @@ style Network fill: #BBDEFB, stroke: #1565C0</code></pre>
     participant Repo as Repository
     participant Network as NetworkDataSource
     participant API
-
-    User-&gt;&gt;UI: Tap "Refresh"
-    UI-&gt;&gt;VM: loadWeather()
-    VM-&gt;&gt;Repo: getCurrentWeather()
-    Repo-&gt;&gt;Network: fetch()
-    Network-&gt;&gt;API: Retrofit call
-    API--&gt;&gt;Network: Weather data
-    Network--&gt;&gt;Repo: Result&amp;lt;Weather&amp;gt;
-    Repo--&gt;&gt;VM: Result&amp;lt;Weather&amp;gt;
-    VM-&gt;&gt;VM: Update UiState
-    VM--&gt;&gt;UI: StateFlow emits
-    UI-&gt;&gt;UI: Recompose with new data</code></pre>
+    User -&gt;&gt; UI: Tap "Refresh"
+    UI -&gt;&gt; VM: loadWeather()
+    VM -&gt;&gt; Repo: getCurrentWeather()
+    Repo -&gt;&gt; Network: fetch()
+    Network -&gt;&gt; API: Retrofit call
+    API --&gt;&gt; Network: Weather data
+    Network --&gt;&gt; Repo: Result Weather
+    Repo --&gt;&gt; VM: Result Weather
+    VM -&gt;&gt; VM: Update UiState
+    VM --&gt;&gt; UI: StateFlow emits
+    UI -&gt;&gt; UI: Recompose with new data</code></pre>
 <h3 id="key-characteristics">Key Characteristics</h3>
 <ul>
 <li><strong>No local caching</strong> - Data fetched directly from network</li>
@@ -2259,7 +2242,8 @@ style Network fill: #BBDEFB, stroke: #1565C0</code></pre>
 </ul>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>For complete repository implementation examples including interface definitions, data sources, and mapper functions, see the <a href="../data/README.md#repository-patterns">Data Module README</a>.</p>
+<p>For complete repository implementation examples including interface definitions, data sources, and
+mapper functions, see the <a href="../data/README.md#repository-patterns">Data Module README</a>.</p>
 </div>
 <hr />
 <h2 id="local-only-pattern">Local-Only Pattern</h2>
@@ -2275,14 +2259,9 @@ style Network fill: #BBDEFB, stroke: #1565C0</code></pre>
     VM[ViewModel] --&gt; Repo[Repository]
     Repo --&gt; DS[DataStore / Room]
     DS --&gt; Storage[(Local Storage)]
-    Storage --&gt;|Flow&amp;lt ;T&amp;gt ;|DS
-DS --&gt; Repo
-Repo --&gt; VM
-
-style VM fill: #E8F5E9,stroke: #4CAF50, stroke-width: 2px
-style Repo fill: #E3F2FD, stroke: #1976D2, stroke-width:2px
-style DS fill: #E3F2FD, stroke:#1976D2, stroke-width: 2px
-style Storage fill:#FFF3E0, stroke: #FF9800, stroke-width: 2px</code></pre>
+    Storage --&gt;|Flow&amp;ltT&amp;gt| DS
+    DS --&gt; Repo
+    Repo --&gt; VM</code></pre>
 <h3 id="data-flow-diagram_1">Data Flow Diagram</h3>
 <pre class="mermaid"><code>sequenceDiagram
     participant User
@@ -2290,26 +2269,24 @@ style Storage fill:#FFF3E0, stroke: #FF9800, stroke-width: 2px</code></pre>
     participant VM as ViewModel
     participant Repo as Repository
     participant DS as DataStore
-
-    Note over UI,DS: App Launch
-    UI-&gt;&gt;VM: observeSettings()
-    VM-&gt;&gt;Repo: observeSettings()
-    Repo-&gt;&gt;DS: Flow subscription
-    DS--&gt;&gt;Repo: Flow&amp;lt;Preferences&amp;gt;
-    Repo--&gt;&gt;VM: Flow emits
-    VM--&gt;&gt;UI: UiState updates
-    UI-&gt;&gt;UI: Render settings
-
-    Note over User,DS: User Changes Theme
-    User-&gt;&gt;UI: Select DARK theme
-    UI-&gt;&gt;VM: updateTheme(DARK)
-    VM-&gt;&gt;Repo: updateTheme(DARK)
-    Repo-&gt;&gt;DS: edit { ... }
-    DS-&gt;&gt;DS: Persist change
-    DS--&gt;&gt;Repo: Flow emits new prefs
-    Repo--&gt;&gt;VM: Flow emits
-    VM--&gt;&gt;UI: UiState updates
-    UI-&gt;&gt;UI: Update automatically</code></pre>
+    Note over UI, DS: App Launch
+    UI -&gt;&gt; VM: observeSettings()
+    VM -&gt;&gt; Repo: observeSettings()
+    Repo -&gt;&gt; DS: Flow subscription
+    DS --&gt;&gt; Repo: Flow&amp;ltPreferences&amp;gt
+    Repo --&gt;&gt; VM: Flow emits
+    VM --&gt;&gt; UI: UiState updates
+    UI -&gt;&gt; UI: Render settings
+    Note over User, DS: User Changes Theme
+    User -&gt;&gt; UI: Select DARK theme
+    UI -&gt;&gt; VM: updateTheme(DARK)
+    VM -&gt;&gt; Repo: updateTheme(DARK)
+    Repo -&gt;&gt; DS: edit { ... }
+    DS -&gt;&gt; DS: Persist change
+    DS --&gt;&gt; Repo: Flow emits new prefs
+    Repo --&gt;&gt; VM: Flow emits
+    VM --&gt;&gt; UI: UiState updates
+    UI -&gt;&gt; UI: Update automatically</code></pre>
 <h3 id="key-characteristics_1">Key Characteristics</h3>
 <ul>
 <li><strong>Fully offline</strong> - No network dependency</li>
@@ -2320,7 +2297,8 @@ style Storage fill:#FFF3E0, stroke: #FF9800, stroke-width: 2px</code></pre>
 </ul>
 <div class="admonition tip">
 <p class="admonition-title">Tip</p>
-<p>Use DataStore for simple key-value preferences and Room for structured local data with relationships.</p>
+<p>Use DataStore for simple key-value preferences and Room for structured local data with
+relationships.</p>
 </div>
 <hr />
 <h2 id="offline-first-pattern-network-local">Offline-First Pattern (Network + Local)</h2>
@@ -2339,22 +2317,14 @@ style Storage fill:#FFF3E0, stroke: #FF9800, stroke-width: 2px</code></pre>
     Network[NetworkDataSource&lt;br/&gt;Retrofit/Firebase]
     DB[(Local Database&lt;br/&gt;SQLite)]
     API[Remote API&lt;br/&gt;Firestore]
-
     VM --&gt;|observeData| Repo
-    Repo --&gt;|Flow&amp;lt;T&amp;gt;| VM
+    Repo --&gt;|Flow&amp;ltT&amp;gt| VM
     Repo --&gt;|observes| Local
-    Local --&gt;|Flow&amp;lt;Entity&amp;gt;| Repo
-    Repo -.sync.-&gt; Network
-    Network -.fetch.-&gt; API
+    Local --&gt;|Flow&amp;ltEntity&amp;gt| Repo
+    Repo -. sync .-&gt; Network
+    Network -. fetch .-&gt; API
     Local &lt;--&gt;|read/write| DB
-    Network --&gt; Local
-
-    style VM fill:#E8F5E9,stroke:#4CAF50,stroke-width:2px
-    style Repo fill:#E3F2FD,stroke:#1976D2,stroke-width:2px
-    style Local fill:#E3F2FD,stroke:#1976D2,stroke-width:2px
-    style Network fill:#E3F2FD,stroke:#1976D2,stroke-width:2px
-    style DB fill:#FFF3E0,stroke:#FF9800,stroke-width:2px
-    style API fill:#FFF3E0,stroke:#FF9800,stroke-width:2px</code></pre>
+    Network --&gt; Local</code></pre>
 <h3 id="key-concepts">Key Concepts</h3>
 <ol>
 <li><strong>Room is the Single Source of Truth</strong>: UI always observes local database</li>
@@ -2372,43 +2342,41 @@ style Storage fill:#FFF3E0, stroke: #FF9800, stroke-width: 2px</code></pre>
     participant Network as NetworkDataSource
     participant DB as Room Database
     participant API
-
-    Note over User,API: App Launch / User Navigates
-    UI-&gt;&gt;VM: observePosts()
-    VM-&gt;&gt;Repo: observePosts()
-    Repo-&gt;&gt;Repo: Trigger sync (background)
-    Repo-&gt;&gt;Local: observePosts()
-    Local-&gt;&gt;DB: Query
-    DB--&gt;&gt;Local: Flow&amp;lt;List&amp;lt;PostEntity&amp;gt;&amp;gt;
-    Local--&gt;&gt;Repo: Flow emits
-    Repo-&gt;&gt;Repo: Map to domain
-    Repo--&gt;&gt;VM: Flow&amp;lt;List&amp;lt;Post&amp;gt;&amp;gt;
-    VM-&gt;&gt;VM: Update UiState
-    VM--&gt;&gt;UI: StateFlow emits
-    UI-&gt;&gt;UI: Display posts (offline-first!)
-
-    Note over Repo,API: Background Sync
+    Note over User, API: App Launch / User Navigates
+    UI -&gt;&gt; VM: observePosts()
+    VM -&gt;&gt; Repo: observePosts()
+    Repo -&gt;&gt; Repo: Trigger sync (background)
+    Repo -&gt;&gt; Local: observePosts()
+    Local -&gt;&gt; DB: Query
+    DB --&gt;&gt; Local: Flow&amp;ltList&amp;ltPostEntity&amp;gt&amp;gt
+    Local --&gt;&gt; Repo: Flow emits
+    Repo -&gt;&gt; Repo: Map to domain
+    Repo --&gt;&gt; VM: Flow&amp;ltList&amp;ltPost&amp;gt&amp;gt
+    VM -&gt;&gt; VM: Update UiState
+    VM --&gt;&gt; UI: StateFlow emits
+    UI -&gt;&gt; UI: Display posts (offline-first!)
+    Note over Repo, API: Background Sync
     par Push Local Changes
-        Repo-&gt;&gt;Local: Get unsynced posts
-        Local--&gt;&gt;Repo: Unsynced items
-        Repo-&gt;&gt;Network: UPSERT/DELETE
-        Network-&gt;&gt;API: Push changes
-        Repo-&gt;&gt;Local: Mark as synced
+        Repo -&gt;&gt; Local: Get unsynced posts
+        Local --&gt;&gt; Repo: Unsynced items
+        Repo -&gt;&gt; Network: UPSERT/DELETE
+        Network -&gt;&gt; API: Push changes
+        Repo -&gt;&gt; Local: Mark as synced
     and Pull Remote Changes
-        Repo-&gt;&gt;Local: Get lastSyncTimestamp
-        Local--&gt;&gt;Repo: Timestamp
-        Repo-&gt;&gt;Network: Fetch since timestamp
-        Network-&gt;&gt;API: GET updated posts
-        API--&gt;&gt;Network: Remote posts
-        Network--&gt;&gt;Repo: Remote data
-        Repo-&gt;&gt;Local: Upsert to database
-        Local-&gt;&gt;DB: Save
+        Repo -&gt;&gt; Local: Get lastSyncTimestamp
+        Local --&gt;&gt; Repo: Timestamp
+        Repo -&gt;&gt; Network: Fetch since timestamp
+        Network -&gt;&gt; API: GET updated posts
+        API --&gt;&gt; Network: Remote posts
+        Network --&gt;&gt; Repo: Remote data
+        Repo -&gt;&gt; Local: Upsert to database
+        Local -&gt;&gt; DB: Save
     end
 
-    DB--&gt;&gt;Local: Flow emits updated
-    Local--&gt;&gt;Repo: Updated data
-    Repo--&gt;&gt;VM: Flow emits
-    VM--&gt;&gt;UI: UI updates (reactive!)</code></pre>
+    DB --&gt;&gt; Local: Flow emits updated
+    Local --&gt;&gt; Repo: Updated data
+    Repo --&gt;&gt; VM: Flow emits
+    VM --&gt;&gt; UI: UI updates (reactive!)</code></pre>
 <h3 id="key-characteristics_2">Key Characteristics</h3>
 <ul>
 <li><strong>Room as Single Source of Truth</strong> - UI always observes local database</li>
@@ -2420,12 +2388,15 @@ style Storage fill:#FFF3E0, stroke: #FF9800, stroke-width: 2px</code></pre>
 </ul>
 <div class="admonition warning">
 <p class="admonition-title">Important</p>
-<p>The offline-first pattern requires careful sync metadata tracking. Always include <code>lastUpdated</code>, <code>lastSynced</code>, <code>needsSync</code>, and <code>syncAction</code> fields in your Room entities.</p>
+<p>The offline-first pattern requires careful sync metadata tracking. Always include <code>lastUpdated</code>,</p>
 </div>
-<p>For detailed offline-first repository implementation with sync metadata, see the <a href="../data/README.md#repository-patterns">Data Module README</a>.</p>
+<p><code>lastSynced</code>, <code>needsSync</code>, and <code>syncAction</code> fields in your Room entities.</p>
+<p>For detailed offline-first repository implementation with sync metadata, see
+the <a href="../data/README.md#repository-patterns">Data Module README</a>.</p>
 <hr />
 <h2 id="real-time-data-updates">Real-Time Data Updates</h2>
-<p>For real-time updates (e.g., Firebase Firestore snapshots, WebSocket), use Firebase's snapshot listeners or similar mechanisms.</p>
+<p>For real-time updates (e.g., Firebase Firestore snapshots, WebSocket), use Firebase's snapshot
+listeners or similar mechanisms.</p>
 <h3 id="firebase-firestore-real-time-flow">Firebase Firestore Real-Time Flow</h3>
 <pre class="mermaid"><code>sequenceDiagram
     participant Firestore as Firebase Firestore&lt;br/&gt;(Cloud)
@@ -2435,22 +2406,16 @@ style Storage fill:#FFF3E0, stroke: #FF9800, stroke-width: 2px</code></pre>
     participant Room as Local Database&lt;br/&gt;(Room)
     participant VM as ViewModel
     participant UI
-
-    Firestore-&gt;&gt;Listener: Data change
-    Listener-&gt;&gt;Flow: Emit snapshot
-    Flow-&gt;&gt;Repo: Observe changes
-    Repo-&gt;&gt;Room: Update local data
-    Room-&gt;&gt;Room: Persist
-    Room--&gt;&gt;Repo: Flow emits
-    Repo--&gt;&gt;VM: Flow&amp;lt;Data&amp;gt;
-    VM-&gt;&gt;VM: Update UiState
-    VM--&gt;&gt;UI: StateFlow emits
-    UI-&gt;&gt;UI: Render updates
-
-    style Firestore fill:#FFF3E0,stroke:#FF9800,stroke-width:2px
-    style Room fill:#FFF3E0,stroke:#FF9800,stroke-width:2px
-    style Repo fill:#E3F2FD,stroke:#1976D2,stroke-width:2px
-    style VM fill:#E8F5E9,stroke:#4CAF50,stroke-width:2px</code></pre>
+    Firestore -&gt;&gt; Listener: Data change
+    Listener -&gt;&gt; Flow: Emit snapshot
+    Flow -&gt;&gt; Repo: Observe changes
+    Repo -&gt;&gt; Room: Update local data
+    Room -&gt;&gt; Room: Persist
+    Room --&gt;&gt; Repo: Flow emits
+    Repo --&gt;&gt; VM: Flow&amp;ltData&amp;gt
+    VM -&gt;&gt; VM: Update UiState
+    VM --&gt;&gt; UI: StateFlow emits
+    UI -&gt;&gt; UI: Render updates</code></pre>
 <h3 id="key-pattern-firestore-room-ui">Key Pattern: Firestore → Room → UI</h3>
 <p>Even with real-time updates, maintain <strong>Room as the single source of truth</strong>:</p>
 <ol>
@@ -2459,20 +2424,23 @@ style Storage fill:#FFF3E0, stroke: #FF9800, stroke-width: 2px</code></pre>
 <li><strong>UI observes Room Flow</strong> (not Firestore directly)</li>
 <li><strong>Result</strong>: Consistent data access pattern across app</li>
 </ol>
-<p>This approach ensures:
-- Offline access to last known data
-- Consistent data access APIs
-- Easy testing (mock Room, not Firestore)
-- Works even if Firebase connection fails</p>
+<p>This approach ensures:</p>
+<ul>
+<li>Offline access to last known data</li>
+<li>Consistent data access APIs</li>
+<li>Easy testing (mock Room, not Firestore)</li>
+<li>Works even if Firebase connection fails</li>
+</ul>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>For Firebase Firestore integration examples, see the <a href="../firebase/firestore/README.md">Firebase Module README</a>.</p>
+<p>For Firebase Firestore integration examples, see
+the <a href="../firebase/firestore/README.md">Firebase Module README</a>.</p>
 </div>
 <hr />
 <h2 id="caching-strategies">Caching Strategies</h2>
 <h3 id="1-time-based-cache-invalidation">1. Time-Based Cache Invalidation</h3>
 <p>Fetch fresh data from network if cache is older than a threshold.</p>
-<p><strong>Flow:</strong>
+<p><strong>Flow:</strong></p>
 <pre class="mermaid"><code>graph TD
     Start[Repository called] --&gt; Check{Check lastSyncTimestamp}
     Check --&gt; Stale{Is cache stale?&lt;br/&gt;current time - lastSync &gt; threshold}
@@ -2480,21 +2448,16 @@ style Storage fill:#FFF3E0, stroke: #FF9800, stroke-width: 2px</code></pre>
     Stale --&gt;|NO| Use[Use cached data]
     Sync --&gt; Emit[Emit local data immediately]
     Use --&gt; Emit
-    Emit --&gt; End[offline-first!]
-
-    style Start fill:#E8F5E9,stroke:#4CAF50,stroke-width:2px
-    style Check fill:#E3F2FD,stroke:#1976D2,stroke-width:2px
-    style Stale fill:#FFF3E0,stroke:#FF9800,stroke-width:2px
-    style Sync fill:#FFEBEE,stroke:#C62828,stroke-width:2px
-    style Use fill:#C8E6C9,stroke:#388E3C,stroke-width:2px
-    style Emit fill:#C8E6C9,stroke:#388E3C,stroke-width:2px</code></pre></p>
-<p><strong>Use When:</strong>
-- Data changes infrequently
-- Staleness tolerance is acceptable (e.g., 5 minutes)
-- Want to reduce network calls</p>
+    Emit --&gt; End[offline-first!]</code></pre>
+<p><strong>Use When:</strong></p>
+<ul>
+<li>Data changes infrequently</li>
+<li>Staleness tolerance is acceptable (e.g., 5 minutes)</li>
+<li>Want to reduce network calls</li>
+</ul>
 <h3 id="2-manual-refresh-pull-to-refresh">2. Manual Refresh (Pull-to-Refresh)</h3>
 <p>Allow user to manually trigger sync.</p>
-<p><strong>Flow:</strong>
+<p><strong>Flow:</strong></p>
 <pre class="mermaid"><code>sequenceDiagram
     participant User
     participant UI
@@ -2502,60 +2465,53 @@ style Storage fill:#FFF3E0, stroke: #FF9800, stroke-width: 2px</code></pre>
     participant Repo as Repository
     participant Network
     participant Room as Local Database
-
-    User-&gt;&gt;UI: Pull to refresh
-    UI-&gt;&gt;VM: refreshPosts()
-    VM-&gt;&gt;VM: Set loading state
-    VM-&gt;&gt;Repo: syncPosts()
-    Repo-&gt;&gt;Network: Fetch from network
-    Network--&gt;&gt;Repo: Fresh data
-    Repo-&gt;&gt;Room: Update local database
-    Room-&gt;&gt;Room: Persist
-    Room--&gt;&gt;Repo: Flow emits updated
-    Repo--&gt;&gt;VM: Updated data
-    VM-&gt;&gt;VM: Clear loading state
-    VM--&gt;&gt;UI: UiState updates
-    UI-&gt;&gt;UI: Dismiss loading indicator</code></pre></p>
-<p><strong>Use When:</strong>
-- User wants to ensure fresh data
-- Complementary to time-based caching
-- Provides user control</p>
+    User -&gt;&gt; UI: Pull to refresh
+    UI -&gt;&gt; VM: refreshPosts()
+    VM -&gt;&gt; VM: Set loading state
+    VM -&gt;&gt; Repo: syncPosts()
+    Repo -&gt;&gt; Network: Fetch from network
+    Network --&gt;&gt; Repo: Fresh data
+    Repo -&gt;&gt; Room: Update local database
+    Room -&gt;&gt; Room: Persist
+    Room --&gt;&gt; Repo: Flow emits updated
+    Repo --&gt;&gt; VM: Updated data
+    VM -&gt;&gt; VM: Clear loading state
+    VM --&gt;&gt; UI: UiState updates
+    UI -&gt;&gt; UI: Dismiss loading indicator</code></pre>
+<p><strong>Use When:</strong></p>
+<ul>
+<li>User wants to ensure fresh data</li>
+<li>Complementary to time-based caching</li>
+<li>Provides user control</li>
+</ul>
 <h3 id="3-network-bound-resource-pattern">3. Network-Bound Resource Pattern</h3>
 <p>Utility for coordinating network + local data with automatic caching.</p>
-<p><strong>Flow:</strong>
+<p><strong>Flow:</strong></p>
 <pre class="mermaid"><code>graph TD
     Start[Network-Bound Resource] --&gt; Loading1[1. Emit Loading state]
     Loading1 --&gt; Query[2. Query local database]
     Query --&gt; Loading2[3. Emit Loading with local data]
     Loading2 --&gt; ShouldFetch{4. Should fetch&lt;br/&gt;from network?}
-
     ShouldFetch --&gt;|YES| Fetch[Fetch from network]
     Fetch --&gt; Save[Save to local database]
     Save --&gt; Success[Emit Success with fresh data]
-
     ShouldFetch --&gt;|NO| CachedSuccess[Emit Success with cached data]
-
-    Fetch -.Network Error.-&gt; Error[Emit Error&lt;br/&gt;with stale local data]
-
-    style Start fill:#E8F5E9,stroke:#4CAF50,stroke-width:2px
-    style Loading1 fill:#FFF3E0,stroke:#FF9800,stroke-width:2px
-    style Loading2 fill:#FFF3E0,stroke:#FF9800,stroke-width:2px
-    style ShouldFetch fill:#E3F2FD,stroke:#1976D2,stroke-width:2px
-    style Fetch fill:#E3F2FD,stroke:#1976D2,stroke-width:2px
-    style Success fill:#C8E6C9,stroke:#388E3C,stroke-width:2px
-    style CachedSuccess fill:#C8E6C9,stroke:#388E3C,stroke-width:2px
-    style Error fill:#FFEBEE,stroke:#C62828,stroke-width:2px</code></pre></p>
-<p><strong>Use When:</strong>
-- Want automatic cache-then-network pattern
-- Need loading states with cached data
-- Want to show stale data on network errors</p>
+    Fetch -. Network Error .-&gt; Error[Emit Error&lt;br/&gt;with stale local data]</code></pre>
+<p><strong>Use When:</strong></p>
+<ul>
+<li>Want automatic cache-then-network pattern</li>
+<li>Need loading states with cached data</li>
+<li>Want to show stale data on network errors</li>
+</ul>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>For <code>networkBoundResource</code> implementation and usage examples, see the <a href="../data/README.md#caching-strategies">Data Module README</a>.</p>
+<p>For <code>networkBoundResource</code> implementation and usage examples, see
+the <a href="../data/README.md">Data Module README</a>.</p>
 </div>
 <hr />
 <h2 id="error-handling">Error Handling</h2>
-<p>All data layer operations use a <strong>layered error handling approach</strong> with <code>Result&lt;T&gt;</code> for error propagation:</p>
+<p>All data layer operations use a <strong>layered error handling approach</strong> with <code>Result&lt;T&gt;</code> for error
+propagation:</p>
 <ul>
 <li><strong>Repository Layer</strong>: Uses <code>suspendRunCatching</code> to wrap all operations</li>
 <li><strong>ViewModel Layer</strong>: Uses <code>updateStateWith</code>/<code>updateWith</code> for automatic error capture</li>
@@ -2563,9 +2519,9 @@ style Storage fill:#FFF3E0, stroke: #FF9800, stroke-width: 2px</code></pre>
 </ul>
 <h3 id="error-flow-diagram">Error Flow Diagram</h3>
 <pre class="mermaid"><code>graph TD
-    Start[Repository Operation] --&gt; Catch[suspendRunCatching {...}]
+    Start[Repository Operation] --&gt; Catch[suspendRunCatching]
     Catch --&gt; Result{Success or Failure}
-    Result --&gt; Return[Result&amp;lt;T&amp;gt;]
+    Result --&gt; Return[Result&amp;ltT&amp;gt]
     Return --&gt; VM[ViewModel]
     VM --&gt; Update[updateStateWith/&lt;br/&gt;updateWith]
     Update --&gt; Auto[Auto-handle Result]
@@ -2573,19 +2529,13 @@ style Storage fill:#FFF3E0, stroke: #FF9800, stroke-width: 2px</code></pre>
     UiState --&gt; Stateful[StatefulComposable]
     Stateful --&gt; Display{Display}
     Display --&gt;|Success| Content[Show content]
-    Display --&gt;|Error| Snackbar[Show error snackbar]
-
-    style Start fill:#E3F2FD,stroke:#1976D2,stroke-width:2px
-    style Catch fill:#E3F2FD,stroke:#1976D2,stroke-width:2px
-    style VM fill:#E8F5E9,stroke:#4CAF50,stroke-width:2px
-    style Update fill:#E8F5E9,stroke:#4CAF50,stroke-width:2px
-    style Stateful fill:#E8F5E9,stroke:#4CAF50,stroke-width:2px
-    style Content fill:#C8E6C9,stroke:#388E3C,stroke-width:2px
-    style Snackbar fill:#FFEBEE,stroke:#C62828,stroke-width:2px</code></pre>
-<p>For comprehensive error handling patterns including network-specific errors, HTTP error codes, and detailed examples, see:</p>
+    Display --&gt;|Error| Snackbar[Show error snackbar]</code></pre>
+<p>For comprehensive error handling patterns including network-specific errors, HTTP error codes, and
+detailed examples, see:</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Complete error handling documentation is available in the <a href="../data/README.md#error-handling">Data Module README</a>.</p>
+<p>Complete error handling documentation is available in
+the <a href="../data/README.md#error-handling">Data Module README</a>.</p>
 </div>
 <hr />
 <h2 id="summary">Summary</h2>
@@ -2593,21 +2543,27 @@ style Storage fill:#FFF3E0, stroke: #FF9800, stroke-width: 2px</code></pre>
 <ul>
 <li><strong>Network-Only</strong>: For real-time data that doesn't need offline access (weather, stock prices)</li>
 <li><strong>Local-Only</strong>: For preferences and settings using DataStore (theme, notifications)</li>
-<li><strong>Offline-First</strong>: For user-generated content with Room as single source of truth (posts, profiles)</li>
+<li><strong>Offline-First</strong>: For user-generated content with Room as single source of truth (posts,
+  profiles)</li>
 </ul>
 <p><strong>Key Takeaways:</strong></p>
 <ol>
 <li><strong>Choose the Right Pattern</strong> based on feature requirements</li>
-<li><strong>Room is the Single Source of Truth</strong> for offline-first - UI observes local database, network updates happen in background</li>
-<li><strong>Use Proper Threading</strong> - Inject <code>@IoDispatcher</code> and use <code>withContext(ioDispatcher)</code> for blocking calls</li>
-<li><strong>Error Handling is Centralized</strong> - Repository uses <code>suspendRunCatching</code>, ViewModel uses <code>updateStateWith</code>/<code>updateWith</code>, UI uses <code>StatefulComposable</code></li>
+<li><strong>Room is the Single Source of Truth</strong> for offline-first - UI observes local database, network
+   updates happen in background</li>
+<li><strong>Use Proper Threading</strong> - Inject <code>@IoDispatcher</code> and use <code>withContext(ioDispatcher)</code> for
+   blocking calls</li>
+<li><strong>Error Handling is Centralized</strong> - Repository uses <code>suspendRunCatching</code>, ViewModel uses
+   <code>updateStateWith</code>/<code>updateWith</code>, UI uses <code>StatefulComposable</code></li>
 <li><strong>Flow for Reactive Data</strong> - Observe local database with Flow, UI updates automatically</li>
 <li><strong>Result for Operations</strong> - One-shot operations return Result<T> for error handling</li>
 </ol>
-<p>All patterns use <strong>Repositories</strong> as the interface to ViewModels, <strong>Data Sources</strong> for external system interaction, <strong>Result</strong> type for error handling, and <strong>Flow</strong> for reactive data streams.</p>
+<p>All patterns use <strong>Repositories</strong> as the interface to ViewModels, <strong>Data Sources</strong> for external
+system interaction, <strong>Result</strong> type for error handling, and <strong>Flow</strong> for reactive data streams.</p>
 <h2 id="further-reading">Further Reading</h2>
 <ul>
-<li><a href="../data/README.md">Data Module README</a> - Repository patterns, implementations, and error handling reference</li>
+<li><a href="../data/README.md">Data Module README</a> - Repository patterns, implementations, and error handling
+  reference</li>
 <li><a href="../state-management/">State Management</a> - Learn about ViewModel state patterns</li>
 <li><a href="../architecture/">Architecture Overview</a> - Understand the two-layer architecture</li>
 <li><a href="../guide/">Adding Features</a> - Step-by-step implementation guide</li>

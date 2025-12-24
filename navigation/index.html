@@ -2682,7 +2682,8 @@
 
 
 <h1 id="navigation-deep-dive">Navigation Deep Dive</h1>
-<p>This guide provides a comprehensive overview of navigation in this Android template, which uses Jetpack Navigation Compose with type-safe navigation powered by Kotlin Serialization.</p>
+<p>This guide provides a comprehensive overview of navigation in this Android template, which uses
+Jetpack Navigation Compose with type-safe navigation powered by Kotlin Serialization.</p>
 <h2 id="table-of-contents">Table of Contents</h2>
 <ul>
 <li><a href="#overview">Overview</a></li>
@@ -2700,7 +2701,8 @@
 <hr />
 <h2 id="overview">Overview</h2>
 <h3 id="navigation-architecture">Navigation Architecture</h3>
-<p>This template uses <strong>Jetpack Navigation Compose</strong> with <strong>type-safe navigation</strong> via Kotlin Serialization. This approach provides:</p>
+<p>This template uses <strong>Jetpack Navigation Compose</strong> with <strong>type-safe navigation</strong> via Kotlin
+Serialization. This approach provides:</p>
 <ul>
 <li><strong>Compile-time safety</strong>: Routes are defined as Kotlin objects/data classes</li>
 <li><strong>Type-safe arguments</strong>: Arguments are passed as typed parameters</li>
@@ -2734,45 +2736,37 @@
     subgraph AuthGraph["AuthNavGraph"]
         SignIn["SignIn&lt;br/&gt;(No arguments)"]
         SignUp["SignUp&lt;br/&gt;(No arguments)"]
-
-        SignIn -.navigate.-&gt; SignUp
-        SignUp -.navigate.-&gt; SignIn
+        SignIn -. navigate .-&gt; SignUp
+        SignUp -. navigate .-&gt; SignIn
     end
 
     subgraph HomeGraph["HomeNavGraph"]
         Home["Home&lt;br/&gt;(No arguments)"]
         Item["Item&lt;br/&gt;(itemId: String?)"]
-
         Home --&gt;|onJetpackClick| Item
         Item --&gt;|onBackClick| Home
     end
 
     Profile["Profile&lt;br/&gt;(Top-level destination)"]
-
     Start --&gt;|isUserLoggedIn = false| AuthGraph
     Start --&gt;|isUserLoggedIn = true| HomeGraph
-
-    SignIn -.auth success.-&gt; HomeGraph
-    SignUp -.auth success.-&gt; HomeGraph
-
-    HomeGraph &lt;-.bottom nav.-&gt; Profile
-    Profile &lt;-.bottom nav.-&gt; HomeGraph
-
-    style Start fill:#FFF3E0,stroke:#FF9800,stroke-width:3px
-    style AuthGraph fill:#FFEBEE,stroke:#F44336,stroke-width:2px
-    style HomeGraph fill:#E8F5E9,stroke:#4CAF50,stroke-width:2px
-    style Profile fill:#E8F5E9,stroke:#4CAF50,stroke-width:2px
-    style NavHost fill:#E3F2FD,stroke:#1976D2,stroke-width:2px</code></pre>
-<p><strong>Legend:</strong>
-- <strong>Solid arrows</strong> (→): Direct navigation within a graph
-- <strong>Dotted arrows</strong> (-.-&gt;): Navigation between graphs or conditional navigation
-- <strong>Orange box</strong>: Conditional routing logic
-- <strong>Red box</strong>: Authentication graph (not logged in)
-- <strong>Green boxes</strong>: Main app destinations (logged in)</p>
+    SignIn -. auth success .-&gt; HomeGraph
+    SignUp -. auth success .-&gt; HomeGraph
+    HomeGraph &lt;-. bottom nav .-&gt; Profile
+    Profile &lt;-. bottom nav .-&gt; HomeGraph</code></pre>
+<p><strong>Legend:</strong></p>
+<ul>
+<li><strong>Solid arrows</strong> (→): Direct navigation within a graph</li>
+<li><strong>Dotted arrows</strong> (-.-&gt;): Navigation between graphs or conditional navigation</li>
+<li><strong>Orange box</strong>: Conditional routing logic</li>
+<li><strong>Red box</strong>: Authentication graph (not logged in)</li>
+<li><strong>Green boxes</strong>: Main app destinations (logged in)</li>
+</ul>
 <hr />
 <h2 id="type-safe-navigation">Type-Safe Navigation</h2>
 <h3 id="defining-routes">Defining Routes</h3>
-<p>Routes are defined as <code>@Serializable</code> objects or data classes in each feature module's <code>navigation/</code> directory:</p>
+<p>Routes are defined as <code>@Serializable</code> objects or data classes in each feature module's <code>navigation/</code>
+directory:</p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1">// feature/home/navigation/HomeNavigation.kt</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="k">package</span><span class="w"> </span><span class="nn">dev.atick.feature.home.navigation</span>
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
@@ -2790,15 +2784,18 @@
 </span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="nd">@Serializable</span>
 </span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="kd">data</span><span class="w"> </span><span class="kd">object</span><span class="w"> </span><span class="nc">HomeNavGraph</span>
 </span></code></pre></div>
-<p><strong>Why use @Serializable?</strong>
-- Kotlin Serialization automatically handles serialization/deserialization
-- Type-safe argument passing with compile-time checking
-- No manual string parsing or type conversion
-- Supports complex types (enums, lists, custom classes)</p>
+<p><strong>Why use @Serializable?</strong></p>
+<ul>
+<li>Kotlin Serialization automatically handles serialization/deserialization</li>
+<li>Type-safe argument passing with compile-time checking</li>
+<li>No manual string parsing or type conversion</li>
+<li>Supports complex types (enums, lists, custom classes)</li>
+</ul>
 <h3 id="route-organization-pattern-used-in-this-template">Route Organization Pattern (Used in This Template)</h3>
 <p>Each feature module has a <code>navigation/</code> directory with a single file defining all routes:</p>
 <ul>
-<li><code>feature/auth/navigation/</code> - Contains <code>AuthNavigation.kt</code> defining <code>AuthNavGraph</code>, <code>SignIn</code>, <code>SignUp</code></li>
+<li><code>feature/auth/navigation/</code> - Contains <code>AuthNavigation.kt</code> defining <code>AuthNavGraph</code>, <code>SignIn</code>,
+  <code>SignUp</code></li>
 <li><code>feature/home/navigation/</code> - Contains <code>HomeNavigation.kt</code> defining <code>HomeNavGraph</code>, <code>Home</code>, <code>Item</code></li>
 <li><code>feature/profile/navigation/</code> - Contains <code>ProfileNavigation.kt</code> defining <code>Profile</code></li>
 </ul>
@@ -2836,11 +2833,13 @@
 </span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">    </span><span class="n">navigate</span><span class="p">(</span><span class="n">SignUp</span><span class="p">,</span><span class="w"> </span><span class="n">navOptions</span><span class="p">)</span>
 </span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="p">}</span>
 </span></code></pre></div>
-<p><strong>Benefits:</strong>
-- Centralized navigation logic
-- Consistent API across features
-- Easy to find all navigation entry points
-- Supports NavOptions for advanced behavior</p>
+<p><strong>Benefits:</strong></p>
+<ul>
+<li>Centralized navigation logic</li>
+<li>Consistent API across features</li>
+<li>Easy to find all navigation entry points</li>
+<li>Supports NavOptions for advanced behavior</li>
+</ul>
 <h3 id="graph-builder-extension">Graph Builder Extension</h3>
 <p>Create extension functions to register screens:</p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1">// feature/profile/navigation/ProfileNavigation.kt</span>
@@ -3054,9 +3053,11 @@
 </span><span id="__span-12-7"><a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="w">    </span><span class="p">}</span>
 </span><span id="__span-12-8"><a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="p">}</span>
 </span></code></pre></div>
-<p><strong>Key Pattern:</strong>
-- The graph builder accepts a lambda (<code>nestedNavGraphs</code>) that defines child screens
-- This allows the NavHost to control which screens are included in the graph</p>
+<p><strong>Key Pattern:</strong></p>
+<ul>
+<li>The graph builder accepts a lambda (<code>nestedNavGraphs</code>) that defines child screens</li>
+<li>This allows the NavHost to control which screens are included in the graph</li>
+</ul>
 <h3 id="using-nested-graphs">Using Nested Graphs</h3>
 <p>Include nested graphs in the main NavHost:</p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1">// app/src/main/kotlin/dev/atick/compose/navigation/NavHost.kt</span>
@@ -3112,10 +3113,13 @@
 <hr />
 <h2 id="adaptive-navigation-bottom-bar-navigation-rail-drawer">Adaptive Navigation (Bottom Bar / Navigation Rail / Drawer)</h2>
 <h3 id="navigationsuitescaffold-pattern">NavigationSuiteScaffold Pattern</h3>
-<p>This template uses <strong>NavigationSuiteScaffold</strong> for adaptive navigation that automatically switches between:
-- <strong>Bottom navigation bar</strong> (compact screens)
-- <strong>Navigation rail</strong> (medium screens)
-- <strong>Navigation drawer</strong> (expanded screens)</p>
+<p>This template uses <strong>NavigationSuiteScaffold</strong> for adaptive navigation that automatically switches
+between:</p>
+<ul>
+<li><strong>Bottom navigation bar</strong> (compact screens)</li>
+<li><strong>Navigation rail</strong> (medium screens)</li>
+<li><strong>Navigation drawer</strong> (expanded screens)</li>
+</ul>
 <h3 id="top-level-destinations">Top-Level Destinations</h3>
 <p>Define top-level destinations in an enum:</p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1">// app/src/main/kotlin/dev/atick/compose/navigation/TopLevelDestination.kt</span>
@@ -3213,11 +3217,13 @@
 </span><span id="__span-18-33"><a id="__codelineno-18-33" name="__codelineno-18-33" href="#__codelineno-18-33"></a><span class="w">    </span><span class="p">)</span>
 </span><span id="__span-18-34"><a id="__codelineno-18-34" name="__codelineno-18-34" href="#__codelineno-18-34"></a><span class="p">}</span>
 </span></code></pre></div>
-<p><strong>Benefits:</strong>
-- Automatically adapts to different screen sizes
-- Consistent navigation UX across device types
-- Single source of truth for navigation items
-- Built-in state preservation</p>
+<p><strong>Benefits:</strong></p>
+<ul>
+<li>Automatically adapts to different screen sizes</li>
+<li>Consistent navigation UX across device types</li>
+<li>Single source of truth for navigation items</li>
+<li>Built-in state preservation</li>
+</ul>
 <h3 id="conditional-navigation-ui">Conditional Navigation UI</h3>
 <p>Show navigation only for top-level destinations:</p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">appState</span><span class="p">.</span><span class="na">currentTopLevelDestination</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
@@ -3279,10 +3285,12 @@
 </span><span id="__span-24-16"><a id="__codelineno-24-16" name="__codelineno-24-16" href="#__codelineno-24-16"></a><span class="w">    </span><span class="p">}</span>
 </span><span id="__span-24-17"><a id="__codelineno-24-17" name="__codelineno-24-17" href="#__codelineno-24-17"></a><span class="p">}</span>
 </span></code></pre></div>
-<p><strong>Key aspects:</strong>
-- <code>saveState = true</code>: Preserves screen state when navigating away
-- <code>launchSingleTop = true</code>: Prevents duplicate destinations
-- <code>restoreState = true</code>: Restores saved state when returning</p>
+<p><strong>Key aspects:</strong></p>
+<ul>
+<li><code>saveState = true</code>: Preserves screen state when navigating away</li>
+<li><code>launchSingleTop = true</code>: Prevents duplicate destinations</li>
+<li><code>restoreState = true</code>: Restores saved state when returning</li>
+</ul>
 <h3 id="single-top-launch-mode">Single Top Launch Mode</h3>
 <p>Avoid duplicate destinations in the stack:</p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="n">navController</span><span class="p">.</span><span class="na">navigate</span><span class="p">(</span><span class="n">Profile</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
@@ -3516,7 +3524,7 @@
 </span><span id="__span-34-3"><a id="__codelineno-34-3" name="__codelineno-34-3" href="#__codelineno-34-3"></a><span class="w">    </span><span class="n">navigate</span><span class="p">(</span><span class="n">Item</span><span class="p">(</span><span class="n">itemId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">itemId</span><span class="p">))</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">launchSingleTop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="w"> </span><span class="p">}</span>
 </span><span id="__span-34-4"><a id="__codelineno-34-4" name="__codelineno-34-4" href="#__codelineno-34-4"></a><span class="p">}</span>
 </span></code></pre></div>
-<p><strong>Separate Route and Screen composables</strong>
+<p><strong>Separate Route and Screen composables</strong></p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-35-1"><a id="__codelineno-35-1" name="__codelineno-35-1" href="#__codelineno-35-1"></a><span class="c1">// Route: Handles ViewModel and navigation callbacks</span>
 </span><span id="__span-35-2"><a id="__codelineno-35-2" name="__codelineno-35-2" href="#__codelineno-35-2"></a><span class="nd">@Composable</span>
 </span><span id="__span-35-3"><a id="__codelineno-35-3" name="__codelineno-35-3" href="#__codelineno-35-3"></a><span class="kd">fun</span><span class="w"> </span><span class="nf">ItemScreen</span><span class="p">(</span>
@@ -3539,7 +3547,7 @@
 </span><span id="__span-35-20"><a id="__codelineno-35-20" name="__codelineno-35-20" href="#__codelineno-35-20"></a><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-35-21"><a id="__codelineno-35-21" name="__codelineno-35-21" href="#__codelineno-35-21"></a><span class="w">    </span><span class="c1">// UI only</span>
 </span><span id="__span-35-22"><a id="__codelineno-35-22" name="__codelineno-35-22" href="#__codelineno-35-22"></a><span class="p">}</span>
-</span></code></pre></div></p>
+</span></code></pre></div>
 <p><strong>Use JetpackAppState pattern for top-level navigation</strong></p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-36-1"><a id="__codelineno-36-1" name="__codelineno-36-1" href="#__codelineno-36-1"></a><span class="c1">// Centralize navigation state and logic</span>
 </span><span id="__span-36-2"><a id="__codelineno-36-2" name="__codelineno-36-2" href="#__codelineno-36-2"></a><span class="kd">class</span><span class="w"> </span><span class="nc">JetpackAppState</span><span class="p">(</span>
@@ -3569,18 +3577,20 @@
 </span><span id="__span-38-9"><a id="__codelineno-38-9" name="__codelineno-38-9" href="#__codelineno-38-9"></a><span class="p">}</span>
 </span><span id="__span-38-10"><a id="__codelineno-38-10" name="__codelineno-38-10" href="#__codelineno-38-10"></a>
 </span><span id="__span-38-11"><a id="__codelineno-38-11" name="__codelineno-38-11" href="#__codelineno-38-11"></a><span class="c1">// Avoid: Passing NavController</span>
-</span><span id="__span-38-12"><a id="__codelineno-38-12" name="__codelineno-38-12" href="#__codelineno-38-12"></a><span class="kd">fun</span><span class="w"> </span><span class="n">NavGraphBuilder</span><span class="p">.</span><span class="nf">itemScreen</span><span class="p">(</span><span class="n">navController</span><span class="p">:</span><span class="w"> </span><span class="n">NavController</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">}</span>
+</span><span id="__span-38-12"><a id="__codelineno-38-12" name="__codelineno-38-12" href="#__codelineno-38-12"></a><span class="kd">fun</span><span class="w"> </span><span class="n">NavGraphBuilder</span><span class="p">.</span><span class="nf">itemScreen</span><span class="p">(</span><span class="n">navController</span><span class="p">:</span><span class="w"> </span><span class="n">NavController</span><span class="p">)</span><span class="w"> </span><span class="p">{}</span>
 </span></code></pre></div>
 <h3 id="donts">Don'ts</h3>
-<p><strong>Don't pass NavController to Screen composables</strong>
+<p><strong>Don't pass NavController to Screen composables</strong></p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-39-1"><a id="__codelineno-39-1" name="__codelineno-39-1" href="#__codelineno-39-1"></a><span class="c1">// Bad: Screen shouldn&#39;t know about NavController</span>
 </span><span id="__span-39-2"><a id="__codelineno-39-2" name="__codelineno-39-2" href="#__codelineno-39-2"></a><span class="nd">@Composable</span>
-</span><span id="__span-39-3"><a id="__codelineno-39-3" name="__codelineno-39-3" href="#__codelineno-39-3"></a><span class="kd">fun</span><span class="w"> </span><span class="nf">ItemScreen</span><span class="p">(</span><span class="n">navController</span><span class="p">:</span><span class="w"> </span><span class="n">NavController</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">}</span>
-</span><span id="__span-39-4"><a id="__codelineno-39-4" name="__codelineno-39-4" href="#__codelineno-39-4"></a>
-</span><span id="__span-39-5"><a id="__codelineno-39-5" name="__codelineno-39-5" href="#__codelineno-39-5"></a><span class="c1">// Good: Use callbacks</span>
-</span><span id="__span-39-6"><a id="__codelineno-39-6" name="__codelineno-39-6" href="#__codelineno-39-6"></a><span class="nd">@Composable</span>
-</span><span id="__span-39-7"><a id="__codelineno-39-7" name="__codelineno-39-7" href="#__codelineno-39-7"></a><span class="kd">fun</span><span class="w"> </span><span class="nf">ItemScreen</span><span class="p">(</span><span class="n">onBackClick</span><span class="p">:</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="kt">Unit</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">}</span>
-</span></code></pre></div></p>
+</span><span id="__span-39-3"><a id="__codelineno-39-3" name="__codelineno-39-3" href="#__codelineno-39-3"></a><span class="kd">fun</span><span class="w"> </span><span class="nf">ItemScreen</span><span class="p">(</span><span class="n">navController</span><span class="p">:</span><span class="w"> </span><span class="n">NavController</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-39-4"><a id="__codelineno-39-4" name="__codelineno-39-4" href="#__codelineno-39-4"></a><span class="p">}</span>
+</span><span id="__span-39-5"><a id="__codelineno-39-5" name="__codelineno-39-5" href="#__codelineno-39-5"></a>
+</span><span id="__span-39-6"><a id="__codelineno-39-6" name="__codelineno-39-6" href="#__codelineno-39-6"></a><span class="c1">// Good: Use callbacks</span>
+</span><span id="__span-39-7"><a id="__codelineno-39-7" name="__codelineno-39-7" href="#__codelineno-39-7"></a><span class="nd">@Composable</span>
+</span><span id="__span-39-8"><a id="__codelineno-39-8" name="__codelineno-39-8" href="#__codelineno-39-8"></a><span class="kd">fun</span><span class="w"> </span><span class="nf">ItemScreen</span><span class="p">(</span><span class="n">onBackClick</span><span class="p">:</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="kt">Unit</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-39-9"><a id="__codelineno-39-9" name="__codelineno-39-9" href="#__codelineno-39-9"></a><span class="p">}</span>
+</span></code></pre></div>
 <p><strong>Don't use string-based routes</strong></p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-40-1"><a id="__codelineno-40-1" name="__codelineno-40-1" href="#__codelineno-40-1"></a><span class="c1">// Avoid</span>
 </span><span id="__span-40-2"><a id="__codelineno-40-2" name="__codelineno-40-2" href="#__codelineno-40-2"></a><span class="n">composable</span><span class="p">(</span><span class="s">&quot;item/{itemId}&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">}</span>
@@ -3620,7 +3630,7 @@
 <h3 id="common-issues">Common Issues</h3>
 <h4 id="issue-arguments-not-accessible-in-viewmodel">Issue: Arguments not accessible in ViewModel</h4>
 <p><strong>Problem:</strong> Navigation arguments are null in ViewModel.</p>
-<p><strong>Solution:</strong>
+<p><strong>Solution:</strong></p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-43-1"><a id="__codelineno-43-1" name="__codelineno-43-1" href="#__codelineno-43-1"></a><span class="c1">// Use SavedStateHandle.toRoute&lt;T&gt;() to extract arguments</span>
 </span><span id="__span-43-2"><a id="__codelineno-43-2" name="__codelineno-43-2" href="#__codelineno-43-2"></a><span class="nd">@HiltViewModel</span>
 </span><span id="__span-43-3"><a id="__codelineno-43-3" name="__codelineno-43-3" href="#__codelineno-43-3"></a><span class="kd">class</span><span class="w"> </span><span class="nc">ItemViewModel</span><span class="w"> </span><span class="nd">@Inject</span><span class="w"> </span><span class="k">constructor</span><span class="p">(</span>
@@ -3630,10 +3640,10 @@
 </span><span id="__span-43-7"><a id="__codelineno-43-7" name="__codelineno-43-7" href="#__codelineno-43-7"></a><span class="w">    </span><span class="c1">// Extract route arguments</span>
 </span><span id="__span-43-8"><a id="__codelineno-43-8" name="__codelineno-43-8" href="#__codelineno-43-8"></a><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="nv">itemId</span><span class="p">:</span><span class="w"> </span><span class="kt">String?</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">savedStateHandle</span><span class="p">.</span><span class="na">toRoute</span><span class="o">&lt;</span><span class="n">Item</span><span class="o">&gt;</span><span class="p">().</span><span class="na">itemId</span>
 </span><span id="__span-43-9"><a id="__codelineno-43-9" name="__codelineno-43-9" href="#__codelineno-43-9"></a><span class="p">}</span>
-</span></code></pre></div></p>
+</span></code></pre></div>
 <h4 id="issue-back-stack-not-clearing">Issue: Back stack not clearing</h4>
 <p><strong>Problem:</strong> Back button doesn't behave as expected.</p>
-<p><strong>Solution:</strong>
+<p><strong>Solution:</strong></p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-44-1"><a id="__codelineno-44-1" name="__codelineno-44-1" href="#__codelineno-44-1"></a><span class="c1">// Clear specific destinations</span>
 </span><span id="__span-44-2"><a id="__codelineno-44-2" name="__codelineno-44-2" href="#__codelineno-44-2"></a><span class="n">navController</span><span class="p">.</span><span class="na">navigate</span><span class="p">(</span><span class="n">Home</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-44-3"><a id="__codelineno-44-3" name="__codelineno-44-3" href="#__codelineno-44-3"></a><span class="w">    </span><span class="n">popUpTo</span><span class="p">(</span><span class="n">Login</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
@@ -3647,10 +3657,10 @@
 </span><span id="__span-44-11"><a id="__codelineno-44-11" name="__codelineno-44-11" href="#__codelineno-44-11"></a><span class="w">        </span><span class="n">inclusive</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
 </span><span id="__span-44-12"><a id="__codelineno-44-12" name="__codelineno-44-12" href="#__codelineno-44-12"></a><span class="w">    </span><span class="p">}</span>
 </span><span id="__span-44-13"><a id="__codelineno-44-13" name="__codelineno-44-13" href="#__codelineno-44-13"></a><span class="p">}</span>
-</span></code></pre></div></p>
+</span></code></pre></div>
 <h4 id="issue-nested-graph-not-found">Issue: Nested graph not found</h4>
 <p><strong>Problem:</strong> Can't navigate to screens within nested graph.</p>
-<p><strong>Solution:</strong>
+<p><strong>Solution:</strong></p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-45-1"><a id="__codelineno-45-1" name="__codelineno-45-1" href="#__codelineno-45-1"></a><span class="c1">// Ensure nested graph is registered in NavHost</span>
 </span><span id="__span-45-2"><a id="__codelineno-45-2" name="__codelineno-45-2" href="#__codelineno-45-2"></a><span class="n">NavHost</span><span class="p">(</span><span class="n">navController</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">navController</span><span class="p">,</span><span class="w"> </span><span class="n">startDestination</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">startDestination</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-45-3"><a id="__codelineno-45-3" name="__codelineno-45-3" href="#__codelineno-45-3"></a><span class="w">    </span><span class="n">authNavGraph</span><span class="p">(</span>
@@ -3666,10 +3676,10 @@
 </span><span id="__span-45-13"><a id="__codelineno-45-13" name="__codelineno-45-13" href="#__codelineno-45-13"></a><span class="w">        </span><span class="p">}</span>
 </span><span id="__span-45-14"><a id="__codelineno-45-14" name="__codelineno-45-14" href="#__codelineno-45-14"></a><span class="w">    </span><span class="p">)</span>
 </span><span id="__span-45-15"><a id="__codelineno-45-15" name="__codelineno-45-15" href="#__codelineno-45-15"></a><span class="p">}</span>
-</span></code></pre></div></p>
+</span></code></pre></div>
 <h4 id="issue-state-not-preserved-in-bottom-navigation">Issue: State not preserved in bottom navigation</h4>
 <p><strong>Problem:</strong> Screen state is lost when switching tabs.</p>
-<p><strong>Solution:</strong>
+<p><strong>Solution:</strong></p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-46-1"><a id="__codelineno-46-1" name="__codelineno-46-1" href="#__codelineno-46-1"></a><span class="c1">// Enable state saving in NavOptions</span>
 </span><span id="__span-46-2"><a id="__codelineno-46-2" name="__codelineno-46-2" href="#__codelineno-46-2"></a><span class="n">navController</span><span class="p">.</span><span class="na">navigate</span><span class="p">(</span><span class="n">destination</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-46-3"><a id="__codelineno-46-3" name="__codelineno-46-3" href="#__codelineno-46-3"></a><span class="w">    </span><span class="n">popUpTo</span><span class="p">(</span><span class="n">navController</span><span class="p">.</span><span class="na">graph</span><span class="p">.</span><span class="na">findStartDestination</span><span class="p">().</span><span class="na">id</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
@@ -3678,10 +3688,10 @@
 </span><span id="__span-46-6"><a id="__codelineno-46-6" name="__codelineno-46-6" href="#__codelineno-46-6"></a><span class="w">    </span><span class="n">restoreState</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
 </span><span id="__span-46-7"><a id="__codelineno-46-7" name="__codelineno-46-7" href="#__codelineno-46-7"></a><span class="w">    </span><span class="n">launchSingleTop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
 </span><span id="__span-46-8"><a id="__codelineno-46-8" name="__codelineno-46-8" href="#__codelineno-46-8"></a><span class="p">}</span>
-</span></code></pre></div></p>
+</span></code></pre></div>
 <h4 id="issue-navigation-ui-showing-on-non-top-level-screens">Issue: Navigation UI showing on non-top-level screens</h4>
 <p><strong>Problem:</strong> Bottom bar or navigation rail visible on detail screens.</p>
-<p><strong>Solution:</strong>
+<p><strong>Solution:</strong></p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-47-1"><a id="__codelineno-47-1" name="__codelineno-47-1" href="#__codelineno-47-1"></a><span class="c1">// Check currentTopLevelDestination in JetpackApp</span>
 </span><span id="__span-47-2"><a id="__codelineno-47-2" name="__codelineno-47-2" href="#__codelineno-47-2"></a><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">appState</span><span class="p">.</span><span class="na">currentTopLevelDestination</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-47-3"><a id="__codelineno-47-3" name="__codelineno-47-3" href="#__codelineno-47-3"></a><span class="w">    </span><span class="c1">// No navigation UI for auth screens, detail screens, etc.</span>
@@ -3691,7 +3701,7 @@
 </span><span id="__span-47-7"><a id="__codelineno-47-7" name="__codelineno-47-7" href="#__codelineno-47-7"></a>
 </span><span id="__span-47-8"><a id="__codelineno-47-8" name="__codelineno-47-8" href="#__codelineno-47-8"></a><span class="c1">// Show NavigationSuiteScaffold only for top-level destinations</span>
 </span><span id="__span-47-9"><a id="__codelineno-47-9" name="__codelineno-47-9" href="#__codelineno-47-9"></a><span class="n">JetpackNavigationSuiteScaffold</span><span class="p">(</span><span class="cm">/* ... */</span><span class="p">)</span>
-</span></code></pre></div></p>
+</span></code></pre></div>
 <hr />
 <h2 id="summary">Summary</h2>
 <p>This guide covered:</p>

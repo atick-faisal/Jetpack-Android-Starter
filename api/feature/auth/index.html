@@ -113,7 +113,7 @@
     <h1 class="cover"><span><span>:feature:auth</span></span></h1>
     <div class="platform-hinted UnderCoverText with-platform-tabs" data-platform-hinted="data-platform-hinted">
       <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":feature:auth/debug" data-filterable-set=":feature:auth/debug" data-active="" data-toggle=":feature:auth/debug">debug</button><button class="platform-bookmark" data-filterable-current=":feature:auth/main" data-filterable-set=":feature:auth/main" data-toggle=":feature:auth/main">androidJvm</button><button class="platform-bookmark" data-filterable-current=":feature:auth/release" data-filterable-set=":feature:auth/release" data-toggle=":feature:auth/release">release</button></div>
-<div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:auth/debug"></div><div class="content sourceset-dependent-content" data-togglable=":feature:auth/main"><p class="paragraph">This module implements user authentication flows including email/password and Google Sign-In. It provides a complete authentication UI with error handling and loading states.</p><h2 class="">Features</h2><ul><li><p class="paragraph">Email/Password Sign In</p></li><li><p class="paragraph">Google Sign In</p></li><li><p class="paragraph">Registration Flow</p></li><li><p class="paragraph">Credential Management</p></li><li><p class="paragraph">Form Validation</p></li><li><p class="paragraph">Error Handling</p></li></ul><h2 class="">Dependencies Graph</h2><div class="sample-container"><div id="mermaid-container-7c8nh01vaffkq"></div></div><script>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:auth/debug"></div><div class="content sourceset-dependent-content" data-togglable=":feature:auth/main"><p class="paragraph">This module implements user authentication flows including email/password and Google Sign-In. It provides a complete authentication UI with error handling and loading states.</p><h2 class="">Features</h2><ul><li><p class="paragraph">Email/Password Sign In</p></li><li><p class="paragraph">Google Sign In</p></li><li><p class="paragraph">Registration Flow</p></li><li><p class="paragraph">Credential Management</p></li><li><p class="paragraph">Form Validation</p></li><li><p class="paragraph">Error Handling</p></li></ul><h2 class="">Dependencies Graph</h2><div class="sample-container"><div id="mermaid-container-3ut84u77vu2eh"></div></div><script>
 window.addEventListener('load', function() {
   var graphDef =  `graph TD
     A[feature:auth] --> B[core:ui]
@@ -123,14 +123,10 @@ window.addEventListener('load', function() {
         B
         C
         D
-    end
-    style A fill: #4CAF50, stroke: #333, stroke-width: 2px
-    style B fill: #64B5F6, stroke: #333, stroke-width: 2px
-    style C fill: #64B5F6, stroke: #333, stroke-width: 2px
-    style D fill: #64B5F6, stroke: #333, stroke-width: 2px`;
-  var container = document.getElementById('mermaid-container-7c8nh01vaffkq');
-  container.innerHTML = '<div id="mermaid-target-7c8nh01vaffkq"></div>';
-  var updateGraph7c8nh01vaffkq = function() {
+    end`;
+  var container = document.getElementById('mermaid-container-3ut84u77vu2eh');
+  container.innerHTML = '<div id="mermaid-target-3ut84u77vu2eh"></div>';
+  var updateGraph3ut84u77vu2eh = function() {
     // setTimeout required or else the 1st render could be done before mermaid.initialize() has applied the theme.
     // Also required because we can't listen to localStorage events reliably, and it's changed on the same click event...
     setTimeout(() => {
@@ -141,19 +137,19 @@ window.addEventListener('load', function() {
         theme = 'dark';
       }
       mermaid.initialize({'theme': theme});
-      mermaid.render('mermaid-target-7c8nh01vaffkq', graphDef).then(({ svg, bindFunctions }) => {
+      mermaid.render('mermaid-target-3ut84u77vu2eh', graphDef).then(({ svg, bindFunctions }) => {
           container.innerHTML = svg;
           // Trick to make the graph takes only the required height.
-          document.getElementById('mermaid-target-7c8nh01vaffkq').removeAttribute('height')
+          document.getElementById('mermaid-target-3ut84u77vu2eh').removeAttribute('height')
           bindFunctions?.(element);
       });
     }, 0);
   }
-  updateGraph7c8nh01vaffkq();
+  updateGraph3ut84u77vu2eh();
   
   var themeToggleButton = document.getElementById('theme-toggle-button');
   themeToggleButton.addEventListener('click', () => {
-    updateGraph7c8nh01vaffkq();
+    updateGraph3ut84u77vu2eh();
   });
 });</script><h2 class="">Usage</h2><div class="sample-container"><pre><code class="block lang-kotlin" theme="idea">dependencies {<br>    implementation(project(":feature:auth"))<br>}</code></pre><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><h3 class="">Key Components</h3><ol><li><p class="paragraph"><strong>SignInRoute</strong>: Handles user sign-in</p><div class="sample-container"><pre><code class="block lang-kotlin" theme="idea">@Composable<br>fun SignInRoute(<br>   onSignUpClick: () -&gt; Unit,<br>   onShowSnackbar: suspend (String, SnackbarAction, Throwable?) -&gt; Boolean,<br>   signInViewModel: SignInViewModel = hiltViewModel(),<br>)</code></pre><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></li><li><p class="paragraph"><strong>SignUpRoute</strong>: Handles user registration</p><div class="sample-container"><pre><code class="block lang-kotlin" theme="idea">@Composable<br>fun SignUpRoute(<br>   onSignInClick: () -&gt; Unit,<br>   onShowSnackbar: suspend (String, SnackbarAction, Throwable?) -&gt; Boolean,<br>   signUpViewModel: SignUpViewModel = hiltViewModel(),<br>)</code></pre><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></li></ol><h2 class="">Related Documentation</h2><ul><li><p class="paragraph"><strong>../../docs/guide.md</strong> - Step-by-step template for creating new features</p></li><li><p class="paragraph"><strong>../../docs/state-management.md</strong> - UiState pattern and ViewModel best practices</p></li><li><p class="paragraph"><strong>../../docs/navigation.md</strong> - Type-safe navigation implementation</p></li><li><p class="paragraph"><strong>../../firebase/auth/README.md</strong> - Firebase Auth wrapper used by this module</p></li></ul></div><div class="content sourceset-dependent-content" data-togglable=":feature:auth/release"></div>    </div>
   </div>

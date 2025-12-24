@@ -1493,7 +1493,10 @@
 
 <h1 id="firebase-setup">Firebase Setup</h1>
 <h2 id="summary">Summary</h2>
-<p>This guide walks you through setting up Firebase for this project, including Authentication (Google Sign-In and Email/Password), Firestore database, and Analytics. Learn how to configure the Firebase Console, download and protect <code>google-services.json</code>, set up security rules, and troubleshoot common Firebase issues.</p>
+<p>This guide walks you through setting up Firebase for this project, including Authentication (Google
+Sign-In and Email/Password), Firestore database, and Analytics. Learn how to configure the Firebase
+Console, download and protect <code>google-services.json</code>, set up security rules, and troubleshoot common
+Firebase issues.</p>
 <hr />
 <p>This project uses Firebase for authentication, Firestore database, and analytics. Follow this guide
 to set up Firebase for your project.</p>
@@ -1687,22 +1690,20 @@ deploying to production.</p>
 </div>
 <h2 id="additional-setup">Additional Setup</h2>
 <ol>
-<li>
-<p><strong>Test Your Configuration</strong>:</p>
+<li><strong>Test Your Configuration</strong>:</li>
+</ol>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1">// Add this in an activity or fragment</span>
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="n">FirebaseAuth</span><span class="p">.</span><span class="na">getInstance</span><span class="p">().</span><span class="na">currentUser</span><span class="o">?.</span><span class="na">let</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="n">Timber</span><span class="p">.</span><span class="na">d</span><span class="p">(</span><span class="s">&quot;Firebase Auth is working: </span><span class="si">${</span><span class="nb">it</span><span class="p">.</span><span class="na">email</span><span class="si">}</span><span class="s">&quot;</span><span class="p">)</span>
 </span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="p">}</span>
 </span></code></pre></div>
-</li>
-<li>
-<p><strong>Reset Git Tracking</strong> (if needed):</p>
+<ol>
+<li><strong>Reset Git Tracking</strong> (if needed):</li>
+</ol>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>git<span class="w"> </span>update-index<span class="w"> </span>--no-skip-worktree<span class="w"> </span>app/google-services.json
 </span></code></pre></div>
-</li>
-<li>
-<p><strong>Multiple Environments</strong>:</p>
-<ul>
+<ol>
+<li><strong>Multiple Environments</strong>:<ul>
 <li>Create separate Firebase projects for development and production</li>
 <li>Manage different <code>google-services.json</code> files for each build variant</li>
 </ul>

@@ -3004,9 +3004,7 @@ are organized by category for easy reference.</p>
 <p>The template intentionally uses a <strong>two-layer architecture</strong> (UI + Data) instead of the traditional
 three-layer approach:</p>
 <pre class="mermaid"><code>graph LR
-    UI[UI Layer&lt;br/&gt;ViewModel] --&gt; Data[Data Layer&lt;br/&gt;Repository + Data Sources]
-    style UI fill: #e1f5ff, stroke: #01579b, stroke-width: 2px
-    style Data fill: #f3e5f5, stroke: #4a148c, stroke-width: 2px</code></pre>
+    UI[UI Layer&lt;br/&gt;ViewModel] --&gt; Data[Data Layer&lt;br/&gt;Repository + Data Sources]</code></pre>
 <p><strong>Reasons:</strong></p>
 <ul>
 <li><strong>Reduces complexity</strong>: Fewer layers means less boilerplate and easier navigation</li>
@@ -3484,11 +3482,7 @@ cases keep this logic testable and reusable.</p>
     Complex --&gt;|YES| Room1[Use Room]
     Complex --&gt;|NO| Preferences{Is it simple&lt;br/&gt;preferences/settings?}
     Preferences --&gt;|YES| DataStore[Use DataStore]
-    Preferences --&gt;|NO| Room2[Use Room&lt;br/&gt;structured data]
-    style Firestore fill: #fff3e0, stroke: #e65100, stroke-width: 2px
-    style Room1 fill: #e1f5ff, stroke: #01579b, stroke-width: 2px
-    style Room2 fill: #e1f5ff, stroke: #01579b, stroke-width: 2px
-    style DataStore fill: #f3e5f5, stroke: #4a148c, stroke-width: 2px</code></pre>
+    Preferences --&gt;|NO| Room2[Use Room&lt;br/&gt;structured data]</code></pre>
 <p><strong>Examples:</strong></p>
 <ul>
 <li><strong>Room</strong>: User posts, messages, cached data, offline-first content</li>
@@ -3617,10 +3611,7 @@ pattern.</p>
     Start --&gt;|NO| UpdateState[Use updateState]
     Start --&gt;|YES| ReturnData{Does it return&lt;br/&gt;new data to display?}
     ReturnData --&gt;|YES| UpdateStateWith[Use updateStateWith]
-    ReturnData --&gt;|NO| UpdateWith[Use updateWith]
-    style UpdateState fill: #e1f5ff, stroke: #01579b, stroke-width: 2px
-    style UpdateStateWith fill: #fff3e0, stroke: #e65100, stroke-width: 2px
-    style UpdateWith fill: #f3e5f5, stroke: #4a148c, stroke-width: 2px</code></pre>
+    ReturnData --&gt;|NO| UpdateWith[Use updateWith]</code></pre>
 <h4 id="use-updatestate-for-synchronous-state-changes">Use <code>updateState</code> for synchronous state changes</h4>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1">// Form input</span>
 </span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="kd">fun</span><span class="w"> </span><span class="nf">onNameChanged</span><span class="p">(</span><span class="n">name</span><span class="p">:</span><span class="w"> </span><span class="kt">String</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>

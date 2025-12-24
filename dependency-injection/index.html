@@ -2726,9 +2726,11 @@
 
 
 <h1 id="dependency-injection-guide">Dependency Injection Guide</h1>
-<p>This guide covers how dependency injection (DI) works in this template using <strong>Dagger Hilt</strong>. All examples are based on the actual implementation patterns used throughout the codebase.</p>
+<p>This guide covers how dependency injection (DI) works in this template using <strong>Dagger Hilt</strong>. All
+examples are based on the actual implementation patterns used throughout the codebase.</p>
 <h2 id="overview">Overview</h2>
-<p>This template uses <strong>Dagger Hilt</strong> for dependency injection, which is the recommended DI solution for Android. Hilt is built on top of Dagger and provides:</p>
+<p>This template uses <strong>Dagger Hilt</strong> for dependency injection, which is the recommended DI solution
+for Android. Hilt is built on top of Dagger and provides:</p>
 <ul>
 <li>Simplified setup with convention-based configuration</li>
 <li>Integration with Android components (Activity, ViewModel, Worker, etc.)</li>
@@ -2746,10 +2748,12 @@
 </span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">    </span><span class="n">alias</span><span class="p">(</span><span class="n">libs</span><span class="p">.</span><span class="na">plugins</span><span class="p">.</span><span class="na">jetpack</span><span class="p">.</span><span class="na">dokka</span><span class="p">)</span>
 </span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="p">}</span>
 </span></code></pre></div>
-<p>The <code>jetpack.dagger.hilt</code> convention plugin automatically:
-- Applies <code>com.google.dagger.hilt.android</code> plugin
-- Applies <code>com.google.devtools.ksp</code> plugin
-- Adds Hilt runtime and compiler dependencies</p>
+<p>The <code>jetpack.dagger.hilt</code> convention plugin automatically:</p>
+<ul>
+<li>Applies <code>com.google.dagger.hilt.android</code> plugin</li>
+<li>Applies <code>com.google.devtools.ksp</code> plugin</li>
+<li>Adds Hilt runtime and compiler dependencies</li>
+</ul>
 <h3 id="2-annotate-your-application-class">2. Annotate Your Application Class</h3>
 <p>The <code>Application</code> class must be annotated with <code>@HiltAndroidApp</code>:</p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nd">@HiltAndroidApp</span>
@@ -2791,8 +2795,9 @@
 <h3 id="binds-vs-provides">@Binds vs @Provides</h3>
 <p>Hilt modules use two different methods for providing dependencies:</p>
 <h4 id="binds-preferred-for-interfaces">@Binds (Preferred for Interfaces)</h4>
-<p>Use <code>@Binds</code> when you have an interface and a single implementation. It's more efficient than <code>@Provides</code> because it generates less code.</p>
-<p><strong>Pattern:</strong>
+<p>Use <code>@Binds</code> when you have an interface and a single implementation. It's more efficient than
+<code>@Provides</code> because it generates less code.</p>
+<p><strong>Pattern:</strong></p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nd">@Module</span>
 </span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nd">@InstallIn</span><span class="p">(</span><span class="n">SingletonComponent</span><span class="o">::</span><span class="n">class</span><span class="p">)</span>
 </span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="kd">abstract</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nc">RepositoryModule</span><span class="w"> </span><span class="p">{</span>
@@ -2803,8 +2808,8 @@
 </span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">        </span><span class="n">authRepositoryImpl</span><span class="p">:</span><span class="w"> </span><span class="n">AuthRepositoryImpl</span>
 </span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">    </span><span class="p">):</span><span class="w"> </span><span class="n">AuthRepository</span>
 </span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="p">}</span>
-</span></code></pre></div></p>
-<p><strong>Real Example from <code>data/src/main/kotlin/dev/atick/data/di/RepositoryModule.kt</code>:</strong>
+</span></code></pre></div>
+<p><strong>Real Example from <code>data/src/main/kotlin/dev/atick/data/di/RepositoryModule.kt</code>:</strong></p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nd">@Module</span>
 </span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nd">@InstallIn</span><span class="p">(</span><span class="n">SingletonComponent</span><span class="o">::</span><span class="n">class</span><span class="p">)</span>
 </span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="kd">abstract</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nc">RepositoryModule</span><span class="w"> </span><span class="p">{</span>
@@ -2822,14 +2827,17 @@
 </span><span id="__span-5-15"><a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>
 </span><span id="__span-5-16"><a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="w">    </span><span class="c1">// ... more bindings</span>
 </span><span id="__span-5-17"><a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="p">}</span>
-</span></code></pre></div></p>
-<p><strong>When to use:</strong>
-- Binding interfaces to implementations
-- When the implementation has <code>@Inject constructor</code>
-- When you don't need any custom logic to create the object</p>
+</span></code></pre></div>
+<p><strong>When to use:</strong></p>
+<ul>
+<li>Binding interfaces to implementations</li>
+<li>When the implementation has <code>@Inject constructor</code></li>
+<li>When you don't need any custom logic to create the object</li>
+</ul>
 <h4 id="provides-for-complex-construction">@Provides (For Complex Construction)</h4>
-<p>Use <code>@Provides</code> when you need custom logic to create objects, or when the type can't have <code>@Inject</code> on its constructor (e.g., third-party libraries, builders).</p>
-<p><strong>Real Example from <code>core/room/src/main/kotlin/dev/atick/core/room/di/DatabaseModule.kt</code>:</strong>
+<p>Use <code>@Provides</code> when you need custom logic to create objects, or when the type can't have <code>@Inject</code>
+on its constructor (e.g., third-party libraries, builders).</p>
+<p><strong>Real Example from <code>core/room/src/main/kotlin/dev/atick/core/room/di/DatabaseModule.kt</code>:</strong></p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nd">@Module</span>
 </span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nd">@InstallIn</span><span class="p">(</span><span class="n">SingletonComponent</span><span class="o">::</span><span class="n">class</span><span class="p">)</span>
 </span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="kd">object</span><span class="w"> </span><span class="nc">DatabaseModule</span><span class="w"> </span><span class="p">{</span>
@@ -2848,8 +2856,9 @@
 </span><span id="__span-6-16"><a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="w">        </span><span class="p">).</span><span class="na">fallbackToDestructiveMigration</span><span class="p">(</span><span class="kc">true</span><span class="p">).</span><span class="na">build</span><span class="p">()</span>
 </span><span id="__span-6-17"><a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="w">    </span><span class="p">}</span>
 </span><span id="__span-6-18"><a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a><span class="p">}</span>
-</span></code></pre></div></p>
-<p><strong>Real Example from <code>core/network/src/main/kotlin/dev/atick/core/network/di/retrofit/RetrofitModule.kt</code>:</strong>
+</span></code></pre></div>
+<p><strong>Real Example
+from <code>core/network/src/main/kotlin/dev/atick/core/network/di/retrofit/RetrofitModule.kt</code>:</strong></p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nd">@Module</span><span class="p">(</span>
 </span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">    </span><span class="n">includes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[</span>
 </span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">        </span><span class="n">OkHttpClientModule</span><span class="o">::</span><span class="n">class</span><span class="p">,</span>
@@ -2871,42 +2880,47 @@
 </span><span id="__span-7-19"><a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a><span class="w">            </span><span class="p">.</span><span class="na">build</span><span class="p">()</span>
 </span><span id="__span-7-20"><a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a><span class="w">    </span><span class="p">}</span>
 </span><span id="__span-7-21"><a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a><span class="p">}</span>
-</span></code></pre></div></p>
-<p><strong>When to use:</strong>
-- Creating objects with builders (Retrofit, Room, OkHttp)
-- Third-party library types
-- Objects requiring complex initialization logic
-- When you need to use <code>@ApplicationContext</code> or other qualifiers</p>
+</span></code></pre></div>
+<p><strong>When to use:</strong></p>
+<ul>
+<li>Creating objects with builders (Retrofit, Room, OkHttp)</li>
+<li>Third-party library types</li>
+<li>Objects requiring complex initialization logic</li>
+<li>When you need to use <code>@ApplicationContext</code> or other qualifiers</li>
+</ul>
 <h3 id="scoping">Scoping</h3>
 <p>Scoping controls the lifecycle of dependencies. This template uses three main scopes:</p>
 <h4 id="singleton-application-scope">@Singleton (Application Scope)</h4>
 <p>Objects live as long as the application process.</p>
-<p><strong>Example:</strong>
+<p><strong>Example:</strong></p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nd">@Binds</span>
 </span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nd">@Singleton</span>
 </span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="kd">internal</span><span class="w"> </span><span class="kd">abstract</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="nf">bindAuthRepository</span><span class="p">(</span>
 </span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">    </span><span class="n">authRepositoryImpl</span><span class="p">:</span><span class="w"> </span><span class="n">AuthRepositoryImpl</span><span class="p">,</span>
 </span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="p">):</span><span class="w"> </span><span class="n">AuthRepository</span>
-</span></code></pre></div></p>
-<p><strong>Use for:</strong>
-- Repositories
-- Data sources (Room DAOs, Retrofit services, DataStore)
-- Network clients (OkHttp, Retrofit)
-- Utilities (CrashReporter, NetworkUtils)</p>
+</span></code></pre></div>
+<p><strong>Use for:</strong></p>
+<ul>
+<li>Repositories</li>
+<li>Data sources (Room DAOs, Retrofit services, DataStore)</li>
+<li>Network clients (OkHttp, Retrofit)</li>
+<li>Utilities (CrashReporter, NetworkUtils)</li>
+</ul>
 <h4 id="viewmodelscoped">@ViewModelScoped</h4>
-<p>Objects live as long as the ViewModel. Useful for dependencies that should be recreated when the ViewModel is recreated.</p>
-<p><strong>Example:</strong>
+<p>Objects live as long as the ViewModel. Useful for dependencies that should be recreated when the
+ViewModel is recreated.</p>
+<p><strong>Example:</strong></p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="nd">@Provides</span>
 </span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="nd">@ViewModelScoped</span>
 </span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="kd">fun</span><span class="w"> </span><span class="nf">provideSpecialUseCase</span><span class="p">():</span><span class="w"> </span><span class="n">SpecialUseCase</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">SpecialUseCase</span><span class="p">()</span>
 </span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="p">}</span>
-</span></code></pre></div></p>
+</span></code></pre></div>
 <h4 id="activityscoped">@ActivityScoped</h4>
 <p>Objects live as long as the Activity. Less commonly used in this template.</p>
 <h3 id="qualifier-annotations">Qualifier Annotations</h3>
 <p>Qualifiers differentiate between multiple instances of the same type.</p>
-<p><strong>Real Example from <code>core/android/src/main/kotlin/dev/atick/core/di/DispatcherModule.kt</code>:</strong>
+<p><strong>Real Example from <code>core/android/src/main/kotlin/dev/atick/core/di/DispatcherModule.kt</code>:</strong></p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="nd">@Module</span>
 </span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="nd">@InstallIn</span><span class="p">(</span><span class="n">SingletonComponent</span><span class="o">::</span><span class="n">class</span><span class="p">)</span>
 </span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="kd">object</span><span class="w"> </span><span class="nc">DispatcherModule</span><span class="w"> </span><span class="p">{</span>
@@ -2934,8 +2948,8 @@
 </span><span id="__span-10-25"><a id="__codelineno-10-25" name="__codelineno-10-25" href="#__codelineno-10-25"></a><span class="nd">@Retention</span><span class="p">(</span><span class="n">AnnotationRetention</span><span class="p">.</span><span class="na">BINARY</span><span class="p">)</span>
 </span><span id="__span-10-26"><a id="__codelineno-10-26" name="__codelineno-10-26" href="#__codelineno-10-26"></a><span class="nd">@Qualifier</span>
 </span><span id="__span-10-27"><a id="__codelineno-10-27" name="__codelineno-10-27" href="#__codelineno-10-27"></a><span class="kd">annotation</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nc">MainDispatcher</span>
-</span></code></pre></div></p>
-<p><strong>Usage in Data Source:</strong>
+</span></code></pre></div>
+<p><strong>Usage in Data Source:</strong></p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="kd">class</span><span class="w"> </span><span class="nc">NetworkDataSourceImpl</span><span class="w"> </span><span class="nd">@Inject</span><span class="w"> </span><span class="k">constructor</span><span class="p">(</span>
 </span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="nv">restApi</span><span class="p">:</span><span class="w"> </span><span class="n">RestApi</span><span class="p">,</span>
 </span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">    </span><span class="nd">@IoDispatcher</span><span class="w"> </span><span class="kd">private</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="nv">ioDispatcher</span><span class="p">:</span><span class="w"> </span><span class="n">CoroutineDispatcher</span><span class="p">,</span>
@@ -2945,45 +2959,49 @@
 </span><span id="__span-11-7"><a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="w">        </span><span class="n">restApi</span><span class="p">.</span><span class="na">getData</span><span class="p">()</span>
 </span><span id="__span-11-8"><a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="w">    </span><span class="p">}</span>
 </span><span id="__span-11-9"><a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="p">}</span>
-</span></code></pre></div></p>
-<p><strong>When to create qualifiers:</strong>
-- Multiple instances of the same type with different configurations
-- Different implementations of the same interface for different purposes
-- Named instances (like different dispatchers, different databases)</p>
+</span></code></pre></div>
+<p><strong>When to create qualifiers:</strong></p>
+<ul>
+<li>Multiple instances of the same type with different configurations</li>
+<li>Different implementations of the same interface for different purposes</li>
+<li>Named instances (like different dispatchers, different databases)</li>
+</ul>
 <h2 id="injection-patterns">Injection Patterns</h2>
 <h3 id="constructor-injection-preferred">Constructor Injection (Preferred)</h3>
-<p>This is the most common and recommended pattern. Works for:
-- ViewModels (<code>@HiltViewModel</code>)
-- Repositories
-- Data sources
-- Any class you control</p>
-<p><strong>ViewModel Example:</strong>
+<p>This is the most common and recommended pattern. Works for:</p>
+<ul>
+<li>ViewModels (<code>@HiltViewModel</code>)</li>
+<li>Repositories</li>
+<li>Data sources</li>
+<li>Any class you control</li>
+</ul>
+<p><strong>ViewModel Example:</strong></p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="nd">@HiltViewModel</span>
 </span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="kd">class</span><span class="w"> </span><span class="nc">SettingsViewModel</span><span class="w"> </span><span class="nd">@Inject</span><span class="w"> </span><span class="k">constructor</span><span class="p">(</span>
 </span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="nv">settingsRepository</span><span class="p">:</span><span class="w"> </span><span class="n">SettingsRepository</span><span class="p">,</span>
 </span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">ViewModel</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="w">    </span><span class="c1">// Use settingsRepository</span>
 </span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="p">}</span>
-</span></code></pre></div></p>
-<p><strong>Repository Example:</strong>
+</span></code></pre></div>
+<p><strong>Repository Example:</strong></p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="kd">internal</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nc">AuthRepositoryImpl</span><span class="w"> </span><span class="nd">@Inject</span><span class="w"> </span><span class="k">constructor</span><span class="p">(</span>
 </span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="nv">authDataSource</span><span class="p">:</span><span class="w"> </span><span class="n">AuthDataSource</span><span class="p">,</span>
 </span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="nv">userPreferencesDataSource</span><span class="p">:</span><span class="w"> </span><span class="n">UserPreferencesDataSource</span><span class="p">,</span>
 </span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">AuthRepository</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="w">    </span><span class="c1">// Use data sources</span>
 </span><span id="__span-13-6"><a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="p">}</span>
-</span></code></pre></div></p>
-<p><strong>Data Source Example:</strong>
+</span></code></pre></div>
+<p><strong>Data Source Example:</strong></p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="kd">class</span><span class="w"> </span><span class="nc">FirebaseDataSourceImpl</span><span class="w"> </span><span class="nd">@Inject</span><span class="w"> </span><span class="k">constructor</span><span class="p">(</span>
 </span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="nv">firestore</span><span class="p">:</span><span class="w"> </span><span class="n">FirebaseFirestore</span><span class="p">,</span>
 </span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="w">    </span><span class="nd">@IoDispatcher</span><span class="w"> </span><span class="kd">private</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="nv">ioDispatcher</span><span class="p">:</span><span class="w"> </span><span class="n">CoroutineDispatcher</span><span class="p">,</span>
 </span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">FirebaseDataSource</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-14-5"><a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="w">    </span><span class="c1">// Use firestore and ioDispatcher</span>
 </span><span id="__span-14-6"><a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="p">}</span>
-</span></code></pre></div></p>
+</span></code></pre></div>
 <h3 id="field-injection">Field Injection</h3>
 <p>Used for Android framework components where you can't control constructor.</p>
-<p><strong>Activity Example from <code>app/src/main/kotlin/dev/atick/compose/MainActivity.kt</code>:</strong>
+<p><strong>Activity Example from <code>app/src/main/kotlin/dev/atick/compose/MainActivity.kt</code>:</strong></p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="nd">@AndroidEntryPoint</span>
 </span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="kd">class</span><span class="w"> </span><span class="nc">MainActivity</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">AppCompatActivity</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>
@@ -3000,7 +3018,7 @@
 </span><span id="__span-15-14"><a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a><span class="w">        </span><span class="c1">// networkUtils and crashReporter are now injected</span>
 </span><span id="__span-15-15"><a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a><span class="w">    </span><span class="p">}</span>
 </span><span id="__span-15-16"><a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a><span class="p">}</span>
-</span></code></pre></div></p>
+</span></code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Important</p>
 <p><strong>Field Injection Requirements:</strong>
@@ -3011,7 +3029,7 @@
 </div>
 <h3 id="assistedinject-for-workers">AssistedInject (For Workers)</h3>
 <p>WorkManager Workers need special handling because they receive runtime parameters from WorkManager.</p>
-<p><strong>Real Example from <code>sync/src/main/kotlin/dev/atick/sync/worker/SyncWorker.kt</code>:</strong>
+<p><strong>Real Example from <code>sync/src/main/kotlin/dev/atick/sync/worker/SyncWorker.kt</code>:</strong></p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="nd">@HiltWorker</span>
 </span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="kd">class</span><span class="w"> </span><span class="nc">SyncWorker</span><span class="w"> </span><span class="nd">@AssistedInject</span><span class="w"> </span><span class="k">constructor</span><span class="p">(</span>
 </span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="w">    </span><span class="nd">@Assisted</span><span class="w"> </span><span class="kd">private</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="nv">context</span><span class="p">:</span><span class="w"> </span><span class="n">Context</span><span class="p">,</span>
@@ -3028,12 +3046,14 @@
 </span><span id="__span-16-14"><a id="__codelineno-16-14" name="__codelineno-16-14" href="#__codelineno-16-14"></a><span class="w">        </span><span class="p">}</span>
 </span><span id="__span-16-15"><a id="__codelineno-16-15" name="__codelineno-16-15" href="#__codelineno-16-15"></a><span class="w">    </span><span class="p">}</span>
 </span><span id="__span-16-16"><a id="__codelineno-16-16" name="__codelineno-16-16" href="#__codelineno-16-16"></a><span class="p">}</span>
-</span></code></pre></div></p>
-<p><strong>Key Points:</strong>
-- Use <code>@HiltWorker</code> annotation
-- Use <code>@AssistedInject</code> for constructor
-- Mark WorkManager-provided params with <code>@Assisted</code>
-- Regular dependencies are injected normally</p>
+</span></code></pre></div>
+<p><strong>Key Points:</strong></p>
+<ul>
+<li>Use <code>@HiltWorker</code> annotation</li>
+<li>Use <code>@AssistedInject</code> for constructor</li>
+<li>Mark WorkManager-provided params with <code>@Assisted</code></li>
+<li>Regular dependencies are injected normally</li>
+</ul>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>You must also use <code>DelegatingWorker</code> when enqueuing:</p>
@@ -3050,11 +3070,13 @@
 <p>Modules are organized by layer and purpose. Each module contains a <code>di/</code> package with Hilt modules.</p>
 <h3 id="core-module-di-structure">Core Module DI Structure</h3>
 <ul>
-<li><code>core/android/src/main/kotlin/dev/atick/core/di/</code></li>
+<li><code>core/android/src/main/kotlin/dev/atick/core/di/</code><ul>
 <li><code>DispatcherModule.kt</code> - Coroutine dispatchers</li>
 <li><code>CoroutineModule.kt</code> - CoroutineScope</li>
 <li><code>StringDecoderModule.kt</code> - URI decoder</li>
-<li><code>core/network/src/main/kotlin/dev/atick/core/network/di/</code></li>
+</ul>
+</li>
+<li><code>core/network/src/main/kotlin/dev/atick/core/network/di/</code><ul>
 <li><code>retrofit/</code><ul>
 <li><code>RetrofitModule.kt</code> - Retrofit instance</li>
 <li><code>ConverterModule.kt</code> - JSON converter</li>
@@ -3071,40 +3093,56 @@
 </li>
 <li><code>NetworkUtilsModule.kt</code> - Network utilities</li>
 <li><code>DataSourceModule.kt</code> - Network data source</li>
-<li><code>core/room/src/main/kotlin/dev/atick/core/room/di/</code></li>
+</ul>
+</li>
+<li><code>core/room/src/main/kotlin/dev/atick/core/room/di/</code><ul>
 <li><code>DatabaseModule.kt</code> - Room database</li>
 <li><code>DaoModule.kt</code> - DAOs</li>
 <li><code>DataSourceModule.kt</code> - Local data source</li>
-<li><code>core/preferences/src/main/kotlin/dev/atick/core/preferences/di/</code></li>
+</ul>
+</li>
+<li><code>core/preferences/src/main/kotlin/dev/atick/core/preferences/di/</code><ul>
 <li><code>DatastoreModule.kt</code> - DataStore</li>
 <li><code>PreferencesDataSourceModule.kt</code> - Preferences data source</li>
 </ul>
+</li>
+</ul>
 <h3 id="data-module-di-structure">Data Module DI Structure</h3>
 <ul>
-<li><code>data/src/main/kotlin/dev/atick/data/di/</code></li>
+<li><code>data/src/main/kotlin/dev/atick/data/di/</code><ul>
 <li><code>RepositoryModule.kt</code> - All repository bindings</li>
+</ul>
+</li>
 </ul>
 <h3 id="firebase-module-di-structure">Firebase Module DI Structure</h3>
 <ul>
-<li><code>firebase/analytics/src/main/kotlin/dev/atick/firebase/analytics/di/</code></li>
+<li><code>firebase/analytics/src/main/kotlin/dev/atick/firebase/analytics/di/</code><ul>
 <li><code>FirebaseModule.kt</code> - Firebase Analytics</li>
 <li><code>CrashlyticsModule.kt</code> - CrashReporter</li>
-<li><code>firebase/auth/src/main/kotlin/dev/atick/firebase/auth/di/</code></li>
+</ul>
+</li>
+<li><code>firebase/auth/src/main/kotlin/dev/atick/firebase/auth/di/</code><ul>
 <li><code>FirebaseAuthModule.kt</code> - Firebase Auth</li>
 <li><code>CredentialManagerModule.kt</code> - Credential Manager</li>
 <li><code>DataSourceModule.kt</code> - Auth data source</li>
-<li><code>firebase/firestore/src/main/kotlin/dev/atick/firebase/firestore/di/</code></li>
+</ul>
+</li>
+<li><code>firebase/firestore/src/main/kotlin/dev/atick/firebase/firestore/di/</code><ul>
 <li><code>FirebaseModule.kt</code> - Firestore instance</li>
 <li><code>DataSourceModule.kt</code> - Firestore data source</li>
 </ul>
+</li>
+</ul>
 <h3 id="sync-module-di-structure">Sync Module DI Structure</h3>
 <ul>
-<li><code>sync/src/main/kotlin/dev/atick/sync/di/</code></li>
+<li><code>sync/src/main/kotlin/dev/atick/sync/di/</code><ul>
 <li><code>SyncModule.kt</code> - SyncManager binding</li>
+</ul>
+</li>
 </ul>
 <h3 id="module-inclusion-pattern">Module Inclusion Pattern</h3>
 <p>Modules can include other modules to establish dependencies:</p>
-<p><strong>Example from <code>core/room/di/DaoModule.kt</code>:</strong>
+<p><strong>Example from <code>core/room/di/DaoModule.kt</code>:</strong></p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="nd">@Module</span><span class="p">(</span>
 </span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="w">    </span><span class="n">includes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[</span>
 </span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="w">        </span><span class="n">DatabaseModule</span><span class="o">::</span><span class="n">class</span><span class="p">,</span>
@@ -3118,11 +3156,12 @@
 </span><span id="__span-18-11"><a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a><span class="w">    </span><span class="kd">fun</span><span class="w"> </span><span class="nf">provideJetpackDao</span><span class="p">(</span><span class="n">jetpackDatabase</span><span class="p">:</span><span class="w"> </span><span class="n">JetpackDatabase</span><span class="p">)</span><span class="w"> </span><span class="o">=</span>
 </span><span id="__span-18-12"><a id="__codelineno-18-12" name="__codelineno-18-12" href="#__codelineno-18-12"></a><span class="w">        </span><span class="n">jetpackDatabase</span><span class="p">.</span><span class="na">getJetpackDao</span><span class="p">()</span>
 </span><span id="__span-18-13"><a id="__codelineno-18-13" name="__codelineno-18-13" href="#__codelineno-18-13"></a><span class="p">}</span>
-</span></code></pre></div></p>
-<p>This ensures <code>DatabaseModule</code> is processed before <code>DaoModule</code>, so the database is available when creating the DAO.</p>
+</span></code></pre></div>
+<p>This ensures <code>DatabaseModule</code> is processed before <code>DaoModule</code>, so the database is available when
+creating the DAO.</p>
 <h2 id="common-patterns">Common Patterns</h2>
 <h3 id="pattern-1-repository-with-multiple-data-sources">Pattern 1: Repository with Multiple Data Sources</h3>
-<p><strong>Real Example from <code>data/src/main/kotlin/dev/atick/data/repository/auth/AuthRepositoryImpl.kt</code>:</strong>
+<p><strong>Real Example from <code>data/src/main/kotlin/dev/atick/data/repository/auth/AuthRepositoryImpl.kt</code>:</strong></p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="kd">internal</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nc">AuthRepositoryImpl</span><span class="w"> </span><span class="nd">@Inject</span><span class="w"> </span><span class="k">constructor</span><span class="p">(</span>
 </span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="nv">authDataSource</span><span class="p">:</span><span class="w"> </span><span class="n">AuthDataSource</span><span class="p">,</span>
 </span><span id="__span-19-3"><a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="nv">userPreferencesDataSource</span><span class="p">:</span><span class="w"> </span><span class="n">UserPreferencesDataSource</span><span class="p">,</span>
@@ -3138,16 +3177,16 @@
 </span><span id="__span-19-13"><a id="__codelineno-19-13" name="__codelineno-19-13" href="#__codelineno-19-13"></a><span class="w">        </span><span class="p">}</span>
 </span><span id="__span-19-14"><a id="__codelineno-19-14" name="__codelineno-19-14" href="#__codelineno-19-14"></a><span class="w">    </span><span class="p">}</span>
 </span><span id="__span-19-15"><a id="__codelineno-19-15" name="__codelineno-19-15" href="#__codelineno-19-15"></a><span class="p">}</span>
-</span></code></pre></div></p>
-<p><strong>Binding:</strong>
+</span></code></pre></div>
+<p><strong>Binding:</strong></p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="nd">@Binds</span>
 </span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="nd">@Singleton</span>
 </span><span id="__span-20-3"><a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="kd">internal</span><span class="w"> </span><span class="kd">abstract</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="nf">bindAuthRepository</span><span class="p">(</span>
 </span><span id="__span-20-4"><a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="w">    </span><span class="n">authRepositoryImpl</span><span class="p">:</span><span class="w"> </span><span class="n">AuthRepositoryImpl</span><span class="p">,</span>
 </span><span id="__span-20-5"><a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a><span class="p">):</span><span class="w"> </span><span class="n">AuthRepository</span>
-</span></code></pre></div></p>
+</span></code></pre></div>
 <h3 id="pattern-2-datastore-with-dispatcher">Pattern 2: DataStore with Dispatcher</h3>
-<p><strong>Real Example from <code>core/preferences/di/DatastoreModule.kt</code>:</strong>
+<p><strong>Real Example from <code>core/preferences/di/DatastoreModule.kt</code>:</strong></p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="nd">@Module</span>
 </span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="nd">@InstallIn</span><span class="p">(</span><span class="n">SingletonComponent</span><span class="o">::</span><span class="n">class</span><span class="p">)</span>
 </span><span id="__span-21-3"><a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a><span class="kd">object</span><span class="w"> </span><span class="nc">DatastoreModule</span><span class="w"> </span><span class="p">{</span>
@@ -3167,13 +3206,15 @@
 </span><span id="__span-21-17"><a id="__codelineno-21-17" name="__codelineno-21-17" href="#__codelineno-21-17"></a><span class="w">        </span><span class="p">)</span>
 </span><span id="__span-21-18"><a id="__codelineno-21-18" name="__codelineno-21-18" href="#__codelineno-21-18"></a><span class="w">    </span><span class="p">}</span>
 </span><span id="__span-21-19"><a id="__codelineno-21-19" name="__codelineno-21-19" href="#__codelineno-21-19"></a><span class="p">}</span>
-</span></code></pre></div></p>
-<p><strong>Key points:</strong>
-- Uses <code>@ApplicationContext</code> qualifier for Context
-- Uses <code>@IoDispatcher</code> qualifier for CoroutineDispatcher
-- Creates DataStore with custom scope on IO dispatcher</p>
+</span></code></pre></div>
+<p><strong>Key points:</strong></p>
+<ul>
+<li>Uses <code>@ApplicationContext</code> qualifier for Context</li>
+<li>Uses <code>@IoDispatcher</code> qualifier for CoroutineDispatcher</li>
+<li>Creates DataStore with custom scope on IO dispatcher</li>
+</ul>
 <h3 id="pattern-3-android-system-service">Pattern 3: Android System Service</h3>
-<p><strong>Real Example from <code>firebase/auth/di/CredentialManagerModule.kt</code>:</strong>
+<p><strong>Real Example from <code>firebase/auth/di/CredentialManagerModule.kt</code>:</strong></p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="nd">@Module</span>
 </span><span id="__span-22-2"><a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="nd">@InstallIn</span><span class="p">(</span><span class="n">SingletonComponent</span><span class="o">::</span><span class="n">class</span><span class="p">)</span>
 </span><span id="__span-22-3"><a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a><span class="kd">object</span><span class="w"> </span><span class="nc">CredentialManagerModule</span><span class="w"> </span><span class="p">{</span>
@@ -3184,9 +3225,9 @@
 </span><span id="__span-22-8"><a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">CredentialManager</span><span class="p">.</span><span class="na">create</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
 </span><span id="__span-22-9"><a id="__codelineno-22-9" name="__codelineno-22-9" href="#__codelineno-22-9"></a><span class="w">    </span><span class="p">}</span>
 </span><span id="__span-22-10"><a id="__codelineno-22-10" name="__codelineno-22-10" href="#__codelineno-22-10"></a><span class="p">}</span>
-</span></code></pre></div></p>
+</span></code></pre></div>
 <h3 id="pattern-4-third-party-library-with-builder">Pattern 4: Third-Party Library with Builder</h3>
-<p><strong>Real Example from Retrofit setup:</strong>
+<p><strong>Real Example from Retrofit setup:</strong></p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="nd">@Module</span><span class="p">(</span><span class="n">includes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[</span><span class="n">OkHttpClientModule</span><span class="o">::</span><span class="n">class</span><span class="o">]</span><span class="p">)</span>
 </span><span id="__span-23-2"><a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a><span class="nd">@InstallIn</span><span class="p">(</span><span class="n">SingletonComponent</span><span class="o">::</span><span class="n">class</span><span class="p">)</span>
 </span><span id="__span-23-3"><a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a><span class="kd">object</span><span class="w"> </span><span class="nc">RetrofitModule</span><span class="w"> </span><span class="p">{</span>
@@ -3204,10 +3245,10 @@
 </span><span id="__span-23-15"><a id="__codelineno-23-15" name="__codelineno-23-15" href="#__codelineno-23-15"></a><span class="w">            </span><span class="p">.</span><span class="na">build</span><span class="p">()</span>
 </span><span id="__span-23-16"><a id="__codelineno-23-16" name="__codelineno-23-16" href="#__codelineno-23-16"></a><span class="w">    </span><span class="p">}</span>
 </span><span id="__span-23-17"><a id="__codelineno-23-17" name="__codelineno-23-17" href="#__codelineno-23-17"></a><span class="p">}</span>
-</span></code></pre></div></p>
+</span></code></pre></div>
 <h2 id="convention-plugin-pattern">Convention Plugin Pattern</h2>
 <p>This template uses a <strong>Gradle Convention Plugin</strong> to simplify Hilt setup across modules.</p>
-<p><strong>Convention Plugin (<code>build-logic/convention/src/main/kotlin/DaggerHiltConventionPlugin.kt</code>):</strong>
+<p><strong>Convention Plugin (<code>build-logic/convention/src/main/kotlin/DaggerHiltConventionPlugin.kt</code>):</strong></p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="kd">class</span><span class="w"> </span><span class="nc">DaggerHiltConventionPlugin</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">Plugin</span><span class="o">&lt;</span><span class="n">Project</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-24-2"><a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a><span class="w">    </span><span class="kd">override</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="nf">apply</span><span class="p">(</span><span class="n">target</span><span class="p">:</span><span class="w"> </span><span class="n">Project</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-24-3"><a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a><span class="w">        </span><span class="n">with</span><span class="p">(</span><span class="n">target</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
@@ -3225,23 +3266,25 @@
 </span><span id="__span-24-15"><a id="__codelineno-24-15" name="__codelineno-24-15" href="#__codelineno-24-15"></a><span class="w">        </span><span class="p">}</span>
 </span><span id="__span-24-16"><a id="__codelineno-24-16" name="__codelineno-24-16" href="#__codelineno-24-16"></a><span class="w">    </span><span class="p">}</span>
 </span><span id="__span-24-17"><a id="__codelineno-24-17" name="__codelineno-24-17" href="#__codelineno-24-17"></a><span class="p">}</span>
-</span></code></pre></div></p>
-<p><strong>Usage in <code>feature/home/build.gradle.kts</code>:</strong>
+</span></code></pre></div>
+<p><strong>Usage in <code>feature/home/build.gradle.kts</code>:</strong></p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="n">plugins</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-25-2"><a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a><span class="w">    </span><span class="n">alias</span><span class="p">(</span><span class="n">libs</span><span class="p">.</span><span class="na">plugins</span><span class="p">.</span><span class="na">jetpack</span><span class="p">.</span><span class="na">ui</span><span class="p">.</span><span class="na">library</span><span class="p">)</span>
 </span><span id="__span-25-3"><a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a><span class="w">    </span><span class="n">alias</span><span class="p">(</span><span class="n">libs</span><span class="p">.</span><span class="na">plugins</span><span class="p">.</span><span class="na">jetpack</span><span class="p">.</span><span class="na">dagger</span><span class="p">.</span><span class="na">hilt</span><span class="p">)</span><span class="w"> </span><span class="c1">// One line to add Hilt</span>
 </span><span id="__span-25-4"><a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a><span class="w">    </span><span class="n">alias</span><span class="p">(</span><span class="n">libs</span><span class="p">.</span><span class="na">plugins</span><span class="p">.</span><span class="na">jetpack</span><span class="p">.</span><span class="na">dokka</span><span class="p">)</span>
 </span><span id="__span-25-5"><a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a><span class="p">}</span>
-</span></code></pre></div></p>
-<p><strong>Benefits:</strong>
-- Consistent Hilt setup across all modules
-- Single source of truth for Hilt configuration
-- Easy to update Hilt version across the entire project
-- Reduces boilerplate in build files</p>
+</span></code></pre></div>
+<p><strong>Benefits:</strong></p>
+<ul>
+<li>Consistent Hilt setup across all modules</li>
+<li>Single source of truth for Hilt configuration</li>
+<li>Easy to update Hilt version across the entire project</li>
+<li>Reduces boilerplate in build files</li>
+</ul>
 <h2 id="testing-with-hilt">Testing with Hilt</h2>
 <h3 id="unit-testing-repositories-and-viewmodels">Unit Testing Repositories and ViewModels</h3>
 <p>For unit tests, you can use test doubles (fakes or mocks) instead of real implementations.</p>
-<p><strong>Example (Not in codebase, but standard pattern):</strong>
+<p><strong>Example (Not in codebase, but standard pattern):</strong></p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="kd">class</span><span class="w"> </span><span class="nc">AuthRepositoryTest</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-26-2"><a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>
 </span><span id="__span-26-3"><a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">lateinit</span><span class="w"> </span><span class="kd">var</span><span class="w"> </span><span class="nv">repository</span><span class="p">:</span><span class="w"> </span><span class="n">AuthRepository</span>
@@ -3261,14 +3304,16 @@
 </span><span id="__span-26-17"><a id="__codelineno-26-17" name="__codelineno-26-17" href="#__codelineno-26-17"></a><span class="w">        </span><span class="c1">// Test implementation</span>
 </span><span id="__span-26-18"><a id="__codelineno-26-18" name="__codelineno-26-18" href="#__codelineno-26-18"></a><span class="w">    </span><span class="p">}</span>
 </span><span id="__span-26-19"><a id="__codelineno-26-19" name="__codelineno-26-19" href="#__codelineno-26-19"></a><span class="p">}</span>
-</span></code></pre></div></p>
-<p><strong>Key points:</strong>
-- No Hilt in unit tests
-- Use constructor injection (makes testing easier)
-- Inject fake/mock implementations manually</p>
+</span></code></pre></div>
+<p><strong>Key points:</strong></p>
+<ul>
+<li>No Hilt in unit tests</li>
+<li>Use constructor injection (makes testing easier)</li>
+<li>Inject fake/mock implementations manually</li>
+</ul>
 <h3 id="integration-testing-with-hilt">Integration Testing with Hilt</h3>
 <p>For Android instrumentation tests, use Hilt's testing library.</p>
-<p><strong>Example (Not in codebase, but standard pattern):</strong>
+<p><strong>Example (Not in codebase, but standard pattern):</strong></p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a><span class="nd">@HiltAndroidTest</span>
 </span><span id="__span-27-2"><a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a><span class="nd">@UninstallModules</span><span class="p">(</span><span class="n">RepositoryModule</span><span class="o">::</span><span class="n">class</span><span class="p">)</span>
 </span><span id="__span-27-3"><a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a><span class="kd">class</span><span class="w"> </span><span class="nc">FeatureIntegrationTest</span><span class="w"> </span><span class="p">{</span>
@@ -3285,32 +3330,36 @@
 </span><span id="__span-27-14"><a id="__codelineno-27-14" name="__codelineno-27-14" href="#__codelineno-27-14"></a><span class="w">        </span><span class="c1">// Test with fake repository</span>
 </span><span id="__span-27-15"><a id="__codelineno-27-15" name="__codelineno-27-15" href="#__codelineno-27-15"></a><span class="w">    </span><span class="p">}</span>
 </span><span id="__span-27-16"><a id="__codelineno-27-16" name="__codelineno-27-16" href="#__codelineno-27-16"></a><span class="p">}</span>
-</span></code></pre></div></p>
+</span></code></pre></div>
 <h2 id="troubleshooting">Troubleshooting</h2>
 <h3 id="common-issues">Common Issues</h3>
 <h4 id="1-cannot-find-symbol-daggerapplicationcomponent">1. "Cannot find symbol: DaggerApplicationComponent"</h4>
 <p><strong>Cause:</strong> Hilt annotation processor hasn't run yet.</p>
-<p><strong>Solution:</strong>
-- Build the project: <code>./gradlew build</code>
-- Clean and rebuild: <code>./gradlew clean build</code>
-- Ensure <code>@HiltAndroidApp</code> is on your Application class</p>
+<p><strong>Solution:</strong></p>
+<ul>
+<li>Build the project: <code>./gradlew build</code></li>
+<li>Clean and rebuild: <code>./gradlew clean build</code></li>
+<li>Ensure <code>@HiltAndroidApp</code> is on your Application class</li>
+</ul>
 <h4 id="2-missing-binding-for-type">2. "Missing binding for [Type]"</h4>
 <p><strong>Cause:</strong> No Hilt module provides this type.</p>
-<p><strong>Solution:</strong>
-- Create a module with <code>@Provides</code> or <code>@Binds</code> for the type
-- If using <code>@Binds</code>, ensure the implementation has <code>@Inject constructor</code>
-- Check that the module is installed in the correct component (<code>@InstallIn</code>)</p>
-<p><strong>Example:</strong>
+<p><strong>Solution:</strong></p>
+<ul>
+<li>Create a module with <code>@Provides</code> or <code>@Binds</code> for the type</li>
+<li>If using <code>@Binds</code>, ensure the implementation has <code>@Inject constructor</code></li>
+<li>Check that the module is installed in the correct component (<code>@InstallIn</code>)</li>
+</ul>
+<p><strong>Example:</strong></p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-28-1"><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a><span class="c1">// Problem: AuthRepository not bound</span>
 </span><span id="__span-28-2"><a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a><span class="nd">@Binds</span>
 </span><span id="__span-28-3"><a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a><span class="nd">@Singleton</span>
 </span><span id="__span-28-4"><a id="__codelineno-28-4" name="__codelineno-28-4" href="#__codelineno-28-4"></a><span class="kd">internal</span><span class="w"> </span><span class="kd">abstract</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="nf">bindAuthRepository</span><span class="p">(</span>
 </span><span id="__span-28-5"><a id="__codelineno-28-5" name="__codelineno-28-5" href="#__codelineno-28-5"></a><span class="w">    </span><span class="n">authRepositoryImpl</span><span class="p">:</span><span class="w"> </span><span class="n">AuthRepositoryImpl</span><span class="p">,</span>
 </span><span id="__span-28-6"><a id="__codelineno-28-6" name="__codelineno-28-6" href="#__codelineno-28-6"></a><span class="p">):</span><span class="w"> </span><span class="n">AuthRepository</span>
-</span></code></pre></div></p>
+</span></code></pre></div>
 <h4 id="3-injected-field-must-not-be-private">3. "Injected field must not be private"</h4>
 <p><strong>Cause:</strong> Field injection doesn't work with private fields.</p>
-<p><strong>Solution:</strong>
+<p><strong>Solution:</strong></p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-29-1"><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a><span class="c1">// ❌ Wrong</span>
 </span><span id="__span-29-2"><a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a><span class="nd">@Inject</span>
 </span><span id="__span-29-3"><a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a><span class="kd">private</span><span class="w"> </span><span class="kd">lateinit</span><span class="w"> </span><span class="kd">var</span><span class="w"> </span><span class="nv">repository</span><span class="p">:</span><span class="w"> </span><span class="n">Repository</span>
@@ -3318,10 +3367,10 @@
 </span><span id="__span-29-5"><a id="__codelineno-29-5" name="__codelineno-29-5" href="#__codelineno-29-5"></a><span class="c1">// ✅ Correct</span>
 </span><span id="__span-29-6"><a id="__codelineno-29-6" name="__codelineno-29-6" href="#__codelineno-29-6"></a><span class="nd">@Inject</span>
 </span><span id="__span-29-7"><a id="__codelineno-29-7" name="__codelineno-29-7" href="#__codelineno-29-7"></a><span class="kd">lateinit</span><span class="w"> </span><span class="kd">var</span><span class="w"> </span><span class="nv">repository</span><span class="p">:</span><span class="w"> </span><span class="n">Repository</span>
-</span></code></pre></div></p>
+</span></code></pre></div>
 <h4 id="4-inject-constructor-required-when-using-binds">4. "@Inject constructor required" (when using @Binds)</h4>
 <p><strong>Cause:</strong> <code>@Binds</code> requires the implementation to have <code>@Inject constructor</code>.</p>
-<p><strong>Solution:</strong>
+<p><strong>Solution:</strong></p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-30-1"><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a><span class="c1">// ❌ Wrong</span>
 </span><span id="__span-30-2"><a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a><span class="kd">class</span><span class="w"> </span><span class="nc">AuthRepositoryImpl</span><span class="p">(</span>
 </span><span id="__span-30-3"><a id="__codelineno-30-3" name="__codelineno-30-3" href="#__codelineno-30-3"></a><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="nv">authDataSource</span><span class="p">:</span><span class="w"> </span><span class="n">AuthDataSource</span><span class="p">,</span>
@@ -3331,40 +3380,46 @@
 </span><span id="__span-30-7"><a id="__codelineno-30-7" name="__codelineno-30-7" href="#__codelineno-30-7"></a><span class="kd">class</span><span class="w"> </span><span class="nc">AuthRepositoryImpl</span><span class="w"> </span><span class="nd">@Inject</span><span class="w"> </span><span class="k">constructor</span><span class="p">(</span>
 </span><span id="__span-30-8"><a id="__codelineno-30-8" name="__codelineno-30-8" href="#__codelineno-30-8"></a><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="nv">authDataSource</span><span class="p">:</span><span class="w"> </span><span class="n">AuthDataSource</span><span class="p">,</span>
 </span><span id="__span-30-9"><a id="__codelineno-30-9" name="__codelineno-30-9" href="#__codelineno-30-9"></a><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">AuthRepository</span>
-</span></code></pre></div></p>
+</span></code></pre></div>
 <h4 id="5-scoping-mismatch">5. "Scoping mismatch"</h4>
 <p><strong>Cause:</strong> Dependency has a shorter scope than the class requesting it.</p>
-<p><strong>Example of problem:</strong>
+<p><strong>Example of problem:</strong></p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-31-1"><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a><span class="nd">@Singleton</span>
 </span><span id="__span-31-2"><a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a><span class="kd">class</span><span class="w"> </span><span class="nc">Repository</span><span class="w"> </span><span class="nd">@Inject</span><span class="w"> </span><span class="k">constructor</span><span class="p">(</span>
 </span><span id="__span-31-3"><a id="__codelineno-31-3" name="__codelineno-31-3" href="#__codelineno-31-3"></a><span class="w">    </span><span class="nd">@ActivityScoped</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="nv">activityDep</span><span class="p">:</span><span class="w"> </span><span class="n">ActivityDependency</span><span class="w">  </span><span class="c1">// ❌ Wrong</span>
 </span><span id="__span-31-4"><a id="__codelineno-31-4" name="__codelineno-31-4" href="#__codelineno-31-4"></a><span class="p">)</span>
-</span></code></pre></div></p>
-<p><strong>Solution:</strong> Ensure dependencies have equal or longer scopes:
-- <code>@Singleton</code> can depend on <code>@Singleton</code>
-- <code>@ActivityScoped</code> can depend on <code>@Singleton</code> or <code>@ActivityScoped</code>
-- <code>@ViewModelScoped</code> can depend on <code>@Singleton</code> or <code>@ViewModelScoped</code></p>
+</span></code></pre></div>
+<p><strong>Solution:</strong> Ensure dependencies have equal or longer scopes:</p>
+<ul>
+<li><code>@Singleton</code> can depend on <code>@Singleton</code></li>
+<li><code>@ActivityScoped</code> can depend on <code>@Singleton</code> or <code>@ActivityScoped</code></li>
+<li><code>@ViewModelScoped</code> can depend on <code>@Singleton</code> or <code>@ViewModelScoped</code></li>
+</ul>
 <h4 id="6-ksp-not-generating-code">6. KSP not generating code</h4>
 <p><strong>Cause:</strong> KSP configuration issue or cache corruption.</p>
-<p><strong>Solution:</strong>
-- Ensure convention plugin applies KSP: <code>apply("com.google.devtools.ksp")</code>
-- Invalidate caches and restart Android Studio
-- Clean build directory: <code>./gradlew clean</code>
-- Check KSP version compatibility with Kotlin version</p>
+<p><strong>Solution:</strong></p>
+<ul>
+<li>Ensure convention plugin applies KSP: <code>apply("com.google.devtools.ksp")</code></li>
+<li>Invalidate caches and restart Android Studio</li>
+<li>Clean build directory: <code>./gradlew clean</code></li>
+<li>Check KSP version compatibility with Kotlin version</li>
+</ul>
 <h4 id="7-circular-dependency-error">7. Circular dependency error</h4>
 <p><strong>Cause:</strong> Two classes depend on each other.</p>
-<p><strong>Example:</strong>
+<p><strong>Example:</strong></p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-32-1"><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a><span class="kd">class</span><span class="w"> </span><span class="nc">A</span><span class="w"> </span><span class="nd">@Inject</span><span class="w"> </span><span class="k">constructor</span><span class="p">(</span><span class="kd">val</span><span class="w"> </span><span class="nv">b</span><span class="p">:</span><span class="w"> </span><span class="n">B</span><span class="p">)</span>
 </span><span id="__span-32-2"><a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a><span class="kd">class</span><span class="w"> </span><span class="nc">B</span><span class="w"> </span><span class="nd">@Inject</span><span class="w"> </span><span class="k">constructor</span><span class="p">(</span><span class="kd">val</span><span class="w"> </span><span class="nv">a</span><span class="p">:</span><span class="w"> </span><span class="n">A</span><span class="p">)</span><span class="w">  </span><span class="c1">// Circular!</span>
-</span></code></pre></div></p>
-<p><strong>Solutions:</strong>
-- Use <code>Lazy&lt;T&gt;</code> for one dependency
-- Use <code>Provider&lt;T&gt;</code> for one dependency
-- Refactor to break the cycle (extract common logic)</p>
-<p><strong>Example fix:</strong>
+</span></code></pre></div>
+<p><strong>Solutions:</strong></p>
+<ul>
+<li>Use <code>Lazy&lt;T&gt;</code> for one dependency</li>
+<li>Use <code>Provider&lt;T&gt;</code> for one dependency</li>
+<li>Refactor to break the cycle (extract common logic)</li>
+</ul>
+<p><strong>Example fix:</strong></p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-33-1"><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a><span class="kd">class</span><span class="w"> </span><span class="nc">A</span><span class="w"> </span><span class="nd">@Inject</span><span class="w"> </span><span class="k">constructor</span><span class="p">(</span><span class="kd">val</span><span class="w"> </span><span class="nv">b</span><span class="p">:</span><span class="w"> </span><span class="n">Lazy</span><span class="o">&lt;</span><span class="n">B</span><span class="o">&gt;</span><span class="p">)</span><span class="w">  </span><span class="c1">// Break cycle with Lazy</span>
 </span><span id="__span-33-2"><a id="__codelineno-33-2" name="__codelineno-33-2" href="#__codelineno-33-2"></a><span class="kd">class</span><span class="w"> </span><span class="nc">B</span><span class="w"> </span><span class="nd">@Inject</span><span class="w"> </span><span class="k">constructor</span><span class="p">(</span><span class="kd">val</span><span class="w"> </span><span class="nv">a</span><span class="p">:</span><span class="w"> </span><span class="n">A</span><span class="p">)</span>
-</span></code></pre></div></p>
+</span></code></pre></div>
 <h2 id="best-practices">Best Practices</h2>
 <h3 id="dos">Do's</h3>
 <ol>
@@ -3395,11 +3450,11 @@
 </li>
 <li>
 <p><strong>Organize modules by layer</strong> (following the existing pattern)</p>
-</li>
+<ul>
 <li><code>core/*/di/</code> for core infrastructure</li>
 <li><code>data/di/</code> for repositories</li>
-<li>
-<p><code>firebase/*/di/</code> for Firebase integrations</p>
+<li><code>firebase/*/di/</code> for Firebase integrations</li>
+</ul>
 </li>
 <li>
 <p><strong>Use <code>internal</code> for implementation bindings</strong>
@@ -3470,13 +3525,16 @@
 </ol>
 <h2 id="advanced-topics">Advanced Topics</h2>
 <h3 id="custom-components-not-used-in-this-template">Custom Components (Not Used in This Template)</h3>
-<p>Hilt allows creating custom components for specific lifecycles. This template doesn't use custom components, but they can be useful for:
-- Fragment-specific dependencies
-- Service-specific dependencies
-- Custom lifecycle scopes</p>
+<p>Hilt allows creating custom components for specific lifecycles. This template doesn't use custom
+components, but they can be useful for:</p>
+<ul>
+<li>Fragment-specific dependencies</li>
+<li>Service-specific dependencies</li>
+<li>Custom lifecycle scopes</li>
+</ul>
 <h3 id="entry-points">Entry Points</h3>
 <p>If you need to inject dependencies into a class that Hilt doesn't support, use <code>@EntryPoint</code>.</p>
-<p><strong>Example (not in codebase):</strong>
+<p><strong>Example (not in codebase):</strong></p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-43-1"><a id="__codelineno-43-1" name="__codelineno-43-1" href="#__codelineno-43-1"></a><span class="nd">@EntryPoint</span>
 </span><span id="__span-43-2"><a id="__codelineno-43-2" name="__codelineno-43-2" href="#__codelineno-43-2"></a><span class="nd">@InstallIn</span><span class="p">(</span><span class="n">SingletonComponent</span><span class="o">::</span><span class="n">class</span><span class="p">)</span>
 </span><span id="__span-43-3"><a id="__codelineno-43-3" name="__codelineno-43-3" href="#__codelineno-43-3"></a><span class="kd">interface</span><span class="w"> </span><span class="nc">MyEntryPoint</span><span class="w"> </span><span class="p">{</span>
@@ -3489,10 +3547,10 @@
 </span><span id="__span-43-10"><a id="__codelineno-43-10" name="__codelineno-43-10" href="#__codelineno-43-10"></a><span class="w">    </span><span class="n">MyEntryPoint</span><span class="o">::</span><span class="n">class</span><span class="p">.</span><span class="na">java</span>
 </span><span id="__span-43-11"><a id="__codelineno-43-11" name="__codelineno-43-11" href="#__codelineno-43-11"></a><span class="p">)</span>
 </span><span id="__span-43-12"><a id="__codelineno-43-12" name="__codelineno-43-12" href="#__codelineno-43-12"></a><span class="kd">val</span><span class="w"> </span><span class="nv">repository</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">entryPoint</span><span class="p">.</span><span class="na">repository</span><span class="p">()</span>
-</span></code></pre></div></p>
+</span></code></pre></div>
 <h3 id="multibindings">Multibindings</h3>
 <p>For providing multiple implementations of the same interface (e.g., list of plugins, interceptors).</p>
-<p><strong>Example (not in codebase):</strong>
+<p><strong>Example (not in codebase):</strong></p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-44-1"><a id="__codelineno-44-1" name="__codelineno-44-1" href="#__codelineno-44-1"></a><span class="nd">@Module</span>
 </span><span id="__span-44-2"><a id="__codelineno-44-2" name="__codelineno-44-2" href="#__codelineno-44-2"></a><span class="nd">@InstallIn</span><span class="p">(</span><span class="n">SingletonComponent</span><span class="o">::</span><span class="n">class</span><span class="p">)</span>
 </span><span id="__span-44-3"><a id="__codelineno-44-3" name="__codelineno-44-3" href="#__codelineno-44-3"></a><span class="kd">abstract</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nc">InterceptorModule</span><span class="w"> </span><span class="p">{</span>
@@ -3510,7 +3568,7 @@
 </span><span id="__span-44-15"><a id="__codelineno-44-15" name="__codelineno-44-15" href="#__codelineno-44-15"></a><span class="kd">class</span><span class="w"> </span><span class="nc">Client</span><span class="w"> </span><span class="nd">@Inject</span><span class="w"> </span><span class="k">constructor</span><span class="p">(</span>
 </span><span id="__span-44-16"><a id="__codelineno-44-16" name="__codelineno-44-16" href="#__codelineno-44-16"></a><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="nv">interceptors</span><span class="p">:</span><span class="w"> </span><span class="n">Set</span><span class="o">&lt;</span><span class="nd">@JvmSuppressWildcards</span><span class="w"> </span><span class="n">Interceptor</span><span class="o">&gt;</span>
 </span><span id="__span-44-17"><a id="__codelineno-44-17" name="__codelineno-44-17" href="#__codelineno-44-17"></a><span class="p">)</span>
-</span></code></pre></div></p>
+</span></code></pre></div>
 <h2 id="migration-guide">Migration Guide</h2>
 <p>If you're adding Hilt to an existing project or module:</p>
 <h3 id="step-1-add-convention-plugin">Step 1: Add Convention Plugin</h3>
@@ -3558,7 +3616,8 @@
 <li><strong>Qualifier annotations</strong> - Used for dispatchers and multiple instances</li>
 <li><strong>Compile-time safety</strong> - Hilt validates dependency graph at build time</li>
 </ol>
-<p>By following these patterns, you'll have a maintainable, testable, and efficient DI setup that scales with your project.</p>
+<p>By following these patterns, you'll have a maintainable, testable, and efficient DI setup that
+scales with your project.</p>
 
 
 

@@ -2086,7 +2086,8 @@
 <h1 id="performance-optimizations">Performance Optimizations</h1>
 <p>This guide covers various performance optimization features available in the project.</p>
 <h2 id="compose-compiler-metrics">Compose Compiler Metrics</h2>
-<p>The project includes built-in support for Compose compiler metrics to help optimize your composables.</p>
+<p>The project includes built-in support for Compose compiler metrics to help optimize your
+composables.</p>
 <p>Check the <code>gradle.properties</code> file to ensure the following:</p>
 <div class="language-properties highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="na">enableComposeCompilerMetrics</span><span class="o">=</span><span class="s">true</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="na">enableComposeCompilerReports</span><span class="o">=</span><span class="s">true</span>
@@ -2130,10 +2131,13 @@
 </span></code></pre></div>
 <div class="admonition tip">
 <p class="admonition-title">Tip</p>
-<p>Use <code>@Immutable</code> for classes that never change and <code>@Stable</code> for classes whose properties may change but maintain identity.</p>
+<p>Use <code>@Immutable</code> for classes that never change and <code>@Stable</code> for classes whose properties may
+change but maintain identity.</p>
 </div>
 <h2 id="lazylist-optimization">LazyList Optimization</h2>
-<p>The project uses <code>LazyVerticalStaggeredGrid</code> in the home screen (see <code>feature/home/src/main/kotlin/dev/atick/feature/home/ui/home/HomeScreen.kt:104</code>). Here are best practices for LazyList components.</p>
+<p>The project uses <code>LazyVerticalStaggeredGrid</code> in the home screen (see
+<code>feature/home/src/main/kotlin/dev/atick/feature/home/ui/home/HomeScreen.kt:104</code>). Here are best
+practices for LazyList components.</p>
 <h3 id="use-stable-keys">Use Stable Keys</h3>
 <p>Always provide stable, unique keys for list items:</p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1">// ✅ Good: Stable unique keys (as used in HomeScreen.kt)</span>
@@ -2165,7 +2169,8 @@
 </span></code></pre></div>
 <div class="admonition tip">
 <p class="admonition-title">Tip</p>
-<p>Keys enable Compose to track items across recompositions, reducing unnecessary recompositions and preserving item state.</p>
+<p>Keys enable Compose to track items across recompositions, reducing unnecessary recompositions and
+preserving item state.</p>
 </div>
 <h3 id="content-type-for-mixed-lists">Content Type for Mixed Lists</h3>
 <p>For lists with different item types, use <code>contentType</code> to optimize composition:</p>
@@ -2202,7 +2207,9 @@
 </span><span id="__span-5-15"><a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="p">}</span>
 </span></code></pre></div>
 <h2 id="image-loading-best-practices">Image Loading Best Practices</h2>
-<p>This template uses Coil for image loading (see <code>core/network/src/main/kotlin/dev/atick/core/network/di/coil/CoilModule.kt</code> and <code>core/ui/src/main/kotlin/dev/atick/core/ui/components/DynamicAsyncImage.kt</code>).</p>
+<p>This template uses Coil for image loading (see
+<code>core/network/src/main/kotlin/dev/atick/core/network/di/coil/CoilModule.kt</code> and
+<code>core/ui/src/main/kotlin/dev/atick/core/ui/components/DynamicAsyncImage.kt</code>).</p>
 <h3 id="coil-configuration">Coil Configuration</h3>
 <p>The project provides an <code>ImageLoader</code> through Hilt in <code>CoilModule.kt</code>:</p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nd">@Provides</span>
@@ -2211,17 +2218,17 @@
 </span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">    </span><span class="n">okHttpCallFactory</span><span class="p">:</span><span class="w"> </span><span class="n">Call</span><span class="p">.</span><span class="na">Factory</span><span class="p">,</span>
 </span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">    </span><span class="nd">@ApplicationContext</span><span class="w"> </span><span class="n">application</span><span class="p">:</span><span class="w"> </span><span class="n">Context</span><span class="p">,</span>
 </span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="p">):</span><span class="w"> </span><span class="n">ImageLoader</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ImageLoader</span><span class="p">.</span><span class="na">Builder</span><span class="p">(</span><span class="n">application</span><span class="p">)</span>
-</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">    </span><span class="p">.</span><span class="na">callFactory</span><span class="p">(</span><span class="n">okHttpCallFactory</span><span class="p">)</span>
-</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">    </span><span class="p">.</span><span class="na">components</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-6-9"><a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">        </span><span class="n">add</span><span class="p">(</span><span class="n">SvgDecoder</span><span class="p">.</span><span class="na">Factory</span><span class="p">())</span><span class="w">  </span><span class="c1">// SVG support</span>
-</span><span id="__span-6-10"><a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="w">    </span><span class="p">}</span>
-</span><span id="__span-6-11"><a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="w">    </span><span class="p">.</span><span class="na">respectCacheHeaders</span><span class="p">(</span><span class="kc">false</span><span class="p">)</span><span class="w">  </span><span class="c1">// Assumes versioned URLs</span>
-</span><span id="__span-6-12"><a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="w">    </span><span class="p">.</span><span class="na">apply</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-6-13"><a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">BuildConfig</span><span class="p">.</span><span class="na">DEBUG</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-6-14"><a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="w">            </span><span class="n">logger</span><span class="p">(</span><span class="n">DebugLogger</span><span class="p">())</span>
-</span><span id="__span-6-15"><a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="w">        </span><span class="p">}</span>
-</span><span id="__span-6-16"><a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="w">    </span><span class="p">}</span>
-</span><span id="__span-6-17"><a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="w">    </span><span class="p">.</span><span class="na">build</span><span class="p">()</span>
+</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">        </span><span class="p">.</span><span class="na">callFactory</span><span class="p">(</span><span class="n">okHttpCallFactory</span><span class="p">)</span>
+</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">        </span><span class="p">.</span><span class="na">components</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-6-9"><a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">            </span><span class="n">add</span><span class="p">(</span><span class="n">SvgDecoder</span><span class="p">.</span><span class="na">Factory</span><span class="p">())</span><span class="w">  </span><span class="c1">// SVG support</span>
+</span><span id="__span-6-10"><a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="w">        </span><span class="p">}</span>
+</span><span id="__span-6-11"><a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="w">        </span><span class="p">.</span><span class="na">respectCacheHeaders</span><span class="p">(</span><span class="kc">false</span><span class="p">)</span><span class="w">  </span><span class="c1">// Assumes versioned URLs</span>
+</span><span id="__span-6-12"><a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="w">        </span><span class="p">.</span><span class="na">apply</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-6-13"><a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">BuildConfig</span><span class="p">.</span><span class="na">DEBUG</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-6-14"><a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="w">                </span><span class="n">logger</span><span class="p">(</span><span class="n">DebugLogger</span><span class="p">())</span>
+</span><span id="__span-6-15"><a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="w">            </span><span class="p">}</span>
+</span><span id="__span-6-16"><a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="w">        </span><span class="p">}</span>
+</span><span id="__span-6-17"><a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="w">        </span><span class="p">.</span><span class="na">build</span><span class="p">()</span>
 </span></code></pre></div>
 <p>The <code>App</code> class implements <code>ImageLoaderFactory</code> to provide this loader:</p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nd">@HiltAndroidApp</span>
@@ -2314,7 +2321,8 @@
 </span><span id="__span-12-15"><a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a><span class="p">}</span>
 </span></code></pre></div>
 <h3 id="workmanager-and-hilt">WorkManager and Hilt</h3>
-<p>When using WorkManager with Hilt, use <code>HiltWorker</code> (as implemented in <code>sync/src/main/kotlin/dev/atick/sync/worker/SyncWorker.kt</code>):</p>
+<p>When using WorkManager with Hilt, use <code>HiltWorker</code> (as implemented in
+<code>sync/src/main/kotlin/dev/atick/sync/worker/SyncWorker.kt</code>):</p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="nd">@HiltWorker</span>
 </span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="kd">class</span><span class="w"> </span><span class="nc">SyncWorker</span><span class="w"> </span><span class="nd">@AssistedInject</span><span class="w"> </span><span class="k">constructor</span><span class="p">(</span>
 </span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="w">    </span><span class="nd">@Assisted</span><span class="w"> </span><span class="n">context</span><span class="p">:</span><span class="w"> </span><span class="n">Context</span><span class="p">,</span>
@@ -2333,7 +2341,9 @@
 </span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>- `core/network/model/` - Data models kept unobfuscated
 </span></code></pre></div>
 <h3 id="proguard-and-consumer-rules">ProGuard and Consumer Rules</h3>
-<p>If your app works in <code>debug</code> build but not in <code>release</code> build that typically indicates obfuscation issues. In that case you need to add or edit the proguard rules. These can be found in <code>&lt;module&gt;/proguard-rules.pro</code> or <code>&lt;module&gt;/consumer-rules.pro</code> files. For example:</p>
+<p>If your app works in <code>debug</code> build but not in <code>release</code> build that typically indicates obfuscation
+issues. In that case you need to add or edit the proguard rules. These can be found in
+<code>&lt;module&gt;/proguard-rules.pro</code> or <code>&lt;module&gt;/consumer-rules.pro</code> files. For example:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a># Keep all models
 </span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>-keep class **.model.** { *; }
 </span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>
@@ -2343,7 +2353,8 @@
 </span></code></pre></div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>The project's model organization makes it easy to keep data models unobfuscated while allowing safe obfuscation of implementation classes.</p>
+<p>The project's model organization makes it easy to keep data models unobfuscated while allowing
+safe obfuscation of implementation classes.</p>
 </div>
 <h2 id="startup-optimization">Startup Optimization</h2>
 <p>Reducing app startup time improves user experience and metrics.</p>
@@ -2363,7 +2374,8 @@
 </span><span id="__span-16-12"><a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a><span class="p">}</span>
 </span></code></pre></div>
 <h3 id="optimize-dependency-injection">Optimize Dependency Injection</h3>
-<p>Hilt creates the dependency graph at startup. Use <code>@Binds</code> instead of <code>@Provides</code> when possible (as used throughout this template):</p>
+<p>Hilt creates the dependency graph at startup. Use <code>@Binds</code> instead of <code>@Provides</code> when possible (as
+used throughout this template):</p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1">// ✅ Good: @Binds is more efficient (used in data/src/main/kotlin/dev/atick/data/di/RepositoryModule.kt)</span>
 </span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="nd">@Module</span>
 </span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="nd">@InstallIn</span><span class="p">(</span><span class="n">SingletonComponent</span><span class="o">::</span><span class="n">class</span><span class="p">)</span>
@@ -2404,10 +2416,12 @@
 <h3 id="multi-module-build-optimization">Multi-Module Build Optimization</h3>
 <p>Take advantage of the project's modular structure:</p>
 <ol>
-<li><strong>Make Module</strong>: Instead of rebuilding the entire project, use Make Module:</li>
-<li>Android Studio: Right-click module → Make Module</li>
 <li>
-<p>Command Line: <code>./gradlew :module:name:assembleDebug</code></p>
+<p><strong>Make Module</strong>: Instead of rebuilding the entire project, use Make Module:</p>
+<ul>
+<li>Android Studio: Right-click module → Make Module</li>
+<li>Command Line: <code>./gradlew :module:name:assembleDebug</code></li>
+</ul>
 </li>
 <li>
 <p><strong>Parallel Execution</strong>: Enabled in <code>gradle.properties</code>:
@@ -2420,7 +2434,8 @@
 </ol>
 <div class="admonition tip">
 <p class="admonition-title">Tip</p>
-<p>When working on a feature, use Make Module on just that feature's module to significantly reduce build time.</p>
+<p>When working on a feature, use Make Module on just that feature's module to significantly reduce
+build time.</p>
 </div>
 <h2 id="baseline-profiles">Baseline Profiles</h2>
 <div class="admonition note">
@@ -2442,7 +2457,9 @@
 <li>Ahead-of-time compilation for key paths</li>
 </ul>
 <h2 id="firebase-performance-monitoring">Firebase Performance Monitoring</h2>
-<p>This template includes Firebase Performance Monitoring setup through the Firebase convention plugin (see <code>build-logic/convention/src/main/kotlin/dev/atick/convention/firebase/FirebaseConventionPlugin.kt</code>):</p>
+<p>This template includes Firebase Performance Monitoring setup through the Firebase convention
+plugin (see
+<code>build-logic/convention/src/main/kotlin/dev/atick/convention/firebase/FirebaseConventionPlugin.kt</code>):</p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="kd">class</span><span class="w"> </span><span class="nc">FirebaseConventionPlugin</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">Plugin</span><span class="o">&lt;</span><span class="n">Project</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="w">    </span><span class="kd">override</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="nf">apply</span><span class="p">(</span><span class="n">target</span><span class="p">:</span><span class="w"> </span><span class="n">Project</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-21-3"><a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a><span class="w">        </span><span class="n">with</span><span class="p">(</span><span class="n">target</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
@@ -2479,30 +2496,35 @@
 <h3 id="android-studio-profilers">Android Studio Profilers</h3>
 <p>Use Android Studio's built-in profilers:</p>
 <ol>
-<li><strong>CPU Profiler</strong>: Identify expensive operations</li>
+<li>
+<p><strong>CPU Profiler</strong>: Identify expensive operations</p>
+<ul>
 <li>Run → Profile 'app'</li>
 <li>Record CPU activity during critical operations</li>
-<li>
-<p>Look for long-running methods</p>
+<li>Look for long-running methods</li>
+</ul>
 </li>
 <li>
 <p><strong>Memory Profiler</strong>: Detect memory issues</p>
-</li>
+<ul>
 <li>Monitor memory allocation during scrolling</li>
 <li>Take heap dumps to find leaked objects</li>
-<li>
-<p>Check for unnecessary object creation</p>
+<li>Check for unnecessary object creation</li>
+</ul>
 </li>
 <li>
 <p><strong>Layout Inspector</strong>: Analyze compose hierarchy</p>
-</li>
+<ul>
 <li>Tools → Layout Inspector</li>
 <li>Check recomposition counts</li>
 <li>Identify unnecessary recompositions</li>
+</ul>
+</li>
 </ol>
 <div class="admonition warning">
 <p class="admonition-title">Important</p>
-<p>Always profile your app's performance using Android Studio's CPU Profiler and Layout Inspector before and after optimizations to ensure they're effective.</p>
+<p>Always profile your app's performance using Android Studio's CPU Profiler and Layout Inspector
+before and after optimizations to ensure they're effective.</p>
 </div>
 <h2 id="further-reading">Further Reading</h2>
 <ul>

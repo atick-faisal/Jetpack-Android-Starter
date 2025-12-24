@@ -3198,9 +3198,12 @@
 
 
 <h1 id="component-usage-guide">Component Usage Guide</h1>
-<p>This guide covers the pre-built UI components available in the <code>core:ui</code> module, their usage patterns, customization options, and best practices.</p>
+<p>This guide covers the pre-built UI components available in the <code>core:ui</code> module, their usage
+patterns, customization options, and best practices.</p>
 <h2 id="overview">Overview</h2>
-<p>The Jetpack Android Starter template provides a curated set of Material 3 components with consistent styling and behavior patterns. These components are located in <code>core/ui/src/main/kotlin/dev/atick/core/ui/components/</code>.</p>
+<p>The Jetpack Android Starter template provides a curated set of Material 3 components with consistent
+styling and behavior patterns. These components are located in
+<code>core/ui/src/main/kotlin/dev/atick/core/ui/components/</code>.</p>
 <h3 id="component-philosophy">Component Philosophy</h3>
 <ol>
 <li><strong>Material 3 Foundation</strong>: All components wrap Material 3 components with opinionated defaults</li>
@@ -3210,15 +3213,19 @@
 <li><strong>Composable</strong>: Flexible content slots for customization</li>
 </ol>
 <h3 id="when-to-use-pre-built-components">When to Use Pre-Built Components</h3>
-<p><strong>Use pre-built components when:</strong>
-- You need standard UI patterns (buttons, text fields, app bars)
-- You want consistent styling across your app
-- You need accessibility features out of the box
-- You want to reduce boilerplate code</p>
-<p><strong>Create custom components when:</strong>
-- You need highly specialized UI behavior
-- Pre-built components don't match your design requirements
-- You need fine-grained control over component internals</p>
+<p><strong>Use pre-built components when:</strong></p>
+<ul>
+<li>You need standard UI patterns (buttons, text fields, app bars)</li>
+<li>You want consistent styling across your app</li>
+<li>You need accessibility features out of the box</li>
+<li>You want to reduce boilerplate code</li>
+</ul>
+<p><strong>Create custom components when:</strong></p>
+<ul>
+<li>You need highly specialized UI behavior</li>
+<li>Pre-built components don't match your design requirements</li>
+<li>You need fine-grained control over component internals</li>
+</ul>
 <h3 id="component-selection-guide">Component Selection Guide</h3>
 <p>Use this flowchart to quickly find the right component for your needs:</p>
 <pre class="mermaid"><code>graph TD
@@ -3228,62 +3235,52 @@
     Input --&gt;|Action| ActionType{Action Type?}
     Input --&gt;|Navigation| NavType{Navigation Type?}
     Input --&gt;|Display| DisplayType{Display Type?}
-
     TextType --&gt;|Regular Text| JetpackTextFiled
     TextType --&gt;|Password| JetpackPasswordFiled
-
-    SelectType --&gt;|Multi-select Filter| JetpackFilterChip
+    SelectType --&gt;|Multi - select Filter| JetpackFilterChip
     SelectType --&gt;|Follow/Unfollow| JetpackTag
     SelectType --&gt;|Toggle State| JetpackIconToggleButton
-    SelectType --&gt;|2-4 Options| JetpackToggleOptions
+    SelectType --&gt;|2 - 4 Options| JetpackToggleOptions
     SelectType --&gt;|Tabs| JetpackTabRow
-
     ActionType --&gt;|Primary| ButtonType{Need Emphasis?}
     ActionType --&gt;|Icon Toggle| JetpackIconToggleButton
     ActionType --&gt;|Primary FAB| FabType{Need Text?}
-
     ButtonType --&gt;|High| JetpackButton
     ButtonType --&gt;|Medium| JetpackOutlinedButton
     ButtonType --&gt;|Low| JetpackTextButton
-
     FabType --&gt;|Yes| JetpackExtendedFab
     FabType --&gt;|No| MaterialFAB[Use Material3 FloatingActionButton]
-
-    NavType --&gt;|App-wide Adaptive| JetpackNavigationSuiteScaffold
+    NavType --&gt;|App - wide Adaptive| JetpackNavigationSuiteScaffold
     NavType --&gt;|Bottom Bar Only| JetpackNavigationBar
     NavType --&gt;|Side Rail Only| JetpackNavigationRail
     NavType --&gt;|Top Bar| AppBarType{Need Action?}
-
     AppBarType --&gt;|Back + Icon| JetpackTopAppBar1[JetpackTopAppBar]
     AppBarType --&gt;|Icon Only| JetpackTopAppBar2[JetpackTopAppBar]
     AppBarType --&gt;|Avatar| JetpackTopAppBarWithAvatar
     AppBarType --&gt;|Text Action| JetpackActionBar
-
     DisplayType --&gt;|Loading| LoadingType{Overlay?}
     DisplayType --&gt;|Image| JetpackDynamicAsyncImage[DynamicAsyncImage]
     DisplayType --&gt;|Divider| DividerWithText
     DisplayType --&gt;|Background| BgType{Gradient?}
-
     LoadingType --&gt;|Yes| JetpackOverlayLoadingWheel
     LoadingType --&gt;|No| JetpackLoadingWheel
-
     BgType --&gt;|Yes| AppGradientBackground
     BgType --&gt;|No| AppBackground
-
     Start --&gt; Gesture{Swipe Gesture?}
     Gesture --&gt;|Swipe to Delete| SwipeToDismiss</code></pre>
 <h2 id="component-reference">Component Reference</h2>
 <h3 id="buttons">Buttons</h3>
-<p>The template provides three button variants: filled, outlined, and text buttons. All support text and icon content.</p>
+<p>The template provides three button variants: filled, outlined, and text buttons. All support text
+and icon content.</p>
 <h4 id="jetpackbutton-filled">JetpackButton (Filled)</h4>
 <p><strong>Purpose</strong>: Primary actions, high emphasis</p>
-<p><strong>Basic Usage</strong>:
+<p><strong>Basic Usage</strong>:</p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">JetpackButton</span><span class="p">(</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">    </span><span class="n">onClick</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="cm">/* action */</span><span class="w"> </span><span class="p">},</span>
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span><span class="n">text</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">Text</span><span class="p">(</span><span class="s">&quot;Continue&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">}</span>
 </span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="p">)</span>
-</span></code></pre></div></p>
-<p><strong>With Leading Icon</strong>:
+</span></code></pre></div>
+<p><strong>With Leading Icon</strong>:</p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">JetpackButton</span><span class="p">(</span>
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">    </span><span class="n">onClick</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="cm">/* action */</span><span class="w"> </span><span class="p">},</span>
 </span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span><span class="n">text</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">Text</span><span class="p">(</span><span class="s">&quot;Sign In&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">},</span>
@@ -3294,8 +3291,8 @@
 </span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">        </span><span class="p">)</span>
 </span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">    </span><span class="p">}</span>
 </span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="p">)</span>
-</span></code></pre></div></p>
-<p><strong>Custom Content</strong>:
+</span></code></pre></div>
+<p><strong>Custom Content</strong>:</p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">JetpackButton</span><span class="p">(</span>
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">    </span><span class="n">onClick</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="cm">/* action */</span><span class="w"> </span><span class="p">},</span>
 </span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span><span class="n">modifier</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Modifier</span><span class="p">.</span><span class="na">fillMaxWidth</span><span class="p">()</span>
@@ -3303,15 +3300,17 @@
 </span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">    </span><span class="n">Text</span><span class="p">(</span><span class="s">&quot;Custom Layout&quot;</span><span class="p">)</span>
 </span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">    </span><span class="n">Icon</span><span class="p">(</span><span class="n">Icons</span><span class="p">.</span><span class="na">Default</span><span class="p">.</span><span class="na">ArrowForward</span><span class="p">,</span><span class="w"> </span><span class="n">contentDescription</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span>
 </span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="p">}</span>
-</span></code></pre></div></p>
-<p><strong>Parameters</strong>:
-- <code>onClick</code>: Callback when button is clicked
-- <code>text</code>: Text label composable (in overload)
-- <code>leadingIcon</code>: Optional icon before text (in overload)
-- <code>content</code>: Custom content slot (in base overload)
-- <code>modifier</code>: Modifier to customize appearance
-- <code>enabled</code>: Boolean to enable/disable button (default: <code>true</code>)
-- <code>contentPadding</code>: Internal padding (default: <code>ButtonDefaults.ContentPadding</code>)</p>
+</span></code></pre></div>
+<p><strong>Parameters</strong>:</p>
+<ul>
+<li><code>onClick</code>: Callback when button is clicked</li>
+<li><code>text</code>: Text label composable (in overload)</li>
+<li><code>leadingIcon</code>: Optional icon before text (in overload)</li>
+<li><code>content</code>: Custom content slot (in base overload)</li>
+<li><code>modifier</code>: Modifier to customize appearance</li>
+<li><code>enabled</code>: Boolean to enable/disable button (default: <code>true</code>)</li>
+<li><code>contentPadding</code>: Internal padding (default: <code>ButtonDefaults.ContentPadding</code>)</li>
+</ul>
 <p><strong>Theming</strong>: Uses <code>MaterialTheme.colorScheme.onBackground</code> for container color</p>
 <h4 id="jetpackoutlinedbutton">JetpackOutlinedButton</h4>
 <p><strong>Purpose</strong>: Secondary actions, medium emphasis</p>
@@ -3321,10 +3320,12 @@
 </span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span><span class="n">text</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">Text</span><span class="p">(</span><span class="s">&quot;Cancel&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">}</span>
 </span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="p">)</span>
 </span></code></pre></div>
-<p><strong>Theming</strong>:
-- Uses <code>MaterialTheme.colorScheme.outline</code> for border
-- Adapts border color when disabled (12% alpha)
-- 1.dp border width</p>
+<p><strong>Theming</strong>:</p>
+<ul>
+<li>Uses <code>MaterialTheme.colorScheme.outline</code> for border</li>
+<li>Adapts border color when disabled (12% alpha)</li>
+<li>1.dp border width</li>
+</ul>
 <h4 id="jetpacktextbutton">JetpackTextButton</h4>
 <p><strong>Purpose</strong>: Tertiary actions, low emphasis</p>
 <p><strong>Usage</strong>: Same API as <code>JetpackButton</code>, but with no background</p>
@@ -3333,7 +3334,7 @@
 </span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span><span class="n">text</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">Text</span><span class="p">(</span><span class="s">&quot;Skip&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">}</span>
 </span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="p">)</span>
 </span></code></pre></div>
-<p><strong>Common Pattern - Button Row</strong>:
+<p><strong>Common Pattern - Button Row</strong>:</p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="n">Row</span><span class="p">(</span>
 </span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">    </span><span class="n">modifier</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Modifier</span><span class="p">.</span><span class="na">fillMaxWidth</span><span class="p">(),</span>
 </span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">    </span><span class="n">horizontalArrangement</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Arrangement</span><span class="p">.</span><span class="na">spacedBy</span><span class="p">(</span><span class="m">8.</span><span class="n">dp</span><span class="p">)</span>
@@ -3349,11 +3350,11 @@
 </span><span id="__span-5-13"><a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="w">        </span><span class="n">modifier</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Modifier</span><span class="p">.</span><span class="na">weight</span><span class="p">(</span><span class="m">1f</span><span class="p">)</span>
 </span><span id="__span-5-14"><a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="w">    </span><span class="p">)</span>
 </span><span id="__span-5-15"><a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="p">}</span>
-</span></code></pre></div></p>
+</span></code></pre></div>
 <h3 id="text-fields">Text Fields</h3>
 <h4 id="jetpacktextfiled">JetpackTextFiled</h4>
 <p><strong>Purpose</strong>: Standard text input with validation support</p>
-<p><strong>Basic Usage</strong>:
+<p><strong>Basic Usage</strong>:</p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="kd">var</span><span class="w"> </span><span class="nv">email</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="n">remember</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">mutableStateOf</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">}</span>
 </span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>
 </span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="n">JetpackTextFiled</span><span class="p">(</span>
@@ -3367,8 +3368,8 @@
 </span><span id="__span-6-11"><a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="w">        </span><span class="p">)</span>
 </span><span id="__span-6-12"><a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="w">    </span><span class="p">}</span>
 </span><span id="__span-6-13"><a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="p">)</span>
-</span></code></pre></div></p>
-<p><strong>With Validation</strong>:
+</span></code></pre></div>
+<p><strong>With Validation</strong>:</p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="kd">val</span><span class="w"> </span><span class="nv">emailData</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="n">viewModel</span><span class="p">.</span><span class="na">emailData</span><span class="p">.</span><span class="na">collectAsStateWithLifecycle</span><span class="p">()</span>
 </span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>
 </span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="n">JetpackTextFiled</span><span class="p">(</span>
@@ -3383,16 +3384,18 @@
 </span><span id="__span-7-12"><a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="w">        </span><span class="n">keyboardType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">KeyboardType</span><span class="p">.</span><span class="na">Email</span>
 </span><span id="__span-7-13"><a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="w">    </span><span class="p">)</span>
 </span><span id="__span-7-14"><a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="p">)</span>
-</span></code></pre></div></p>
-<p><strong>Parameters</strong>:
-- <code>value</code>: Current text value
-- <code>onValueChange</code>: Callback when text changes
-- <code>label</code>: Label composable
-- <code>leadingIcon</code>: Icon before text input
-- <code>trailingIcon</code>: Icon after text input (optional)
-- <code>errorMessage</code>: Error text to display (null for no error)
-- <code>keyboardOptions</code>: Keyboard configuration (default: <code>KeyboardOptions.Default</code>)
-- <code>modifier</code>: Modifier to customize appearance</p>
+</span></code></pre></div>
+<p><strong>Parameters</strong>:</p>
+<ul>
+<li><code>value</code>: Current text value</li>
+<li><code>onValueChange</code>: Callback when text changes</li>
+<li><code>label</code>: Label composable</li>
+<li><code>leadingIcon</code>: Icon before text input</li>
+<li><code>trailingIcon</code>: Icon after text input (optional)</li>
+<li><code>errorMessage</code>: Error text to display (null for no error)</li>
+<li><code>keyboardOptions</code>: Keyboard configuration (default: <code>KeyboardOptions.Default</code>)</li>
+<li><code>modifier</code>: Modifier to customize appearance</li>
+</ul>
 <p><strong>Validation Pattern</strong>:
 The recommended pattern uses <code>TextFiledData</code> from <code>core:ui</code>:</p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1">// In ViewModel</span>
@@ -3414,13 +3417,15 @@ The recommended pattern uses <code>TextFiledData</code> from <code>core:ui</code
 </span><span id="__span-8-17"><a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a><span class="w">    </span><span class="kd">val</span><span class="w"> </span><span class="nv">email</span><span class="p">:</span><span class="w"> </span><span class="n">TextFiledData</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">TextFiledData</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">)</span>
 </span><span id="__span-8-18"><a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a><span class="p">)</span>
 </span></code></pre></div>
-<p><strong>Styling</strong>:
-- 50% rounded corners
-- Red border/color when error is present
-- Animated error message appearance</p>
+<p><strong>Styling</strong>:</p>
+<ul>
+<li>50% rounded corners</li>
+<li>Red border/color when error is present</li>
+<li>Animated error message appearance</li>
+</ul>
 <h4 id="jetpackpasswordfiled">JetpackPasswordFiled</h4>
 <p><strong>Purpose</strong>: Password input with visibility toggle</p>
-<p><strong>Usage</strong>:
+<p><strong>Usage</strong>:</p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="kd">var</span><span class="w"> </span><span class="nv">password</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="n">remember</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">mutableStateOf</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">}</span>
 </span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>
 </span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="n">JetpackPasswordFiled</span><span class="p">(</span>
@@ -3435,13 +3440,15 @@ The recommended pattern uses <code>TextFiledData</code> from <code>core:ui</code
 </span><span id="__span-9-12"><a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="w">    </span><span class="p">},</span>
 </span><span id="__span-9-13"><a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a><span class="w">    </span><span class="n">errorMessage</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">password</span><span class="p">.</span><span class="na">length</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="m">8</span><span class="p">)</span><span class="w"> </span><span class="s">&quot;Too short&quot;</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="kc">null</span>
 </span><span id="__span-9-14"><a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a><span class="p">)</span>
-</span></code></pre></div></p>
-<p><strong>Features</strong>:
-- Automatic visibility toggle button
-- Password masking by default
-- Uses <code>PasswordVisualTransformation</code>
-- Saves visibility state across configuration changes</p>
-<p><strong>Common Pattern - Login Form</strong>:
+</span></code></pre></div>
+<p><strong>Features</strong>:</p>
+<ul>
+<li>Automatic visibility toggle button</li>
+<li>Password masking by default</li>
+<li>Uses <code>PasswordVisualTransformation</code></li>
+<li>Saves visibility state across configuration changes</li>
+</ul>
+<p><strong>Common Pattern - Login Form</strong>:</p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="n">Column</span><span class="p">(</span>
 </span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="w">    </span><span class="n">modifier</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Modifier</span>
 </span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">        </span><span class="p">.</span><span class="na">fillMaxWidth</span><span class="p">()</span>
@@ -3471,11 +3478,11 @@ The recommended pattern uses <code>TextFiledData</code> from <code>core:ui</code
 </span><span id="__span-10-27"><a id="__codelineno-10-27" name="__codelineno-10-27" href="#__codelineno-10-27"></a><span class="w">        </span><span class="n">enabled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">emailData</span><span class="p">.</span><span class="na">isValid</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">passwordData</span><span class="p">.</span><span class="na">isValid</span>
 </span><span id="__span-10-28"><a id="__codelineno-10-28" name="__codelineno-10-28" href="#__codelineno-10-28"></a><span class="w">    </span><span class="p">)</span>
 </span><span id="__span-10-29"><a id="__codelineno-10-29" name="__codelineno-10-29" href="#__codelineno-10-29"></a><span class="p">}</span>
-</span></code></pre></div></p>
+</span></code></pre></div>
 <h3 id="top-app-bars">Top App Bars</h3>
 <h4 id="jetpacktopappbar-navigation-action">JetpackTopAppBar (Navigation + Action)</h4>
 <p><strong>Purpose</strong>: Screen title with navigation and action icons</p>
-<p><strong>Usage</strong>:
+<p><strong>Usage</strong>:</p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="n">JetpackTopAppBar</span><span class="p">(</span>
 </span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="w">    </span><span class="n">titleRes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">R</span><span class="p">.</span><span class="na">string</span><span class="p">.</span><span class="na">screen_title</span><span class="p">,</span>
 </span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">    </span><span class="n">navigationIcon</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Icons</span><span class="p">.</span><span class="na">AutoMirrored</span><span class="p">.</span><span class="na">Filled</span><span class="p">.</span><span class="na">ArrowBack</span><span class="p">,</span>
@@ -3485,53 +3492,57 @@ The recommended pattern uses <code>TextFiledData</code> from <code>core:ui</code
 </span><span id="__span-11-7"><a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="w">    </span><span class="n">onNavigationClick</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">navController</span><span class="p">.</span><span class="na">navigateUp</span><span class="p">()</span><span class="w"> </span><span class="p">},</span>
 </span><span id="__span-11-8"><a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="w">    </span><span class="n">onActionClick</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="cm">/* open settings */</span><span class="w"> </span><span class="p">}</span>
 </span><span id="__span-11-9"><a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="p">)</span>
-</span></code></pre></div></p>
-<p><strong>Parameters</strong>:
-- <code>titleRes</code>: String resource for title
-- <code>navigationIcon</code>: Leading icon (typically back arrow)
-- <code>navigationIconContentDescription</code>: Accessibility label for navigation
-- <code>actionIcon</code>: Trailing action icon
-- <code>actionIconContentDescription</code>: Accessibility label for action
-- <code>onNavigationClick</code>: Navigation callback
-- <code>onActionClick</code>: Action callback
-- <code>colors</code>: TopAppBar colors (default: Material 3 defaults)
-- <code>modifier</code>: Modifier to customize appearance</p>
+</span></code></pre></div>
+<p><strong>Parameters</strong>:</p>
+<ul>
+<li><code>titleRes</code>: String resource for title</li>
+<li><code>navigationIcon</code>: Leading icon (typically back arrow)</li>
+<li><code>navigationIconContentDescription</code>: Accessibility label for navigation</li>
+<li><code>actionIcon</code>: Trailing action icon</li>
+<li><code>actionIconContentDescription</code>: Accessibility label for action</li>
+<li><code>onNavigationClick</code>: Navigation callback</li>
+<li><code>onActionClick</code>: Action callback</li>
+<li><code>colors</code>: TopAppBar colors (default: Material 3 defaults)</li>
+<li><code>modifier</code>: Modifier to customize appearance</li>
+</ul>
 <h4 id="jetpacktopappbar-action-only">JetpackTopAppBar (Action Only)</h4>
 <p><strong>Purpose</strong>: Screen title with action icon only</p>
-<p><strong>Usage</strong>:
+<p><strong>Usage</strong>:</p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="n">JetpackTopAppBar</span><span class="p">(</span>
 </span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="w">    </span><span class="n">titleRes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">R</span><span class="p">.</span><span class="na">string</span><span class="p">.</span><span class="na">home</span><span class="p">,</span>
 </span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">    </span><span class="n">actionIcon</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Icons</span><span class="p">.</span><span class="na">Default</span><span class="p">.</span><span class="na">Settings</span><span class="p">,</span>
 </span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">    </span><span class="n">actionIconContentDescription</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Settings&quot;</span><span class="p">,</span>
 </span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="w">    </span><span class="n">onActionClick</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="cm">/* open settings */</span><span class="w"> </span><span class="p">}</span>
 </span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="p">)</span>
-</span></code></pre></div></p>
+</span></code></pre></div>
 <h4 id="jetpacktopappbarwithavatar">JetpackTopAppBarWithAvatar</h4>
 <p><strong>Purpose</strong>: Screen title with user avatar</p>
-<p><strong>Usage</strong>:
+<p><strong>Usage</strong>:</p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="n">JetpackTopAppBarWithAvatar</span><span class="p">(</span>
 </span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="w">    </span><span class="n">titleRes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">R</span><span class="p">.</span><span class="na">string</span><span class="p">.</span><span class="na">home</span><span class="p">,</span>
 </span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="w">    </span><span class="n">avatarUri</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">userProfilePictureUri</span><span class="p">,</span>
 </span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="w">    </span><span class="n">avatarContentDescription</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Profile picture&quot;</span><span class="p">,</span>
 </span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="w">    </span><span class="n">onAvatarClick</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">navController</span><span class="p">.</span><span class="na">navigateToProfile</span><span class="p">()</span><span class="w"> </span><span class="p">}</span>
 </span><span id="__span-13-6"><a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="p">)</span>
-</span></code></pre></div></p>
-<p><strong>Features</strong>:
-- Loads avatar with Coil's <code>AsyncImage</code>
-- Fallback to default avatar drawable
-- Circular clip automatically applied</p>
+</span></code></pre></div>
+<p><strong>Features</strong>:</p>
+<ul>
+<li>Loads avatar with Coil's <code>AsyncImage</code></li>
+<li>Fallback to default avatar drawable</li>
+<li>Circular clip automatically applied</li>
+</ul>
 <h4 id="jetpackactionbar">JetpackActionBar</h4>
 <p><strong>Purpose</strong>: Screen with back navigation and text action button</p>
-<p><strong>Usage</strong>:
+<p><strong>Usage</strong>:</p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="n">JetpackActionBar</span><span class="p">(</span>
 </span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="w">    </span><span class="n">titleRes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">R</span><span class="p">.</span><span class="na">string</span><span class="p">.</span><span class="na">edit_profile</span><span class="p">,</span>
 </span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="w">    </span><span class="n">actionRes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">R</span><span class="p">.</span><span class="na">string</span><span class="p">.</span><span class="na">save</span><span class="p">,</span>
 </span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="w">    </span><span class="n">onNavigateBackClick</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">navController</span><span class="p">.</span><span class="na">navigateUp</span><span class="p">()</span><span class="w"> </span><span class="p">},</span>
 </span><span id="__span-14-5"><a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="w">    </span><span class="n">onActionClick</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">viewModel</span><span class="o">::</span><span class="n">saveProfile</span>
 </span><span id="__span-14-6"><a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="p">)</span>
-</span></code></pre></div></p>
+</span></code></pre></div>
 <p><strong>Unique Feature</strong>: Uses <code>JetpackButton</code> instead of icon for the action</p>
-<p><strong>Common Pattern - Scaffold with Top App Bar</strong>:
+<p><strong>Common Pattern - Scaffold with Top App Bar</strong>:</p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="n">Scaffold</span><span class="p">(</span>
 </span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="w">    </span><span class="n">topBar</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="w">        </span><span class="n">JetpackTopAppBar</span><span class="p">(</span>
@@ -3548,27 +3559,31 @@ The recommended pattern uses <code>TextFiledData</code> from <code>core:ui</code
 </span><span id="__span-15-14"><a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a><span class="w">    </span><span class="c1">// Screen content</span>
 </span><span id="__span-15-15"><a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a><span class="w">    </span><span class="n">Content</span><span class="p">(</span><span class="n">modifier</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Modifier</span><span class="p">.</span><span class="na">padding</span><span class="p">(</span><span class="n">paddingValues</span><span class="p">))</span>
 </span><span id="__span-15-16"><a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a><span class="p">}</span>
-</span></code></pre></div></p>
+</span></code></pre></div>
 <h3 id="loading-indicators">Loading Indicators</h3>
 <h4 id="jetpackloadingwheel">JetpackLoadingWheel</h4>
 <p><strong>Purpose</strong>: Animated loading indicator</p>
-<p><strong>Usage</strong>:
+<p><strong>Usage</strong>:</p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="n">JetpackLoadingWheel</span><span class="p">(</span>
 </span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="w">    </span><span class="n">contentDesc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Loading data&quot;</span><span class="p">,</span>
 </span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="w">    </span><span class="n">modifier</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Modifier</span><span class="p">.</span><span class="na">size</span><span class="p">(</span><span class="m">48.</span><span class="n">dp</span><span class="p">)</span>
 </span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="p">)</span>
-</span></code></pre></div></p>
-<p><strong>Features</strong>:
-- Custom animated wheel design
-- 12 rotating lines with color transitions
-- Automatic rotation animation
-- Material 3 color scheme integration</p>
-<p><strong>Parameters</strong>:
-- <code>contentDesc</code>: Accessibility content description
-- <code>modifier</code>: Modifier (default includes 48.dp size)</p>
+</span></code></pre></div>
+<p><strong>Features</strong>:</p>
+<ul>
+<li>Custom animated wheel design</li>
+<li>12 rotating lines with color transitions</li>
+<li>Automatic rotation animation</li>
+<li>Material 3 color scheme integration</li>
+</ul>
+<p><strong>Parameters</strong>:</p>
+<ul>
+<li><code>contentDesc</code>: Accessibility content description</li>
+<li><code>modifier</code>: Modifier (default includes 48.dp size)</li>
+</ul>
 <h4 id="jetpackoverlayloadingwheel">JetpackOverlayLoadingWheel</h4>
 <p><strong>Purpose</strong>: Loading indicator with semi-transparent background</p>
-<p><strong>Usage</strong>:
+<p><strong>Usage</strong>:</p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="n">Box</span><span class="p">(</span><span class="n">modifier</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Modifier</span><span class="p">.</span><span class="na">fillMaxSize</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="w">    </span><span class="c1">// Your content</span>
 </span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="w">    </span><span class="n">Content</span><span class="p">()</span>
@@ -3581,13 +3596,15 @@ The recommended pattern uses <code>TextFiledData</code> from <code>core:ui</code
 </span><span id="__span-17-10"><a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a><span class="w">        </span><span class="p">)</span>
 </span><span id="__span-17-11"><a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a><span class="w">    </span><span class="p">}</span>
 </span><span id="__span-17-12"><a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a><span class="p">}</span>
-</span></code></pre></div></p>
-<p><strong>Features</strong>:
-- Rounded corners (60.dp)
-- Elevated surface (8.dp shadow)
-- 83% opacity background
-- Fixed 60.dp size</p>
-<p><strong>Common Pattern - Loading State</strong>:
+</span></code></pre></div>
+<p><strong>Features</strong>:</p>
+<ul>
+<li>Rounded corners (60.dp)</li>
+<li>Elevated surface (8.dp shadow)</li>
+<li>83% opacity background</li>
+<li>Fixed 60.dp size</li>
+</ul>
+<p><strong>Common Pattern - Loading State</strong>:</p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="n">Box</span><span class="p">(</span><span class="n">modifier</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Modifier</span><span class="p">.</span><span class="na">fillMaxSize</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="w">    </span><span class="k">when</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="w">        </span><span class="n">uiState</span><span class="p">.</span><span class="na">loading</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="p">{</span>
@@ -3604,11 +3621,11 @@ The recommended pattern uses <code>TextFiledData</code> from <code>core:ui</code
 </span><span id="__span-18-14"><a id="__codelineno-18-14" name="__codelineno-18-14" href="#__codelineno-18-14"></a><span class="w">        </span><span class="p">}</span>
 </span><span id="__span-18-15"><a id="__codelineno-18-15" name="__codelineno-18-15" href="#__codelineno-18-15"></a><span class="w">    </span><span class="p">}</span>
 </span><span id="__span-18-16"><a id="__codelineno-18-16" name="__codelineno-18-16" href="#__codelineno-18-16"></a><span class="p">}</span>
-</span></code></pre></div></p>
+</span></code></pre></div>
 <h3 id="filter-chips">Filter Chips</h3>
 <h4 id="jetpackfilterchip">JetpackFilterChip</h4>
 <p><strong>Purpose</strong>: Multi-select filtering with visual checkmarks</p>
-<p><strong>Usage</strong>:
+<p><strong>Usage</strong>:</p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="kd">var</span><span class="w"> </span><span class="nv">selectedCategories</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="n">remember</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">mutableStateOf</span><span class="p">(</span><span class="n">setOf</span><span class="o">&lt;</span><span class="kt">String</span><span class="o">&gt;</span><span class="p">())</span><span class="w"> </span><span class="p">}</span>
 </span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="kd">val</span><span class="w"> </span><span class="nv">categories</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">listOf</span><span class="p">(</span><span class="s">&quot;Active&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Completed&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Archived&quot;</span><span class="p">)</span>
 </span><span id="__span-19-3"><a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>
@@ -3627,27 +3644,33 @@ The recommended pattern uses <code>TextFiledData</code> from <code>core:ui</code
 </span><span id="__span-19-16"><a id="__codelineno-19-16" name="__codelineno-19-16" href="#__codelineno-19-16"></a><span class="w">        </span><span class="p">)</span>
 </span><span id="__span-19-17"><a id="__codelineno-19-17" name="__codelineno-19-17" href="#__codelineno-19-17"></a><span class="w">    </span><span class="p">}</span>
 </span><span id="__span-19-18"><a id="__codelineno-19-18" name="__codelineno-19-18" href="#__codelineno-19-18"></a><span class="p">}</span>
-</span></code></pre></div></p>
-<p><strong>Features</strong>:
-- Automatic checkmark icon when selected
-- Circular pill shape
-- Custom border and color styling
-- Disabled state support</p>
-<p><strong>When to use</strong>:
-- Filtering lists or content (e.g., "Active", "Completed", "All")
-- Multi-select scenarios where users can pick multiple options
-- Category or tag selection</p>
-<p><strong>Parameters</strong>:
-- <code>selected</code>: Whether the chip is currently checked
-- <code>onSelectedChange</code>: Callback when chip is toggled
-- <code>label</code>: Text label content
-- <code>enabled</code>: Enable/disable chip (default: <code>true</code>)
-- <code>modifier</code>: Modifier to customize appearance</p>
+</span></code></pre></div>
+<p><strong>Features</strong>:</p>
+<ul>
+<li>Automatic checkmark icon when selected</li>
+<li>Circular pill shape</li>
+<li>Custom border and color styling</li>
+<li>Disabled state support</li>
+</ul>
+<p><strong>When to use</strong>:</p>
+<ul>
+<li>Filtering lists or content (e.g., "Active", "Completed", "All")</li>
+<li>Multi-select scenarios where users can pick multiple options</li>
+<li>Category or tag selection</li>
+</ul>
+<p><strong>Parameters</strong>:</p>
+<ul>
+<li><code>selected</code>: Whether the chip is currently checked</li>
+<li><code>onSelectedChange</code>: Callback when chip is toggled</li>
+<li><code>label</code>: Text label content</li>
+<li><code>enabled</code>: Enable/disable chip (default: <code>true</code>)</li>
+<li><code>modifier</code>: Modifier to customize appearance</li>
+</ul>
 <p><strong>See also</strong>: <code>JetpackTag</code> for non-toggleable tags with different visual style</p>
 <h3 id="tags">Tags</h3>
 <h4 id="jetpacktag">JetpackTag</h4>
 <p><strong>Purpose</strong>: Follow/unfollow topics or interests</p>
-<p><strong>Usage</strong>:
+<p><strong>Usage</strong>:</p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="kd">var</span><span class="w"> </span><span class="nv">followedTopics</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="n">remember</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">mutableStateOf</span><span class="p">(</span><span class="n">setOf</span><span class="o">&lt;</span><span class="kt">String</span><span class="o">&gt;</span><span class="p">())</span><span class="w"> </span><span class="p">}</span>
 </span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="kd">val</span><span class="w"> </span><span class="nv">availableTopics</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">listOf</span><span class="p">(</span><span class="s">&quot;Android&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Kotlin&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Compose&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Testing&quot;</span><span class="p">)</span>
 </span><span id="__span-20-3"><a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>
@@ -3669,27 +3692,33 @@ The recommended pattern uses <code>TextFiledData</code> from <code>core:ui</code
 </span><span id="__span-20-19"><a id="__codelineno-20-19" name="__codelineno-20-19" href="#__codelineno-20-19"></a><span class="w">        </span><span class="p">)</span>
 </span><span id="__span-20-20"><a id="__codelineno-20-20" name="__codelineno-20-20" href="#__codelineno-20-20"></a><span class="w">    </span><span class="p">}</span>
 </span><span id="__span-20-21"><a id="__codelineno-20-21" name="__codelineno-20-21" href="#__codelineno-20-21"></a><span class="p">}</span>
-</span></code></pre></div></p>
-<p><strong>Features</strong>:
-- Visual distinction between followed (solid) and unfollowed (translucent) states
-- Rounded button shape with small text
-- Theme-aware colors
-- Disabled state support</p>
-<p><strong>When to use</strong>:
-- Interest or topic selection (e.g., "Follow topics you're interested in")
-- Category management
-- Tag-based filtering with persistent selection</p>
-<p><strong>Parameters</strong>:
-- <code>followed</code>: Whether this tag is followed
-- <code>onClick</code>: Callback when tag is clicked
-- <code>text</code>: Text label content
-- <code>enabled</code>: Enable/disable tag (default: <code>true</code>)
-- <code>modifier</code>: Modifier to customize appearance</p>
+</span></code></pre></div>
+<p><strong>Features</strong>:</p>
+<ul>
+<li>Visual distinction between followed (solid) and unfollowed (translucent) states</li>
+<li>Rounded button shape with small text</li>
+<li>Theme-aware colors</li>
+<li>Disabled state support</li>
+</ul>
+<p><strong>When to use</strong>:</p>
+<ul>
+<li>Interest or topic selection (e.g., "Follow topics you're interested in")</li>
+<li>Category management</li>
+<li>Tag-based filtering with persistent selection</li>
+</ul>
+<p><strong>Parameters</strong>:</p>
+<ul>
+<li><code>followed</code>: Whether this tag is followed</li>
+<li><code>onClick</code>: Callback when tag is clicked</li>
+<li><code>text</code>: Text label content</li>
+<li><code>enabled</code>: Enable/disable tag (default: <code>true</code>)</li>
+<li><code>modifier</code>: Modifier to customize appearance</li>
+</ul>
 <p><strong>See also</strong>: <code>JetpackFilterChip</code> for temporary filtering (non-persistent selection)</p>
 <h3 id="icon-toggle-buttons">Icon Toggle Buttons</h3>
 <h4 id="jetpackicontogglebutton">JetpackIconToggleButton</h4>
 <p><strong>Purpose</strong>: Binary toggle actions (favorite/unfavorite, bookmark/unbookmark)</p>
-<p><strong>Usage</strong>:
+<p><strong>Usage</strong>:</p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="kd">var</span><span class="w"> </span><span class="nv">isFavorite</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="n">remember</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">mutableStateOf</span><span class="p">(</span><span class="kc">false</span><span class="p">)</span><span class="w"> </span><span class="p">}</span>
 </span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>
 </span><span id="__span-21-3"><a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a><span class="n">JetpackIconToggleButton</span><span class="p">(</span>
@@ -3708,27 +3737,33 @@ The recommended pattern uses <code>TextFiledData</code> from <code>core:ui</code
 </span><span id="__span-21-16"><a id="__codelineno-21-16" name="__codelineno-21-16" href="#__codelineno-21-16"></a><span class="w">        </span><span class="p">)</span>
 </span><span id="__span-21-17"><a id="__codelineno-21-17" name="__codelineno-21-17" href="#__codelineno-21-17"></a><span class="w">    </span><span class="p">}</span>
 </span><span id="__span-21-18"><a id="__codelineno-21-18" name="__codelineno-21-18" href="#__codelineno-21-18"></a><span class="p">)</span>
-</span></code></pre></div></p>
-<p><strong>Features</strong>:
-- Automatic icon switching between checked/unchecked states
-- Filled background with rounded shape
-- Primary container color when checked, transparent when unchecked
-- Disabled state support</p>
-<p><strong>When to use</strong>:
-- Binary toggle actions (favorite/unfavorite, bookmark/unbookmark)
-- Visibility toggles (show/hide password, expand/collapse)
-- State indicators that can be toggled</p>
-<p><strong>Parameters</strong>:
-- <code>checked</code>: Whether the toggle button is currently checked
-- <code>onCheckedChange</code>: Callback when toggle button is clicked
-- <code>icon</code>: Icon content when unchecked
-- <code>checkedIcon</code>: Icon content when checked (defaults to <code>icon</code> if not provided)
-- <code>enabled</code>: Enable/disable button (default: <code>true</code>)
-- <code>modifier</code>: Modifier to customize appearance</p>
+</span></code></pre></div>
+<p><strong>Features</strong>:</p>
+<ul>
+<li>Automatic icon switching between checked/unchecked states</li>
+<li>Filled background with rounded shape</li>
+<li>Primary container color when checked, transparent when unchecked</li>
+<li>Disabled state support</li>
+</ul>
+<p><strong>When to use</strong>:</p>
+<ul>
+<li>Binary toggle actions (favorite/unfavorite, bookmark/unbookmark)</li>
+<li>Visibility toggles (show/hide password, expand/collapse)</li>
+<li>State indicators that can be toggled</li>
+</ul>
+<p><strong>Parameters</strong>:</p>
+<ul>
+<li><code>checked</code>: Whether the toggle button is currently checked</li>
+<li><code>onCheckedChange</code>: Callback when toggle button is clicked</li>
+<li><code>icon</code>: Icon content when unchecked</li>
+<li><code>checkedIcon</code>: Icon content when checked (defaults to <code>icon</code> if not provided)</li>
+<li><code>enabled</code>: Enable/disable button (default: <code>true</code>)</li>
+<li><code>modifier</code>: Modifier to customize appearance</li>
+</ul>
 <h3 id="toggle-options">Toggle Options</h3>
 <h4 id="jetpacktoggleoptions">JetpackToggleOptions</h4>
 <p><strong>Purpose</strong>: Segmented button selector for mutually exclusive choices</p>
-<p><strong>Usage</strong>:
+<p><strong>Usage</strong>:</p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="kd">val</span><span class="w"> </span><span class="nv">themeOptions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">listOf</span><span class="p">(</span>
 </span><span id="__span-22-2"><a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="w">    </span><span class="n">ToggleOption</span><span class="p">(</span><span class="n">text</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">R</span><span class="p">.</span><span class="na">string</span><span class="p">.</span><span class="na">light</span><span class="p">,</span><span class="w"> </span><span class="n">icon</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Icons</span><span class="p">.</span><span class="na">Default</span><span class="p">.</span><span class="na">LightMode</span><span class="p">),</span>
 </span><span id="__span-22-3"><a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a><span class="w">    </span><span class="n">ToggleOption</span><span class="p">(</span><span class="n">text</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">R</span><span class="p">.</span><span class="na">string</span><span class="p">.</span><span class="na">dark</span><span class="p">,</span><span class="w"> </span><span class="n">icon</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Icons</span><span class="p">.</span><span class="na">Default</span><span class="p">.</span><span class="na">DarkMode</span><span class="p">),</span>
@@ -3741,25 +3776,31 @@ The recommended pattern uses <code>TextFiledData</code> from <code>core:ui</code
 </span><span id="__span-22-10"><a id="__codelineno-22-10" name="__codelineno-22-10" href="#__codelineno-22-10"></a><span class="w">    </span><span class="n">selectedIndex</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">selectedTheme</span><span class="p">,</span>
 </span><span id="__span-22-11"><a id="__codelineno-22-11" name="__codelineno-22-11" href="#__codelineno-22-11"></a><span class="w">    </span><span class="n">onSelectionChange</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">selectedTheme</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">it</span><span class="w"> </span><span class="p">}</span>
 </span><span id="__span-22-12"><a id="__codelineno-22-12" name="__codelineno-22-12" href="#__codelineno-22-12"></a><span class="p">)</span>
-</span></code></pre></div></p>
-<p><strong>Features</strong>:
-- Segmented button-style selector
-- Animated transitions between states
-- Icon and text for each option
-- Fixed 56dp height with rounded corners</p>
-<p><strong>When to use</strong>:
-- Mutually exclusive choices (Light/Dark/System theme)
-- View modes (List/Grid)
-- Any set of 2-4 options requiring visual selection</p>
-<p><strong>Parameters</strong>:
-- <code>options</code>: List of <code>ToggleOption</code> (recommended 2-4 options)
-- <code>selectedIndex</code>: Zero-based index of selected option
-- <code>onSelectionChange</code>: Callback when selection changes
-- <code>modifier</code>: Modifier to customize appearance</p>
+</span></code></pre></div>
+<p><strong>Features</strong>:</p>
+<ul>
+<li>Segmented button-style selector</li>
+<li>Animated transitions between states</li>
+<li>Icon and text for each option</li>
+<li>Fixed 56dp height with rounded corners</li>
+</ul>
+<p><strong>When to use</strong>:</p>
+<ul>
+<li>Mutually exclusive choices (Light/Dark/System theme)</li>
+<li>View modes (List/Grid)</li>
+<li>Any set of 2-4 options requiring visual selection</li>
+</ul>
+<p><strong>Parameters</strong>:</p>
+<ul>
+<li><code>options</code>: List of <code>ToggleOption</code> (recommended 2-4 options)</li>
+<li><code>selectedIndex</code>: Zero-based index of selected option</li>
+<li><code>onSelectionChange</code>: Callback when selection changes</li>
+<li><code>modifier</code>: Modifier to customize appearance</li>
+</ul>
 <h3 id="floating-action-buttons">Floating Action Buttons</h3>
 <h4 id="jetpackextendedfab">JetpackExtendedFab</h4>
 <p><strong>Purpose</strong>: Primary actions with text label for clarity</p>
-<p><strong>Usage</strong>:
+<p><strong>Usage</strong>:</p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="n">Scaffold</span><span class="p">(</span>
 </span><span id="__span-23-2"><a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a><span class="w">    </span><span class="n">floatingActionButton</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-23-3"><a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a><span class="w">        </span><span class="n">JetpackExtendedFab</span><span class="p">(</span>
@@ -3771,21 +3812,27 @@ The recommended pattern uses <code>TextFiledData</code> from <code>core:ui</code
 </span><span id="__span-23-9"><a id="__codelineno-23-9" name="__codelineno-23-9" href="#__codelineno-23-9"></a><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">padding</span><span class="w"> </span><span class="o">-&gt;</span>
 </span><span id="__span-23-10"><a id="__codelineno-23-10" name="__codelineno-23-10" href="#__codelineno-23-10"></a><span class="w">    </span><span class="n">ItemList</span><span class="p">(</span><span class="n">Modifier</span><span class="p">.</span><span class="na">padding</span><span class="p">(</span><span class="n">padding</span><span class="p">))</span>
 </span><span id="__span-23-11"><a id="__codelineno-23-11" name="__codelineno-23-11" href="#__codelineno-23-11"></a><span class="p">}</span>
-</span></code></pre></div></p>
-<p><strong>Features</strong>:
-- Combined icon and text for clarity
-- Material 3 theming and colors
-- Standard FAB elevation and behavior
-- Uses the same resource for icon description and button text</p>
-<p><strong>When to use</strong>:
-- Primary actions that need text label for clarity (e.g., "Create", "Compose")
-- When users need extra context beyond just an icon
-- First-time user experiences where action should be obvious</p>
-<p><strong>Parameters</strong>:
-- <code>icon</code>: Icon to display
-- <code>text</code>: String resource for both text label and icon content description
-- <code>onClick</code>: Callback when FAB is clicked
-- <code>modifier</code>: Modifier to customize appearance</p>
+</span></code></pre></div>
+<p><strong>Features</strong>:</p>
+<ul>
+<li>Combined icon and text for clarity</li>
+<li>Material 3 theming and colors</li>
+<li>Standard FAB elevation and behavior</li>
+<li>Uses the same resource for icon description and button text</li>
+</ul>
+<p><strong>When to use</strong>:</p>
+<ul>
+<li>Primary actions that need text label for clarity (e.g., "Create", "Compose")</li>
+<li>When users need extra context beyond just an icon</li>
+<li>First-time user experiences where action should be obvious</li>
+</ul>
+<p><strong>Parameters</strong>:</p>
+<ul>
+<li><code>icon</code>: Icon to display</li>
+<li><code>text</code>: String resource for both text label and icon content description</li>
+<li><code>onClick</code>: Callback when FAB is clicked</li>
+<li><code>modifier</code>: Modifier to customize appearance</li>
+</ul>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>For icon-only FABs, use Material 3's <code>FloatingActionButton</code> directly.</p>
@@ -3794,7 +3841,7 @@ The recommended pattern uses <code>TextFiledData</code> from <code>core:ui</code
 <p>The template provides adaptive navigation components that automatically adjust based on screen size.</p>
 <h4 id="jetpacknavigationsuitescaffold">JetpackNavigationSuiteScaffold</h4>
 <p><strong>Purpose</strong>: Adaptive navigation (bottom bar on phones, rail on tablets, drawer on large screens)</p>
-<p><strong>Usage</strong>:
+<p><strong>Usage</strong>:</p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="n">JetpackNavigationSuiteScaffold</span><span class="p">(</span>
 </span><span id="__span-24-2"><a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a><span class="w">    </span><span class="n">navigationSuiteItems</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-24-3"><a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a><span class="w">        </span><span class="n">destinations</span><span class="p">.</span><span class="na">forEach</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">destination</span><span class="w"> </span><span class="o">-&gt;</span>
@@ -3813,21 +3860,27 @@ The recommended pattern uses <code>TextFiledData</code> from <code>core:ui</code
 </span><span id="__span-24-16"><a id="__codelineno-24-16" name="__codelineno-24-16" href="#__codelineno-24-16"></a><span class="w">        </span><span class="c1">// Navigation graph</span>
 </span><span id="__span-24-17"><a id="__codelineno-24-17" name="__codelineno-24-17" href="#__codelineno-24-17"></a><span class="w">    </span><span class="p">}</span>
 </span><span id="__span-24-18"><a id="__codelineno-24-18" name="__codelineno-24-18" href="#__codelineno-24-18"></a><span class="p">}</span>
-</span></code></pre></div></p>
-<p><strong>Features</strong>:
-- Automatic adaptation based on window size:
-  - <strong>Compact</strong> screens: Bottom navigation bar
-  - <strong>Medium</strong> screens: Navigation rail
-  - <strong>Expanded</strong> screens: Navigation drawer
-- Consistent theming across all layouts
-- Icon switching between selected/unselected states</p>
-<p><strong>When to use</strong>:
-- App-wide navigation
-- Multi-destination apps
-- Responsive layouts across devices</p>
+</span></code></pre></div>
+<p><strong>Features</strong>:</p>
+<ul>
+<li>Automatic adaptation based on window size:<ul>
+<li><strong>Compact</strong> screens: Bottom navigation bar</li>
+<li><strong>Medium</strong> screens: Navigation rail</li>
+<li><strong>Expanded</strong> screens: Navigation drawer</li>
+</ul>
+</li>
+<li>Consistent theming across all layouts</li>
+<li>Icon switching between selected/unselected states</li>
+</ul>
+<p><strong>When to use</strong>:</p>
+<ul>
+<li>App-wide navigation</li>
+<li>Multi-destination apps</li>
+<li>Responsive layouts across devices</li>
+</ul>
 <h4 id="jetpacknavigationbar">JetpackNavigationBar</h4>
 <p><strong>Purpose</strong>: Bottom navigation bar for compact screens</p>
-<p><strong>Usage</strong>:
+<p><strong>Usage</strong>:</p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="n">JetpackNavigationBar</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-25-2"><a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a><span class="w">    </span><span class="n">destinations</span><span class="p">.</span><span class="na">forEach</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">destination</span><span class="w"> </span><span class="o">-&gt;</span>
 </span><span id="__span-25-3"><a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a><span class="w">        </span><span class="n">JetpackNavigationBarItem</span><span class="p">(</span>
@@ -3838,13 +3891,15 @@ The recommended pattern uses <code>TextFiledData</code> from <code>core:ui</code
 </span><span id="__span-25-8"><a id="__codelineno-25-8" name="__codelineno-25-8" href="#__codelineno-25-8"></a><span class="w">        </span><span class="p">)</span>
 </span><span id="__span-25-9"><a id="__codelineno-25-9" name="__codelineno-25-9" href="#__codelineno-25-9"></a><span class="w">    </span><span class="p">}</span>
 </span><span id="__span-25-10"><a id="__codelineno-25-10" name="__codelineno-25-10" href="#__codelineno-25-10"></a><span class="p">}</span>
-</span></code></pre></div></p>
-<p><strong>When to use</strong>:
-- Fixed bottom navigation on phones
-- 3-5 top-level destinations</p>
+</span></code></pre></div>
+<p><strong>When to use</strong>:</p>
+<ul>
+<li>Fixed bottom navigation on phones</li>
+<li>3-5 top-level destinations</li>
+</ul>
 <h4 id="jetpacknavigationrail">JetpackNavigationRail</h4>
 <p><strong>Purpose</strong>: Side navigation for tablets and larger screens</p>
-<p><strong>Usage</strong>:
+<p><strong>Usage</strong>:</p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="n">JetpackNavigationRail</span><span class="p">(</span>
 </span><span id="__span-26-2"><a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a><span class="w">    </span><span class="n">header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-26-3"><a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a><span class="w">        </span><span class="n">JetpackExtendedFab</span><span class="p">(</span>
@@ -3863,15 +3918,17 @@ The recommended pattern uses <code>TextFiledData</code> from <code>core:ui</code
 </span><span id="__span-26-16"><a id="__codelineno-26-16" name="__codelineno-26-16" href="#__codelineno-26-16"></a><span class="w">        </span><span class="p">)</span>
 </span><span id="__span-26-17"><a id="__codelineno-26-17" name="__codelineno-26-17" href="#__codelineno-26-17"></a><span class="w">    </span><span class="p">}</span>
 </span><span id="__span-26-18"><a id="__codelineno-26-18" name="__codelineno-26-18" href="#__codelineno-26-18"></a><span class="p">}</span>
-</span></code></pre></div></p>
-<p><strong>When to use</strong>:
-- Tablet and large screen layouts
-- Apps with many destinations (5+)</p>
+</span></code></pre></div>
+<p><strong>When to use</strong>:</p>
+<ul>
+<li>Tablet and large screen layouts</li>
+<li>Apps with many destinations (5+)</li>
+</ul>
 <p><strong>See also</strong>: <a href="../navigation/">Navigation Deep Dive</a> for type-safe navigation patterns</p>
 <h3 id="tabs">Tabs</h3>
 <h4 id="jetpacktab-jetpacktabrow">JetpackTab &amp; JetpackTabRow</h4>
 <p><strong>Purpose</strong>: Tabbed content switching within a screen</p>
-<p><strong>Usage</strong>:
+<p><strong>Usage</strong>:</p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a><span class="kd">var</span><span class="w"> </span><span class="nv">selectedTab</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="n">remember</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">mutableIntStateOf</span><span class="p">(</span><span class="m">0</span><span class="p">)</span><span class="w"> </span><span class="p">}</span>
 </span><span id="__span-27-2"><a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a><span class="kd">val</span><span class="w"> </span><span class="nv">tabs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">listOf</span><span class="p">(</span><span class="s">&quot;Feed&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Explore&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Profile&quot;</span><span class="p">)</span>
 </span><span id="__span-27-3"><a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a>
@@ -3893,30 +3950,38 @@ The recommended pattern uses <code>TextFiledData</code> from <code>core:ui</code
 </span><span id="__span-27-19"><a id="__codelineno-27-19" name="__codelineno-27-19" href="#__codelineno-27-19"></a><span class="w">        </span><span class="m">2</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">ProfileScreen</span><span class="p">()</span>
 </span><span id="__span-27-20"><a id="__codelineno-27-20" name="__codelineno-27-20" href="#__codelineno-27-20"></a><span class="w">    </span><span class="p">}</span>
 </span><span id="__span-27-21"><a id="__codelineno-27-21" name="__codelineno-27-21" href="#__codelineno-27-21"></a><span class="p">}</span>
-</span></code></pre></div></p>
-<p><strong>Features</strong>:
-- Transparent container background
-- Secondary indicator (2dp height) that animates between tabs
-- Equal spacing for all tabs
-- Custom top padding for visual alignment</p>
-<p><strong>When to use</strong>:
-- Content switching within a single screen
-- Viewing different aspects of the same data
-- Alternative views of content</p>
-<p><strong>Parameters (JetpackTab)</strong>:
-- <code>selected</code>: Whether tab is selected
-- <code>onClick</code>: Callback when tab is clicked
-- <code>text</code>: Text label content
-- <code>enabled</code>: Enable/disable tab (default: <code>true</code>)
-- <code>modifier</code>: Modifier to customize appearance</p>
-<p><strong>Parameters (JetpackTabRow)</strong>:
-- <code>selectedTabIndex</code>: Index of currently selected tab
-- <code>tabs</code>: Tab composables (typically multiple <code>JetpackTab</code>s)
-- <code>modifier</code>: Modifier to customize appearance</p>
+</span></code></pre></div>
+<p><strong>Features</strong>:</p>
+<ul>
+<li>Transparent container background</li>
+<li>Secondary indicator (2dp height) that animates between tabs</li>
+<li>Equal spacing for all tabs</li>
+<li>Custom top padding for visual alignment</li>
+</ul>
+<p><strong>When to use</strong>:</p>
+<ul>
+<li>Content switching within a single screen</li>
+<li>Viewing different aspects of the same data</li>
+<li>Alternative views of content</li>
+</ul>
+<p><strong>Parameters (JetpackTab)</strong>:</p>
+<ul>
+<li><code>selected</code>: Whether tab is selected</li>
+<li><code>onClick</code>: Callback when tab is clicked</li>
+<li><code>text</code>: Text label content</li>
+<li><code>enabled</code>: Enable/disable tab (default: <code>true</code>)</li>
+<li><code>modifier</code>: Modifier to customize appearance</li>
+</ul>
+<p><strong>Parameters (JetpackTabRow)</strong>:</p>
+<ul>
+<li><code>selectedTabIndex</code>: Index of currently selected tab</li>
+<li><code>tabs</code>: Tab composables (typically multiple <code>JetpackTab</code>s)</li>
+<li><code>modifier</code>: Modifier to customize appearance</li>
+</ul>
 <h3 id="dividers">Dividers</h3>
 <h4 id="dividerwithtext">DividerWithText</h4>
 <p><strong>Purpose</strong>: Horizontal divider with centered text (e.g., "OR" between sign-in methods)</p>
-<p><strong>Usage</strong>:
+<p><strong>Usage</strong>:</p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-28-1"><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a><span class="n">Column</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-28-2"><a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a><span class="w">    </span><span class="c1">// Email sign-in form</span>
 </span><span id="__span-28-3"><a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a><span class="w">    </span><span class="n">JetpackTextFiled</span><span class="p">(...)</span>
@@ -3929,23 +3994,29 @@ The recommended pattern uses <code>TextFiledData</code> from <code>core:ui</code
 </span><span id="__span-28-10"><a id="__codelineno-28-10" name="__codelineno-28-10" href="#__codelineno-28-10"></a><span class="w">    </span><span class="n">GoogleSignInButton</span><span class="p">(</span><span class="n">onClick</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="p">})</span>
 </span><span id="__span-28-11"><a id="__codelineno-28-11" name="__codelineno-28-11" href="#__codelineno-28-11"></a><span class="w">    </span><span class="n">FacebookSignInButton</span><span class="p">(</span><span class="n">onClick</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="p">})</span>
 </span><span id="__span-28-12"><a id="__codelineno-28-12" name="__codelineno-28-12" href="#__codelineno-28-12"></a><span class="p">}</span>
-</span></code></pre></div></p>
-<p><strong>Features</strong>:
-- Centered text label with equal dividers on both sides
-- Material 3 HorizontalDivider styling
-- Small typography for subtle visual separation
-- 16dp horizontal padding around text</p>
-<p><strong>When to use</strong>:
-- Separating alternative sign-in methods ("OR")
-- Breaking up long forms into logical sections
-- Showing "More options" between primary and secondary actions</p>
-<p><strong>Parameters</strong>:
-- <code>text</code>: String resource for text to display
-- <code>modifier</code>: Modifier to customize appearance</p>
+</span></code></pre></div>
+<p><strong>Features</strong>:</p>
+<ul>
+<li>Centered text label with equal dividers on both sides</li>
+<li>Material 3 HorizontalDivider styling</li>
+<li>Small typography for subtle visual separation</li>
+<li>16dp horizontal padding around text</li>
+</ul>
+<p><strong>When to use</strong>:</p>
+<ul>
+<li>Separating alternative sign-in methods ("OR")</li>
+<li>Breaking up long forms into logical sections</li>
+<li>Showing "More options" between primary and secondary actions</li>
+</ul>
+<p><strong>Parameters</strong>:</p>
+<ul>
+<li><code>text</code>: String resource for text to display</li>
+<li><code>modifier</code>: Modifier to customize appearance</li>
+</ul>
 <h3 id="swipe-to-dismiss">Swipe to Dismiss</h3>
 <h4 id="swipetodismiss">SwipeToDismiss</h4>
 <p><strong>Purpose</strong>: Swipe-to-delete gesture for list items</p>
-<p><strong>Usage</strong>:
+<p><strong>Usage</strong>:</p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-29-1"><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a><span class="n">LazyColumn</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-29-2"><a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a><span class="w">    </span><span class="n">items</span><span class="p">(</span><span class="n">items</span><span class="p">,</span><span class="w"> </span><span class="n">key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nb">it</span><span class="p">.</span><span class="na">id</span><span class="w"> </span><span class="p">})</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">item</span><span class="w"> </span><span class="o">-&gt;</span>
 </span><span id="__span-29-3"><a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a><span class="w">        </span><span class="n">SwipeToDismiss</span><span class="p">(</span>
@@ -3955,28 +4026,35 @@ The recommended pattern uses <code>TextFiledData</code> from <code>core:ui</code
 </span><span id="__span-29-7"><a id="__codelineno-29-7" name="__codelineno-29-7" href="#__codelineno-29-7"></a><span class="w">        </span><span class="p">}</span>
 </span><span id="__span-29-8"><a id="__codelineno-29-8" name="__codelineno-29-8" href="#__codelineno-29-8"></a><span class="w">    </span><span class="p">}</span>
 </span><span id="__span-29-9"><a id="__codelineno-29-9" name="__codelineno-29-9" href="#__codelineno-29-9"></a><span class="p">}</span>
-</span></code></pre></div></p>
-<p><strong>Features</strong>:
-- End-to-start swipe only (prevents accidental dismissal)
-- Visual feedback: delete icon with error container background
-- Animated background color based on swipe progress
-- Confirmation: <code>onDelete</code> only called when swipe completes threshold</p>
-<p><strong>When to use</strong>:
-- Dismissing items in a LazyColumn list
-- Removing notifications
-- Deleting messages or emails</p>
-<p><strong>Parameters</strong>:
-- <code>onDelete</code>: Callback when item is swiped to dismiss
-- <code>content</code>: Content to display (the item being dismissed)
-- <code>modifier</code>: Modifier to customize appearance</p>
+</span></code></pre></div>
+<p><strong>Features</strong>:</p>
+<ul>
+<li>End-to-start swipe only (prevents accidental dismissal)</li>
+<li>Visual feedback: delete icon with error container background</li>
+<li>Animated background color based on swipe progress</li>
+<li>Confirmation: <code>onDelete</code> only called when swipe completes threshold</li>
+</ul>
+<p><strong>When to use</strong>:</p>
+<ul>
+<li>Dismissing items in a LazyColumn list</li>
+<li>Removing notifications</li>
+<li>Deleting messages or emails</li>
+</ul>
+<p><strong>Parameters</strong>:</p>
+<ul>
+<li><code>onDelete</code>: Callback when item is swiped to dismiss</li>
+<li><code>content</code>: Content to display (the item being dismissed)</li>
+<li><code>modifier</code>: Modifier to customize appearance</li>
+</ul>
 <div class="admonition tip">
 <p class="admonition-title">Tip</p>
-<p>Always use <code>key</code> parameter in <code>items()</code> for proper animation and recomposition when using SwipeToDismiss.</p>
+<p>Always use <code>key</code> parameter in <code>items()</code> for proper animation and recomposition when using
+SwipeToDismiss.</p>
 </div>
 <h3 id="image-loading">Image Loading</h3>
 <h4 id="dynamicasyncimage">DynamicAsyncImage</h4>
 <p><strong>Purpose</strong>: Async image loading with Coil integration</p>
-<p><strong>Usage</strong>:
+<p><strong>Usage</strong>:</p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-30-1"><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a><span class="n">DynamicAsyncImage</span><span class="p">(</span>
 </span><span id="__span-30-2"><a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a><span class="w">    </span><span class="n">imageUrl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;https://example.com/avatar.jpg&quot;</span><span class="p">,</span>
 </span><span id="__span-30-3"><a id="__codelineno-30-3" name="__codelineno-30-3" href="#__codelineno-30-3"></a><span class="w">    </span><span class="n">contentDescription</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;User avatar&quot;</span><span class="p">,</span>
@@ -3985,27 +4063,34 @@ The recommended pattern uses <code>TextFiledData</code> from <code>core:ui</code
 </span><span id="__span-30-6"><a id="__codelineno-30-6" name="__codelineno-30-6" href="#__codelineno-30-6"></a><span class="w">        </span><span class="p">.</span><span class="na">size</span><span class="p">(</span><span class="m">80.</span><span class="n">dp</span><span class="p">)</span>
 </span><span id="__span-30-7"><a id="__codelineno-30-7" name="__codelineno-30-7" href="#__codelineno-30-7"></a><span class="w">        </span><span class="p">.</span><span class="na">clip</span><span class="p">(</span><span class="n">CircleShape</span><span class="p">)</span>
 </span><span id="__span-30-8"><a id="__codelineno-30-8" name="__codelineno-30-8" href="#__codelineno-30-8"></a><span class="p">)</span>
-</span></code></pre></div></p>
-<p><strong>Features</strong>:
-- <strong>Loading state</strong>: Displays <code>JetpackLoadingWheel</code> while loading
-- <strong>Error handling</strong>: Falls back to placeholder on failure
-- <strong>Theme integration</strong>: Applies tint from <code>LocalTintTheme</code> when appropriate
-- <strong>Preview mode</strong>: Shows placeholder in Android Studio preview
-- <strong>Coil integration</strong>: Automatic memory and disk caching</p>
-<p><strong>When to use</strong>:
-- Loading remote images (avatars, thumbnails, photos)
-- Any image that needs async loading
-- Images requiring loading states and error handling</p>
-<p><strong>Parameters</strong>:
-- <code>imageUrl</code>: URL of image to load
-- <code>contentDescription</code>: Accessibility description
-- <code>placeholder</code>: Painter to display while loading or on error (default: <code>ic_placeholder</code>)
-- <code>modifier</code>: Modifier to customize appearance</p>
-<p><strong>See also</strong>: <a href="../performance/#image-loading-optimization">Performance Guide</a> for image optimization patterns</p>
+</span></code></pre></div>
+<p><strong>Features</strong>:</p>
+<ul>
+<li><strong>Loading state</strong>: Displays <code>JetpackLoadingWheel</code> while loading</li>
+<li><strong>Error handling</strong>: Falls back to placeholder on failure</li>
+<li><strong>Theme integration</strong>: Applies tint from <code>LocalTintTheme</code> when appropriate</li>
+<li><strong>Preview mode</strong>: Shows placeholder in Android Studio preview</li>
+<li><strong>Coil integration</strong>: Automatic memory and disk caching</li>
+</ul>
+<p><strong>When to use</strong>:</p>
+<ul>
+<li>Loading remote images (avatars, thumbnails, photos)</li>
+<li>Any image that needs async loading</li>
+<li>Images requiring loading states and error handling</li>
+</ul>
+<p><strong>Parameters</strong>:</p>
+<ul>
+<li><code>imageUrl</code>: URL of image to load</li>
+<li><code>contentDescription</code>: Accessibility description</li>
+<li><code>placeholder</code>: Painter to display while loading or on error (default: <code>ic_placeholder</code>)</li>
+<li><code>modifier</code>: Modifier to customize appearance</li>
+</ul>
+<p><strong>See also</strong>: <a href="../performance/#image-loading-optimization">Performance Guide</a> for image optimization
+patterns</p>
 <h3 id="background-components">Background Components</h3>
 <h4 id="appbackground">AppBackground</h4>
 <p><strong>Purpose</strong>: Main app background with theme support</p>
-<p><strong>Usage</strong>:
+<p><strong>Usage</strong>:</p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-31-1"><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a><span class="nd">@Composable</span>
 </span><span id="__span-31-2"><a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a><span class="kd">fun</span><span class="w"> </span><span class="nf">MyApp</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-31-3"><a id="__codelineno-31-3" name="__codelineno-31-3" href="#__codelineno-31-3"></a><span class="w">    </span><span class="n">AppBackground</span><span class="w"> </span><span class="p">{</span>
@@ -4017,18 +4102,22 @@ The recommended pattern uses <code>TextFiledData</code> from <code>core:ui</code
 </span><span id="__span-31-9"><a id="__codelineno-31-9" name="__codelineno-31-9" href="#__codelineno-31-9"></a><span class="w">        </span><span class="p">)</span>
 </span><span id="__span-31-10"><a id="__codelineno-31-10" name="__codelineno-31-10" href="#__codelineno-31-10"></a><span class="w">    </span><span class="p">}</span>
 </span><span id="__span-31-11"><a id="__codelineno-31-11" name="__codelineno-31-11" href="#__codelineno-31-11"></a><span class="p">}</span>
-</span></code></pre></div></p>
-<p><strong>Features</strong>:
-- Automatic color from <code>LocalBackgroundTheme</code>
-- Tonal elevation support for depth
-- Resets absolute tonal elevation for nested surfaces
-- Fills max size by default</p>
-<p><strong>When to use</strong>:
-- App-level background wrapper
-- Consistent theming across screens</p>
+</span></code></pre></div>
+<p><strong>Features</strong>:</p>
+<ul>
+<li>Automatic color from <code>LocalBackgroundTheme</code></li>
+<li>Tonal elevation support for depth</li>
+<li>Resets absolute tonal elevation for nested surfaces</li>
+<li>Fills max size by default</li>
+</ul>
+<p><strong>When to use</strong>:</p>
+<ul>
+<li>App-level background wrapper</li>
+<li>Consistent theming across screens</li>
+</ul>
 <h4 id="appgradientbackground">AppGradientBackground</h4>
 <p><strong>Purpose</strong>: Decorative gradient background for special screens</p>
-<p><strong>Usage</strong>:
+<p><strong>Usage</strong>:</p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-32-1"><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a><span class="nd">@Composable</span>
 </span><span id="__span-32-2"><a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a><span class="kd">fun</span><span class="w"> </span><span class="nf">OnboardingScreen</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-32-3"><a id="__codelineno-32-3" name="__codelineno-32-3" href="#__codelineno-32-3"></a><span class="w">    </span><span class="n">AppGradientBackground</span><span class="p">(</span>
@@ -4047,30 +4136,39 @@ The recommended pattern uses <code>TextFiledData</code> from <code>core:ui</code
 </span><span id="__span-32-16"><a id="__codelineno-32-16" name="__codelineno-32-16" href="#__codelineno-32-16"></a><span class="w">        </span><span class="p">}</span>
 </span><span id="__span-32-17"><a id="__codelineno-32-17" name="__codelineno-32-17" href="#__codelineno-32-17"></a><span class="w">    </span><span class="p">}</span>
 </span><span id="__span-32-18"><a id="__codelineno-32-18" name="__codelineno-32-18" href="#__codelineno-32-18"></a><span class="p">}</span>
-</span></code></pre></div></p>
-<p><strong>Features</strong>:
-- Dual gradient (top fades out at 72.4%, bottom fades in at 25.5%)
-- Angled at 11.06 degrees for visual interest
-- Theme-aware gradient colors from <code>LocalGradientColors</code>
-- Container background with gradient overlay</p>
-<p><strong>When to use</strong>:
-- Onboarding or welcome screens
-- Feature announcements or promotions
-- Hero sections with visual emphasis
-- Special event or seasonal theming</p>
-<p><strong>Parameters</strong>:
-- <code>gradientColors</code>: Gradient colors to render (default: <code>LocalGradientColors.current</code>)
-- <code>content</code>: Background content
-- <code>modifier</code>: Modifier to customize appearance</p>
+</span></code></pre></div>
+<p><strong>Features</strong>:</p>
+<ul>
+<li>Dual gradient (top fades out at 72.4%, bottom fades in at 25.5%)</li>
+<li>Angled at 11.06 degrees for visual interest</li>
+<li>Theme-aware gradient colors from <code>LocalGradientColors</code></li>
+<li>Container background with gradient overlay</li>
+</ul>
+<p><strong>When to use</strong>:</p>
+<ul>
+<li>Onboarding or welcome screens</li>
+<li>Feature announcements or promotions</li>
+<li>Hero sections with visual emphasis</li>
+<li>Special event or seasonal theming</li>
+</ul>
+<p><strong>Parameters</strong>:</p>
+<ul>
+<li><code>gradientColors</code>: Gradient colors to render (default: <code>LocalGradientColors.current</code>)</li>
+<li><code>content</code>: Background content</li>
+<li><code>modifier</code>: Modifier to customize appearance</li>
+</ul>
 <p><strong>See also</strong>: <code>AppBackground</code> for standard solid backgrounds</p>
 <h2 id="theming-components">Theming Components</h2>
 <h3 id="color-scheme">Color Scheme</h3>
-<p>All components use Material 3's <code>MaterialTheme.colorScheme</code>. The default color scheme is defined in <code>core/ui/src/main/kotlin/dev/atick/core/ui/theme/Color.kt</code>.</p>
-<p><strong>Component Color Usage</strong>:
-- <strong>JetpackButton</strong>: <code>colorScheme.onBackground</code> (container)
-- <strong>JetpackOutlinedButton</strong>: <code>colorScheme.outline</code> (border)
-- <strong>Loading Indicators</strong>: <code>colorScheme.onBackground</code> and <code>colorScheme.inversePrimary</code>
-- <strong>Text Fields</strong>: <code>colorScheme.error</code> (when error is present)</p>
+<p>All components use Material 3's <code>MaterialTheme.colorScheme</code>. The default color scheme is defined in
+<code>core/ui/src/main/kotlin/dev/atick/core/ui/theme/Color.kt</code>.</p>
+<p><strong>Component Color Usage</strong>:</p>
+<ul>
+<li><strong>JetpackButton</strong>: <code>colorScheme.onBackground</code> (container)</li>
+<li><strong>JetpackOutlinedButton</strong>: <code>colorScheme.outline</code> (border)</li>
+<li><strong>Loading Indicators</strong>: <code>colorScheme.onBackground</code> and <code>colorScheme.inversePrimary</code></li>
+<li><strong>Text Fields</strong>: <code>colorScheme.error</code> (when error is present)</li>
+</ul>
 <h3 id="customizing-colors">Customizing Colors</h3>
 <p><strong>Option 1: Modify theme colors</strong> (affects all components):</p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-33-1"><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a><span class="c1">// In core/ui/theme/Color.kt</span>
@@ -4090,7 +4188,8 @@ The recommended pattern uses <code>TextFiledData</code> from <code>core:ui</code
 </span><span id="__span-34-7"><a id="__codelineno-34-7" name="__codelineno-34-7" href="#__codelineno-34-7"></a><span class="p">)</span>
 </span></code></pre></div>
 <h3 id="typography">Typography</h3>
-<p>Components use Material 3 typography defined in <code>core/ui/src/main/kotlin/dev/atick/core/ui/theme/Type.kt</code>.</p>
+<p>Components use Material 3 typography defined in
+<code>core/ui/src/main/kotlin/dev/atick/core/ui/theme/Type.kt</code>.</p>
 <p><strong>Customizing Typography</strong>:</p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-35-1"><a id="__codelineno-35-1" name="__codelineno-35-1" href="#__codelineno-35-1"></a><span class="c1">// In core/ui/theme/Type.kt</span>
 </span><span id="__span-35-2"><a id="__codelineno-35-2" name="__codelineno-35-2" href="#__codelineno-35-2"></a><span class="kd">val</span><span class="w"> </span><span class="nv">Typography</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Typography</span><span class="p">(</span>
@@ -4136,7 +4235,8 @@ The recommended pattern uses <code>TextFiledData</code> from <code>core:ui</code
 </span><span id="__span-39-6"><a id="__codelineno-39-6" name="__codelineno-39-6" href="#__codelineno-39-6"></a><span class="p">}</span>
 </span></code></pre></div>
 <h3 id="contrast">Contrast</h3>
-<p>Components automatically use theme colors with sufficient contrast. Verify custom colors meet WCAG AA standards:</p>
+<p>Components automatically use theme colors with sufficient contrast. Verify custom colors meet WCAG
+AA standards:</p>
 <ul>
 <li>Normal text: 4.5:1 contrast ratio</li>
 <li>Large text: 3:1 contrast ratio</li>
@@ -4218,9 +4318,11 @@ The recommended pattern uses <code>TextFiledData</code> from <code>core:ui</code
 </span><span id="__span-43-7"><a id="__codelineno-43-7" name="__codelineno-43-7" href="#__codelineno-43-7"></a><span class="w">    </span><span class="p">}</span>
 </span><span id="__span-43-8"><a id="__codelineno-43-8" name="__codelineno-43-8" href="#__codelineno-43-8"></a><span class="p">}</span>
 </span></code></pre></div>
-<p><strong>Preview Annotations</strong>:
-- <code>@PreviewDevices</code>: Shows component on multiple device sizes
-- <code>@PreviewThemes</code>: Shows component in light and dark themes</p>
+<p><strong>Preview Annotations</strong>:</p>
+<ul>
+<li><code>@PreviewDevices</code>: Shows component on multiple device sizes</li>
+<li><code>@PreviewThemes</code>: Shows component in light and dark themes</li>
+</ul>
 <h3 id="5-document-with-kdoc">5. Document with KDoc</h3>
 <p>Provide comprehensive KDoc for all public components:</p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-44-1"><a id="__codelineno-44-1" name="__codelineno-44-1" href="#__codelineno-44-1"></a><span class="cm">/**</span>
@@ -4228,34 +4330,35 @@ The recommended pattern uses <code>TextFiledData</code> from <code>core:ui</code
 </span><span id="__span-44-3"><a id="__codelineno-44-3" name="__codelineno-44-3" href="#__codelineno-44-3"></a><span class="cm"> *</span>
 </span><span id="__span-44-4"><a id="__codelineno-44-4" name="__codelineno-44-4" href="#__codelineno-44-4"></a><span class="cm"> * Example usage:</span>
 </span><span id="__span-44-5"><a id="__codelineno-44-5" name="__codelineno-44-5" href="#__codelineno-44-5"></a><span class="cm"> * ```</span>
-</span><span id="__span-44-6"><a id="__codelineno-44-6" name="__codelineno-44-6" href="#__codelineno-44-6"></a><span class="cm"> * UserCard(</span>
-</span><span id="__span-44-7"><a id="__codelineno-44-7" name="__codelineno-44-7" href="#__codelineno-44-7"></a><span class="cm"> *     name = &quot;John Doe&quot;,</span>
-</span><span id="__span-44-8"><a id="__codelineno-44-8" name="__codelineno-44-8" href="#__codelineno-44-8"></a><span class="cm"> *     email = &quot;john@example.com&quot;</span>
-</span><span id="__span-44-9"><a id="__codelineno-44-9" name="__codelineno-44-9" href="#__codelineno-44-9"></a><span class="cm"> * )</span>
-</span><span id="__span-44-10"><a id="__codelineno-44-10" name="__codelineno-44-10" href="#__codelineno-44-10"></a><span class="cm"> * ```</span>
-</span><span id="__span-44-11"><a id="__codelineno-44-11" name="__codelineno-44-11" href="#__codelineno-44-11"></a><span class="cm"> *</span>
-</span><span id="__span-44-12"><a id="__codelineno-44-12" name="__codelineno-44-12" href="#__codelineno-44-12"></a><span class="cm"> * @param name The user&#39;s display name</span>
-</span><span id="__span-44-13"><a id="__codelineno-44-13" name="__codelineno-44-13" href="#__codelineno-44-13"></a><span class="cm"> * @param email The user&#39;s email address</span>
-</span><span id="__span-44-14"><a id="__codelineno-44-14" name="__codelineno-44-14" href="#__codelineno-44-14"></a><span class="cm"> * @param modifier Modifier to be applied to the card</span>
-</span><span id="__span-44-15"><a id="__codelineno-44-15" name="__codelineno-44-15" href="#__codelineno-44-15"></a><span class="cm"> */</span>
-</span><span id="__span-44-16"><a id="__codelineno-44-16" name="__codelineno-44-16" href="#__codelineno-44-16"></a><span class="nd">@Composable</span>
-</span><span id="__span-44-17"><a id="__codelineno-44-17" name="__codelineno-44-17" href="#__codelineno-44-17"></a><span class="kd">fun</span><span class="w"> </span><span class="nf">UserCard</span><span class="p">(</span><span class="cm">/* ... */</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="cm">/* ... */</span><span class="w"> </span><span class="p">}</span>
+</span><span id="__span-44-6"><a id="__codelineno-44-6" name="__codelineno-44-6" href="#__codelineno-44-6"></a>
+</span><span id="__span-44-7"><a id="__codelineno-44-7" name="__codelineno-44-7" href="#__codelineno-44-7"></a><span class="cm">* UserCard(</span>
+</span><span id="__span-44-8"><a id="__codelineno-44-8" name="__codelineno-44-8" href="#__codelineno-44-8"></a><span class="cm">*     name = &quot;John Doe&quot;,</span>
+</span><span id="__span-44-9"><a id="__codelineno-44-9" name="__codelineno-44-9" href="#__codelineno-44-9"></a><span class="cm">*     email = &quot;john@example.com&quot;</span>
+</span><span id="__span-44-10"><a id="__codelineno-44-10" name="__codelineno-44-10" href="#__codelineno-44-10"></a><span class="cm">* )</span>
+</span><span id="__span-44-11"><a id="__codelineno-44-11" name="__codelineno-44-11" href="#__codelineno-44-11"></a><span class="cm">* ```</span>
+</span><span id="__span-44-12"><a id="__codelineno-44-12" name="__codelineno-44-12" href="#__codelineno-44-12"></a><span class="cm">*</span>
+</span><span id="__span-44-13"><a id="__codelineno-44-13" name="__codelineno-44-13" href="#__codelineno-44-13"></a><span class="cm">* @param name The user&#39;s display name</span>
+</span><span id="__span-44-14"><a id="__codelineno-44-14" name="__codelineno-44-14" href="#__codelineno-44-14"></a><span class="cm">* @param email The user&#39;s email address</span>
+</span><span id="__span-44-15"><a id="__codelineno-44-15" name="__codelineno-44-15" href="#__codelineno-44-15"></a><span class="cm">* @param modifier Modifier to be applied to the card</span>
+</span><span id="__span-44-16"><a id="__codelineno-44-16" name="__codelineno-44-16" href="#__codelineno-44-16"></a><span class="cm">  */</span>
+</span><span id="__span-44-17"><a id="__codelineno-44-17" name="__codelineno-44-17" href="#__codelineno-44-17"></a><span class="w">  </span><span class="nd">@Composable</span>
+</span><span id="__span-44-18"><a id="__codelineno-44-18" name="__codelineno-44-18" href="#__codelineno-44-18"></a><span class="w">  </span><span class="kd">fun</span><span class="w"> </span><span class="nf">UserCard</span><span class="p">(</span><span class="cm">/* ... */</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="cm">/* ... */</span><span class="w"> </span><span class="p">}</span>
 </span></code></pre></div>
 <h2 id="component-organization">Component Organization</h2>
 <h3 id="file-structure">File Structure</h3>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-45-1"><a id="__codelineno-45-1" name="__codelineno-45-1" href="#__codelineno-45-1"></a>core/ui/src/main/kotlin/dev/atick/core/ui/
 </span><span id="__span-45-2"><a id="__codelineno-45-2" name="__codelineno-45-2" href="#__codelineno-45-2"></a>├── components/
-</span><span id="__span-45-3"><a id="__codelineno-45-3" name="__codelineno-45-3" href="#__codelineno-45-3"></a>│   ├── Button.kt         # All button variants
-</span><span id="__span-45-4"><a id="__codelineno-45-4" name="__codelineno-45-4" href="#__codelineno-45-4"></a>│   ├── TextField.kt      # All text field variants
-</span><span id="__span-45-5"><a id="__codelineno-45-5" name="__codelineno-45-5" href="#__codelineno-45-5"></a>│   ├── TopAppBar.kt      # All app bar variants
-</span><span id="__span-45-6"><a id="__codelineno-45-6" name="__codelineno-45-6" href="#__codelineno-45-6"></a>│   ├── LoadingWheel.kt   # Loading indicators
-</span><span id="__span-45-7"><a id="__codelineno-45-7" name="__codelineno-45-7" href="#__codelineno-45-7"></a>│   └── ...
+</span><span id="__span-45-3"><a id="__codelineno-45-3" name="__codelineno-45-3" href="#__codelineno-45-3"></a>│ ├── Button.kt # All button variants
+</span><span id="__span-45-4"><a id="__codelineno-45-4" name="__codelineno-45-4" href="#__codelineno-45-4"></a>│ ├── TextField.kt # All text field variants
+</span><span id="__span-45-5"><a id="__codelineno-45-5" name="__codelineno-45-5" href="#__codelineno-45-5"></a>│ ├── TopAppBar.kt # All app bar variants
+</span><span id="__span-45-6"><a id="__codelineno-45-6" name="__codelineno-45-6" href="#__codelineno-45-6"></a>│ ├── LoadingWheel.kt # Loading indicators
+</span><span id="__span-45-7"><a id="__codelineno-45-7" name="__codelineno-45-7" href="#__codelineno-45-7"></a>│ └── ...
 </span><span id="__span-45-8"><a id="__codelineno-45-8" name="__codelineno-45-8" href="#__codelineno-45-8"></a>├── theme/
-</span><span id="__span-45-9"><a id="__codelineno-45-9" name="__codelineno-45-9" href="#__codelineno-45-9"></a>│   ├── Color.kt          # Color definitions
-</span><span id="__span-45-10"><a id="__codelineno-45-10" name="__codelineno-45-10" href="#__codelineno-45-10"></a>│   ├── Type.kt           # Typography
-</span><span id="__span-45-11"><a id="__codelineno-45-11" name="__codelineno-45-11" href="#__codelineno-45-11"></a>│   └── Theme.kt          # Theme setup
+</span><span id="__span-45-9"><a id="__codelineno-45-9" name="__codelineno-45-9" href="#__codelineno-45-9"></a>│ ├── Color.kt # Color definitions
+</span><span id="__span-45-10"><a id="__codelineno-45-10" name="__codelineno-45-10" href="#__codelineno-45-10"></a>│ ├── Type.kt # Typography
+</span><span id="__span-45-11"><a id="__codelineno-45-11" name="__codelineno-45-11" href="#__codelineno-45-11"></a>│ └── Theme.kt # Theme setup
 </span><span id="__span-45-12"><a id="__codelineno-45-12" name="__codelineno-45-12" href="#__codelineno-45-12"></a>└── utils/
-</span><span id="__span-45-13"><a id="__codelineno-45-13" name="__codelineno-45-13" href="#__codelineno-45-13"></a>    └── ...               # UI utilities
+</span><span id="__span-45-13"><a id="__codelineno-45-13" name="__codelineno-45-13" href="#__codelineno-45-13"></a>└── ... # UI utilities
 </span></code></pre></div>
 <h3 id="naming-conventions">Naming Conventions</h3>
 <ul>
@@ -4319,10 +4422,12 @@ The recommended pattern uses <code>TextFiledData</code> from <code>core:ui</code
 </span><span id="__span-49-4"><a id="__codelineno-49-4" name="__codelineno-49-4" href="#__codelineno-49-4"></a><span class="w">    </span><span class="n">modifier</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Modifier</span><span class="p">.</span><span class="na">size</span><span class="p">(</span><span class="m">100.</span><span class="n">dp</span><span class="p">)</span>
 </span><span id="__span-49-5"><a id="__codelineno-49-5" name="__codelineno-49-5" href="#__codelineno-49-5"></a><span class="p">)</span>
 </span></code></pre></div>
-<p>Features:
-- Automatic memory and disk caching (Coil)
-- Crossfade animations
-- Placeholder and error handling</p>
+<p>Features:</p>
+<ul>
+<li>Automatic memory and disk caching (Coil)</li>
+<li>Crossfade animations</li>
+<li>Placeholder and error handling</li>
+</ul>
 <h2 id="migration-from-xml-views">Migration from XML Views</h2>
 <p>If migrating from XML to Compose, use these mappings:</p>
 <table>
@@ -4357,12 +4462,9 @@ The recommended pattern uses <code>TextFiledData</code> from <code>core:ui</code
 </table>
 <p><strong>Example Migration</strong>:</p>
 <div class="language-xml highlight"><pre><span></span><code><span id="__span-50-1"><a id="__codelineno-50-1" name="__codelineno-50-1" href="#__codelineno-50-1"></a><span class="cm">&lt;!-- Before (XML) --&gt;</span>
-</span><span id="__span-50-2"><a id="__codelineno-50-2" name="__codelineno-50-2" href="#__codelineno-50-2"></a><span class="nt">&lt;Button</span>
-</span><span id="__span-50-3"><a id="__codelineno-50-3" name="__codelineno-50-3" href="#__codelineno-50-3"></a><span class="w">    </span><span class="na">android:id=</span><span class="s">&quot;@+id/submitButton&quot;</span>
-</span><span id="__span-50-4"><a id="__codelineno-50-4" name="__codelineno-50-4" href="#__codelineno-50-4"></a><span class="w">    </span><span class="na">android:layout_width=</span><span class="s">&quot;match_parent&quot;</span>
-</span><span id="__span-50-5"><a id="__codelineno-50-5" name="__codelineno-50-5" href="#__codelineno-50-5"></a><span class="w">    </span><span class="na">android:layout_height=</span><span class="s">&quot;wrap_content&quot;</span>
-</span><span id="__span-50-6"><a id="__codelineno-50-6" name="__codelineno-50-6" href="#__codelineno-50-6"></a><span class="w">    </span><span class="na">android:text=</span><span class="s">&quot;@string/submit&quot;</span>
-</span><span id="__span-50-7"><a id="__codelineno-50-7" name="__codelineno-50-7" href="#__codelineno-50-7"></a><span class="w">    </span><span class="na">android:onClick=</span><span class="s">&quot;onSubmitClick&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+</span><span id="__span-50-2"><a id="__codelineno-50-2" name="__codelineno-50-2" href="#__codelineno-50-2"></a><span class="nt">&lt;Button</span><span class="w"> </span><span class="na">android:id=</span><span class="s">&quot;@+id/submitButton&quot;</span><span class="w"> </span><span class="na">android:layout_width=</span><span class="s">&quot;match_parent&quot;</span>
+</span><span id="__span-50-3"><a id="__codelineno-50-3" name="__codelineno-50-3" href="#__codelineno-50-3"></a><span class="w">        </span><span class="na">android:layout_height=</span><span class="s">&quot;wrap_content&quot;</span><span class="w"> </span><span class="na">android:text=</span><span class="s">&quot;@string/submit&quot;</span>
+</span><span id="__span-50-4"><a id="__codelineno-50-4" name="__codelineno-50-4" href="#__codelineno-50-4"></a><span class="w">        </span><span class="na">android:onClick=</span><span class="s">&quot;onSubmitClick&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
 </span></code></pre></div>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-51-1"><a id="__codelineno-51-1" name="__codelineno-51-1" href="#__codelineno-51-1"></a><span class="c1">// After (Compose)</span>
 </span><span id="__span-51-2"><a id="__codelineno-51-2" name="__codelineno-51-2" href="#__codelineno-51-2"></a><span class="n">JetpackButton</span><span class="p">(</span>
@@ -4381,7 +4483,8 @@ The recommended pattern uses <code>TextFiledData</code> from <code>core:ui</code
 <li><strong>Flexibility</strong> through content slots and modifiers</li>
 <li><strong>Performance</strong> optimizations for common patterns</li>
 </ul>
-<p>Follow the patterns in this guide to build beautiful, accessible, and performant UIs with minimal boilerplate.</p>
+<p>Follow the patterns in this guide to build beautiful, accessible, and performant UIs with minimal
+boilerplate.</p>
 <h2 id="further-reading">Further Reading</h2>
 <h3 id="concept-guides">Concept Guides</h3>
 <ul>
@@ -4393,7 +4496,8 @@ The recommended pattern uses <code>TextFiledData</code> from <code>core:ui</code
 <h3 id="module-documentation">Module Documentation</h3>
 <ul>
 <li><a href="../core/ui/README.md">Core UI Module</a> - Component architecture and state management utilities</li>
-<li><a href="../feature/auth/README.md">Feature Auth Module</a> - Example of form components and authentication UI</li>
+<li><a href="../feature/auth/README.md">Feature Auth Module</a> - Example of form components and authentication
+  UI</li>
 <li><a href="../feature/home/README.md">Feature Home Module</a> - Example of list components and data display</li>
 </ul>
 <h3 id="external-resources">External Resources</h3>

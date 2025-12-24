@@ -2260,7 +2260,9 @@
 
 
 <h1 id="state-management-deep-dive">State Management Deep Dive</h1>
-<p>This guide provides a comprehensive understanding of the state management pattern used in this Android starter template. The pattern centers around <strong>predictable, centralized state management</strong> using the <code>UiState</code> wrapper combined with specialized update functions.</p>
+<p>This guide provides a comprehensive understanding of the state management pattern used in this
+Android starter template. The pattern centers around <strong>predictable, centralized state management</strong>
+using the <code>UiState</code> wrapper combined with specialized update functions.</p>
 <hr />
 <h2 id="table-of-contents">Table of Contents</h2>
 <ol>
@@ -2278,10 +2280,13 @@
 <h3 id="philosophy">Philosophy</h3>
 <p>The state management pattern in this template follows these principles:</p>
 <ol>
-<li><strong>Single Source of Truth</strong>: Each screen has exactly one <code>UiState&lt;ScreenData&gt;</code> that represents all UI state</li>
+<li><strong>Single Source of Truth</strong>: Each screen has exactly one <code>UiState&lt;ScreenData&gt;</code> that represents all
+   UI state</li>
 <li><strong>Unidirectional Data Flow</strong>: Data flows from Repository → ViewModel → UI in one direction</li>
-<li><strong>Automatic Loading &amp; Error Handling</strong>: Loading states and errors are handled automatically by <code>UiState</code></li>
-<li><strong>Predictable Updates</strong>: State updates follow consistent patterns using <code>updateState</code>, <code>updateStateWith</code>, and <code>updateWith</code></li>
+<li><strong>Automatic Loading &amp; Error Handling</strong>: Loading states and errors are handled automatically by
+   <code>UiState</code></li>
+<li><strong>Predictable Updates</strong>: State updates follow consistent patterns using <code>updateState</code>,
+   <code>updateStateWith</code>, and <code>updateWith</code></li>
 <li><strong>Type Safety</strong>: Compile-time guarantees through Kotlin's type system</li>
 </ol>
 <h3 id="architecture-layers">Architecture Layers</h3>
@@ -2290,20 +2295,20 @@
         SC[StatefulComposable&lt;br/&gt;- Shows LoadingIndicator&lt;br/&gt;- Shows ErrorSnackbar&lt;br/&gt;- Renders Screen]
     end
 
-    subgraph VM["ViewModel Layer (MVVM)"]
-        VML[ViewModel&lt;br/&gt;- _uiState: MutableStateFlow&lt;br/&gt;- uiState: StateFlow&lt;br/&gt;- updateState&amp;#40;&amp;#41;&lt;br/&gt;- updateStateWith&amp;#40;&amp;#41;&lt;br/&gt;- updateWith&amp;#40;&amp;#41;]
-    end
+subgraph VM["ViewModel Layer (MVVM)"]
+VML[ViewModel&lt;br/&gt;- _uiState: MutableStateFlow&lt;br/&gt;- uiState: StateFlow&lt;br/&gt;- updateState&amp;#40;&amp;#41;&lt;br/&gt;- updateStateWith&amp;#40;&amp;#41;&lt;br/&gt;- updateWith&amp;#40;&amp;#41;]
+end
 
-    subgraph Data["Data Layer (Repository)"]
-        Repo[Repository&lt;br/&gt;- suspendRunCatching &amp;#123; &amp;#125;&lt;br/&gt;- Flow&amp;lt;Data&amp;gt;]
-    end
+subgraph Data["Data Layer (Repository)"]
+Repo[Repository&lt;br/&gt;- suspendRunCatching &amp;#123; &amp;#125;&lt;br/&gt;- Flow&amp;lt;Data&amp;gt;]
+end
 
-    UI --&gt;|UiState&amp;lt;ScreenData&amp;gt;| VM
-    VM --&gt;|Result&amp;lt;T&amp;gt;| Data
+UI --&gt;|UiState&amp;lt ;ScreenData&amp;gt ;|VM
+VM --&gt;|Result&amp;lt ;T&amp;gt ;|Data
 
-    style UI fill:#e1f5ff,stroke:#01579b,stroke-width:2px
-    style VM fill:#fff3e0,stroke:#e65100,stroke-width:2px
-    style Data fill:#f3e5f5,stroke:#4a148c,stroke-width:2px</code></pre>
+style UI fill:#e1f5ff, stroke: #01579b, stroke-width: 2px
+style VM fill: #fff3e0, stroke: #e65100,stroke-width: 2px
+style Data fill: #f3e5f5,stroke: #4a148c, stroke-width: 2px</code></pre>
 <hr />
 <h2 id="the-uistate-wrapper">The UiState Wrapper</h2>
 <h3 id="definition">Definition</h3>
@@ -2318,10 +2323,11 @@
 <ul>
 <li><strong><code>data: T</code></strong>: The actual screen data (always available, even during loading/error)</li>
 <li><strong><code>loading: Boolean</code></strong>: Indicates if an async operation is in progress</li>
-<li><strong><code>error: OneTimeEvent&lt;Throwable?&gt;</code></strong>: One-time error events that won't re-trigger on recomposition</li>
+<li><strong><code>error: OneTimeEvent&lt;Throwable?&gt;</code></strong>: One-time error events that won't re-trigger on
+  recomposition</li>
 </ul>
 <h3 id="why-use-uistate">Why Use UiState?</h3>
-<p><strong>Without UiState</strong> (Anti-pattern):
+<p><strong>Without UiState</strong> (Anti-pattern):</p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1">// ❌ Multiple state flows - complex and error-prone</span>
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="kd">class</span><span class="w"> </span><span class="nc">BadViewModel</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">ViewModel</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="nv">_posts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MutableStateFlow</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Post</span><span class="o">&gt;&gt;</span><span class="p">(</span><span class="n">emptyList</span><span class="p">())</span>
@@ -2347,8 +2353,8 @@
 </span><span id="__span-1-23"><a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="w">        </span><span class="p">}</span>
 </span><span id="__span-1-24"><a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="w">    </span><span class="p">}</span>
 </span><span id="__span-1-25"><a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="p">}</span>
-</span></code></pre></div></p>
-<p><strong>With UiState</strong> (Correct pattern):
+</span></code></pre></div>
+<p><strong>With UiState</strong> (Correct pattern):</p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1">// ✅ Single state flow - simple and predictable</span>
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="kd">data</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nc">PostsScreenData</span><span class="p">(</span>
 </span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span><span class="kd">val</span><span class="w"> </span><span class="nv">posts</span><span class="p">:</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">Post</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">emptyList</span><span class="p">()</span>
@@ -2368,7 +2374,7 @@
 </span><span id="__span-2-17"><a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="w">        </span><span class="p">}</span>
 </span><span id="__span-2-18"><a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="w">    </span><span class="p">}</span>
 </span><span id="__span-2-19"><a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="p">}</span>
-</span></code></pre></div></p>
+</span></code></pre></div>
 <hr />
 <h2 id="update-functions-explained">Update Functions Explained</h2>
 <p>There are <strong>three update functions</strong>, each designed for a specific use case:</p>
@@ -2415,7 +2421,7 @@
 </span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">    </span><span class="p">}</span>
 </span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="p">}</span>
 </span></code></pre></div>
-<p><strong>Example - Form Input:</strong>
+<p><strong>Example - Form Input:</strong></p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kd">data</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nc">FormScreenData</span><span class="p">(</span>
 </span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">    </span><span class="kd">val</span><span class="w"> </span><span class="nv">name</span><span class="p">:</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="p">,</span>
 </span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span><span class="kd">val</span><span class="w"> </span><span class="nv">email</span><span class="p">:</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="p">,</span>
@@ -2444,7 +2450,7 @@
 </span><span id="__span-4-26"><a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a><span class="w">        </span><span class="p">}</span>
 </span><span id="__span-4-27"><a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a><span class="w">    </span><span class="p">}</span>
 </span><span id="__span-4-28"><a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a><span class="p">}</span>
-</span></code></pre></div></p>
+</span></code></pre></div>
 <h3 id="2-updatestatewith-async-with-new-data">2. updateStateWith - Async with New Data</h3>
 <p><strong>Use when</strong>: Fetching data from repository/network and updating state with the result</p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="cm">/**</span>
@@ -2460,12 +2466,14 @@
 </span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">    </span><span class="p">}</span>
 </span><span id="__span-5-12"><a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="p">}</span>
 </span></code></pre></div>
-<p><strong>How it works:</strong>
-1. Sets <code>loading = true</code>
-2. Executes your async block
-3. If <strong>success</strong>: Updates <code>data</code> with result, sets <code>loading = false</code>
-4. If <strong>failure</strong>: Sets <code>error</code> with exception, keeps existing <code>data</code>, sets <code>loading = false</code></p>
-<p><strong>Example - Loading User Profile:</strong>
+<p><strong>How it works:</strong></p>
+<ol>
+<li>Sets <code>loading = true</code></li>
+<li>Executes your async block</li>
+<li>If <strong>success</strong>: Updates <code>data</code> with result, sets <code>loading = false</code></li>
+<li>If <strong>failure</strong>: Sets <code>error</code> with exception, keeps existing <code>data</code>, sets <code>loading = false</code></li>
+</ol>
+<p><strong>Example - Loading User Profile:</strong></p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="kd">data</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nc">ProfileScreenData</span><span class="p">(</span>
 </span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">    </span><span class="kd">val</span><span class="w"> </span><span class="nv">user</span><span class="p">:</span><span class="w"> </span><span class="n">User? </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
 </span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">    </span><span class="kd">val</span><span class="w"> </span><span class="nv">followers</span><span class="p">:</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">User</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">emptyList</span><span class="p">()</span>
@@ -2493,9 +2501,10 @@
 </span><span id="__span-6-25"><a id="__codelineno-6-25" name="__codelineno-6-25" href="#__codelineno-6-25"></a><span class="w">        </span><span class="p">}</span>
 </span><span id="__span-6-26"><a id="__codelineno-6-26" name="__codelineno-6-26" href="#__codelineno-6-26"></a><span class="w">    </span><span class="p">}</span>
 </span><span id="__span-6-27"><a id="__codelineno-6-27" name="__codelineno-6-27" href="#__codelineno-6-27"></a><span class="p">}</span>
-</span></code></pre></div></p>
+</span></code></pre></div>
 <h3 id="3-updatewith-async-without-new-data">3. updateWith - Async without New Data</h3>
-<p><strong>Use when</strong>: Performing async operations that don't return data (side effects like save, delete, update)</p>
+<p><strong>Use when</strong>: Performing async operations that don't return data (side effects like save, delete,
+update)</p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="cm">/**</span>
 </span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="cm"> * Async operation without returning new data.</span>
 </span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="cm"> * Use this when you need to perform a side effect (like saving to database)</span>
@@ -2507,12 +2516,14 @@
 </span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="w">    </span><span class="p">}</span>
 </span><span id="__span-7-10"><a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="p">}</span>
 </span></code></pre></div>
-<p><strong>How it works:</strong>
-1. Sets <code>loading = true</code>
-2. Executes your async block
-3. If <strong>success</strong>: Sets <code>loading = false</code> (data unchanged)
-4. If <strong>failure</strong>: Sets <code>error</code> with exception, sets <code>loading = false</code></p>
-<p><strong>Example - Saving Settings:</strong>
+<p><strong>How it works:</strong></p>
+<ol>
+<li>Sets <code>loading = true</code></li>
+<li>Executes your async block</li>
+<li>If <strong>success</strong>: Sets <code>loading = false</code> (data unchanged)</li>
+<li>If <strong>failure</strong>: Sets <code>error</code> with exception, sets <code>loading = false</code></li>
+</ol>
+<p><strong>Example - Saving Settings:</strong></p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="kd">data</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nc">SettingsScreenData</span><span class="p">(</span>
 </span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">    </span><span class="kd">val</span><span class="w"> </span><span class="nv">darkMode</span><span class="p">:</span><span class="w"> </span><span class="kt">Boolean</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
 </span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">    </span><span class="kd">val</span><span class="w"> </span><span class="nv">notifications</span><span class="p">:</span><span class="w"> </span><span class="kt">Boolean</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
@@ -2539,11 +2550,13 @@
 </span><span id="__span-8-24"><a id="__codelineno-8-24" name="__codelineno-8-24" href="#__codelineno-8-24"></a><span class="w">        </span><span class="p">}</span>
 </span><span id="__span-8-25"><a id="__codelineno-8-25" name="__codelineno-8-25" href="#__codelineno-8-25"></a><span class="w">    </span><span class="p">}</span>
 </span><span id="__span-8-26"><a id="__codelineno-8-26" name="__codelineno-8-26" href="#__codelineno-8-26"></a><span class="p">}</span>
-</span></code></pre></div></p>
+</span></code></pre></div>
 <hr />
 <h2 id="kotlin-context-parameters">Kotlin Context Parameters</h2>
 <h3 id="what-are-context-parameters">What Are Context Parameters?</h3>
-<p>Kotlin 2.0 introduces <strong>context parameters</strong> - a way to implicitly pass context to functions without explicitly declaring parameters. This template uses context parameters in the update functions to access <code>viewModelScope</code>.</p>
+<p>Kotlin 2.0 introduces <strong>context parameters</strong> - a way to implicitly pass context to functions without
+explicitly declaring parameters. This template uses context parameters in the update functions to
+access <code>viewModelScope</code>.</p>
 <h3 id="traditional-approach-before-context-parameters">Traditional Approach (Before Context Parameters)</h3>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1">// ❌ Old way - must pass viewModelScope explicitly</span>
 </span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="kd">fun</span><span class="w"> </span><span class="o">&lt;</span><span class="n">T</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">Any</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">MutableStateFlow</span><span class="o">&lt;</span><span class="n">UiState</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&gt;</span><span class="p">.</span><span class="na">updateStateWith</span><span class="p">(</span>
@@ -2776,14 +2789,14 @@
 </span><span id="__span-13-74"><a id="__codelineno-13-74" name="__codelineno-13-74" href="#__codelineno-13-74"></a><span class="w">        </span><span class="n">confirmPassword</span><span class="p">:</span><span class="w"> </span><span class="kt">String</span>
 </span><span id="__span-13-75"><a id="__codelineno-13-75" name="__codelineno-13-75" href="#__codelineno-13-75"></a><span class="w">    </span><span class="p">):</span><span class="w"> </span><span class="kt">Boolean</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-13-76"><a id="__codelineno-13-76" name="__codelineno-13-76" href="#__codelineno-13-76"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">validateEmail</span><span class="p">(</span><span class="n">email</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="o">&amp;&amp;</span>
-</span><span id="__span-13-77"><a id="__codelineno-13-77" name="__codelineno-13-77" href="#__codelineno-13-77"></a><span class="w">               </span><span class="n">validatePassword</span><span class="p">(</span><span class="n">password</span><span class="p">,</span><span class="w"> </span><span class="n">confirmPassword</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">null</span>
+</span><span id="__span-13-77"><a id="__codelineno-13-77" name="__codelineno-13-77" href="#__codelineno-13-77"></a><span class="w">                </span><span class="n">validatePassword</span><span class="p">(</span><span class="n">password</span><span class="p">,</span><span class="w"> </span><span class="n">confirmPassword</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">null</span>
 </span><span id="__span-13-78"><a id="__codelineno-13-78" name="__codelineno-13-78" href="#__codelineno-13-78"></a><span class="w">    </span><span class="p">}</span>
 </span><span id="__span-13-79"><a id="__codelineno-13-79" name="__codelineno-13-79" href="#__codelineno-13-79"></a><span class="p">}</span>
 </span></code></pre></div>
 <hr />
 <h2 id="advanced-patterns">Advanced Patterns</h2>
 <h3 id="pattern-1-multiple-async-operations">Pattern 1: Multiple Async Operations</h3>
-<p><strong>Sequential async operations:</strong>
+<p><strong>Sequential async operations:</strong></p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="kd">fun</span><span class="w"> </span><span class="nf">loadUserData</span><span class="p">(</span><span class="n">userId</span><span class="p">:</span><span class="w"> </span><span class="kt">String</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="w">    </span><span class="n">_uiState</span><span class="p">.</span><span class="na">updateStateWith</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="w">        </span><span class="c1">// Load user first</span>
@@ -2795,8 +2808,8 @@
 </span><span id="__span-14-9"><a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a><span class="w">        </span><span class="p">}</span>
 </span><span id="__span-14-10"><a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a><span class="w">    </span><span class="p">}</span>
 </span><span id="__span-14-11"><a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a><span class="p">}</span>
-</span></code></pre></div></p>
-<p><strong>Parallel async operations:</strong>
+</span></code></pre></div>
+<p><strong>Parallel async operations:</strong></p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="kd">fun</span><span class="w"> </span><span class="nf">loadDashboard</span><span class="p">(</span><span class="n">userId</span><span class="p">:</span><span class="w"> </span><span class="kt">String</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="w">    </span><span class="n">_uiState</span><span class="p">.</span><span class="na">updateStateWith</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="w">        </span><span class="c1">// Load both in parallel</span>
@@ -2810,7 +2823,7 @@
 </span><span id="__span-15-11"><a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a><span class="w">        </span><span class="n">Result</span><span class="p">.</span><span class="na">success</span><span class="p">(</span><span class="n">copy</span><span class="p">(</span><span class="n">user</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">user</span><span class="p">,</span><span class="w"> </span><span class="n">stats</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">stats</span><span class="p">))</span>
 </span><span id="__span-15-12"><a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a><span class="w">    </span><span class="p">}</span>
 </span><span id="__span-15-13"><a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a><span class="p">}</span>
-</span></code></pre></div></p>
+</span></code></pre></div>
 <h3 id="pattern-2-partial-loading-states">Pattern 2: Partial Loading States</h3>
 <p><strong>When you need fine-grained loading indicators:</strong></p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="kd">data</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nc">DashboardScreenData</span><span class="p">(</span>
@@ -2984,7 +2997,7 @@
 <hr />
 <h2 id="migration-guide">Migration Guide</h2>
 <h3 id="from-livedata-to-stateflow-uistate">From LiveData to StateFlow + UiState</h3>
-<p><strong>Before (LiveData):</strong>
+<p><strong>Before (LiveData):</strong></p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="kd">class</span><span class="w"> </span><span class="nc">OldViewModel</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">ViewModel</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-22-2"><a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="nv">_posts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MutableLiveData</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Post</span><span class="o">&gt;&gt;</span><span class="p">()</span>
 </span><span id="__span-22-3"><a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a><span class="w">    </span><span class="kd">val</span><span class="w"> </span><span class="nv">posts</span><span class="p">:</span><span class="w"> </span><span class="n">LiveData</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Post</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_posts</span>
@@ -3003,8 +3016,8 @@
 </span><span id="__span-22-16"><a id="__codelineno-22-16" name="__codelineno-22-16" href="#__codelineno-22-16"></a><span class="w">        </span><span class="p">}</span>
 </span><span id="__span-22-17"><a id="__codelineno-22-17" name="__codelineno-22-17" href="#__codelineno-22-17"></a><span class="w">    </span><span class="p">}</span>
 </span><span id="__span-22-18"><a id="__codelineno-22-18" name="__codelineno-22-18" href="#__codelineno-22-18"></a><span class="p">}</span>
-</span></code></pre></div></p>
-<p><strong>After (StateFlow + UiState):</strong>
+</span></code></pre></div>
+<p><strong>After (StateFlow + UiState):</strong></p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="kd">data</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nc">PostsScreenData</span><span class="p">(</span>
 </span><span id="__span-23-2"><a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a><span class="w">    </span><span class="kd">val</span><span class="w"> </span><span class="nv">posts</span><span class="p">:</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">Post</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">emptyList</span><span class="p">()</span>
 </span><span id="__span-23-3"><a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a><span class="p">)</span>
@@ -3023,9 +3036,9 @@
 </span><span id="__span-23-16"><a id="__codelineno-23-16" name="__codelineno-23-16" href="#__codelineno-23-16"></a><span class="w">        </span><span class="p">}</span>
 </span><span id="__span-23-17"><a id="__codelineno-23-17" name="__codelineno-23-17" href="#__codelineno-23-17"></a><span class="w">    </span><span class="p">}</span>
 </span><span id="__span-23-18"><a id="__codelineno-23-18" name="__codelineno-23-18" href="#__codelineno-23-18"></a><span class="p">}</span>
-</span></code></pre></div></p>
+</span></code></pre></div>
 <h3 id="from-sealed-class-state-to-uistate">From Sealed Class State to UiState</h3>
-<p><strong>Before (Sealed Class):</strong>
+<p><strong>Before (Sealed Class):</strong></p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="kd">sealed</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nc">ScreenState</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-24-2"><a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a><span class="w">    </span><span class="kd">object</span><span class="w"> </span><span class="nc">Loading</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">ScreenState</span><span class="p">()</span>
 </span><span id="__span-24-3"><a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a><span class="w">    </span><span class="kd">data</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nc">Success</span><span class="p">(</span><span class="kd">val</span><span class="w"> </span><span class="nv">data</span><span class="p">:</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">Post</span><span class="o">&gt;</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">ScreenState</span><span class="p">()</span>
@@ -3047,8 +3060,8 @@
 </span><span id="__span-24-19"><a id="__codelineno-24-19" name="__codelineno-24-19" href="#__codelineno-24-19"></a><span class="w">        </span><span class="p">}</span>
 </span><span id="__span-24-20"><a id="__codelineno-24-20" name="__codelineno-24-20" href="#__codelineno-24-20"></a><span class="w">    </span><span class="p">}</span>
 </span><span id="__span-24-21"><a id="__codelineno-24-21" name="__codelineno-24-21" href="#__codelineno-24-21"></a><span class="p">}</span>
-</span></code></pre></div></p>
-<p><strong>After (UiState):</strong>
+</span></code></pre></div>
+<p><strong>After (UiState):</strong></p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="kd">data</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nc">PostsScreenData</span><span class="p">(</span>
 </span><span id="__span-25-2"><a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a><span class="w">    </span><span class="kd">val</span><span class="w"> </span><span class="nv">posts</span><span class="p">:</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">Post</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">emptyList</span><span class="p">()</span>
 </span><span id="__span-25-3"><a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a><span class="p">)</span>
@@ -3067,16 +3080,18 @@
 </span><span id="__span-25-16"><a id="__codelineno-25-16" name="__codelineno-25-16" href="#__codelineno-25-16"></a><span class="w">        </span><span class="p">}</span>
 </span><span id="__span-25-17"><a id="__codelineno-25-17" name="__codelineno-25-17" href="#__codelineno-25-17"></a><span class="w">    </span><span class="p">}</span>
 </span><span id="__span-25-18"><a id="__codelineno-25-18" name="__codelineno-25-18" href="#__codelineno-25-18"></a><span class="p">}</span>
-</span></code></pre></div></p>
+</span></code></pre></div>
 <hr />
 <h2 id="summary">Summary</h2>
 <p><strong>Key Takeaways:</strong></p>
 <ol>
 <li><strong>Use <code>UiState&lt;T&gt;</code> wrapper</strong> - Centralizes loading, error, and data state</li>
-<li><strong>Choose the right update function</strong>:</li>
+<li><strong>Choose the right update function</strong>:<ul>
 <li><code>updateState</code> for synchronous updates</li>
 <li><code>updateStateWith</code> for async operations returning data</li>
 <li><code>updateWith</code> for async side effects</li>
+</ul>
+</li>
 <li><strong>Context parameters make API cleaner</strong> - No need to pass <code>viewModelScope</code></li>
 <li><strong>StatefulComposable handles UI boilerplate</strong> - Automatic loading and error display</li>
 <li><strong>Single source of truth</strong> - One <code>StateFlow&lt;UiState&lt;ScreenData&gt;&gt;</code> per screen</li>
@@ -3097,7 +3112,9 @@
 </ul>
 <h3 id="api-documentation">API Documentation</h3>
 <ul>
-<li><a href="../core/ui/src/main/kotlin/dev/atick/core/ui/utils/StatefulComposable.kt"><code>StatefulComposable.kt</code></a> - Stateful composable implementation</li>
+<li><a href="../core/ui/src/main/kotlin/dev/atick/core/ui/utils/StatefulComposable.kt">
+  <code>StatefulComposable.kt</code></a> -
+  Stateful composable implementation</li>
 </ul>
 
 
