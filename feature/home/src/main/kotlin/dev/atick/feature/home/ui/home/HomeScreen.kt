@@ -16,31 +16,24 @@
 
 package dev.atick.feature.home.ui.home
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Sync
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ElevatedCard
+import androidx.compose.material.icons.filled.CloudSync
+import androidx.compose.material.icons.filled.RocketLaunch
 import androidx.compose.material3.Icon
+import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -94,97 +87,40 @@ private fun HomeScreen(
 ) {
     val state = rememberLazyStaggeredGridState()
 
-    LazyVerticalStaggeredGrid(
-        columns = StaggeredGridCells.Adaptive(300.dp),
-        contentPadding = PaddingValues(16.dp),
-        horizontalArrangement = Arrangement.spacedBy(16.dp),
-        verticalItemSpacing = 16.dp,
-        state = state,
+    Surface(
+        modifier = Modifier.padding(horizontal = 2.dp),
+        shape = MaterialTheme.shapes.large,
+        color = Color.Transparent,
     ) {
-        items(items = jetpacks, key = { it.id }) { jetpack ->
-            SwipeToDismiss(onDelete = { onDeleteJetpack(jetpack) }) {
-                JetpackCard(
-                    jetpack = jetpack,
-                    onClick = { onJetpackCLick(jetpack.id) },
-                )
-            }
-        }
-    }
-}
-
-/**
- * Jetpack card.
- *
- * @param jetpack The jetpack.
- * @param modifier The modifier.
- * @param onClick The click listener.
- */
-@Composable
-fun JetpackCard(
-    jetpack: Jetpack,
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit = {},
-) {
-    ElevatedCard(
-        modifier = modifier
-            .fillMaxWidth()
-            .clickable(onClick = onClick),
-        shape = MaterialTheme.shapes.medium,
-        elevation = CardDefaults.elevatedCardElevation(),
-    ) {
-        Column(
-            modifier = Modifier
-                .padding(16.dp)
-                .fillMaxWidth(),
+        LazyVerticalStaggeredGrid(
+            columns = StaggeredGridCells.Adaptive(150.dp),
+            horizontalArrangement = Arrangement.spacedBy(2.dp),
+            verticalItemSpacing = 2.dp,
+            state = state,
         ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Text(
-                    text = jetpack.name,
-                    style = MaterialTheme.typography.titleLarge,
-                    color = MaterialTheme.colorScheme.onSurface,
-                )
-
-                // Sync status indicator
-                if (jetpack.needsSync) {
-                    Icon(
-                        imageVector = Icons.Rounded.Sync,
-                        contentDescription = "Needs sync",
-                        tint = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.size(20.dp),
+            items(items = jetpacks, key = { it.id }) { jetpack ->
+                SwipeToDismiss(onDelete = { onDeleteJetpack(jetpack) }) {
+                    ListItem(
+                        onClick = { onJetpackCLick(jetpack.id) },
+                        leadingContent = {
+                            Icon(
+                                Icons.Default.RocketLaunch,
+                                contentDescription = jetpack.name,
+                            )
+                        },
+                        overlineContent = { Text(jetpack.formattedDate) },
+                        content = { Text(jetpack.name) },
+                        supportingContent = { Text(jetpack.price.format(isCurrency = true)) },
+                        trailingContent = {
+                            if (jetpack.needsSync) {
+                                Icon(
+                                    Icons.Default.CloudSync,
+                                    contentDescription = null,
+                                )
+                            }
+                        },
                     )
                 }
-            }
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Text(
-                text = "ID: ${jetpack.id}",
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Text(
-                    text = "$ ${jetpack.price.format(2)}",
-                    style = MaterialTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.primary,
-                )
-
-                Text(
-                    text = jetpack.formattedDate,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
             }
         }
     }
