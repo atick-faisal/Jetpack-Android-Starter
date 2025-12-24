@@ -98,7 +98,38 @@
   </div>
   <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
     <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":data/main" data-filterable-set=":data/main" data-active="" data-toggle=":data/main">androidJvm</button></div>
-<div class="content sourceset-dependent-content" data-active="" data-togglable=":data/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="get-jetpacks.html"><span class="token function">getJetpacks</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><span data-unresolved-link="kotlinx.coroutines.flow/Flow///PointingToDeclaration/">Flow</span><span class="token operator">&lt;</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><a href="../../dev.atick.data.model.home/-jetpack/index.html">Jetpack</a><span class="token operator">&gt;</span><span class="token operator">&gt;</span></div><p class="paragraph">Retrieves a list of all jetpacks.</p><span class="kdoc-tag"><h4 class="">Return</h4><p class="paragraph">A Flow emitting a list of Jetpack objects.</p></span></div>  </div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":data/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="get-jetpacks.html"><span class="token function">getJetpacks</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><span data-unresolved-link="kotlinx.coroutines.flow/Flow///PointingToDeclaration/">Flow</span><span class="token operator">&lt;</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><a href="../../dev.atick.data.model.home/-jetpack/index.html">Jetpack</a><span class="token operator">&gt;</span><span class="token operator">&gt;</span></div><p class="paragraph">Retrieves a list of all jetpacks.</p><span class="kdoc-tag"><h4 class="">Return</h4><p class="paragraph">A Flow emitting a list of Jetpack objects.</p></span><h4 class="">Samples</h4><div class="sample-container"><pre><code class="runnablesample monospace block lang-kotlin" theme="idea">import dev.atick.core.preferences.data.UserPreferencesDataSource
+import dev.atick.core.room.data.LocalDataSource
+import dev.atick.core.room.model.SyncAction
+import dev.atick.core.utils.suspendRunCatching
+import dev.atick.data.model.home.Jetpack
+import dev.atick.data.model.home.mapToJetpacks
+import dev.atick.data.model.home.toFirebaseJetpack
+import dev.atick.data.model.home.toJetpack
+import dev.atick.data.model.home.toJetpackEntity
+import dev.atick.data.utils.SyncManager
+import dev.atick.data.utils.SyncProgress
+import dev.atick.firebase.firestore.data.FirebaseDataSource
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emitAll
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
+import timber.log.Timber
+import javax.inject.Inject
+
+fun main() { 
+   //sampleStart 
+   // Request a sync when fetching jetpacks
+// TODO: This should be done in a more efficient way
+syncManager.requestSync()
+
+return flow {
+    val userId = preferencesDataSource.getUserIdOrThrow()
+    val jetpacks = localDataSource.getJetpacks(userId).map { it.mapToJetpacks() }
+    emitAll(jetpacks)
+} 
+   //sampleEnd
+}</code></pre></div></div>  </div>
 </div>
     <div class="footer">
         <div class="footer--container">

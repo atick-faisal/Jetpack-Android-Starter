@@ -9,14 +9,17 @@
       
       
       
-        <link rel="prev" href="../dependency/">
+        <link rel="prev" href="../architecture/">
       
       
-        <link rel="next" href="../spotless/">
+        <link rel="next" href="../state-management/">
+      
+      
+        
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.23">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
     
     
       
@@ -24,10 +27,10 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.84d31ad4.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
       
         
-        <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -50,7 +53,6 @@
     
       
 
-    
     
     
   </head>
@@ -269,9 +271,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Getting Started
+  
+
     
   </span>
+  
   
 
       </a>
@@ -289,8 +296,6 @@
   
     
     
-      
-        
       
         
       
@@ -314,9 +319,14 @@
   
   
   <span class="md-ellipsis">
-    Development Guide
+    
+  
+    Core Concepts
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -325,32 +335,13 @@
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
-            Development Guide
+            
+  
+    Core Concepts
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../guide/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Guide
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
             
               
                 
@@ -364,32 +355,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Architecture
+  
+
     
   </span>
   
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../dependency/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Dependencies
-    
-  </span>
   
 
       </a>
@@ -419,9 +392,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Philosophy
+  
+
     
   </span>
+  
   
 
           <span class="md-nav__icon md-icon"></span>
@@ -432,9 +410,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Philosophy
+  
+
     
   </span>
+  
   
 
       </a>
@@ -457,7 +440,9 @@
         <li class="md-nav__item">
   <a href="#core-principles" class="md-nav__link">
     <span class="md-ellipsis">
-      Core Principles
+      
+        Core Principles
+      
     </span>
   </a>
   
@@ -467,7 +452,9 @@
           <li class="md-nav__item">
   <a href="#1-pragmatic-simplicity" class="md-nav__link">
     <span class="md-ellipsis">
-      1. Pragmatic Simplicity
+      
+        1. Pragmatic Simplicity
+      
     </span>
   </a>
   
@@ -476,7 +463,9 @@
           <li class="md-nav__item">
   <a href="#2-centralized-state-management" class="md-nav__link">
     <span class="md-ellipsis">
-      2. Centralized State Management
+      
+        2. Centralized State Management
+      
     </span>
   </a>
   
@@ -486,7 +475,9 @@
           <li class="md-nav__item">
   <a href="#uistate-wrapper" class="md-nav__link">
     <span class="md-ellipsis">
-      UiState Wrapper
+      
+        UiState Wrapper
+      
     </span>
   </a>
   
@@ -495,7 +486,9 @@
           <li class="md-nav__item">
   <a href="#statefulcomposable-pattern" class="md-nav__link">
     <span class="md-ellipsis">
-      StatefulComposable Pattern
+      
+        StatefulComposable Pattern
+      
     </span>
   </a>
   
@@ -509,7 +502,9 @@
           <li class="md-nav__item">
   <a href="#3-direct-viewmodels" class="md-nav__link">
     <span class="md-ellipsis">
-      3. Direct ViewModels
+      
+        3. Direct ViewModels
+      
     </span>
   </a>
   
@@ -518,7 +513,9 @@
           <li class="md-nav__item">
   <a href="#4-error-handling" class="md-nav__link">
     <span class="md-ellipsis">
-      4. Error Handling
+      
+        4. Error Handling
+      
     </span>
   </a>
   
@@ -527,7 +524,9 @@
           <li class="md-nav__item">
   <a href="#5-state-updates" class="md-nav__link">
     <span class="md-ellipsis">
-      5. State Updates
+      
+        5. State Updates
+      
     </span>
   </a>
   
@@ -536,7 +535,9 @@
           <li class="md-nav__item">
   <a href="#6-feature-organization" class="md-nav__link">
     <span class="md-ellipsis">
-      6. Feature Organization
+      
+        6. Feature Organization
+      
     </span>
   </a>
   
@@ -550,7 +551,9 @@
         <li class="md-nav__item">
   <a href="#conscious-trade-offs" class="md-nav__link">
     <span class="md-ellipsis">
-      Conscious Trade-offs
+      
+        Conscious Trade-offs
+      
     </span>
   </a>
   
@@ -559,7 +562,9 @@
         <li class="md-nav__item">
   <a href="#benefits-of-this-approach" class="md-nav__link">
     <span class="md-ellipsis">
-      Benefits of This Approach
+      
+        Benefits of This Approach
+      
     </span>
   </a>
   
@@ -568,7 +573,20 @@
         <li class="md-nav__item">
   <a href="#when-to-break-these-rules" class="md-nav__link">
     <span class="md-ellipsis">
-      When to Break These Rules
+      
+        When to Break These Rules
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
     </span>
   </a>
   
@@ -577,7 +595,9 @@
         <li class="md-nav__item">
   <a href="#further-reading" class="md-nav__link">
     <span class="md-ellipsis">
-      Further Reading
+      
+        Further Reading
+      
     </span>
   </a>
   
@@ -587,6 +607,34 @@
   
 </nav>
       
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../state-management/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    State Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -607,6 +655,10 @@
   
     
     
+      
+        
+      
+        
       
         
       
@@ -634,9 +686,14 @@
   
   
   <span class="md-ellipsis">
-    Tools & Configuration
+    
+  
+    Development Guide
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -645,7 +702,273 @@
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_3">
             <span class="md-nav__icon md-icon"></span>
-            Tools & Configuration
+            
+  
+    Development Guide
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Adding Features
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../components/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Components
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../data-flow/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data Flow
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../navigation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Navigation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dependency-injection/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dependency Injection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dependency/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dependencies
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../quick-reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tools & Configuration
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tools & Configuration
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -661,9 +984,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Spotless
+  
+
     
   </span>
+  
   
 
       </a>
@@ -684,9 +1012,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Fastlane
+  
+
     
   </span>
+  
   
 
       </a>
@@ -707,9 +1040,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Firebase
+  
+
     
   </span>
+  
   
 
       </a>
@@ -730,9 +1068,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     GitHub
+  
+
     
   </span>
+  
   
 
       </a>
@@ -753,9 +1096,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Plugins
+  
+
     
   </span>
+  
   
 
       </a>
@@ -792,26 +1140,35 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
         
           
-          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
             
   
   
   <span class="md-ellipsis">
+    
+  
     Best Practices
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
-            Best Practices
+            
+  
+    Best Practices
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -827,9 +1184,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Performance
+  
+
     
   </span>
+  
   
 
       </a>
@@ -850,9 +1212,130 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Tips
+  
+
     
   </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Troubleshooting
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Troubleshooting
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../troubleshooting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Common Issues
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../faq/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FAQ
+  
+
+    
+  </span>
+  
   
 
       </a>
@@ -880,9 +1363,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     📚 API Reference
+  
+
     
   </span>
+  
   
 
       </a>
@@ -902,9 +1390,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     ⚖️ License
+  
+
     
   </span>
+  
   
 
       </a>
@@ -941,7 +1434,9 @@
         <li class="md-nav__item">
   <a href="#core-principles" class="md-nav__link">
     <span class="md-ellipsis">
-      Core Principles
+      
+        Core Principles
+      
     </span>
   </a>
   
@@ -951,7 +1446,9 @@
           <li class="md-nav__item">
   <a href="#1-pragmatic-simplicity" class="md-nav__link">
     <span class="md-ellipsis">
-      1. Pragmatic Simplicity
+      
+        1. Pragmatic Simplicity
+      
     </span>
   </a>
   
@@ -960,7 +1457,9 @@
           <li class="md-nav__item">
   <a href="#2-centralized-state-management" class="md-nav__link">
     <span class="md-ellipsis">
-      2. Centralized State Management
+      
+        2. Centralized State Management
+      
     </span>
   </a>
   
@@ -970,7 +1469,9 @@
           <li class="md-nav__item">
   <a href="#uistate-wrapper" class="md-nav__link">
     <span class="md-ellipsis">
-      UiState Wrapper
+      
+        UiState Wrapper
+      
     </span>
   </a>
   
@@ -979,7 +1480,9 @@
           <li class="md-nav__item">
   <a href="#statefulcomposable-pattern" class="md-nav__link">
     <span class="md-ellipsis">
-      StatefulComposable Pattern
+      
+        StatefulComposable Pattern
+      
     </span>
   </a>
   
@@ -993,7 +1496,9 @@
           <li class="md-nav__item">
   <a href="#3-direct-viewmodels" class="md-nav__link">
     <span class="md-ellipsis">
-      3. Direct ViewModels
+      
+        3. Direct ViewModels
+      
     </span>
   </a>
   
@@ -1002,7 +1507,9 @@
           <li class="md-nav__item">
   <a href="#4-error-handling" class="md-nav__link">
     <span class="md-ellipsis">
-      4. Error Handling
+      
+        4. Error Handling
+      
     </span>
   </a>
   
@@ -1011,7 +1518,9 @@
           <li class="md-nav__item">
   <a href="#5-state-updates" class="md-nav__link">
     <span class="md-ellipsis">
-      5. State Updates
+      
+        5. State Updates
+      
     </span>
   </a>
   
@@ -1020,7 +1529,9 @@
           <li class="md-nav__item">
   <a href="#6-feature-organization" class="md-nav__link">
     <span class="md-ellipsis">
-      6. Feature Organization
+      
+        6. Feature Organization
+      
     </span>
   </a>
   
@@ -1034,7 +1545,9 @@
         <li class="md-nav__item">
   <a href="#conscious-trade-offs" class="md-nav__link">
     <span class="md-ellipsis">
-      Conscious Trade-offs
+      
+        Conscious Trade-offs
+      
     </span>
   </a>
   
@@ -1043,7 +1556,9 @@
         <li class="md-nav__item">
   <a href="#benefits-of-this-approach" class="md-nav__link">
     <span class="md-ellipsis">
-      Benefits of This Approach
+      
+        Benefits of This Approach
+      
     </span>
   </a>
   
@@ -1052,7 +1567,20 @@
         <li class="md-nav__item">
   <a href="#when-to-break-these-rules" class="md-nav__link">
     <span class="md-ellipsis">
-      When to Break These Rules
+      
+        When to Break These Rules
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
     </span>
   </a>
   
@@ -1061,7 +1589,9 @@
         <li class="md-nav__item">
   <a href="#further-reading" class="md-nav__link">
     <span class="md-ellipsis">
-      Further Reading
+      
+        Further Reading
+      
     </span>
   </a>
   
@@ -1077,6 +1607,7 @@
           
           
             <div class="md-content" data-md-component="content">
+              
               <article class="md-content__inner md-typeset">
                 
                   
@@ -1206,12 +1737,12 @@ centrally:</p>
 </span></code></pre></div>
 <h3 id="6-feature-organization">6. Feature Organization</h3>
 <p>Each feature is self-contained and follows a consistent structure:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>feature/
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>└── auth/
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>    ├── navigation/    # Navigation-related code
-</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>    ├── ui/           # UI components and ViewModels
-</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>    └── model/       # Feature-specific models
-</span></code></pre></div>
+<ul>
+<li><code>feature/auth/</code> - Authentication feature module</li>
+<li><code>navigation/</code> - Navigation-related code</li>
+<li><code>ui/</code> - UI components and ViewModels</li>
+<li><code>model/</code> - Feature-specific models</li>
+</ul>
 <h2 id="conscious-trade-offs">Conscious Trade-offs</h2>
 <p>Our design philosophy makes several conscious trade-offs:</p>
 <ol>
@@ -1293,11 +1824,22 @@ easier to understand, not to restrict flexibility where it's truly needed.</p>
 <p>When deviating from these patterns, document your reasoning to help other developers understand
 the context of your decisions.</p>
 </div>
+<hr />
+<h2 id="summary">Summary</h2>
+<p>This template's design philosophy prioritizes:</p>
+<ul>
+<li><strong>Pragmatic simplicity</strong> over theoretical purity</li>
+<li><strong>Centralized state management</strong> with UiState and StatefulComposable</li>
+<li><strong>Direct, explicit state updates</strong> for readability and debuggability</li>
+<li><strong>Consistent error handling</strong> across all layers</li>
+<li><strong>Strong conventions</strong> over flexible configuration</li>
+</ul>
+<p>These trade-offs favor maintainability, readability, and easier onboarding at the cost of some flexibility.</p>
 <h2 id="further-reading">Further Reading</h2>
 <ul>
-<li><a href="../architecture/">Architecture Overview</a>: Understand the architecture and design principles</li>
-<li><a href="../guide/">Adding New Features</a>: Get started with adding new features to the project</li>
-<li><a href="../github/">CI/CD Setup</a>: Set up continuous integration and deployment for the project</li>
+<li><a href="../architecture/">Architecture Overview</a> - Understand the two-layer architecture</li>
+<li><a href="../state-management/">State Management</a> - Deep dive into UiState and update functions</li>
+<li><a href="../guide/">Adding Features</a> - Step-by-step guide applying these principles</li>
 </ul>
 
 
@@ -1485,10 +2027,11 @@ the context of your decisions.</p>
     
     
       
-      <script id="__config" type="application/json">{"base": "..", "features": ["navigation.indexes", "navigation.top", "content.action.view", "content.code.copy"], "search": "../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.indexes", "navigation.top", "content.action.view", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../assets/javascripts/bundle.f55a23d4.min.js"></script>
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
       
     
   </body>

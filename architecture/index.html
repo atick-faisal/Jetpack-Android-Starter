@@ -9,14 +9,17 @@
       
       
       
-        <link rel="prev" href="../guide/">
+        <link rel="prev" href="../getting-started/">
       
       
-        <link rel="next" href="../dependency/">
+        <link rel="next" href="../philosophy/">
+      
+      
+        
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.23">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
     
     
       
@@ -24,10 +27,10 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.84d31ad4.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
       
         
-        <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -50,7 +53,6 @@
     
       
 
-    
     
     
   </head>
@@ -269,9 +271,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Getting Started
+  
+
     
   </span>
+  
   
 
       </a>
@@ -289,8 +296,6 @@
   
     
     
-      
-        
       
         
       
@@ -314,9 +319,14 @@
   
   
   <span class="md-ellipsis">
-    Development Guide
+    
+  
+    Core Concepts
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -325,32 +335,13 @@
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
-            Development Guide
+            
+  
+    Core Concepts
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../guide/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Guide
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
             
               
                 
@@ -373,9 +364,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Architecture
+  
+
     
   </span>
+  
   
 
           <span class="md-nav__icon md-icon"></span>
@@ -386,9 +382,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Architecture
+  
+
     
   </span>
+  
   
 
       </a>
@@ -411,7 +412,9 @@
         <li class="md-nav__item">
   <a href="#architectural-principles" class="md-nav__link">
     <span class="md-ellipsis">
-      Architectural Principles
+      
+        Architectural Principles
+      
     </span>
   </a>
   
@@ -420,7 +423,9 @@
         <li class="md-nav__item">
   <a href="#core-layers" class="md-nav__link">
     <span class="md-ellipsis">
-      Core Layers
+      
+        Core Layers
+      
     </span>
   </a>
   
@@ -430,7 +435,9 @@
           <li class="md-nav__item">
   <a href="#ui-layer" class="md-nav__link">
     <span class="md-ellipsis">
-      UI Layer
+      
+        UI Layer
+      
     </span>
   </a>
   
@@ -439,7 +446,9 @@
           <li class="md-nav__item">
   <a href="#data-layer" class="md-nav__link">
     <span class="md-ellipsis">
-      Data Layer
+      
+        Data Layer
+      
     </span>
   </a>
   
@@ -453,7 +462,9 @@
         <li class="md-nav__item">
   <a href="#state-management" class="md-nav__link">
     <span class="md-ellipsis">
-      State Management
+      
+        State Management
+      
     </span>
   </a>
   
@@ -462,7 +473,9 @@
         <li class="md-nav__item">
   <a href="#dependency-injection" class="md-nav__link">
     <span class="md-ellipsis">
-      Dependency Injection
+      
+        Dependency Injection
+      
     </span>
   </a>
   
@@ -471,7 +484,9 @@
         <li class="md-nav__item">
   <a href="#data-flow" class="md-nav__link">
     <span class="md-ellipsis">
-      Data Flow
+      
+        Data Flow
+      
     </span>
   </a>
   
@@ -480,16 +495,20 @@
         <li class="md-nav__item">
   <a href="#adding-a-domain-layer" class="md-nav__link">
     <span class="md-ellipsis">
-      Adding a Domain Layer
+      
+        Adding a Domain Layer
+      
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#testing-strategy-upcoming" class="md-nav__link">
+  <a href="#testing-strategy" class="md-nav__link">
     <span class="md-ellipsis">
-      Testing Strategy (Upcoming 🚧)
+      
+        Testing Strategy
+      
     </span>
   </a>
   
@@ -498,7 +517,92 @@
         <li class="md-nav__item">
   <a href="#best-practices" class="md-nav__link">
     <span class="md-ellipsis">
-      Best Practices
+      
+        Best Practices
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#integration-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Integration Patterns
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Integration Patterns">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#navigation-state-management-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Navigation + State Management Integration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#firebase-data-layer-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Firebase + Data Layer Integration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dependency-injection-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dependency Injection Integration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sync-repositories-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sync + Repositories Integration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#complete-integration-flow-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Complete Integration Flow Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
     </span>
   </a>
   
@@ -507,9 +611,39 @@
         <li class="md-nav__item">
   <a href="#further-reading" class="md-nav__link">
     <span class="md-ellipsis">
-      Further Reading
+      
+        Further Reading
+      
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Further Reading">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#concept-guides" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Concept Guides
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#module-documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Module Documentation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -529,14 +663,19 @@
   
   
     <li class="md-nav__item">
-      <a href="../dependency/" class="md-nav__link">
+      <a href="../philosophy/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Dependencies
+    
+  
+    Philosophy
+  
+
     
   </span>
+  
   
 
       </a>
@@ -552,14 +691,19 @@
   
   
     <li class="md-nav__item">
-      <a href="../philosophy/" class="md-nav__link">
+      <a href="../state-management/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Philosophy
+    
+  
+    State Management
+  
+
     
   </span>
+  
   
 
       </a>
@@ -583,6 +727,10 @@
   
     
     
+      
+        
+      
+        
       
         
       
@@ -610,9 +758,14 @@
   
   
   <span class="md-ellipsis">
-    Tools & Configuration
+    
+  
+    Development Guide
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -621,7 +774,273 @@
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_3">
             <span class="md-nav__icon md-icon"></span>
-            Tools & Configuration
+            
+  
+    Development Guide
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Adding Features
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../components/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Components
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../data-flow/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data Flow
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../navigation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Navigation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dependency-injection/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dependency Injection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dependency/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dependencies
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../quick-reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tools & Configuration
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tools & Configuration
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -637,9 +1056,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Spotless
+  
+
     
   </span>
+  
   
 
       </a>
@@ -660,9 +1084,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Fastlane
+  
+
     
   </span>
+  
   
 
       </a>
@@ -683,9 +1112,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Firebase
+  
+
     
   </span>
+  
   
 
       </a>
@@ -706,9 +1140,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     GitHub
+  
+
     
   </span>
+  
   
 
       </a>
@@ -729,9 +1168,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Plugins
+  
+
     
   </span>
+  
   
 
       </a>
@@ -768,26 +1212,35 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
         
           
-          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
             
   
   
   <span class="md-ellipsis">
+    
+  
     Best Practices
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
-            Best Practices
+            
+  
+    Best Practices
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -803,9 +1256,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Performance
+  
+
     
   </span>
+  
   
 
       </a>
@@ -826,9 +1284,130 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Tips
+  
+
     
   </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Troubleshooting
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Troubleshooting
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../troubleshooting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Common Issues
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../faq/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FAQ
+  
+
+    
+  </span>
+  
   
 
       </a>
@@ -856,9 +1435,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     📚 API Reference
+  
+
     
   </span>
+  
   
 
       </a>
@@ -878,9 +1462,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     ⚖️ License
+  
+
     
   </span>
+  
   
 
       </a>
@@ -917,7 +1506,9 @@
         <li class="md-nav__item">
   <a href="#architectural-principles" class="md-nav__link">
     <span class="md-ellipsis">
-      Architectural Principles
+      
+        Architectural Principles
+      
     </span>
   </a>
   
@@ -926,7 +1517,9 @@
         <li class="md-nav__item">
   <a href="#core-layers" class="md-nav__link">
     <span class="md-ellipsis">
-      Core Layers
+      
+        Core Layers
+      
     </span>
   </a>
   
@@ -936,7 +1529,9 @@
           <li class="md-nav__item">
   <a href="#ui-layer" class="md-nav__link">
     <span class="md-ellipsis">
-      UI Layer
+      
+        UI Layer
+      
     </span>
   </a>
   
@@ -945,7 +1540,9 @@
           <li class="md-nav__item">
   <a href="#data-layer" class="md-nav__link">
     <span class="md-ellipsis">
-      Data Layer
+      
+        Data Layer
+      
     </span>
   </a>
   
@@ -959,7 +1556,9 @@
         <li class="md-nav__item">
   <a href="#state-management" class="md-nav__link">
     <span class="md-ellipsis">
-      State Management
+      
+        State Management
+      
     </span>
   </a>
   
@@ -968,7 +1567,9 @@
         <li class="md-nav__item">
   <a href="#dependency-injection" class="md-nav__link">
     <span class="md-ellipsis">
-      Dependency Injection
+      
+        Dependency Injection
+      
     </span>
   </a>
   
@@ -977,7 +1578,9 @@
         <li class="md-nav__item">
   <a href="#data-flow" class="md-nav__link">
     <span class="md-ellipsis">
-      Data Flow
+      
+        Data Flow
+      
     </span>
   </a>
   
@@ -986,16 +1589,20 @@
         <li class="md-nav__item">
   <a href="#adding-a-domain-layer" class="md-nav__link">
     <span class="md-ellipsis">
-      Adding a Domain Layer
+      
+        Adding a Domain Layer
+      
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#testing-strategy-upcoming" class="md-nav__link">
+  <a href="#testing-strategy" class="md-nav__link">
     <span class="md-ellipsis">
-      Testing Strategy (Upcoming 🚧)
+      
+        Testing Strategy
+      
     </span>
   </a>
   
@@ -1004,7 +1611,92 @@
         <li class="md-nav__item">
   <a href="#best-practices" class="md-nav__link">
     <span class="md-ellipsis">
-      Best Practices
+      
+        Best Practices
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#integration-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Integration Patterns
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Integration Patterns">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#navigation-state-management-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Navigation + State Management Integration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#firebase-data-layer-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Firebase + Data Layer Integration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dependency-injection-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dependency Injection Integration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sync-repositories-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sync + Repositories Integration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#complete-integration-flow-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Complete Integration Flow Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
     </span>
   </a>
   
@@ -1013,9 +1705,39 @@
         <li class="md-nav__item">
   <a href="#further-reading" class="md-nav__link">
     <span class="md-ellipsis">
-      Further Reading
+      
+        Further Reading
+      
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Further Reading">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#concept-guides" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Concept Guides
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#module-documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Module Documentation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1029,6 +1751,7 @@
           
           
             <div class="md-content" data-md-component="content">
+              
               <article class="md-content__inner md-typeset">
                 
                   
@@ -1061,6 +1784,42 @@ some pragmatic adaptations to keep the codebase simple and maintainable.</p>
 </ol>
 <h2 id="core-layers">Core Layers</h2>
 <p>The app uses a two-layer architecture:</p>
+<pre class="mermaid"><code>graph TB
+    subgraph UI["UI Layer"]
+        direction TB
+        Composable["Composables&lt;br/&gt;(Pure UI)"]
+        ViewModel["ViewModels&lt;br/&gt;(State Management)"]
+        ScreenData["Screen Data&lt;br/&gt;(Immutable State)"]
+        UiState["UiState&amp;lt;T&amp;gt;&lt;br/&gt;(Wrapper)"]
+
+        Composable -.observes.- UiState
+        ViewModel --&gt;|manages| UiState
+        UiState --&gt;|wraps| ScreenData
+    end
+
+    subgraph Data["Data Layer"]
+        direction TB
+        Repository["Repositories&lt;br/&gt;(Single Source of Truth)"]
+        LocalDS["Local Data Sources&lt;br/&gt;(Room, DataStore)"]
+        NetworkDS["Network Data Sources&lt;br/&gt;(Retrofit, Firebase)"]
+
+        Repository --&gt;|reads/writes| LocalDS
+        Repository --&gt;|fetches| NetworkDS
+        NetworkDS -.syncs.-&gt; LocalDS
+    end
+
+    subgraph DI["Dependency Injection"]
+        Hilt["Hilt&lt;br/&gt;(Provides Dependencies)"]
+    end
+
+    ViewModel --&gt;|calls| Repository
+    Hilt -.injects.-&gt; ViewModel
+    Hilt -.injects.-&gt; Repository
+
+    style UI fill:#E8F5E9,stroke:#4CAF50,stroke-width:2px
+    style Data fill:#E3F2FD,stroke:#1976D2,stroke-width:2px
+    style DI fill:#FFF3E0,stroke:#FF9800,stroke-width:2px</code></pre>
+<p><strong>Simplified View</strong>:</p>
 <pre class="mermaid"><code>graph TD
     A[UI Layer] --&gt; B[Data Layer]
     style A fill: #4CAF50, stroke: #333, stroke-width: 2px
@@ -1068,9 +1827,9 @@ some pragmatic adaptations to keep the codebase simple and maintainable.</p>
 <h3 id="ui-layer">UI Layer</h3>
 <p>The UI layer follows MVVM pattern and consists of:</p>
 <ol>
-<li><strong>Composable UI</strong>: Pure UI components built with Jetpack Compose</li>
-<li><strong>ViewModel</strong>: Manages UI state and business logic</li>
-<li><strong>UI State</strong>: Immutable data classes representing screen state</li>
+<li><strong>Composables</strong>: Pure UI components built with Jetpack Compose</li>
+<li><strong>ViewModels</strong>: Manage UI state and business logic</li>
+<li><strong>Screen Data</strong>: Immutable data classes representing screen state</li>
 </ol>
 <p>Example UI Layer structure:</p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kd">data</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nc">HomeScreenData</span><span class="p">(</span>
@@ -1088,7 +1847,7 @@ some pragmatic adaptations to keep the codebase simple and maintainable.</p>
 </span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
 </span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="nd">@Composable</span>
 </span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="kd">fun</span><span class="w"> </span><span class="nf">HomeScreen</span><span class="p">(</span>
-</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="w">    </span><span class="n">uiState</span><span class="p">:</span><span class="w"> </span><span class="n">HomeScreenData</span><span class="p">,</span>
+</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="w">    </span><span class="n">screenData</span><span class="p">:</span><span class="w"> </span><span class="n">HomeScreenData</span><span class="p">,</span>
 </span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="w">    </span><span class="n">onAction</span><span class="p">:</span><span class="w"> </span><span class="p">(</span><span class="n">HomeAction</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="kt">Unit</span>
 </span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="p">}</span>
@@ -1208,7 +1967,11 @@ injected via the <code>context(viewModel: ViewModel)</code> parameter.</p>
 - Business rules become complex
 - You need to transform data between layers</p>
 </div>
-<h2 id="testing-strategy-upcoming">Testing Strategy (Upcoming 🚧)</h2>
+<h2 id="testing-strategy">Testing Strategy</h2>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Testing infrastructure is planned but not yet implemented in this template.</p>
+</div>
 <p>The architecture enables different types of tests:</p>
 <ol>
 <li><strong>UI Tests</strong>: Test Composables in isolation</li>
@@ -1218,21 +1981,338 @@ injected via the <code>context(viewModel: ViewModel)</code> parameter.</p>
 </ol>
 <h2 id="best-practices">Best Practices</h2>
 <ol>
-<li><strong>Keep UI State Simple</strong>: Only include what's needed for the UI</li>
+<li><strong>Keep Screen Data Simple</strong>: Only include what's needed for the UI</li>
 <li><strong>Single Responsibility</strong>: Each class should have one clear purpose</li>
-<li><strong>Error Handling</strong>: Use Result type for operations that can fail</li>
+<li><strong>Error Handling</strong>: Use <code>Result</code> type for operations that can fail</li>
 <li><strong>Coroutines</strong>: Use structured concurrency with proper scoping</li>
 <li><strong>Immutable Data</strong>: Use data classes for state and models</li>
 </ol>
-<h2 id="further-reading">Further Reading</h2>
+<hr />
+<h2 id="integration-patterns">Integration Patterns</h2>
+<p>Understanding how different architectural components work together is crucial for building features effectively. This section explains the key integration patterns in the template.</p>
+<h3 id="navigation-state-management-integration">Navigation + State Management Integration</h3>
+<p>Navigation and state management work together to create a seamless user experience with proper state preservation.</p>
+<p><strong>Pattern</strong>: Type-safe navigation with state restoration</p>
+<div class="language-kotlin highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1">// 1. Define navigation route with parameters</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nd">@Serializable</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="kd">data</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nc">ProfileRoute</span><span class="p">(</span><span class="kd">val</span><span class="w"> </span><span class="nv">userId</span><span class="p">:</span><span class="w"> </span><span class="kt">String</span><span class="p">)</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1">// 2. ViewModel manages state</span>
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="nd">@HiltViewModel</span>
+</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="kd">class</span><span class="w"> </span><span class="nc">ProfileViewModel</span><span class="w"> </span><span class="nd">@Inject</span><span class="w"> </span><span class="k">constructor</span><span class="p">(</span>
+</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">    </span><span class="n">savedStateHandle</span><span class="p">:</span><span class="w"> </span><span class="n">SavedStateHandle</span><span class="p">,</span>
+</span><span id="__span-6-9"><a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="nv">repository</span><span class="p">:</span><span class="w"> </span><span class="n">UserRepository</span>
+</span><span id="__span-6-10"><a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">ViewModel</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-6-11"><a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="w">    </span><span class="c1">// Extract userId from navigation arguments</span>
+</span><span id="__span-6-12"><a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="nv">userId</span><span class="p">:</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">savedStateHandle</span><span class="p">.</span><span class="na">toRoute</span><span class="o">&lt;</span><span class="n">ProfileRoute</span><span class="o">&gt;</span><span class="p">().</span><span class="na">userId</span>
+</span><span id="__span-6-13"><a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>
+</span><span id="__span-6-14"><a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="nv">_uiState</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MutableStateFlow</span><span class="p">(</span><span class="n">UiState</span><span class="p">(</span><span class="n">ProfileScreenData</span><span class="p">()))</span>
+</span><span id="__span-6-15"><a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="w">    </span><span class="kd">val</span><span class="w"> </span><span class="nv">uiState</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_uiState</span><span class="p">.</span><span class="na">asStateFlow</span><span class="p">()</span>
+</span><span id="__span-6-16"><a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>
+</span><span id="__span-6-17"><a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="w">    </span><span class="k">init</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-6-18"><a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a><span class="w">        </span><span class="n">loadProfile</span><span class="p">()</span>
+</span><span id="__span-6-19"><a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-6-20"><a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a>
+</span><span id="__span-6-21"><a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="nf">loadProfile</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-6-22"><a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a><span class="w">        </span><span class="n">_uiState</span><span class="p">.</span><span class="na">updateStateWith</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-6-23"><a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a><span class="w">            </span><span class="n">repository</span><span class="p">.</span><span class="na">getUserProfile</span><span class="p">(</span><span class="n">userId</span><span class="p">)</span>
+</span><span id="__span-6-24"><a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a><span class="w">        </span><span class="p">}</span>
+</span><span id="__span-6-25"><a id="__codelineno-6-25" name="__codelineno-6-25" href="#__codelineno-6-25"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-6-26"><a id="__codelineno-6-26" name="__codelineno-6-26" href="#__codelineno-6-26"></a><span class="p">}</span>
+</span><span id="__span-6-27"><a id="__codelineno-6-27" name="__codelineno-6-27" href="#__codelineno-6-27"></a>
+</span><span id="__span-6-28"><a id="__codelineno-6-28" name="__codelineno-6-28" href="#__codelineno-6-28"></a><span class="c1">// 3. Navigation integration in NavGraph</span>
+</span><span id="__span-6-29"><a id="__codelineno-6-29" name="__codelineno-6-29" href="#__codelineno-6-29"></a><span class="kd">fun</span><span class="w"> </span><span class="n">NavGraphBuilder</span><span class="p">.</span><span class="nf">profileScreen</span><span class="p">(</span>
+</span><span id="__span-6-30"><a id="__codelineno-6-30" name="__codelineno-6-30" href="#__codelineno-6-30"></a><span class="w">    </span><span class="n">onShowSnackbar</span><span class="p">:</span><span class="w"> </span><span class="n">suspend</span><span class="w"> </span><span class="p">(</span><span class="kt">String</span><span class="p">,</span><span class="w"> </span><span class="n">SnackbarAction</span><span class="p">,</span><span class="w"> </span><span class="n">Throwable?)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="kt">Boolean</span><span class="p">,</span>
+</span><span id="__span-6-31"><a id="__codelineno-6-31" name="__codelineno-6-31" href="#__codelineno-6-31"></a><span class="w">    </span><span class="n">onNavigateBack</span><span class="p">:</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="kt">Unit</span>
+</span><span id="__span-6-32"><a id="__codelineno-6-32" name="__codelineno-6-32" href="#__codelineno-6-32"></a><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-6-33"><a id="__codelineno-6-33" name="__codelineno-6-33" href="#__codelineno-6-33"></a><span class="w">    </span><span class="n">composable</span><span class="o">&lt;</span><span class="n">ProfileRoute</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">backStackEntry</span><span class="w"> </span><span class="o">-&gt;</span>
+</span><span id="__span-6-34"><a id="__codelineno-6-34" name="__codelineno-6-34" href="#__codelineno-6-34"></a><span class="w">        </span><span class="n">ProfileRoute</span><span class="p">(</span>
+</span><span id="__span-6-35"><a id="__codelineno-6-35" name="__codelineno-6-35" href="#__codelineno-6-35"></a><span class="w">            </span><span class="n">onShowSnackbar</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">onShowSnackbar</span><span class="p">,</span>
+</span><span id="__span-6-36"><a id="__codelineno-6-36" name="__codelineno-6-36" href="#__codelineno-6-36"></a><span class="w">            </span><span class="n">onNavigateBack</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">onNavigateBack</span>
+</span><span id="__span-6-37"><a id="__codelineno-6-37" name="__codelineno-6-37" href="#__codelineno-6-37"></a><span class="w">        </span><span class="p">)</span>
+</span><span id="__span-6-38"><a id="__codelineno-6-38" name="__codelineno-6-38" href="#__codelineno-6-38"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-6-39"><a id="__codelineno-6-39" name="__codelineno-6-39" href="#__codelineno-6-39"></a><span class="p">}</span>
+</span></code></pre></div>
+<p><strong>Key Integration Points</strong>:
+- <code>SavedStateHandle</code> provides navigation arguments to ViewModel
+- <code>toRoute&lt;T&gt;()</code> converts type-safe route to data class
+- State survives configuration changes automatically
+- Back stack preservation handled by Navigation Compose</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>For detailed navigation patterns, see <a href="../navigation/">Navigation Deep Dive</a>. For state management patterns, see <a href="../state-management/">State Management Guide</a>.</p>
+</div>
+<h3 id="firebase-data-layer-integration">Firebase + Data Layer Integration</h3>
+<p>Firebase services integrate with the repository pattern to provide seamless authentication and cloud data access.</p>
+<p><strong>Pattern</strong>: Firebase authentication flow with repository pattern</p>
+<div class="language-kotlin highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1">// 1. Firebase wrapper abstracts Firebase SDK</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="kd">class</span><span class="w"> </span><span class="nc">FirebaseAuthWrapper</span><span class="w"> </span><span class="nd">@Inject</span><span class="w"> </span><span class="k">constructor</span><span class="p">(</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="nv">auth</span><span class="p">:</span><span class="w"> </span><span class="n">FirebaseAuth</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">    </span><span class="kd">fun</span><span class="w"> </span><span class="nf">currentUserFlow</span><span class="p">():</span><span class="w"> </span><span class="n">Flow</span><span class="o">&lt;</span><span class="n">FirebaseUser?&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">callbackFlow</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">        </span><span class="kd">val</span><span class="w"> </span><span class="nv">listener</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">FirebaseAuth</span><span class="p">.</span><span class="na">AuthStateListener</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">auth</span><span class="w"> </span><span class="o">-&gt;</span>
+</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">            </span><span class="n">trySend</span><span class="p">(</span><span class="n">auth</span><span class="p">.</span><span class="na">currentUser</span><span class="p">)</span>
+</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="w">        </span><span class="p">}</span>
+</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="w">        </span><span class="n">auth</span><span class="p">.</span><span class="na">addAuthStateListener</span><span class="p">(</span><span class="n">listener</span><span class="p">)</span>
+</span><span id="__span-7-10"><a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="w">        </span><span class="n">awaitClose</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">auth</span><span class="p">.</span><span class="na">removeAuthStateListener</span><span class="p">(</span><span class="n">listener</span><span class="p">)</span><span class="w"> </span><span class="p">}</span>
+</span><span id="__span-7-11"><a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-7-12"><a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="p">}</span>
+</span><span id="__span-7-13"><a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>
+</span><span id="__span-7-14"><a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="c1">// 2. Repository uses Firebase wrapper</span>
+</span><span id="__span-7-15"><a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="kd">class</span><span class="w"> </span><span class="nc">UserRepositoryImpl</span><span class="w"> </span><span class="nd">@Inject</span><span class="w"> </span><span class="k">constructor</span><span class="p">(</span>
+</span><span id="__span-7-16"><a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="nv">firebaseAuth</span><span class="p">:</span><span class="w"> </span><span class="n">FirebaseAuthWrapper</span><span class="p">,</span>
+</span><span id="__span-7-17"><a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="nv">firestore</span><span class="p">:</span><span class="w"> </span><span class="n">FirestoreWrapper</span><span class="p">,</span>
+</span><span id="__span-7-18"><a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="nv">localDataSource</span><span class="p">:</span><span class="w"> </span><span class="n">UserLocalDataSource</span>
+</span><span id="__span-7-19"><a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">UserRepository</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-7-20"><a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a><span class="w">    </span><span class="c1">// Observe authentication state</span>
+</span><span id="__span-7-21"><a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a><span class="w">    </span><span class="kd">override</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="nf">observeCurrentUser</span><span class="p">():</span><span class="w"> </span><span class="n">Flow</span><span class="o">&lt;</span><span class="n">User?&gt;</span><span class="w"> </span><span class="o">=</span>
+</span><span id="__span-7-22"><a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a><span class="w">        </span><span class="n">firebaseAuth</span><span class="p">.</span><span class="na">currentUserFlow</span><span class="p">()</span>
+</span><span id="__span-7-23"><a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a><span class="w">            </span><span class="p">.</span><span class="na">map</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">firebaseUser</span><span class="w"> </span><span class="o">-&gt;</span>
+</span><span id="__span-7-24"><a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a><span class="w">                </span><span class="n">firebaseUser</span><span class="o">?.</span><span class="na">let</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">getUserFromFirestore</span><span class="p">(</span><span class="nb">it</span><span class="p">.</span><span class="na">uid</span><span class="p">)</span><span class="w"> </span><span class="p">}</span>
+</span><span id="__span-7-25"><a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a><span class="w">            </span><span class="p">}</span>
+</span><span id="__span-7-26"><a id="__codelineno-7-26" name="__codelineno-7-26" href="#__codelineno-7-26"></a>
+</span><span id="__span-7-27"><a id="__codelineno-7-27" name="__codelineno-7-27" href="#__codelineno-7-27"></a><span class="w">    </span><span class="c1">// Sync user data from Firestore to local database</span>
+</span><span id="__span-7-28"><a id="__codelineno-7-28" name="__codelineno-7-28" href="#__codelineno-7-28"></a><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">suspend</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="nf">getUserFromFirestore</span><span class="p">(</span><span class="n">uid</span><span class="p">:</span><span class="w"> </span><span class="kt">String</span><span class="p">):</span><span class="w"> </span><span class="n">User</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-7-29"><a id="__codelineno-7-29" name="__codelineno-7-29" href="#__codelineno-7-29"></a><span class="w">        </span><span class="kd">val</span><span class="w"> </span><span class="nv">firestoreUser</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">firestore</span><span class="p">.</span><span class="na">getUser</span><span class="p">(</span><span class="n">uid</span><span class="p">)</span>
+</span><span id="__span-7-30"><a id="__codelineno-7-30" name="__codelineno-7-30" href="#__codelineno-7-30"></a><span class="w">        </span><span class="n">localDataSource</span><span class="p">.</span><span class="na">saveUser</span><span class="p">(</span><span class="n">firestoreUser</span><span class="p">.</span><span class="na">toEntity</span><span class="p">())</span>
+</span><span id="__span-7-31"><a id="__codelineno-7-31" name="__codelineno-7-31" href="#__codelineno-7-31"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">firestoreUser</span><span class="p">.</span><span class="na">toDomain</span><span class="p">()</span>
+</span><span id="__span-7-32"><a id="__codelineno-7-32" name="__codelineno-7-32" href="#__codelineno-7-32"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-7-33"><a id="__codelineno-7-33" name="__codelineno-7-33" href="#__codelineno-7-33"></a><span class="p">}</span>
+</span><span id="__span-7-34"><a id="__codelineno-7-34" name="__codelineno-7-34" href="#__codelineno-7-34"></a>
+</span><span id="__span-7-35"><a id="__codelineno-7-35" name="__codelineno-7-35" href="#__codelineno-7-35"></a><span class="c1">// 3. ViewModel observes repository</span>
+</span><span id="__span-7-36"><a id="__codelineno-7-36" name="__codelineno-7-36" href="#__codelineno-7-36"></a><span class="nd">@HiltViewModel</span>
+</span><span id="__span-7-37"><a id="__codelineno-7-37" name="__codelineno-7-37" href="#__codelineno-7-37"></a><span class="kd">class</span><span class="w"> </span><span class="nc">AuthViewModel</span><span class="w"> </span><span class="nd">@Inject</span><span class="w"> </span><span class="k">constructor</span><span class="p">(</span>
+</span><span id="__span-7-38"><a id="__codelineno-7-38" name="__codelineno-7-38" href="#__codelineno-7-38"></a><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="nv">userRepository</span><span class="p">:</span><span class="w"> </span><span class="n">UserRepository</span>
+</span><span id="__span-7-39"><a id="__codelineno-7-39" name="__codelineno-7-39" href="#__codelineno-7-39"></a><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">ViewModel</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-7-40"><a id="__codelineno-7-40" name="__codelineno-7-40" href="#__codelineno-7-40"></a><span class="w">    </span><span class="kd">val</span><span class="w"> </span><span class="nv">currentUser</span><span class="p">:</span><span class="w"> </span><span class="n">StateFlow</span><span class="o">&lt;</span><span class="n">User?&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">userRepository</span><span class="p">.</span><span class="na">observeCurrentUser</span><span class="p">()</span>
+</span><span id="__span-7-41"><a id="__codelineno-7-41" name="__codelineno-7-41" href="#__codelineno-7-41"></a><span class="w">        </span><span class="p">.</span><span class="na">stateIn</span><span class="p">(</span>
+</span><span id="__span-7-42"><a id="__codelineno-7-42" name="__codelineno-7-42" href="#__codelineno-7-42"></a><span class="w">            </span><span class="n">scope</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">viewModelScope</span><span class="p">,</span>
+</span><span id="__span-7-43"><a id="__codelineno-7-43" name="__codelineno-7-43" href="#__codelineno-7-43"></a><span class="w">            </span><span class="n">started</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SharingStarted</span><span class="p">.</span><span class="na">WhileSubscribed</span><span class="p">(</span><span class="m">5000</span><span class="p">),</span>
+</span><span id="__span-7-44"><a id="__codelineno-7-44" name="__codelineno-7-44" href="#__codelineno-7-44"></a><span class="w">            </span><span class="n">initialValue</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span>
+</span><span id="__span-7-45"><a id="__codelineno-7-45" name="__codelineno-7-45" href="#__codelineno-7-45"></a><span class="w">        </span><span class="p">)</span>
+</span><span id="__span-7-46"><a id="__codelineno-7-46" name="__codelineno-7-46" href="#__codelineno-7-46"></a><span class="p">}</span>
+</span></code></pre></div>
+<p><strong>Key Integration Points</strong>:
+- Firebase wrappers provide reactive Flow-based APIs
+- Repositories coordinate between Firebase and local database
+- ViewModels observe repositories using StateFlow
+- Local database serves as cache for offline access</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>For Firebase setup, see <a href="../firebase/">Firebase Setup Guide</a>. For repository patterns, see <a href="../data/README.md">Data Layer Guide</a>.</p>
+</div>
+<h3 id="dependency-injection-integration">Dependency Injection Integration</h3>
+<p>Hilt ties all architectural components together by providing dependencies throughout the app.</p>
+<p><strong>Pattern</strong>: Complete DI flow from data sources to UI</p>
+<div class="language-kotlin highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1">// 1. Provide data sources</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nd">@Module</span>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="nd">@InstallIn</span><span class="p">(</span><span class="n">SingletonComponent</span><span class="o">::</span><span class="n">class</span><span class="p">)</span>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="kd">object</span><span class="w"> </span><span class="nc">NetworkModule</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">    </span><span class="nd">@Provides</span>
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">    </span><span class="nd">@Singleton</span>
+</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">    </span><span class="kd">fun</span><span class="w"> </span><span class="nf">provideApiService</span><span class="p">():</span><span class="w"> </span><span class="n">ApiService</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Retrofit</span><span class="p">.</span><span class="na">Builder</span><span class="p">()</span>
+</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="w">        </span><span class="p">.</span><span class="na">baseUrl</span><span class="p">(</span><span class="n">BASE_URL</span><span class="p">)</span>
+</span><span id="__span-8-9"><a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="w">        </span><span class="p">.</span><span class="na">build</span><span class="p">()</span>
+</span><span id="__span-8-10"><a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="w">        </span><span class="p">.</span><span class="na">create</span><span class="p">(</span><span class="n">ApiService</span><span class="o">::</span><span class="n">class</span><span class="p">.</span><span class="na">java</span><span class="p">)</span>
+</span><span id="__span-8-11"><a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="p">}</span>
+</span><span id="__span-8-12"><a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>
+</span><span id="__span-8-13"><a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="c1">// 2. Bind repositories</span>
+</span><span id="__span-8-14"><a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="nd">@Module</span>
+</span><span id="__span-8-15"><a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="nd">@InstallIn</span><span class="p">(</span><span class="n">SingletonComponent</span><span class="o">::</span><span class="n">class</span><span class="p">)</span>
+</span><span id="__span-8-16"><a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="kd">abstract</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nc">RepositoryModule</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-8-17"><a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a><span class="w">    </span><span class="nd">@Binds</span>
+</span><span id="__span-8-18"><a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a><span class="w">    </span><span class="nd">@Singleton</span>
+</span><span id="__span-8-19"><a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a><span class="w">    </span><span class="kd">abstract</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="nf">bindUserRepository</span><span class="p">(</span>
+</span><span id="__span-8-20"><a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a><span class="w">        </span><span class="n">impl</span><span class="p">:</span><span class="w"> </span><span class="n">UserRepositoryImpl</span>
+</span><span id="__span-8-21"><a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a><span class="w">    </span><span class="p">):</span><span class="w"> </span><span class="n">UserRepository</span>
+</span><span id="__span-8-22"><a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a><span class="p">}</span>
+</span><span id="__span-8-23"><a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a>
+</span><span id="__span-8-24"><a id="__codelineno-8-24" name="__codelineno-8-24" href="#__codelineno-8-24"></a><span class="c1">// 3. Inject into ViewModels</span>
+</span><span id="__span-8-25"><a id="__codelineno-8-25" name="__codelineno-8-25" href="#__codelineno-8-25"></a><span class="nd">@HiltViewModel</span>
+</span><span id="__span-8-26"><a id="__codelineno-8-26" name="__codelineno-8-26" href="#__codelineno-8-26"></a><span class="kd">class</span><span class="w"> </span><span class="nc">HomeViewModel</span><span class="w"> </span><span class="nd">@Inject</span><span class="w"> </span><span class="k">constructor</span><span class="p">(</span>
+</span><span id="__span-8-27"><a id="__codelineno-8-27" name="__codelineno-8-27" href="#__codelineno-8-27"></a><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="nv">userRepository</span><span class="p">:</span><span class="w"> </span><span class="n">UserRepository</span><span class="p">,</span><span class="w">  </span><span class="c1">// Injected by Hilt</span>
+</span><span id="__span-8-28"><a id="__codelineno-8-28" name="__codelineno-8-28" href="#__codelineno-8-28"></a><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="nv">contentRepository</span><span class="p">:</span><span class="w"> </span><span class="n">ContentRepository</span><span class="w">  </span><span class="c1">// Injected by Hilt</span>
+</span><span id="__span-8-29"><a id="__codelineno-8-29" name="__codelineno-8-29" href="#__codelineno-8-29"></a><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">ViewModel</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-8-30"><a id="__codelineno-8-30" name="__codelineno-8-30" href="#__codelineno-8-30"></a><span class="w">    </span><span class="c1">// ViewModel automatically receives dependencies</span>
+</span><span id="__span-8-31"><a id="__codelineno-8-31" name="__codelineno-8-31" href="#__codelineno-8-31"></a><span class="p">}</span>
+</span><span id="__span-8-32"><a id="__codelineno-8-32" name="__codelineno-8-32" href="#__codelineno-8-32"></a>
+</span><span id="__span-8-33"><a id="__codelineno-8-33" name="__codelineno-8-33" href="#__codelineno-8-33"></a><span class="c1">// 4. Inject into Composables</span>
+</span><span id="__span-8-34"><a id="__codelineno-8-34" name="__codelineno-8-34" href="#__codelineno-8-34"></a><span class="nd">@Composable</span>
+</span><span id="__span-8-35"><a id="__codelineno-8-35" name="__codelineno-8-35" href="#__codelineno-8-35"></a><span class="kd">fun</span><span class="w"> </span><span class="nf">HomeRoute</span><span class="p">(</span>
+</span><span id="__span-8-36"><a id="__codelineno-8-36" name="__codelineno-8-36" href="#__codelineno-8-36"></a><span class="w">    </span><span class="n">viewModel</span><span class="p">:</span><span class="w"> </span><span class="n">HomeViewModel</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">hiltViewModel</span><span class="p">()</span><span class="w">  </span><span class="c1">// Hilt provides ViewModel</span>
+</span><span id="__span-8-37"><a id="__codelineno-8-37" name="__codelineno-8-37" href="#__codelineno-8-37"></a><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-8-38"><a id="__codelineno-8-38" name="__codelineno-8-38" href="#__codelineno-8-38"></a><span class="w">    </span><span class="kd">val</span><span class="w"> </span><span class="nv">uiState</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="n">viewModel</span><span class="p">.</span><span class="na">uiState</span><span class="p">.</span><span class="na">collectAsStateWithLifecycle</span><span class="p">()</span>
+</span><span id="__span-8-39"><a id="__codelineno-8-39" name="__codelineno-8-39" href="#__codelineno-8-39"></a><span class="w">    </span><span class="c1">// Use ViewModel</span>
+</span><span id="__span-8-40"><a id="__codelineno-8-40" name="__codelineno-8-40" href="#__codelineno-8-40"></a><span class="p">}</span>
+</span></code></pre></div>
+<p><strong>Key Integration Points</strong>:
+- Data sources provided in Singleton scope
+- Repositories use <code>@Binds</code> for interface-to-implementation mapping
+- ViewModels annotated with <code>@HiltViewModel</code> for automatic injection
+- <code>hiltViewModel()</code> retrieves ViewModels in Composables
+- <code>@AndroidEntryPoint</code> enables injection in Activities/Fragments</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>For complete DI patterns, see <a href="../dependency-injection/">Dependency Injection Guide</a> (993 lines of comprehensive guidance).</p>
+</div>
+<h3 id="sync-repositories-integration">Sync + Repositories Integration</h3>
+<p>WorkManager-based sync integrates with repositories to keep local data synchronized with remote sources.</p>
+<p><strong>Pattern</strong>: Background sync with repository coordination</p>
+<div class="language-kotlin highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1">// 1. Repository implements Syncable interface</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="kd">class</span><span class="w"> </span><span class="nc">ContentRepositoryImpl</span><span class="w"> </span><span class="nd">@Inject</span><span class="w"> </span><span class="k">constructor</span><span class="p">(</span>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="nv">localDataSource</span><span class="p">:</span><span class="w"> </span><span class="n">ContentLocalDataSource</span><span class="p">,</span>
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="nv">networkDataSource</span><span class="p">:</span><span class="w"> </span><span class="n">ContentNetworkDataSource</span><span class="p">,</span>
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="w">    </span><span class="nd">@IoDispatcher</span><span class="w"> </span><span class="kd">private</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="nv">ioDispatcher</span><span class="p">:</span><span class="w"> </span><span class="n">CoroutineDispatcher</span>
+</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">ContentRepository</span><span class="p">,</span><span class="w"> </span><span class="n">Syncable</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="w">    </span><span class="c1">// UI observes local database (single source of truth)</span>
+</span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="w">    </span><span class="kd">override</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="nf">observeContent</span><span class="p">():</span><span class="w"> </span><span class="n">Flow</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Content</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="o">=</span>
+</span><span id="__span-9-9"><a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="w">        </span><span class="n">localDataSource</span><span class="p">.</span><span class="na">observeContent</span><span class="p">()</span>
+</span><span id="__span-9-10"><a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="w">            </span><span class="p">.</span><span class="na">map</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">entities</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">entities</span><span class="p">.</span><span class="na">map</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nb">it</span><span class="p">.</span><span class="na">toDomain</span><span class="p">()</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+</span><span id="__span-9-11"><a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>
+</span><span id="__span-9-12"><a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="w">    </span><span class="c1">// Sync updates local database in background</span>
+</span><span id="__span-9-13"><a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a><span class="w">    </span><span class="kd">override</span><span class="w"> </span><span class="kd">suspend</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="nf">sync</span><span class="p">():</span><span class="w"> </span><span class="kt">Boolean</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">withContext</span><span class="p">(</span><span class="n">ioDispatcher</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-9-14"><a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a><span class="w">        </span><span class="n">suspendRunCatching</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-9-15"><a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a><span class="w">            </span><span class="kd">val</span><span class="w"> </span><span class="nv">remoteContent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">networkDataSource</span><span class="p">.</span><span class="na">getContent</span><span class="p">()</span>
+</span><span id="__span-9-16"><a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a><span class="w">            </span><span class="n">localDataSource</span><span class="p">.</span><span class="na">saveContent</span><span class="p">(</span><span class="n">remoteContent</span><span class="p">.</span><span class="na">map</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nb">it</span><span class="p">.</span><span class="na">toEntity</span><span class="p">()</span><span class="w"> </span><span class="p">})</span>
+</span><span id="__span-9-17"><a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a><span class="w">        </span><span class="p">}.</span><span class="na">isSuccess</span>
+</span><span id="__span-9-18"><a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-9-19"><a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a><span class="p">}</span>
+</span><span id="__span-9-20"><a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a>
+</span><span id="__span-9-21"><a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a><span class="c1">// 2. SyncWorker coordinates repository sync with progress tracking</span>
+</span><span id="__span-9-22"><a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a><span class="nd">@HiltWorker</span>
+</span><span id="__span-9-23"><a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a><span class="kd">class</span><span class="w"> </span><span class="nc">SyncWorker</span><span class="w"> </span><span class="nd">@AssistedInject</span><span class="w"> </span><span class="k">constructor</span><span class="p">(</span>
+</span><span id="__span-9-24"><a id="__codelineno-9-24" name="__codelineno-9-24" href="#__codelineno-9-24"></a><span class="w">    </span><span class="nd">@Assisted</span><span class="w"> </span><span class="kd">private</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="nv">context</span><span class="p">:</span><span class="w"> </span><span class="n">Context</span><span class="p">,</span>
+</span><span id="__span-9-25"><a id="__codelineno-9-25" name="__codelineno-9-25" href="#__codelineno-9-25"></a><span class="w">    </span><span class="nd">@Assisted</span><span class="w"> </span><span class="n">workerParameters</span><span class="p">:</span><span class="w"> </span><span class="n">WorkerParameters</span><span class="p">,</span>
+</span><span id="__span-9-26"><a id="__codelineno-9-26" name="__codelineno-9-26" href="#__codelineno-9-26"></a><span class="w">    </span><span class="nd">@IoDispatcher</span><span class="w"> </span><span class="kd">private</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="nv">ioDispatcher</span><span class="p">:</span><span class="w"> </span><span class="n">CoroutineDispatcher</span><span class="p">,</span>
+</span><span id="__span-9-27"><a id="__codelineno-9-27" name="__codelineno-9-27" href="#__codelineno-9-27"></a><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="nv">homeRepository</span><span class="p">:</span><span class="w"> </span><span class="n">HomeRepository</span>
+</span><span id="__span-9-28"><a id="__codelineno-9-28" name="__codelineno-9-28" href="#__codelineno-9-28"></a><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">CoroutineWorker</span><span class="p">(</span><span class="n">context</span><span class="p">,</span><span class="w"> </span><span class="n">workerParameters</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-9-29"><a id="__codelineno-9-29" name="__codelineno-9-29" href="#__codelineno-9-29"></a><span class="w">    </span><span class="kd">override</span><span class="w"> </span><span class="kd">suspend</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="nf">doWork</span><span class="p">():</span><span class="w"> </span><span class="n">Result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">withContext</span><span class="p">(</span><span class="n">ioDispatcher</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-9-30"><a id="__codelineno-9-30" name="__codelineno-9-30" href="#__codelineno-9-30"></a><span class="w">        </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-9-31"><a id="__codelineno-9-31" name="__codelineno-9-31" href="#__codelineno-9-31"></a><span class="w">            </span><span class="n">setForeground</span><span class="p">(</span><span class="n">getForegroundInfo</span><span class="p">())</span>
+</span><span id="__span-9-32"><a id="__codelineno-9-32" name="__codelineno-9-32" href="#__codelineno-9-32"></a><span class="w">            </span><span class="n">homeRepository</span><span class="p">.</span><span class="na">sync</span><span class="p">()</span>
+</span><span id="__span-9-33"><a id="__codelineno-9-33" name="__codelineno-9-33" href="#__codelineno-9-33"></a><span class="w">                </span><span class="p">.</span><span class="na">flowOn</span><span class="p">(</span><span class="n">ioDispatcher</span><span class="p">)</span>
+</span><span id="__span-9-34"><a id="__codelineno-9-34" name="__codelineno-9-34" href="#__codelineno-9-34"></a><span class="w">                </span><span class="p">.</span><span class="na">collect</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">progress</span><span class="w"> </span><span class="o">-&gt;</span>
+</span><span id="__span-9-35"><a id="__codelineno-9-35" name="__codelineno-9-35" href="#__codelineno-9-35"></a><span class="w">                    </span><span class="n">setForeground</span><span class="p">(</span><span class="n">getForegroundInfo</span><span class="p">(</span><span class="n">progress</span><span class="p">.</span><span class="na">total</span><span class="p">,</span><span class="w"> </span><span class="n">progress</span><span class="p">.</span><span class="na">current</span><span class="p">))</span>
+</span><span id="__span-9-36"><a id="__codelineno-9-36" name="__codelineno-9-36" href="#__codelineno-9-36"></a><span class="w">                </span><span class="p">}</span>
+</span><span id="__span-9-37"><a id="__codelineno-9-37" name="__codelineno-9-37" href="#__codelineno-9-37"></a><span class="w">            </span><span class="n">Result</span><span class="p">.</span><span class="na">success</span><span class="p">()</span>
+</span><span id="__span-9-38"><a id="__codelineno-9-38" name="__codelineno-9-38" href="#__codelineno-9-38"></a><span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">e</span><span class="p">:</span><span class="w"> </span><span class="n">Exception</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-9-39"><a id="__codelineno-9-39" name="__codelineno-9-39" href="#__codelineno-9-39"></a><span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">runAttemptCount</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">TOTAL_SYNC_ATTEMPTS</span><span class="p">)</span><span class="w"> </span><span class="n">Result</span><span class="p">.</span><span class="na">retry</span><span class="p">()</span>
+</span><span id="__span-9-40"><a id="__codelineno-9-40" name="__codelineno-9-40" href="#__codelineno-9-40"></a><span class="w">            </span><span class="k">else</span><span class="w"> </span><span class="n">Result</span><span class="p">.</span><span class="na">failure</span><span class="p">()</span>
+</span><span id="__span-9-41"><a id="__codelineno-9-41" name="__codelineno-9-41" href="#__codelineno-9-41"></a><span class="w">        </span><span class="p">}</span>
+</span><span id="__span-9-42"><a id="__codelineno-9-42" name="__codelineno-9-42" href="#__codelineno-9-42"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-9-43"><a id="__codelineno-9-43" name="__codelineno-9-43" href="#__codelineno-9-43"></a><span class="p">}</span>
+</span><span id="__span-9-44"><a id="__codelineno-9-44" name="__codelineno-9-44" href="#__codelineno-9-44"></a>
+</span><span id="__span-9-45"><a id="__codelineno-9-45" name="__codelineno-9-45" href="#__codelineno-9-45"></a><span class="c1">// 3. Initialize sync in Application</span>
+</span><span id="__span-9-46"><a id="__codelineno-9-46" name="__codelineno-9-46" href="#__codelineno-9-46"></a><span class="kd">class</span><span class="w"> </span><span class="nc">App</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">Application</span><span class="p">(),</span><span class="w"> </span><span class="n">Configuration</span><span class="p">.</span><span class="na">Provider</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-9-47"><a id="__codelineno-9-47" name="__codelineno-9-47" href="#__codelineno-9-47"></a><span class="w">    </span><span class="kd">override</span><span class="w"> </span><span class="kd">fun</span><span class="w"> </span><span class="nf">onCreate</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-9-48"><a id="__codelineno-9-48" name="__codelineno-9-48" href="#__codelineno-9-48"></a><span class="w">        </span><span class="k">super</span><span class="p">.</span><span class="na">onCreate</span><span class="p">()</span>
+</span><span id="__span-9-49"><a id="__codelineno-9-49" name="__codelineno-9-49" href="#__codelineno-9-49"></a><span class="w">        </span><span class="n">Sync</span><span class="p">.</span><span class="na">initialize</span><span class="p">(</span><span class="n">context</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">)</span><span class="w">  </span><span class="c1">// Sets up periodic sync</span>
+</span><span id="__span-9-50"><a id="__codelineno-9-50" name="__codelineno-9-50" href="#__codelineno-9-50"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-9-51"><a id="__codelineno-9-51" name="__codelineno-9-51" href="#__codelineno-9-51"></a><span class="p">}</span>
+</span></code></pre></div>
+<p><strong>Key Integration Points</strong>:
+- Repositories implement <code>sync()</code> method returning <code>Flow&lt;SyncProgress&gt;</code>
+- <code>SyncWorker</code> receives repository via Hilt dependency injection
+- <code>setForeground()</code> displays progress notification as sync runs
+- <code>Sync.initialize()</code> sets up periodic WorkManager sync
+- Local database updated in background
+- UI automatically reflects changes via Flow observation
+- Network constraints ensure sync only runs when connected
+- Retry logic with exponential backoff (up to 3 attempts)</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>For sync patterns and troubleshooting, see <a href="../sync/README.md">Sync Module README</a>.</p>
+</div>
+<h3 id="complete-integration-flow-example">Complete Integration Flow Example</h3>
+<p>Here's how all systems work together when a user opens a feature screen:</p>
+<pre class="mermaid"><code>sequenceDiagram
+    participant UI as Composable
+    participant VM as ViewModel
+    participant Repo as Repository
+    participant Local as Local DB
+    participant Remote as Remote API
+    participant Sync as SyncWorker
+
+    Note over UI,Sync: User Opens Screen
+    UI-&gt;&gt;VM: hiltViewModel() injection
+    VM-&gt;&gt;Repo: observeData()
+    Repo-&gt;&gt;Local: observeDataEntities()
+    Local--&gt;&gt;Repo: Flow&lt;List&lt;Entity&gt;&gt;
+    Repo--&gt;&gt;VM: Flow&lt;List&lt;Domain&gt;&gt;
+    VM--&gt;&gt;UI: StateFlow&lt;UiState&lt;Data&gt;&gt;
+
+    Note over UI,Sync: Background Sync (Periodic)
+    Sync-&gt;&gt;Repo: sync()
+    Repo-&gt;&gt;Remote: fetchData()
+    Remote--&gt;&gt;Repo: List&lt;DTO&gt;
+    Repo-&gt;&gt;Local: saveData(entities)
+    Local--&gt;&gt;Repo: Success
+    Note over Local,UI: Flow emits new data
+    Local--&gt;&gt;Repo: Updated Flow
+    Repo--&gt;&gt;VM: Updated Flow
+    VM--&gt;&gt;UI: Updated State
+    UI-&gt;&gt;UI: Recomposition</code></pre>
+<p><strong>Flow Breakdown</strong>:</p>
+<ol>
+<li><strong>Screen Opens</strong>:</li>
+<li>Hilt injects ViewModel with Repository dependencies</li>
+<li>ViewModel starts observing repository data</li>
+<li>
+<p>Repository returns Flow from local database (single source of truth)</p>
+</li>
+<li>
+<p><strong>Initial Display</strong>:</p>
+</li>
+<li>UI receives StateFlow with cached data</li>
+<li>
+<p>Screen displays immediately (offline-first)</p>
+</li>
+<li>
+<p><strong>Background Sync</strong>:</p>
+</li>
+<li>WorkManager triggers SyncWorker periodically</li>
+<li>SyncWorker calls <code>sync()</code> on all repositories</li>
+<li>
+<p>Repository fetches from remote and updates local database</p>
+</li>
+<li>
+<p><strong>Automatic Update</strong>:</p>
+</li>
+<li>Local database change triggers Flow emission</li>
+<li>ViewModel receives updated data</li>
+<li>UI automatically recomposes with new data</li>
+</ol>
+<p><strong>Key Benefits</strong>:
+- <strong>Offline-first</strong>: App works without network
+- <strong>Automatic updates</strong>: No manual refresh needed
+- <strong>Type safety</strong>: Compile-time navigation and DI
+- <strong>Separation of concerns</strong>: Each layer has clear responsibility
+- <strong>Testability</strong>: Dependencies easily mocked via Hilt</p>
+<hr />
+<h2 id="summary">Summary</h2>
+<p>This template uses a <strong>two-layer architecture</strong> (UI + Data) for simplicity:</p>
 <ul>
-<li><a href="../philosophy/">Design Philosophy</a>: Understand the design principles behind the architecture</li>
-<li><a href="../guide/">Adding New Features</a>: Learn how to add new features to the project</li>
-<li><a href="../github/">CI/CD Setup</a>: Set up continuous integration and deployment for the project</li>
-<li><a href="../performance/">Performance Optimization</a>: Optimize the app for speed and efficiency</li>
-<li><a href="../tips/">Useful Tips &amp; Tricks</a>: Get useful tips for development and debugging</li>
-<li><a href="../plugins/">Convention Plugins</a>: Learn about custom Gradle plugins used in the project</li>
-<li><a href="../spotless/">Code Style with Spotless</a>: Follow code formatting guidelines for the project</li>
+<li><strong>UI Layer</strong>: Composables + ViewModels with UiState wrapper</li>
+<li><strong>Data Layer</strong>: Repositories + Data Sources (Network, Local, Firebase)</li>
+<li><strong>State Management</strong>: Centralized with <code>updateState</code> and <code>updateStateWith</code> functions</li>
+<li><strong>Dependency Injection</strong>: Hilt with feature-based modules</li>
+<li><strong>Unidirectional Data Flow</strong>: User actions → ViewModel → Repository → Data Sources → UI</li>
+</ul>
+<p>The architecture is intentionally simple but allows for growth when needed.</p>
+<h2 id="further-reading">Further Reading</h2>
+<h3 id="concept-guides">Concept Guides</h3>
+<ul>
+<li><a href="../philosophy/">Design Philosophy</a> - Understand the design principles behind the architecture</li>
+<li><a href="../state-management/">State Management</a> - Deep dive into the UiState pattern</li>
+<li><a href="../guide/">Adding Features</a> - Step-by-step guide to implementing new features</li>
+<li><a href="../data-flow/">Data Flow</a> - Understand data flow patterns (offline-first, caching, sync)</li>
+<li><a href="../dependency-injection/">Dependency Injection</a> - Complete guide to Hilt setup and patterns</li>
+</ul>
+<h3 id="module-documentation">Module Documentation</h3>
+<ul>
+<li><a href="../core/ui/README.md">Core UI Module</a> - State management utilities and UI components</li>
+<li><a href="../data/README.md">Data Layer Module</a> - Repository patterns and implementations</li>
+<li><a href="../app/README.md">App Module</a> - Application architecture and MainActivity setup</li>
 </ul>
 
 
@@ -1420,10 +2500,11 @@ injected via the <code>context(viewModel: ViewModel)</code> parameter.</p>
     
     
       
-      <script id="__config" type="application/json">{"base": "..", "features": ["navigation.indexes", "navigation.top", "content.action.view", "content.code.copy"], "search": "../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.indexes", "navigation.top", "content.action.view", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../assets/javascripts/bundle.f55a23d4.min.js"></script>
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
       
     
   </body>

@@ -97,7 +97,7 @@
     <h1 class="cover"><span>Sync</span><wbr><span><span>Action</span></span></h1>
     <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
       <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":core:room/main" data-filterable-set=":core:room/main" data-active="" data-toggle=":core:room/main">androidJvm</button></div>
-<div class="content sourceset-dependent-content" data-active="" data-togglable=":core:room/main"><div class="symbol monospace"><span class="token keyword">enum </span><a href="index.html">SyncAction</a> : <a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-enum/index.html">Enum</a><span class="token operator">&lt;</span><a href="index.html">SyncAction</a><span class="token operator">&gt; </span></div><p class="paragraph">Represents a SyncAction, which is an enumeration of the possible actions to take when syncing an item.</p></div>    </div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":core:room/main"><div class="symbol monospace"><span class="token keyword">enum </span><a href="index.html">SyncAction</a> : <a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-enum/index.html">Enum</a><span class="token operator">&lt;</span><a href="index.html">SyncAction</a><span class="token operator">&gt; </span></div><p class="paragraph">Defines the type of synchronization action to perform on an entity.</p><p class="paragraph">This enum is used to track what operation needs to be performed during the next sync operation with a remote data source. It enables fine-grained control over sync behavior and supports conflict resolution strategies.</p><h2 class="">Usage</h2><p class="paragraph">Set the appropriate action when modifying entities:</p><div class="sample-container"><pre><code class="block lang-kotlin" theme="idea">// After creating or updating<br>entity.copy(syncAction = SyncAction.UPSERT, needsSync = true)<br><br>// After soft deleting<br>entity.copy(syncAction = SyncAction.DELETE, needsSync = true, deleted = true)<br><br>// After successful sync<br>entity.copy(syncAction = SyncAction.NONE, needsSync = false)</code></pre><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><h2 class="">Sync Worker Implementation</h2><div class="sample-container"><pre><code class="block lang-kotlin" theme="idea">when (entity.syncAction) {<br>    SyncAction.UPSERT -&gt; remoteDataSource.upsert(entity.toRemote())<br>    SyncAction.DELETE -&gt; remoteDataSource.delete(entity.id)<br>    SyncAction.NONE -&gt; {} // Already synced, skip<br>}</code></pre><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div>    </div>
   </div>
   <div class="tabbedcontent">
     <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button><button class="section-tab" data-togglable="ENTRY">Entries</button></div>
@@ -116,7 +116,7 @@
                 <div class="title">
                   <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
                     <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":core:room/main" data-filterable-set=":core:room/main" data-active="" data-toggle=":core:room/main">androidJvm</button></div>
-<div class="content sourceset-dependent-content" data-active="" data-togglable=":core:room/main"><div class="symbol monospace"><div class="block"><a href="-n-o-n-e/index.html">NONE</a></div></div></div>                  </div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":core:room/main"><div class="symbol monospace"><div class="block"><a href="-n-o-n-e/index.html">NONE</a></div></div><div class="brief "><p class="paragraph">No synchronization action needed.</p></div></div>                  </div>
                 </div>
               </div>
             </div>
@@ -133,7 +133,7 @@
                 <div class="title">
                   <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
                     <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":core:room/main" data-filterable-set=":core:room/main" data-active="" data-toggle=":core:room/main">androidJvm</button></div>
-<div class="content sourceset-dependent-content" data-active="" data-togglable=":core:room/main"><div class="symbol monospace"><div class="block"><a href="-u-p-s-e-r-t/index.html">UPSERT</a></div></div></div>                  </div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":core:room/main"><div class="symbol monospace"><div class="block"><a href="-u-p-s-e-r-t/index.html">UPSERT</a></div></div><div class="brief "><p class="paragraph">Insert or update this entity on the remote data source.</p></div></div>                  </div>
                 </div>
               </div>
             </div>
@@ -150,7 +150,7 @@
                 <div class="title">
                   <div class="platform-hinted  with-platform-tabs" data-platform-hinted="data-platform-hinted">
                     <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":core:room/main" data-filterable-set=":core:room/main" data-active="" data-toggle=":core:room/main">androidJvm</button></div>
-<div class="content sourceset-dependent-content" data-active="" data-togglable=":core:room/main"><div class="symbol monospace"><div class="block"><a href="-d-e-l-e-t-e/index.html">DELETE</a></div></div></div>                  </div>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":core:room/main"><div class="symbol monospace"><div class="block"><a href="-d-e-l-e-t-e/index.html">DELETE</a></div></div><div class="brief "><p class="paragraph">Delete this entity from the remote data source.</p></div></div>                  </div>
                 </div>
               </div>
             </div>
