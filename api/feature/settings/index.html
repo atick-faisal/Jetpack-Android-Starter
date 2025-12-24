@@ -113,7 +113,7 @@
     <h1 class="cover"><span><span>:feature:settings</span></span></h1>
     <div class="platform-hinted UnderCoverText with-platform-tabs" data-platform-hinted="data-platform-hinted">
       <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":feature:settings/debug" data-filterable-set=":feature:settings/debug" data-active="" data-toggle=":feature:settings/debug">debug</button><button class="platform-bookmark" data-filterable-current=":feature:settings/main" data-filterable-set=":feature:settings/main" data-toggle=":feature:settings/main">androidJvm</button><button class="platform-bookmark" data-filterable-current=":feature:settings/release" data-filterable-set=":feature:settings/release" data-toggle=":feature:settings/release">release</button></div>
-<div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:settings/debug"></div><div class="content sourceset-dependent-content" data-togglable=":feature:settings/main"><p class="paragraph">This module handles user preferences and app settings. It provides a UI for configuring app behavior and managing user preferences.</p><h2 class="">Features</h2><ul><li><p class="paragraph">Theme Configuration (Light/Dark)</p></li><li><p class="paragraph">Dynamic Color Toggle</p></li><li><p class="paragraph">Open Source Licenses</p></li><li><p class="paragraph">User Profile Settings</p></li><li><p class="paragraph">Sign Out Option</p></li><li><p class="paragraph">Preferences Persistence</p></li></ul><h2 class="">Dependencies Graph</h2><div class="sample-container"><div id="mermaid-container-1iss9gtgqd04h"></div></div><script>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:settings/debug"></div><div class="content sourceset-dependent-content" data-togglable=":feature:settings/main"><p class="paragraph">This module handles user preferences and app settings. It provides a UI for configuring app behavior and managing user preferences.</p><h2 class="">Features</h2><ul><li><p class="paragraph">Theme Configuration (Light/Dark)</p></li><li><p class="paragraph">Dynamic Color Toggle</p></li><li><p class="paragraph">Open Source Licenses</p></li><li><p class="paragraph">User Profile Settings</p></li><li><p class="paragraph">Sign Out Option</p></li><li><p class="paragraph">Preferences Persistence</p></li></ul><h2 class="">Dependencies Graph</h2><div class="sample-container"><div id="mermaid-container-58efhbjr0vj8"></div></div><script>
 window.addEventListener('load', function() {
   var graphDef =  `graph TD
     A[feature:settings] --> B[core:ui]
@@ -130,9 +130,9 @@ window.addEventListener('load', function() {
     style C fill: #64B5F6, stroke: #333, stroke-width: 2px
     style D fill: #FF7043, stroke: #333, stroke-width: 2px
     style E fill: #64B5F6, stroke: #333, stroke-width: 2px`;
-  var container = document.getElementById('mermaid-container-1iss9gtgqd04h');
-  container.innerHTML = '<div id="mermaid-target-1iss9gtgqd04h"></div>';
-  var updateGraph1iss9gtgqd04h = function() {
+  var container = document.getElementById('mermaid-container-58efhbjr0vj8');
+  container.innerHTML = '<div id="mermaid-target-58efhbjr0vj8"></div>';
+  var updateGraph58efhbjr0vj8 = function() {
     // setTimeout required or else the 1st render could be done before mermaid.initialize() has applied the theme.
     // Also required because we can't listen to localStorage events reliably, and it's changed on the same click event...
     setTimeout(() => {
@@ -143,19 +143,19 @@ window.addEventListener('load', function() {
         theme = 'dark';
       }
       mermaid.initialize({'theme': theme});
-      mermaid.render('mermaid-target-1iss9gtgqd04h', graphDef).then(({ svg, bindFunctions }) => {
+      mermaid.render('mermaid-target-58efhbjr0vj8', graphDef).then(({ svg, bindFunctions }) => {
           container.innerHTML = svg;
           // Trick to make the graph takes only the required height.
-          document.getElementById('mermaid-target-1iss9gtgqd04h').removeAttribute('height')
+          document.getElementById('mermaid-target-58efhbjr0vj8').removeAttribute('height')
           bindFunctions?.(element);
       });
     }, 0);
   }
-  updateGraph1iss9gtgqd04h();
+  updateGraph58efhbjr0vj8();
   
   var themeToggleButton = document.getElementById('theme-toggle-button');
   themeToggleButton.addEventListener('click', () => {
-    updateGraph1iss9gtgqd04h();
+    updateGraph58efhbjr0vj8();
   });
 });</script><h2 class="">Usage</h2><div class="sample-container"><pre><code class="block lang-kotlin" theme="idea">dependencies {<br>    implementation(project(":feature:settings"))<br>}</code></pre><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><h3 class="">Settings Dialog</h3><div class="sample-container"><pre><code class="block lang-kotlin" theme="idea">@Composable<br>fun SettingsDialog(<br>    onDismiss: () -&gt; Unit,<br>    onShowSnackbar: suspend (String, SnackbarAction, Throwable?) -&gt; Boolean<br>)</code></pre><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><h3 class="">Key Features</h3><ol><li><p class="paragraph"><strong>Theme Settings</strong>:</p><div class="sample-container"><pre><code class="block lang-kotlin" theme="idea">@Composable<br>fun ThemeSettings(<br>   darkThemeConfig: DarkThemeConfig,<br>   useDynamicColor: Boolean,<br>   onDarkThemeConfigChange: (DarkThemeConfig) -&gt; Unit,<br>   onUseDynamicColorChange: (Boolean) -&gt; Unit<br>)</code></pre><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></li><li><p class="paragraph"><strong>Profile Settings</strong>:</p><div class="sample-container"><pre><code class="block lang-kotlin" theme="idea">@Composable<br>fun ProfileSettings(<br>   onSignOut: () -&gt; Unit,<br>   onShowLicenses: () -&gt; Unit<br>)</code></pre><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></li></ol><p class="paragraph">The module uses DataStore Preferences for persistent storage of user settings.</p><h2 class="">Related Documentation</h2><ul><li><p class="paragraph"><strong>../../docs/guide.md</strong> - Step-by-step template for creating new features</p></li><li><p class="paragraph"><strong>../../docs/state-management.md</strong> - UiState pattern and ViewModel best practices</p></li><li><p class="paragraph"><strong>../../core/preferences/README.md</strong> - DataStore implementation for settings persistence</p></li></ul></div><div class="content sourceset-dependent-content" data-togglable=":feature:settings/release"></div>    </div>
   </div>
