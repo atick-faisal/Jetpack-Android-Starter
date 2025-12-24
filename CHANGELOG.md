@@ -1,5 +1,5 @@
 ### FEATURE UPDATES & BUG FIXES
-- Migrate to sdk level 36
+- Improve documentation
+- Migrate to Material 3 Expressive
 - Update dependencies
 - Fix minor bugs and improve performance
-- Fix issue with Google Sign-In
