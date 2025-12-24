@@ -1,10 +1,13 @@
 # Component Usage Guide
 
-This guide covers the pre-built UI components available in the `core:ui` module, their usage patterns, customization options, and best practices.
+This guide covers the pre-built UI components available in the `core:ui` module, their usage
+patterns, customization options, and best practices.
 
 ## Overview
 
-The Jetpack Android Starter template provides a curated set of Material 3 components with consistent styling and behavior patterns. These components are located in `core/ui/src/main/kotlin/dev/atick/core/ui/components/`.
+The Jetpack Android Starter template provides a curated set of Material 3 components with consistent
+styling and behavior patterns. These components are located in
+`core/ui/src/main/kotlin/dev/atick/core/ui/components/`.
 
 ### Component Philosophy
 
@@ -17,12 +20,14 @@ The Jetpack Android Starter template provides a curated set of Material 3 compon
 ### When to Use Pre-Built Components
 
 **Use pre-built components when:**
+
 - You need standard UI patterns (buttons, text fields, app bars)
 - You want consistent styling across your app
 - You need accessibility features out of the box
 - You want to reduce boilerplate code
 
 **Create custom components when:**
+
 - You need highly specialized UI behavior
 - Pre-built components don't match your design requirements
 - You need fine-grained control over component internals
@@ -39,48 +44,37 @@ graph TD
     Input -->|Action| ActionType{Action Type?}
     Input -->|Navigation| NavType{Navigation Type?}
     Input -->|Display| DisplayType{Display Type?}
-
     TextType -->|Regular Text| JetpackTextFiled
     TextType -->|Password| JetpackPasswordFiled
-
-    SelectType -->|Multi-select Filter| JetpackFilterChip
+    SelectType -->|Multi - select Filter| JetpackFilterChip
     SelectType -->|Follow/Unfollow| JetpackTag
     SelectType -->|Toggle State| JetpackIconToggleButton
-    SelectType -->|2-4 Options| JetpackToggleOptions
+    SelectType -->|2 - 4 Options| JetpackToggleOptions
     SelectType -->|Tabs| JetpackTabRow
-
     ActionType -->|Primary| ButtonType{Need Emphasis?}
     ActionType -->|Icon Toggle| JetpackIconToggleButton
     ActionType -->|Primary FAB| FabType{Need Text?}
-
     ButtonType -->|High| JetpackButton
     ButtonType -->|Medium| JetpackOutlinedButton
     ButtonType -->|Low| JetpackTextButton
-
     FabType -->|Yes| JetpackExtendedFab
     FabType -->|No| MaterialFAB[Use Material3 FloatingActionButton]
-
-    NavType -->|App-wide Adaptive| JetpackNavigationSuiteScaffold
+    NavType -->|App - wide Adaptive| JetpackNavigationSuiteScaffold
     NavType -->|Bottom Bar Only| JetpackNavigationBar
     NavType -->|Side Rail Only| JetpackNavigationRail
     NavType -->|Top Bar| AppBarType{Need Action?}
-
     AppBarType -->|Back + Icon| JetpackTopAppBar1[JetpackTopAppBar]
     AppBarType -->|Icon Only| JetpackTopAppBar2[JetpackTopAppBar]
     AppBarType -->|Avatar| JetpackTopAppBarWithAvatar
     AppBarType -->|Text Action| JetpackActionBar
-
     DisplayType -->|Loading| LoadingType{Overlay?}
     DisplayType -->|Image| JetpackDynamicAsyncImage[DynamicAsyncImage]
     DisplayType -->|Divider| DividerWithText
     DisplayType -->|Background| BgType{Gradient?}
-
     LoadingType -->|Yes| JetpackOverlayLoadingWheel
     LoadingType -->|No| JetpackLoadingWheel
-
     BgType -->|Yes| AppGradientBackground
     BgType -->|No| AppBackground
-
     Start --> Gesture{Swipe Gesture?}
     Gesture -->|Swipe to Delete| SwipeToDismiss
 ```
@@ -89,13 +83,15 @@ graph TD
 
 ### Buttons
 
-The template provides three button variants: filled, outlined, and text buttons. All support text and icon content.
+The template provides three button variants: filled, outlined, and text buttons. All support text
+and icon content.
 
 #### JetpackButton (Filled)
 
 **Purpose**: Primary actions, high emphasis
 
 **Basic Usage**:
+
 ```kotlin
 JetpackButton(
     onClick = { /* action */ },
@@ -104,6 +100,7 @@ JetpackButton(
 ```
 
 **With Leading Icon**:
+
 ```kotlin
 JetpackButton(
     onClick = { /* action */ },
@@ -118,6 +115,7 @@ JetpackButton(
 ```
 
 **Custom Content**:
+
 ```kotlin
 JetpackButton(
     onClick = { /* action */ },
@@ -129,6 +127,7 @@ JetpackButton(
 ```
 
 **Parameters**:
+
 - `onClick`: Callback when button is clicked
 - `text`: Text label composable (in overload)
 - `leadingIcon`: Optional icon before text (in overload)
@@ -153,6 +152,7 @@ JetpackOutlinedButton(
 ```
 
 **Theming**:
+
 - Uses `MaterialTheme.colorScheme.outline` for border
 - Adapts border color when disabled (12% alpha)
 - 1.dp border width
@@ -171,6 +171,7 @@ JetpackTextButton(
 ```
 
 **Common Pattern - Button Row**:
+
 ```kotlin
 Row(
     modifier = Modifier.fillMaxWidth(),
@@ -196,6 +197,7 @@ Row(
 **Purpose**: Standard text input with validation support
 
 **Basic Usage**:
+
 ```kotlin
 var email by remember { mutableStateOf("") }
 
@@ -213,6 +215,7 @@ JetpackTextFiled(
 ```
 
 **With Validation**:
+
 ```kotlin
 val emailData by viewModel.emailData.collectAsStateWithLifecycle()
 
@@ -231,6 +234,7 @@ JetpackTextFiled(
 ```
 
 **Parameters**:
+
 - `value`: Current text value
 - `onValueChange`: Callback when text changes
 - `label`: Label composable
@@ -265,6 +269,7 @@ data class ScreenData(
 ```
 
 **Styling**:
+
 - 50% rounded corners
 - Red border/color when error is present
 - Animated error message appearance
@@ -274,6 +279,7 @@ data class ScreenData(
 **Purpose**: Password input with visibility toggle
 
 **Usage**:
+
 ```kotlin
 var password by remember { mutableStateOf("") }
 
@@ -292,12 +298,14 @@ JetpackPasswordFiled(
 ```
 
 **Features**:
+
 - Automatic visibility toggle button
 - Password masking by default
 - Uses `PasswordVisualTransformation`
 - Saves visibility state across configuration changes
 
 **Common Pattern - Login Form**:
+
 ```kotlin
 Column(
     modifier = Modifier
@@ -337,6 +345,7 @@ Column(
 **Purpose**: Screen title with navigation and action icons
 
 **Usage**:
+
 ```kotlin
 JetpackTopAppBar(
     titleRes = R.string.screen_title,
@@ -350,6 +359,7 @@ JetpackTopAppBar(
 ```
 
 **Parameters**:
+
 - `titleRes`: String resource for title
 - `navigationIcon`: Leading icon (typically back arrow)
 - `navigationIconContentDescription`: Accessibility label for navigation
@@ -365,6 +375,7 @@ JetpackTopAppBar(
 **Purpose**: Screen title with action icon only
 
 **Usage**:
+
 ```kotlin
 JetpackTopAppBar(
     titleRes = R.string.home,
@@ -379,6 +390,7 @@ JetpackTopAppBar(
 **Purpose**: Screen title with user avatar
 
 **Usage**:
+
 ```kotlin
 JetpackTopAppBarWithAvatar(
     titleRes = R.string.home,
@@ -389,6 +401,7 @@ JetpackTopAppBarWithAvatar(
 ```
 
 **Features**:
+
 - Loads avatar with Coil's `AsyncImage`
 - Fallback to default avatar drawable
 - Circular clip automatically applied
@@ -398,6 +411,7 @@ JetpackTopAppBarWithAvatar(
 **Purpose**: Screen with back navigation and text action button
 
 **Usage**:
+
 ```kotlin
 JetpackActionBar(
     titleRes = R.string.edit_profile,
@@ -410,6 +424,7 @@ JetpackActionBar(
 **Unique Feature**: Uses `JetpackButton` instead of icon for the action
 
 **Common Pattern - Scaffold with Top App Bar**:
+
 ```kotlin
 Scaffold(
     topBar = {
@@ -436,6 +451,7 @@ Scaffold(
 **Purpose**: Animated loading indicator
 
 **Usage**:
+
 ```kotlin
 JetpackLoadingWheel(
     contentDesc = "Loading data",
@@ -444,12 +460,14 @@ JetpackLoadingWheel(
 ```
 
 **Features**:
+
 - Custom animated wheel design
 - 12 rotating lines with color transitions
 - Automatic rotation animation
 - Material 3 color scheme integration
 
 **Parameters**:
+
 - `contentDesc`: Accessibility content description
 - `modifier`: Modifier (default includes 48.dp size)
 
@@ -458,6 +476,7 @@ JetpackLoadingWheel(
 **Purpose**: Loading indicator with semi-transparent background
 
 **Usage**:
+
 ```kotlin
 Box(modifier = Modifier.fillMaxSize()) {
     // Your content
@@ -474,12 +493,14 @@ Box(modifier = Modifier.fillMaxSize()) {
 ```
 
 **Features**:
+
 - Rounded corners (60.dp)
 - Elevated surface (8.dp shadow)
 - 83% opacity background
 - Fixed 60.dp size
 
 **Common Pattern - Loading State**:
+
 ```kotlin
 Box(modifier = Modifier.fillMaxSize()) {
     when {
@@ -506,6 +527,7 @@ Box(modifier = Modifier.fillMaxSize()) {
 **Purpose**: Multi-select filtering with visual checkmarks
 
 **Usage**:
+
 ```kotlin
 var selectedCategories by remember { mutableStateOf(setOf<String>()) }
 val categories = listOf("Active", "Completed", "Archived")
@@ -528,17 +550,20 @@ LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
 ```
 
 **Features**:
+
 - Automatic checkmark icon when selected
 - Circular pill shape
 - Custom border and color styling
 - Disabled state support
 
 **When to use**:
+
 - Filtering lists or content (e.g., "Active", "Completed", "All")
 - Multi-select scenarios where users can pick multiple options
 - Category or tag selection
 
 **Parameters**:
+
 - `selected`: Whether the chip is currently checked
 - `onSelectedChange`: Callback when chip is toggled
 - `label`: Text label content
@@ -554,6 +579,7 @@ LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
 **Purpose**: Follow/unfollow topics or interests
 
 **Usage**:
+
 ```kotlin
 var followedTopics by remember { mutableStateOf(setOf<String>()) }
 val availableTopics = listOf("Android", "Kotlin", "Compose", "Testing")
@@ -579,17 +605,20 @@ FlowRow(
 ```
 
 **Features**:
+
 - Visual distinction between followed (solid) and unfollowed (translucent) states
 - Rounded button shape with small text
 - Theme-aware colors
 - Disabled state support
 
 **When to use**:
+
 - Interest or topic selection (e.g., "Follow topics you're interested in")
 - Category management
 - Tag-based filtering with persistent selection
 
 **Parameters**:
+
 - `followed`: Whether this tag is followed
 - `onClick`: Callback when tag is clicked
 - `text`: Text label content
@@ -605,6 +634,7 @@ FlowRow(
 **Purpose**: Binary toggle actions (favorite/unfavorite, bookmark/unbookmark)
 
 **Usage**:
+
 ```kotlin
 var isFavorite by remember { mutableStateOf(false) }
 
@@ -627,17 +657,20 @@ JetpackIconToggleButton(
 ```
 
 **Features**:
+
 - Automatic icon switching between checked/unchecked states
 - Filled background with rounded shape
 - Primary container color when checked, transparent when unchecked
 - Disabled state support
 
 **When to use**:
+
 - Binary toggle actions (favorite/unfavorite, bookmark/unbookmark)
 - Visibility toggles (show/hide password, expand/collapse)
 - State indicators that can be toggled
 
 **Parameters**:
+
 - `checked`: Whether the toggle button is currently checked
 - `onCheckedChange`: Callback when toggle button is clicked
 - `icon`: Icon content when unchecked
@@ -652,6 +685,7 @@ JetpackIconToggleButton(
 **Purpose**: Segmented button selector for mutually exclusive choices
 
 **Usage**:
+
 ```kotlin
 val themeOptions = listOf(
     ToggleOption(text = R.string.light, icon = Icons.Default.LightMode),
@@ -668,17 +702,20 @@ JetpackToggleOptions(
 ```
 
 **Features**:
+
 - Segmented button-style selector
 - Animated transitions between states
 - Icon and text for each option
 - Fixed 56dp height with rounded corners
 
 **When to use**:
+
 - Mutually exclusive choices (Light/Dark/System theme)
 - View modes (List/Grid)
 - Any set of 2-4 options requiring visual selection
 
 **Parameters**:
+
 - `options`: List of `ToggleOption` (recommended 2-4 options)
 - `selectedIndex`: Zero-based index of selected option
 - `onSelectionChange`: Callback when selection changes
@@ -691,6 +728,7 @@ JetpackToggleOptions(
 **Purpose**: Primary actions with text label for clarity
 
 **Usage**:
+
 ```kotlin
 Scaffold(
     floatingActionButton = {
@@ -706,17 +744,20 @@ Scaffold(
 ```
 
 **Features**:
+
 - Combined icon and text for clarity
 - Material 3 theming and colors
 - Standard FAB elevation and behavior
 - Uses the same resource for icon description and button text
 
 **When to use**:
+
 - Primary actions that need text label for clarity (e.g., "Create", "Compose")
 - When users need extra context beyond just an icon
 - First-time user experiences where action should be obvious
 
 **Parameters**:
+
 - `icon`: Icon to display
 - `text`: String resource for both text label and icon content description
 - `onClick`: Callback when FAB is clicked
@@ -734,6 +775,7 @@ The template provides adaptive navigation components that automatically adjust b
 **Purpose**: Adaptive navigation (bottom bar on phones, rail on tablets, drawer on large screens)
 
 **Usage**:
+
 ```kotlin
 JetpackNavigationSuiteScaffold(
     navigationSuiteItems = {
@@ -756,14 +798,16 @@ JetpackNavigationSuiteScaffold(
 ```
 
 **Features**:
+
 - Automatic adaptation based on window size:
-  - **Compact** screens: Bottom navigation bar
-  - **Medium** screens: Navigation rail
-  - **Expanded** screens: Navigation drawer
+    - **Compact** screens: Bottom navigation bar
+    - **Medium** screens: Navigation rail
+    - **Expanded** screens: Navigation drawer
 - Consistent theming across all layouts
 - Icon switching between selected/unselected states
 
 **When to use**:
+
 - App-wide navigation
 - Multi-destination apps
 - Responsive layouts across devices
@@ -773,6 +817,7 @@ JetpackNavigationSuiteScaffold(
 **Purpose**: Bottom navigation bar for compact screens
 
 **Usage**:
+
 ```kotlin
 JetpackNavigationBar {
     destinations.forEach { destination ->
@@ -787,6 +832,7 @@ JetpackNavigationBar {
 ```
 
 **When to use**:
+
 - Fixed bottom navigation on phones
 - 3-5 top-level destinations
 
@@ -795,6 +841,7 @@ JetpackNavigationBar {
 **Purpose**: Side navigation for tablets and larger screens
 
 **Usage**:
+
 ```kotlin
 JetpackNavigationRail(
     header = {
@@ -817,6 +864,7 @@ JetpackNavigationRail(
 ```
 
 **When to use**:
+
 - Tablet and large screen layouts
 - Apps with many destinations (5+)
 
@@ -829,6 +877,7 @@ JetpackNavigationRail(
 **Purpose**: Tabbed content switching within a screen
 
 **Usage**:
+
 ```kotlin
 var selectedTab by remember { mutableIntStateOf(0) }
 val tabs = listOf("Feed", "Explore", "Profile")
@@ -854,17 +903,20 @@ Column {
 ```
 
 **Features**:
+
 - Transparent container background
 - Secondary indicator (2dp height) that animates between tabs
 - Equal spacing for all tabs
 - Custom top padding for visual alignment
 
 **When to use**:
+
 - Content switching within a single screen
 - Viewing different aspects of the same data
 - Alternative views of content
 
 **Parameters (JetpackTab)**:
+
 - `selected`: Whether tab is selected
 - `onClick`: Callback when tab is clicked
 - `text`: Text label content
@@ -872,6 +924,7 @@ Column {
 - `modifier`: Modifier to customize appearance
 
 **Parameters (JetpackTabRow)**:
+
 - `selectedTabIndex`: Index of currently selected tab
 - `tabs`: Tab composables (typically multiple `JetpackTab`s)
 - `modifier`: Modifier to customize appearance
@@ -883,6 +936,7 @@ Column {
 **Purpose**: Horizontal divider with centered text (e.g., "OR" between sign-in methods)
 
 **Usage**:
+
 ```kotlin
 Column {
     // Email sign-in form
@@ -899,17 +953,20 @@ Column {
 ```
 
 **Features**:
+
 - Centered text label with equal dividers on both sides
 - Material 3 HorizontalDivider styling
 - Small typography for subtle visual separation
 - 16dp horizontal padding around text
 
 **When to use**:
+
 - Separating alternative sign-in methods ("OR")
 - Breaking up long forms into logical sections
 - Showing "More options" between primary and secondary actions
 
 **Parameters**:
+
 - `text`: String resource for text to display
 - `modifier`: Modifier to customize appearance
 
@@ -920,6 +977,7 @@ Column {
 **Purpose**: Swipe-to-delete gesture for list items
 
 **Usage**:
+
 ```kotlin
 LazyColumn {
     items(items, key = { it.id }) { item ->
@@ -933,23 +991,27 @@ LazyColumn {
 ```
 
 **Features**:
+
 - End-to-start swipe only (prevents accidental dismissal)
 - Visual feedback: delete icon with error container background
 - Animated background color based on swipe progress
 - Confirmation: `onDelete` only called when swipe completes threshold
 
 **When to use**:
+
 - Dismissing items in a LazyColumn list
 - Removing notifications
 - Deleting messages or emails
 
 **Parameters**:
+
 - `onDelete`: Callback when item is swiped to dismiss
 - `content`: Content to display (the item being dismissed)
 - `modifier`: Modifier to customize appearance
 
 > [!TIP]
-> Always use `key` parameter in `items()` for proper animation and recomposition when using SwipeToDismiss.
+> Always use `key` parameter in `items()` for proper animation and recomposition when using
+> SwipeToDismiss.
 
 ### Image Loading
 
@@ -958,6 +1020,7 @@ LazyColumn {
 **Purpose**: Async image loading with Coil integration
 
 **Usage**:
+
 ```kotlin
 DynamicAsyncImage(
     imageUrl = "https://example.com/avatar.jpg",
@@ -970,6 +1033,7 @@ DynamicAsyncImage(
 ```
 
 **Features**:
+
 - **Loading state**: Displays `JetpackLoadingWheel` while loading
 - **Error handling**: Falls back to placeholder on failure
 - **Theme integration**: Applies tint from `LocalTintTheme` when appropriate
@@ -977,17 +1041,20 @@ DynamicAsyncImage(
 - **Coil integration**: Automatic memory and disk caching
 
 **When to use**:
+
 - Loading remote images (avatars, thumbnails, photos)
 - Any image that needs async loading
 - Images requiring loading states and error handling
 
 **Parameters**:
+
 - `imageUrl`: URL of image to load
 - `contentDescription`: Accessibility description
 - `placeholder`: Painter to display while loading or on error (default: `ic_placeholder`)
 - `modifier`: Modifier to customize appearance
 
-**See also**: [Performance Guide](performance.md#image-loading-optimization) for image optimization patterns
+**See also**: [Performance Guide](performance.md#image-loading-optimization) for image optimization
+patterns
 
 ### Background Components
 
@@ -996,6 +1063,7 @@ DynamicAsyncImage(
 **Purpose**: Main app background with theme support
 
 **Usage**:
+
 ```kotlin
 @Composable
 fun MyApp() {
@@ -1011,12 +1079,14 @@ fun MyApp() {
 ```
 
 **Features**:
+
 - Automatic color from `LocalBackgroundTheme`
 - Tonal elevation support for depth
 - Resets absolute tonal elevation for nested surfaces
 - Fills max size by default
 
 **When to use**:
+
 - App-level background wrapper
 - Consistent theming across screens
 
@@ -1025,6 +1095,7 @@ fun MyApp() {
 **Purpose**: Decorative gradient background for special screens
 
 **Usage**:
+
 ```kotlin
 @Composable
 fun OnboardingScreen() {
@@ -1047,18 +1118,21 @@ fun OnboardingScreen() {
 ```
 
 **Features**:
+
 - Dual gradient (top fades out at 72.4%, bottom fades in at 25.5%)
 - Angled at 11.06 degrees for visual interest
 - Theme-aware gradient colors from `LocalGradientColors`
 - Container background with gradient overlay
 
 **When to use**:
+
 - Onboarding or welcome screens
 - Feature announcements or promotions
 - Hero sections with visual emphasis
 - Special event or seasonal theming
 
 **Parameters**:
+
 - `gradientColors`: Gradient colors to render (default: `LocalGradientColors.current`)
 - `content`: Background content
 - `modifier`: Modifier to customize appearance
@@ -1069,9 +1143,11 @@ fun OnboardingScreen() {
 
 ### Color Scheme
 
-All components use Material 3's `MaterialTheme.colorScheme`. The default color scheme is defined in `core/ui/src/main/kotlin/dev/atick/core/ui/theme/Color.kt`.
+All components use Material 3's `MaterialTheme.colorScheme`. The default color scheme is defined in
+`core/ui/src/main/kotlin/dev/atick/core/ui/theme/Color.kt`.
 
 **Component Color Usage**:
+
 - **JetpackButton**: `colorScheme.onBackground` (container)
 - **JetpackOutlinedButton**: `colorScheme.outline` (border)
 - **Loading Indicators**: `colorScheme.onBackground` and `colorScheme.inversePrimary`
@@ -1104,7 +1180,8 @@ JetpackButton(
 
 ### Typography
 
-Components use Material 3 typography defined in `core/ui/src/main/kotlin/dev/atick/core/ui/theme/Type.kt`.
+Components use Material 3 typography defined in
+`core/ui/src/main/kotlin/dev/atick/core/ui/theme/Type.kt`.
 
 **Customizing Typography**:
 
@@ -1172,7 +1249,8 @@ IconButton(
 
 ### Contrast
 
-Components automatically use theme colors with sufficient contrast. Verify custom colors meet WCAG AA standards:
+Components automatically use theme colors with sufficient contrast. Verify custom colors meet WCAG
+AA standards:
 
 - Normal text: 4.5:1 contrast ratio
 - Large text: 3:1 contrast ratio
@@ -1273,6 +1351,7 @@ private fun CustomComponentPreview() {
 ```
 
 **Preview Annotations**:
+
 - `@PreviewDevices`: Shows component on multiple device sizes
 - `@PreviewThemes`: Shows component in light and dark themes
 
@@ -1286,18 +1365,20 @@ Provide comprehensive KDoc for all public components:
  *
  * Example usage:
  * ```
- * UserCard(
- *     name = "John Doe",
- *     email = "john@example.com"
- * )
- * ```
- *
- * @param name The user's display name
- * @param email The user's email address
- * @param modifier Modifier to be applied to the card
- */
-@Composable
-fun UserCard(/* ... */) { /* ... */ }
+
+* UserCard(
+*     name = "John Doe",
+*     email = "john@example.com"
+* )
+* ```
+*
+* @param name The user's display name
+* @param email The user's email address
+* @param modifier Modifier to be applied to the card
+  */
+  @Composable
+  fun UserCard(/* ... */) { /* ... */ }
+
 ```
 
 ## Component Organization
@@ -1305,19 +1386,21 @@ fun UserCard(/* ... */) { /* ... */ }
 ### File Structure
 
 ```
+
 core/ui/src/main/kotlin/dev/atick/core/ui/
 ├── components/
-│   ├── Button.kt         # All button variants
-│   ├── TextField.kt      # All text field variants
-│   ├── TopAppBar.kt      # All app bar variants
-│   ├── LoadingWheel.kt   # Loading indicators
-│   └── ...
+│ ├── Button.kt # All button variants
+│ ├── TextField.kt # All text field variants
+│ ├── TopAppBar.kt # All app bar variants
+│ ├── LoadingWheel.kt # Loading indicators
+│ └── ...
 ├── theme/
-│   ├── Color.kt          # Color definitions
-│   ├── Type.kt           # Typography
-│   └── Theme.kt          # Theme setup
+│ ├── Color.kt # Color definitions
+│ ├── Type.kt # Typography
+│ └── Theme.kt # Theme setup
 └── utils/
-    └── ...               # UI utilities
+└── ... # UI utilities
+
 ```
 
 ### Naming Conventions
@@ -1402,6 +1485,7 @@ DynamicAsyncImage(
 ```
 
 Features:
+
 - Automatic memory and disk caching (Coil)
 - Crossfade animations
 - Placeholder and error handling
@@ -1410,24 +1494,21 @@ Features:
 
 If migrating from XML to Compose, use these mappings:
 
-| XML View | Jetpack Component |
-|----------|-------------------|
-| `<Button>` | `JetpackButton` |
-| `<EditText>` | `JetpackTextFiled` |
-| `<Toolbar>` | `JetpackTopAppBar` |
+| XML View        | Jetpack Component     |
+|-----------------|-----------------------|
+| `<Button>`      | `JetpackButton`       |
+| `<EditText>`    | `JetpackTextFiled`    |
+| `<Toolbar>`     | `JetpackTopAppBar`    |
 | `<ProgressBar>` | `JetpackLoadingWheel` |
-| `<ImageView>` | `DynamicAsyncImage` |
+| `<ImageView>`   | `DynamicAsyncImage`   |
 
 **Example Migration**:
 
 ```xml
 <!-- Before (XML) -->
-<Button
-    android:id="@+id/submitButton"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:text="@string/submit"
-    android:onClick="onSubmitClick" />
+<Button android:id="@+id/submitButton" android:layout_width="match_parent"
+        android:layout_height="wrap_content" android:text="@string/submit"
+        android:onClick="onSubmitClick" />
 ```
 
 ```kotlin
@@ -1451,7 +1532,8 @@ The component library provides:
 - **Flexibility** through content slots and modifiers
 - **Performance** optimizations for common patterns
 
-Follow the patterns in this guide to build beautiful, accessible, and performant UIs with minimal boilerplate.
+Follow the patterns in this guide to build beautiful, accessible, and performant UIs with minimal
+boilerplate.
 
 ## Further Reading
 
@@ -1465,7 +1547,8 @@ Follow the patterns in this guide to build beautiful, accessible, and performant
 ### Module Documentation
 
 - [Core UI Module](../core/ui/README.md) - Component architecture and state management utilities
-- [Feature Auth Module](../feature/auth/README.md) - Example of form components and authentication UI
+- [Feature Auth Module](../feature/auth/README.md) - Example of form components and authentication
+  UI
 - [Feature Home Module](../feature/home/README.md) - Example of list components and data display
 
 ### External Resources

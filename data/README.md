@@ -205,14 +205,6 @@ graph TD
         F
         G
     end
-
-    style A fill: #4CAF50, stroke: #333, stroke-width: 2px
-    style B fill: #64B5F6, stroke: #333, stroke-width: 2px
-    style C fill: #64B5F6, stroke: #333, stroke-width: 2px
-    style D fill: #64B5F6, stroke: #333, stroke-width: 2px
-    style E fill: #64B5F6, stroke: #333, stroke-width: 2px
-    style F fill: #FFA726, stroke: #333, stroke-width: 2px
-    style G fill: #FFA726, stroke: #333, stroke-width: 2px
 ```
 
 ## Hilt Module Setup

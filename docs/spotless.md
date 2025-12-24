@@ -2,7 +2,10 @@
 
 ## Summary
 
-This guide explains the project's code formatting and license header management using Spotless with ktlint. Learn how to check and apply formatting, customize copyright headers, configure IDE integration, and ensure your code passes CI checks. Always run `spotlessApply` before committing to avoid CI failures.
+This guide explains the project's code formatting and license header management using Spotless with
+ktlint. Learn how to check and apply formatting, customize copyright headers, configure IDE
+integration, and ensure your code passes CI checks. Always run `spotlessApply` before committing to
+avoid CI failures.
 
 ---
 
@@ -27,12 +30,12 @@ The Spotless configuration includes:
 The project includes pre-configured run configurations in the `.run` directory:
 
 1. **Spotless Check**: Verifies if all files conform to the formatting rules
-	- Run using: `./gradlew spotlessCheck`
-	- Or use the "Spotless Check" run configuration in Android Studio
+    - Run using: `./gradlew spotlessCheck`
+    - Or use the "Spotless Check" run configuration in Android Studio
 
 2. **Spotless Apply**: Automatically formats all files according to the rules
-	- Run using: `./gradlew spotlessApply`
-	- Or use the "Spotless Apply" run configuration in Android Studio
+    - Run using: `./gradlew spotlessApply`
+    - Or use the "Spotless Apply" run configuration in Android Studio
 
 > [!TIP]
 > Always run Spotless Apply before committing your changes to ensure consistent code formatting.
@@ -108,9 +111,9 @@ The configuration includes similar setups for:
 ## Best Practices
 
 1. **Pre-commit Hook**: Consider setting up a pre-commit hook to run `spotlessApply`:
-	```bash
-	./gradlew spotlessApply
-	```
+   ```bash
+   ./gradlew spotlessApply
+   ```
 
 2. **IDE Integration**: Use the provided run configurations in Android Studio for easy access to
    Spotless commands.

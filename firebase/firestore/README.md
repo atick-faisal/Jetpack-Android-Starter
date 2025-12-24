@@ -19,10 +19,6 @@ graph TD
     A[firebase:firestore] --> B[core:android]
     A --> C[firebase.bom]
     C --> D[firebase.firestore]
-    style A fill: #4CAF50, stroke: #333, stroke-width: 2px
-    style B fill: #64B5F6, stroke: #333, stroke-width: 2px
-    style C fill: #FFA726, stroke: #333, stroke-width: 2px
-    style D fill: #FFA726, stroke: #333, stroke-width: 2px
 ```
 
 ## Usage

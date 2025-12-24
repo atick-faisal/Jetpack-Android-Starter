@@ -26,8 +26,7 @@ graph TB
         ViewModel["ViewModels<br/>(State Management)"]
         ScreenData["Screen Data<br/>(Immutable State)"]
         UiState["UiState&lt;T&gt;<br/>(Wrapper)"]
-
-        Composable -.observes.- UiState
+        Composable -. observes .-> UiState
         ViewModel -->|manages| UiState
         UiState -->|wraps| ScreenData
     end
@@ -37,10 +36,9 @@ graph TB
         Repository["Repositories<br/>(Single Source of Truth)"]
         LocalDS["Local Data Sources<br/>(Room, DataStore)"]
         NetworkDS["Network Data Sources<br/>(Retrofit, Firebase)"]
-
         Repository -->|reads/writes| LocalDS
         Repository -->|fetches| NetworkDS
-        NetworkDS -.syncs.-> LocalDS
+        NetworkDS -. syncs .-> LocalDS
     end
 
     subgraph DI["Dependency Injection"]
@@ -48,12 +46,8 @@ graph TB
     end
 
     ViewModel -->|calls| Repository
-    Hilt -.injects.-> ViewModel
-    Hilt -.injects.-> Repository
-
-    style UI fill:#E8F5E9,stroke:#4CAF50,stroke-width:2px
-    style Data fill:#E3F2FD,stroke:#1976D2,stroke-width:2px
-    style DI fill:#FFF3E0,stroke:#FF9800,stroke-width:2px
+    Hilt -. injects .-> ViewModel
+    Hilt -. injects .-> Repository
 ```
 
 **Simplified View**:
@@ -61,8 +55,6 @@ graph TB
 ```mermaid
 graph TD
     A[UI Layer] --> B[Data Layer]
-    style A fill: #4CAF50, stroke: #333, stroke-width: 2px
-    style B fill: #1976D2, stroke: #333, stroke-width: 2px
 ```
 
 ### UI Layer
@@ -153,11 +145,11 @@ The project uses a consistent state management pattern:
     }
     ```
 
-> [!TIP]
-> **Kotlin Context Parameters**: The `updateStateWith` and `updateWith` functions use Kotlin's
-> context parameters feature (enabled via `-Xcontext-parameters` compiler flag) to automatically
-> access the ViewModel's scope. You don't need to pass `viewModelScope` explicitly - it's
-> injected via the `context(viewModel: ViewModel)` parameter.
+   > [!TIP]
+   > **Kotlin Context Parameters**: The `updateStateWith` and `updateWith` functions use Kotlin's
+   > context parameters feature (enabled via `-Xcontext-parameters` compiler flag) to automatically
+   > access the ViewModel's scope. You don't need to pass `viewModelScope` explicitly - it's
+   > injected via the `context(viewModel: ViewModel)` parameter.
 
 3. **State Display**:
 
@@ -246,11 +238,13 @@ The architecture enables different types of tests:
 
 ## Integration Patterns
 
-Understanding how different architectural components work together is crucial for building features effectively. This section explains the key integration patterns in the template.
+Understanding how different architectural components work together is crucial for building features
+effectively. This section explains the key integration patterns in the template.
 
 ### Navigation + State Management Integration
 
-Navigation and state management work together to create a seamless user experience with proper state preservation.
+Navigation and state management work together to create a seamless user experience with proper state
+preservation.
 
 **Pattern**: Type-safe navigation with state restoration
 
@@ -297,17 +291,20 @@ fun NavGraphBuilder.profileScreen(
 ```
 
 **Key Integration Points**:
+
 - `SavedStateHandle` provides navigation arguments to ViewModel
 - `toRoute<T>()` converts type-safe route to data class
 - State survives configuration changes automatically
 - Back stack preservation handled by Navigation Compose
 
 > [!TIP]
-> For detailed navigation patterns, see [Navigation Deep Dive](navigation.md). For state management patterns, see [State Management Guide](state-management.md).
+> For detailed navigation patterns, see [Navigation Deep Dive](navigation.md). For state management
+> patterns, see [State Management Guide](state-management.md).
 
 ### Firebase + Data Layer Integration
 
-Firebase services integrate with the repository pattern to provide seamless authentication and cloud data access.
+Firebase services integrate with the repository pattern to provide seamless authentication and cloud
+data access.
 
 **Pattern**: Firebase authentication flow with repository pattern
 
@@ -361,13 +358,15 @@ class AuthViewModel @Inject constructor(
 ```
 
 **Key Integration Points**:
+
 - Firebase wrappers provide reactive Flow-based APIs
 - Repositories coordinate between Firebase and local database
 - ViewModels observe repositories using StateFlow
 - Local database serves as cache for offline access
 
 > [!TIP]
-> For Firebase setup, see [Firebase Setup Guide](firebase.md). For repository patterns, see [Data Layer Guide](../data/README.md).
+> For Firebase setup, see [Firebase Setup Guide](firebase.md). For repository patterns,
+> see [Data Layer Guide](../data/README.md).
 
 ### Dependency Injection Integration
 
@@ -419,6 +418,7 @@ fun HomeRoute(
 ```
 
 **Key Integration Points**:
+
 - Data sources provided in Singleton scope
 - Repositories use `@Binds` for interface-to-implementation mapping
 - ViewModels annotated with `@HiltViewModel` for automatic injection
@@ -426,11 +426,13 @@ fun HomeRoute(
 - `@AndroidEntryPoint` enables injection in Activities/Fragments
 
 > [!TIP]
-> For complete DI patterns, see [Dependency Injection Guide](dependency-injection.md) (993 lines of comprehensive guidance).
+> For complete DI patterns, see [Dependency Injection Guide](dependency-injection.md) (993 lines of
+> comprehensive guidance).
 
 ### Sync + Repositories Integration
 
-WorkManager-based sync integrates with repositories to keep local data synchronized with remote sources.
+WorkManager-based sync integrates with repositories to keep local data synchronized with remote
+sources.
 
 **Pattern**: Background sync with repository coordination
 
@@ -489,6 +491,7 @@ class App : Application(), Configuration.Provider {
 ```
 
 **Key Integration Points**:
+
 - Repositories implement `sync()` method returning `Flow<SyncProgress>`
 - `SyncWorker` receives repository via Hilt dependency injection
 - `setForeground()` displays progress notification as sync runs
@@ -513,50 +516,49 @@ sequenceDiagram
     participant Local as Local DB
     participant Remote as Remote API
     participant Sync as SyncWorker
-
-    Note over UI,Sync: User Opens Screen
-    UI->>VM: hiltViewModel() injection
-    VM->>Repo: observeData()
-    Repo->>Local: observeDataEntities()
-    Local-->>Repo: Flow<List<Entity>>
-    Repo-->>VM: Flow<List<Domain>>
-    VM-->>UI: StateFlow<UiState<Data>>
-
-    Note over UI,Sync: Background Sync (Periodic)
-    Sync->>Repo: sync()
-    Repo->>Remote: fetchData()
-    Remote-->>Repo: List<DTO>
-    Repo->>Local: saveData(entities)
-    Local-->>Repo: Success
-    Note over Local,UI: Flow emits new data
-    Local-->>Repo: Updated Flow
-    Repo-->>VM: Updated Flow
-    VM-->>UI: Updated State
-    UI->>UI: Recomposition
+    Note over UI, Sync: User Opens Screen
+    UI ->> VM: hiltViewModel() injection
+    VM ->> Repo: observeData()
+    Repo ->> Local: observeDataEntities()
+    Local -->> Repo: Flow<List<Entity>>
+    Repo -->> VM: Flow<List<Domain>>
+    VM -->> UI: StateFlow<UiState<Data>>
+    Note over UI, Sync: Background Sync (Periodic)
+    Sync ->> Repo: sync()
+    Repo ->> Remote: fetchData()
+    Remote -->> Repo: List<DTO>
+    Repo ->> Local: saveData(entities)
+    Local -->> Repo: Success
+    Note over Local, UI: Flow emits new data
+    Local -->> Repo: Updated Flow
+    Repo -->> VM: Updated Flow
+    VM -->> UI: Updated State
+    UI ->> UI: Recomposition
 ```
 
 **Flow Breakdown**:
 
 1. **Screen Opens**:
-   - Hilt injects ViewModel with Repository dependencies
-   - ViewModel starts observing repository data
-   - Repository returns Flow from local database (single source of truth)
+    - Hilt injects ViewModel with Repository dependencies
+    - ViewModel starts observing repository data
+    - Repository returns Flow from local database (single source of truth)
 
 2. **Initial Display**:
-   - UI receives StateFlow with cached data
-   - Screen displays immediately (offline-first)
+    - UI receives StateFlow with cached data
+    - Screen displays immediately (offline-first)
 
 3. **Background Sync**:
-   - WorkManager triggers SyncWorker periodically
-   - SyncWorker calls `sync()` on all repositories
-   - Repository fetches from remote and updates local database
+    - WorkManager triggers SyncWorker periodically
+    - SyncWorker calls `sync()` on all repositories
+    - Repository fetches from remote and updates local database
 
 4. **Automatic Update**:
-   - Local database change triggers Flow emission
-   - ViewModel receives updated data
-   - UI automatically recomposes with new data
+    - Local database change triggers Flow emission
+    - ViewModel receives updated data
+    - UI automatically recomposes with new data
 
 **Key Benefits**:
+
 - **Offline-first**: App works without network
 - **Automatic updates**: No manual refresh needed
 - **Type safety**: Compile-time navigation and DI

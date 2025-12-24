@@ -29,8 +29,6 @@ three-layer approach:
 ```mermaid
 graph LR
     UI[UI Layer<br/>ViewModel] --> Data[Data Layer<br/>Repository + Data Sources]
-    style UI fill: #e1f5ff, stroke: #01579b, stroke-width: 2px
-    style Data fill: #f3e5f5, stroke: #4a148c, stroke-width: 2px
 ```
 
 **Reasons:**
@@ -502,10 +500,6 @@ graph TD
     Complex -->|NO| Preferences{Is it simple<br/>preferences/settings?}
     Preferences -->|YES| DataStore[Use DataStore]
     Preferences -->|NO| Room2[Use Room<br/>structured data]
-    style Firestore fill: #fff3e0, stroke: #e65100, stroke-width: 2px
-    style Room1 fill: #e1f5ff, stroke: #01579b, stroke-width: 2px
-    style Room2 fill: #e1f5ff, stroke: #01579b, stroke-width: 2px
-    style DataStore fill: #f3e5f5, stroke: #4a148c, stroke-width: 2px
 ```
 
 **Examples:**
@@ -666,9 +660,6 @@ graph TD
     Start -->|YES| ReturnData{Does it return<br/>new data to display?}
     ReturnData -->|YES| UpdateStateWith[Use updateStateWith]
     ReturnData -->|NO| UpdateWith[Use updateWith]
-    style UpdateState fill: #e1f5ff, stroke: #01579b, stroke-width: 2px
-    style UpdateStateWith fill: #fff3e0, stroke: #e65100, stroke-width: 2px
-    style UpdateWith fill: #f3e5f5, stroke: #4a148c, stroke-width: 2px
 ```
 
 #### Use `updateState` for synchronous state changes

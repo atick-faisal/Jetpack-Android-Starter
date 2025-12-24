@@ -181,13 +181,6 @@ graph TD
         E
         F
     end
-
-    style A fill: #4CAF50, stroke: #333, stroke-width: 2px
-    style B fill: #64B5F6, stroke: #333, stroke-width: 2px
-    style C fill: #FF7043, stroke: #333, stroke-width: 2px
-    style G fill: #64B5F6, stroke: #333, stroke-width: 2px
-    style H fill: #64B5F6, stroke: #333, stroke-width: 2px
-    style I fill: #64B5F6, stroke: #333, stroke-width: 2px
 ```
 
 ## API Documentation

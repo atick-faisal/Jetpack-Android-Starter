@@ -15,16 +15,6 @@ graph TD
     A --> H[feature:settings]
     A --> I[firebase:analytics]
     A --> J[sync]
-    style A fill: #4CAF50, stroke: #333, stroke-width: 2px
-    style B fill: #64B5F6, stroke: #333, stroke-width: 2px
-    style C fill: #64B5F6, stroke: #333, stroke-width: 2px
-    style D fill: #64B5F6, stroke: #333, stroke-width: 2px
-    style E fill: #FF7043, stroke: #333, stroke-width: 2px
-    style F fill: #FF7043, stroke: #333, stroke-width: 2px
-    style G fill: #FF7043, stroke: #333, stroke-width: 2px
-    style H fill: #FF7043, stroke: #333, stroke-width: 2px
-    style I fill: #FFA726, stroke: #333, stroke-width: 2px
-    style J fill: #7E57C2, stroke: #333, stroke-width: 2px
 ```
 
 ## Key Features

@@ -1,6 +1,8 @@
 # State Management Deep Dive
 
-This guide provides a comprehensive understanding of the state management pattern used in this Android starter template. The pattern centers around **predictable, centralized state management** using the `UiState` wrapper combined with specialized update functions.
+This guide provides a comprehensive understanding of the state management pattern used in this
+Android starter template. The pattern centers around **predictable, centralized state management**
+using the `UiState` wrapper combined with specialized update functions.
 
 ---
 
@@ -23,10 +25,13 @@ This guide provides a comprehensive understanding of the state management patter
 
 The state management pattern in this template follows these principles:
 
-1. **Single Source of Truth**: Each screen has exactly one `UiState<ScreenData>` that represents all UI state
+1. **Single Source of Truth**: Each screen has exactly one `UiState<ScreenData>` that represents all
+   UI state
 2. **Unidirectional Data Flow**: Data flows from Repository → ViewModel → UI in one direction
-3. **Automatic Loading & Error Handling**: Loading states and errors are handled automatically by `UiState`
-4. **Predictable Updates**: State updates follow consistent patterns using `updateState`, `updateStateWith`, and `updateWith`
+3. **Automatic Loading & Error Handling**: Loading states and errors are handled automatically by
+   `UiState`
+4. **Predictable Updates**: State updates follow consistent patterns using `updateState`,
+   `updateStateWith`, and `updateWith`
 5. **Type Safety**: Compile-time guarantees through Kotlin's type system
 
 ### Architecture Layers
@@ -37,20 +42,20 @@ graph TB
         SC[StatefulComposable<br/>- Shows LoadingIndicator<br/>- Shows ErrorSnackbar<br/>- Renders Screen]
     end
 
-    subgraph VM["ViewModel Layer (MVVM)"]
-        VML[ViewModel<br/>- _uiState: MutableStateFlow<br/>- uiState: StateFlow<br/>- updateState&#40;&#41;<br/>- updateStateWith&#40;&#41;<br/>- updateWith&#40;&#41;]
-    end
+subgraph VM["ViewModel Layer (MVVM)"]
+VML[ViewModel<br/>- _uiState: MutableStateFlow<br/>- uiState: StateFlow<br/>- updateState&#40;&#41;<br/>- updateStateWith&#40;&#41;<br/>- updateWith&#40;&#41;]
+end
 
-    subgraph Data["Data Layer (Repository)"]
-        Repo[Repository<br/>- suspendRunCatching &#123; &#125;<br/>- Flow&lt;Data&gt;]
-    end
+subgraph Data["Data Layer (Repository)"]
+Repo[Repository<br/>- suspendRunCatching &#123; &#125;<br/>- Flow&lt;Data&gt;]
+end
 
-    UI -->|UiState&lt;ScreenData&gt;| VM
-    VM -->|Result&lt;T&gt;| Data
+UI -->|UiState&lt ;ScreenData&gt ;|VM
+VM -->|Result&lt ;T&gt ;|Data
 
-    style UI fill:#e1f5ff,stroke:#01579b,stroke-width:2px
-    style VM fill:#fff3e0,stroke:#e65100,stroke-width:2px
-    style Data fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
+style UI fill:#e1f5ff, stroke: #01579b, stroke-width: 2px
+style VM fill: #fff3e0, stroke: #e65100,stroke-width: 2px
+style Data fill: #f3e5f5,stroke: #4a148c, stroke-width: 2px
 ```
 
 ---
@@ -73,11 +78,13 @@ data class UiState<T : Any>(
 
 - **`data: T`**: The actual screen data (always available, even during loading/error)
 - **`loading: Boolean`**: Indicates if an async operation is in progress
-- **`error: OneTimeEvent<Throwable?>`**: One-time error events that won't re-trigger on recomposition
+- **`error: OneTimeEvent<Throwable?>`**: One-time error events that won't re-trigger on
+  recomposition
 
 ### Why Use UiState?
 
 **Without UiState** (Anti-pattern):
+
 ```kotlin
 // ❌ Multiple state flows - complex and error-prone
 class BadViewModel : ViewModel() {
@@ -107,6 +114,7 @@ class BadViewModel : ViewModel() {
 ```
 
 **With UiState** (Correct pattern):
+
 ```kotlin
 // ✅ Single state flow - simple and predictable
 data class PostsScreenData(
@@ -135,11 +143,11 @@ class GoodViewModel @Inject constructor(
 
 There are **three update functions**, each designed for a specific use case:
 
-| Function | Use Case | Returns New Data? | Async? |
-|----------|----------|-------------------|--------|
-| `updateState` | Synchronous state changes | No | No |
-| `updateStateWith` | Async operations that return new data | Yes | Yes |
-| `updateWith` | Async operations without new data (side effects) | No | Yes |
+| Function          | Use Case                                         | Returns New Data? | Async? |
+|-------------------|--------------------------------------------------|-------------------|--------|
+| `updateState`     | Synchronous state changes                        | No                | No     |
+| `updateStateWith` | Async operations that return new data            | Yes               | Yes    |
+| `updateWith`      | Async operations without new data (side effects) | No                | Yes    |
 
 ### 1. updateState - Synchronous Updates
 
@@ -159,6 +167,7 @@ fun updateValue(newValue: String) {
 ```
 
 **Example - Form Input:**
+
 ```kotlin
 data class FormScreenData(
     val name: String = "",
@@ -210,12 +219,14 @@ fun loadPosts() {
 ```
 
 **How it works:**
+
 1. Sets `loading = true`
 2. Executes your async block
 3. If **success**: Updates `data` with result, sets `loading = false`
 4. If **failure**: Sets `error` with exception, keeps existing `data`, sets `loading = false`
 
 **Example - Loading User Profile:**
+
 ```kotlin
 data class ProfileScreenData(
     val user: User? = null,
@@ -248,7 +259,8 @@ class ProfileViewModel @Inject constructor(
 
 ### 3. updateWith - Async without New Data
 
-**Use when**: Performing async operations that don't return data (side effects like save, delete, update)
+**Use when**: Performing async operations that don't return data (side effects like save, delete,
+update)
 
 ```kotlin
 /**
@@ -264,12 +276,14 @@ fun savePost(post: Post) {
 ```
 
 **How it works:**
+
 1. Sets `loading = true`
 2. Executes your async block
 3. If **success**: Sets `loading = false` (data unchanged)
 4. If **failure**: Sets `error` with exception, sets `loading = false`
 
 **Example - Saving Settings:**
+
 ```kotlin
 data class SettingsScreenData(
     val darkMode: Boolean = false,
@@ -305,7 +319,9 @@ class SettingsViewModel @Inject constructor(
 
 ### What Are Context Parameters?
 
-Kotlin 2.0 introduces **context parameters** - a way to implicitly pass context to functions without explicitly declaring parameters. This template uses context parameters in the update functions to access `viewModelScope`.
+Kotlin 2.0 introduces **context parameters** - a way to implicitly pass context to functions without
+explicitly declaring parameters. This template uses context parameters in the update functions to
+access `viewModelScope`.
 
 ### Traditional Approach (Before Context Parameters)
 
@@ -556,7 +572,7 @@ class SignUpViewModel @Inject constructor(
         confirmPassword: String
     ): Boolean {
         return validateEmail(email) == null &&
-               validatePassword(password, confirmPassword) == null
+                validatePassword(password, confirmPassword) == null
     }
 }
 ```
@@ -568,6 +584,7 @@ class SignUpViewModel @Inject constructor(
 ### Pattern 1: Multiple Async Operations
 
 **Sequential async operations:**
+
 ```kotlin
 fun loadUserData(userId: String) {
     _uiState.updateStateWith {
@@ -583,6 +600,7 @@ fun loadUserData(userId: String) {
 ```
 
 **Parallel async operations:**
+
 ```kotlin
 fun loadDashboard(userId: String) {
     _uiState.updateStateWith {
@@ -798,6 +816,7 @@ fun GoodRoute(viewModel: PostsViewModel = hiltViewModel()) {
 ### From LiveData to StateFlow + UiState
 
 **Before (LiveData):**
+
 ```kotlin
 class OldViewModel : ViewModel() {
     private val _posts = MutableLiveData<List<Post>>()
@@ -820,6 +839,7 @@ class OldViewModel : ViewModel() {
 ```
 
 **After (StateFlow + UiState):**
+
 ```kotlin
 data class PostsScreenData(
     val posts: List<Post> = emptyList()
@@ -844,6 +864,7 @@ class NewViewModel @Inject constructor(
 ### From Sealed Class State to UiState
 
 **Before (Sealed Class):**
+
 ```kotlin
 sealed class ScreenState {
     object Loading : ScreenState()
@@ -869,6 +890,7 @@ class OldViewModel : ViewModel() {
 ```
 
 **After (UiState):**
+
 ```kotlin
 data class PostsScreenData(
     val posts: List<Post> = emptyList()
@@ -898,9 +920,9 @@ class NewViewModel @Inject constructor(
 
 1. **Use `UiState<T>` wrapper** - Centralizes loading, error, and data state
 2. **Choose the right update function**:
-   - `updateState` for synchronous updates
-   - `updateStateWith` for async operations returning data
-   - `updateWith` for async side effects
+    - `updateState` for synchronous updates
+    - `updateStateWith` for async operations returning data
+    - `updateWith` for async side effects
 3. **Context parameters make API cleaner** - No need to pass `viewModelScope`
 4. **StatefulComposable handles UI boilerplate** - Automatic loading and error display
 5. **Single source of truth** - One `StateFlow<UiState<ScreenData>>` per screen
@@ -922,4 +944,6 @@ class NewViewModel @Inject constructor(
 
 ### API Documentation
 
-- [`StatefulComposable.kt`](../core/ui/src/main/kotlin/dev/atick/core/ui/utils/StatefulComposable.kt) - Stateful composable implementation
+- [
+  `StatefulComposable.kt`](../core/ui/src/main/kotlin/dev/atick/core/ui/utils/StatefulComposable.kt) -
+  Stateful composable implementation
