@@ -1,6 +1,7 @@
 # Navigation Deep Dive
 
-This guide provides a comprehensive overview of navigation in this Android template, which uses Jetpack Navigation Compose with type-safe navigation powered by Kotlin Serialization.
+This guide provides a comprehensive overview of navigation in this Android template, which uses
+Jetpack Navigation Compose with type-safe navigation powered by Kotlin Serialization.
 
 ## Table of Contents
 
@@ -22,7 +23,8 @@ This guide provides a comprehensive overview of navigation in this Android templ
 
 ### Navigation Architecture
 
-This template uses **Jetpack Navigation Compose** with **type-safe navigation** via Kotlin Serialization. This approach provides:
+This template uses **Jetpack Navigation Compose** with **type-safe navigation** via Kotlin
+Serialization. This approach provides:
 
 - **Compile-time safety**: Routes are defined as Kotlin objects/data classes
 - **Type-safe arguments**: Arguments are passed as typed parameters
@@ -64,38 +66,28 @@ graph TB
     subgraph AuthGraph["AuthNavGraph"]
         SignIn["SignIn<br/>(No arguments)"]
         SignUp["SignUp<br/>(No arguments)"]
-
-        SignIn -.navigate.-> SignUp
-        SignUp -.navigate.-> SignIn
+        SignIn -. navigate .-> SignUp
+        SignUp -. navigate .-> SignIn
     end
 
     subgraph HomeGraph["HomeNavGraph"]
         Home["Home<br/>(No arguments)"]
         Item["Item<br/>(itemId: String?)"]
-
         Home -->|onJetpackClick| Item
         Item -->|onBackClick| Home
     end
 
     Profile["Profile<br/>(Top-level destination)"]
-
     Start -->|isUserLoggedIn = false| AuthGraph
     Start -->|isUserLoggedIn = true| HomeGraph
-
-    SignIn -.auth success.-> HomeGraph
-    SignUp -.auth success.-> HomeGraph
-
-    HomeGraph <-.bottom nav.-> Profile
-    Profile <-.bottom nav.-> HomeGraph
-
-    style Start fill:#FFF3E0,stroke:#FF9800,stroke-width:3px
-    style AuthGraph fill:#FFEBEE,stroke:#F44336,stroke-width:2px
-    style HomeGraph fill:#E8F5E9,stroke:#4CAF50,stroke-width:2px
-    style Profile fill:#E8F5E9,stroke:#4CAF50,stroke-width:2px
-    style NavHost fill:#E3F2FD,stroke:#1976D2,stroke-width:2px
+    SignIn -. auth success .-> HomeGraph
+    SignUp -. auth success .-> HomeGraph
+    HomeGraph <-. bottom nav .-> Profile
+    Profile <-. bottom nav .-> HomeGraph
 ```
 
 **Legend:**
+
 - **Solid arrows** (→): Direct navigation within a graph
 - **Dotted arrows** (-.->): Navigation between graphs or conditional navigation
 - **Orange box**: Conditional routing logic
@@ -108,7 +100,8 @@ graph TB
 
 ### Defining Routes
 
-Routes are defined as `@Serializable` objects or data classes in each feature module's `navigation/` directory:
+Routes are defined as `@Serializable` objects or data classes in each feature module's `navigation/`
+directory:
 
 ```kotlin
 // feature/home/navigation/HomeNavigation.kt
@@ -130,6 +123,7 @@ data object HomeNavGraph
 ```
 
 **Why use @Serializable?**
+
 - Kotlin Serialization automatically handles serialization/deserialization
 - Type-safe argument passing with compile-time checking
 - No manual string parsing or type conversion
@@ -139,7 +133,8 @@ data object HomeNavGraph
 
 Each feature module has a `navigation/` directory with a single file defining all routes:
 
-- `feature/auth/navigation/` - Contains `AuthNavigation.kt` defining `AuthNavGraph`, `SignIn`, `SignUp`
+- `feature/auth/navigation/` - Contains `AuthNavigation.kt` defining `AuthNavGraph`, `SignIn`,
+  `SignUp`
 - `feature/home/navigation/` - Contains `HomeNavigation.kt` defining `HomeNavGraph`, `Home`, `Item`
 - `feature/profile/navigation/` - Contains `ProfileNavigation.kt` defining `Profile`
 
@@ -190,6 +185,7 @@ fun NavController.navigateToSignUpScreen(navOptions: NavOptions? = null) {
 ```
 
 **Benefits:**
+
 - Centralized navigation logic
 - Consistent API across features
 - Easy to find all navigation entry points
@@ -447,6 +443,7 @@ fun NavGraphBuilder.authNavGraph(
 ```
 
 **Key Pattern:**
+
 - The graph builder accepts a lambda (`nestedNavGraphs`) that defines child screens
 - This allows the NavHost to control which screens are included in the graph
 
@@ -520,7 +517,9 @@ NavHost(
 
 ### NavigationSuiteScaffold Pattern
 
-This template uses **NavigationSuiteScaffold** for adaptive navigation that automatically switches between:
+This template uses **NavigationSuiteScaffold** for adaptive navigation that automatically switches
+between:
+
 - **Bottom navigation bar** (compact screens)
 - **Navigation rail** (medium screens)
 - **Navigation drawer** (expanded screens)
@@ -634,6 +633,7 @@ JetpackNavigationSuiteScaffold(
 ```
 
 **Benefits:**
+
 - Automatically adapts to different screen sizes
 - Consistent navigation UX across device types
 - Single source of truth for navigation items
@@ -726,6 +726,7 @@ fun navigateToTopLevelDestination(topLevelDestination: TopLevelDestination) {
 ```
 
 **Key aspects:**
+
 - `saveState = true`: Preserves screen state when navigating away
 - `launchSingleTop = true`: Prevents duplicate destinations
 - `restoreState = true`: Restores saved state when returning
@@ -1008,6 +1009,7 @@ fun NavController.navigateToItem(itemId: String?) {
 ```
 
 **Separate Route and Screen composables**
+
 ```kotlin
 // Route: Handles ViewModel and navigation callbacks
 @Composable
@@ -1070,20 +1072,23 @@ fun NavGraphBuilder.itemScreen(
 }
 
 // Avoid: Passing NavController
-fun NavGraphBuilder.itemScreen(navController: NavController) { }
+fun NavGraphBuilder.itemScreen(navController: NavController) {}
 ```
 
 ### Don'ts
 
 **Don't pass NavController to Screen composables**
+
 ```kotlin
 // Bad: Screen shouldn't know about NavController
 @Composable
-fun ItemScreen(navController: NavController) { }
+fun ItemScreen(navController: NavController) {
+}
 
 // Good: Use callbacks
 @Composable
-fun ItemScreen(onBackClick: () -> Unit) { }
+fun ItemScreen(onBackClick: () -> Unit) {
+}
 ```
 
 **Don't use string-based routes**
@@ -1140,6 +1145,7 @@ navController.navigate(Profile) {
 **Problem:** Navigation arguments are null in ViewModel.
 
 **Solution:**
+
 ```kotlin
 // Use SavedStateHandle.toRoute<T>() to extract arguments
 @HiltViewModel
@@ -1157,6 +1163,7 @@ class ItemViewModel @Inject constructor(
 **Problem:** Back button doesn't behave as expected.
 
 **Solution:**
+
 ```kotlin
 // Clear specific destinations
 navController.navigate(Home) {
@@ -1178,6 +1185,7 @@ navController.navigate(Home) {
 **Problem:** Can't navigate to screens within nested graph.
 
 **Solution:**
+
 ```kotlin
 // Ensure nested graph is registered in NavHost
 NavHost(navController = navController, startDestination = startDestination) {
@@ -1201,6 +1209,7 @@ NavHost(navController = navController, startDestination = startDestination) {
 **Problem:** Screen state is lost when switching tabs.
 
 **Solution:**
+
 ```kotlin
 // Enable state saving in NavOptions
 navController.navigate(destination) {
@@ -1217,6 +1226,7 @@ navController.navigate(destination) {
 **Problem:** Bottom bar or navigation rail visible on detail screens.
 
 **Solution:**
+
 ```kotlin
 // Check currentTopLevelDestination in JetpackApp
 if (appState.currentTopLevelDestination == null) {

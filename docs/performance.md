@@ -4,7 +4,8 @@ This guide covers various performance optimization features available in the pro
 
 ## Compose Compiler Metrics
 
-The project includes built-in support for Compose compiler metrics to help optimize your composables.
+The project includes built-in support for Compose compiler metrics to help optimize your
+composables.
 
 Check the `gradle.properties` file to ensure the following:
 
@@ -58,11 +59,14 @@ val filteredList = remember(items) {
 ```
 
 > [!TIP]
-> Use `@Immutable` for classes that never change and `@Stable` for classes whose properties may change but maintain identity.
+> Use `@Immutable` for classes that never change and `@Stable` for classes whose properties may
+> change but maintain identity.
 
 ## LazyList Optimization
 
-The project uses `LazyVerticalStaggeredGrid` in the home screen (see `feature/home/src/main/kotlin/dev/atick/feature/home/ui/home/HomeScreen.kt:104`). Here are best practices for LazyList components.
+The project uses `LazyVerticalStaggeredGrid` in the home screen (see
+`feature/home/src/main/kotlin/dev/atick/feature/home/ui/home/HomeScreen.kt:104`). Here are best
+practices for LazyList components.
 
 ### Use Stable Keys
 
@@ -98,7 +102,8 @@ LazyColumn {
 ```
 
 > [!TIP]
-> Keys enable Compose to track items across recompositions, reducing unnecessary recompositions and preserving item state.
+> Keys enable Compose to track items across recompositions, reducing unnecessary recompositions and
+> preserving item state.
 
 ### Content Type for Mixed Lists
 
@@ -144,7 +149,9 @@ fun ItemCard(item: Item) {
 
 ## Image Loading Best Practices
 
-This template uses Coil for image loading (see `core/network/src/main/kotlin/dev/atick/core/network/di/coil/CoilModule.kt` and `core/ui/src/main/kotlin/dev/atick/core/ui/components/DynamicAsyncImage.kt`).
+This template uses Coil for image loading (see
+`core/network/src/main/kotlin/dev/atick/core/network/di/coil/CoilModule.kt` and
+`core/ui/src/main/kotlin/dev/atick/core/ui/components/DynamicAsyncImage.kt`).
 
 ### Coil Configuration
 
@@ -157,17 +164,17 @@ fun provideImageLoader(
     okHttpCallFactory: Call.Factory,
     @ApplicationContext application: Context,
 ): ImageLoader = ImageLoader.Builder(application)
-    .callFactory(okHttpCallFactory)
-    .components {
-        add(SvgDecoder.Factory())  // SVG support
-    }
-    .respectCacheHeaders(false)  // Assumes versioned URLs
-    .apply {
-        if (BuildConfig.DEBUG) {
-            logger(DebugLogger())
+        .callFactory(okHttpCallFactory)
+        .components {
+            add(SvgDecoder.Factory())  // SVG support
         }
-    }
-    .build()
+        .respectCacheHeaders(false)  // Assumes versioned URLs
+        .apply {
+            if (BuildConfig.DEBUG) {
+                logger(DebugLogger())
+            }
+        }
+        .build()
 ```
 
 The `App` class implements `ImageLoaderFactory` to provide this loader:
@@ -286,7 +293,8 @@ class HomeViewModel : ViewModel() {
 
 ### WorkManager and Hilt
 
-When using WorkManager with Hilt, use `HiltWorker` (as implemented in `sync/src/main/kotlin/dev/atick/sync/worker/SyncWorker.kt`):
+When using WorkManager with Hilt, use `HiltWorker` (as implemented in
+`sync/src/main/kotlin/dev/atick/sync/worker/SyncWorker.kt`):
 
 ```kotlin
 @HiltWorker
@@ -314,7 +322,9 @@ The project follows a consistent pattern for data models to simplify ProGuard/R8
 
 ### ProGuard and Consumer Rules
 
-If your app works in `debug` build but not in `release` build that typically indicates obfuscation issues. In that case you need to add or edit the proguard rules. These can be found in `<module>/proguard-rules.pro` or `<module>/consumer-rules.pro` files. For example:
+If your app works in `debug` build but not in `release` build that typically indicates obfuscation
+issues. In that case you need to add or edit the proguard rules. These can be found in
+`<module>/proguard-rules.pro` or `<module>/consumer-rules.pro` files. For example:
 
 ```proguard
 # Keep all models
@@ -326,7 +336,8 @@ If your app works in `debug` build but not in `release` build that typically ind
 ```
 
 > [!NOTE]
-> The project's model organization makes it easy to keep data models unobfuscated while allowing safe obfuscation of implementation classes.
+> The project's model organization makes it easy to keep data models unobfuscated while allowing
+> safe obfuscation of implementation classes.
 
 ## Startup Optimization
 
@@ -353,7 +364,8 @@ class App : Application() {
 
 ### Optimize Dependency Injection
 
-Hilt creates the dependency graph at startup. Use `@Binds` instead of `@Provides` when possible (as used throughout this template):
+Hilt creates the dependency graph at startup. Use `@Binds` instead of `@Provides` when possible (as
+used throughout this template):
 
 ```kotlin
 // ✅ Good: @Binds is more efficient (used in data/src/main/kotlin/dev/atick/data/di/RepositoryModule.kt)
@@ -404,8 +416,8 @@ Use build scans to:
 Take advantage of the project's modular structure:
 
 1. **Make Module**: Instead of rebuilding the entire project, use Make Module:
-   - Android Studio: Right-click module → Make Module
-   - Command Line: `./gradlew :module:name:assembleDebug`
+    - Android Studio: Right-click module → Make Module
+    - Command Line: `./gradlew :module:name:assembleDebug`
 
 2. **Parallel Execution**: Enabled in `gradle.properties`:
    ```properties
@@ -415,7 +427,8 @@ Take advantage of the project's modular structure:
 3. **Configuration Caching**: Already enabled for supported tasks
 
 > [!TIP]
-> When working on a feature, use Make Module on just that feature's module to significantly reduce build time.
+> When working on a feature, use Make Module on just that feature's module to significantly reduce
+> build time.
 
 ## Baseline Profiles
 
@@ -441,7 +454,9 @@ This will include:
 
 ## Firebase Performance Monitoring
 
-This template includes Firebase Performance Monitoring setup through the Firebase convention plugin (see `build-logic/convention/src/main/kotlin/dev/atick/convention/firebase/FirebaseConventionPlugin.kt`):
+This template includes Firebase Performance Monitoring setup through the Firebase convention
+plugin (see
+`build-logic/convention/src/main/kotlin/dev/atick/convention/firebase/FirebaseConventionPlugin.kt`):
 
 ```kotlin
 class FirebaseConventionPlugin : Plugin<Project> {
@@ -486,22 +501,23 @@ FirebasePerformance.getInstance().newTrace("custom_operation").apply {
 Use Android Studio's built-in profilers:
 
 1. **CPU Profiler**: Identify expensive operations
-   - Run → Profile 'app'
-   - Record CPU activity during critical operations
-   - Look for long-running methods
+    - Run → Profile 'app'
+    - Record CPU activity during critical operations
+    - Look for long-running methods
 
 2. **Memory Profiler**: Detect memory issues
-   - Monitor memory allocation during scrolling
-   - Take heap dumps to find leaked objects
-   - Check for unnecessary object creation
+    - Monitor memory allocation during scrolling
+    - Take heap dumps to find leaked objects
+    - Check for unnecessary object creation
 
 3. **Layout Inspector**: Analyze compose hierarchy
-   - Tools → Layout Inspector
-   - Check recomposition counts
-   - Identify unnecessary recompositions
+    - Tools → Layout Inspector
+    - Check recomposition counts
+    - Identify unnecessary recompositions
 
 > [!IMPORTANT]
-> Always profile your app's performance using Android Studio's CPU Profiler and Layout Inspector before and after optimizations to ensure they're effective.
+> Always profile your app's performance using Android Studio's CPU Profiler and Layout Inspector
+> before and after optimizations to ensure they're effective.
 
 ## Further Reading
 

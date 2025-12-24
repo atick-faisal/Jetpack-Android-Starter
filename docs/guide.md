@@ -1,6 +1,7 @@
 # Adding a New Feature
 
-This guide walks you through the complete process of adding a new feature to the app, following established patterns and best practices.
+This guide walks you through the complete process of adding a new feature to the app, following
+established patterns and best practices.
 
 ---
 
@@ -15,7 +16,8 @@ To add a new feature to this template, follow this workflow:
 5. **Set up navigation** - Define type-safe routes and navigation extensions
 6. **Configure DI** - Wire everything together with Hilt modules
 
-This guide provides complete code examples for each step, showing the exact patterns used in this template.
+This guide provides complete code examples for each step, showing the exact patterns used in this
+template.
 
 ---
 
@@ -36,7 +38,8 @@ This guide provides complete code examples for each step, showing the exact patt
 
 ### 1.1 Data Source Models
 
-Create models in the appropriate core module (for example, `core:network` or `core:room`). Create new core modules if needed:
+Create models in the appropriate core module (for example, `core:network` or `core:room`). Create
+new core modules if needed:
 
 ```kotlin
 // core/network/src/main/kotlin/dev/atick/core/network/model/NetworkFeature.kt
@@ -187,7 +190,9 @@ class FeatureRepositoryImpl @Inject constructor(
 > Use `suspendRunCatching` in repositories to handle errors consistently.
 
 > [!NOTE]
-> This is a minimal repository example for the tutorial. For detailed repository patterns including offline-first with sync metadata, network-only, local-only, error handling, and caching strategies, see the [Data Module README](../data/README.md#repository-patterns).
+> This is a minimal repository example for the tutorial. For detailed repository patterns including
+> offline-first with sync metadata, network-only, local-only, error handling, and caching strategies,
+> see the [Data Module README](../data/README.md#repository-patterns).
 
 ---
 
@@ -287,7 +292,8 @@ private fun FeatureScreen(
 
 ## Step 5: Navigation
 
-This section shows the minimal navigation code needed when adding a new feature. For comprehensive navigation patterns and best practices, see the [Navigation Deep Dive](navigation.md) guide.
+This section shows the minimal navigation code needed when adding a new feature. For comprehensive
+navigation patterns and best practices, see the [Navigation Deep Dive](navigation.md) guide.
 
 ---
 
@@ -363,21 +369,25 @@ abstract class RepositoryModule {
 ## Best Practices Reminder
 
 **Data Sources:**
+
 - Use `withContext(ioDispatcher)` for IO operations
 - Handle raw data models
 - One responsibility per data source
 
 **Repositories:**
+
 - Use `suspendRunCatching` for error handling
 - Convert between data models
 - Coordinate between data sources
 
 **ViewModels:**
+
 - Use `updateState`, `updateStateWith`, and `updateWith` utilities
 - Handle UI logic and state management
 - Convert to Screen Data
 
 **UI Components:**
+
 - Use `StatefulComposable` for consistent loading/error handling
 - Keep composables pure and state-driven
 - Separate route from screen implementation

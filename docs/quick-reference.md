@@ -1,6 +1,7 @@
 # Quick Reference
 
-Quick reference guide for the most commonly used patterns, utilities, and functions in this template.
+Quick reference guide for the most commonly used patterns, utilities, and functions in this
+template.
 
 ---
 
@@ -19,7 +20,9 @@ This quick reference provides:
 For detailed explanations, see the [full documentation](index.md).
 
 > [!NOTE]
-> API documentation is available after running `./gradlew dokkaGeneratePublicationHtml`. The generated docs will be at `build/dokka/html/index.html` and can be deployed to `docs/api/` for viewing at `../api/index.html`.
+> API documentation is available after running `./gradlew dokkaGeneratePublicationHtml`. The
+> generated docs will be at `build/dokka/html/index.html` and can be deployed to `docs/api/` for
+> viewing at `../api/index.html`.
 
 ---
 
@@ -59,11 +62,11 @@ val uiState = _uiState.asStateFlow()
 
 ### State Update Functions
 
-| Function | When to Use | Returns | Example |
-|----------|-------------|---------|---------|
-| `updateState` | Synchronous updates (text input, toggles) | Immediate | `_uiState.updateState { copy(name = newName) }` |
-| `updateStateWith` | Async operations returning new data | `Result<T>` | `_uiState.updateStateWith { repository.getData() }` |
-| `updateWith` | Async operations returning Unit | `Result<Unit>` | `_uiState.updateWith { repository.saveData() }` |
+| Function          | When to Use                               | Returns        | Example                                             |
+|-------------------|-------------------------------------------|----------------|-----------------------------------------------------|
+| `updateState`     | Synchronous updates (text input, toggles) | Immediate      | `_uiState.updateState { copy(name = newName) }`     |
+| `updateStateWith` | Async operations returning new data       | `Result<T>`    | `_uiState.updateStateWith { repository.getData() }` |
+| `updateWith`      | Async operations returning Unit           | `Result<Unit>` | `_uiState.updateWith { repository.saveData() }`     |
 
 **Quick Examples:**
 
@@ -126,7 +129,8 @@ fun FeatureScreen(
 }
 ```
 
-**[📚 Full API Documentation](state-management.md)** - See State Management guide for detailed UiState patterns
+**[📚 Full API Documentation](state-management.md)** - See State Management guide for detailed
+UiState patterns
 
 > [!NOTE]
 > Complete API documentation is available after running `./gradlew dokkaGeneratePublicationHtml`.
@@ -232,11 +236,11 @@ class DataSourceImpl @Inject constructor(
 
 **Available Dispatchers:**
 
-| Qualifier | Use Case |
-|-----------|----------|
-| `@IoDispatcher` | IO operations (network, database, file) |
-| `@DefaultDispatcher` | CPU-intensive work |
-| `@MainDispatcher` | UI updates |
+| Qualifier            | Use Case                                |
+|----------------------|-----------------------------------------|
+| `@IoDispatcher`      | IO operations (network, database, file) |
+| `@DefaultDispatcher` | CPU-intensive work                      |
+| `@MainDispatcher`    | UI updates                              |
 
 ---
 
@@ -261,7 +265,8 @@ class FeatureRepositoryImpl @Inject constructor(
 ```
 
 **Why not `runCatching`?**
-Standard `runCatching` catches `CancellationException`, which breaks coroutine cancellation. `suspendRunCatching` re-throws it.
+Standard `runCatching` catches `CancellationException`, which breaks coroutine cancellation.
+`suspendRunCatching` re-throws it.
 
 ### ViewModel Layer
 
@@ -508,7 +513,8 @@ fun NavGraphBuilder.profileScreen(
 - [Architecture Guide](architecture.md) - Deep dive into architecture decisions
 - [Getting Started](getting-started.md) - Step-by-step setup guide
 - [Development Guide](guide.md) - Comprehensive development patterns
-- [State Management](state-management.md) - Complete state management guide with detailed UiState patterns
+- [State Management](state-management.md) - Complete state management guide with detailed UiState
+  patterns
 - [Data Flow](data-flow.md) - Data flow patterns
 - [Navigation](navigation.md) - Type-safe navigation deep dive
 - [Dependency Injection](dependency-injection.md) - Complete DI guide

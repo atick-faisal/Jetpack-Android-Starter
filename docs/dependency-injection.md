@@ -1,10 +1,12 @@
 # Dependency Injection Guide
 
-This guide covers how dependency injection (DI) works in this template using **Dagger Hilt**. All examples are based on the actual implementation patterns used throughout the codebase.
+This guide covers how dependency injection (DI) works in this template using **Dagger Hilt**. All
+examples are based on the actual implementation patterns used throughout the codebase.
 
 ## Overview
 
-This template uses **Dagger Hilt** for dependency injection, which is the recommended DI solution for Android. Hilt is built on top of Dagger and provides:
+This template uses **Dagger Hilt** for dependency injection, which is the recommended DI solution
+for Android. Hilt is built on top of Dagger and provides:
 
 - Simplified setup with convention-based configuration
 - Integration with Android components (Activity, ViewModel, Worker, etc.)
@@ -28,6 +30,7 @@ plugins {
 ```
 
 The `jetpack.dagger.hilt` convention plugin automatically:
+
 - Applies `com.google.dagger.hilt.android` plugin
 - Applies `com.google.devtools.ksp` plugin
 - Adds Hilt runtime and compiler dependencies
@@ -89,9 +92,11 @@ Hilt modules use two different methods for providing dependencies:
 
 #### @Binds (Preferred for Interfaces)
 
-Use `@Binds` when you have an interface and a single implementation. It's more efficient than `@Provides` because it generates less code.
+Use `@Binds` when you have an interface and a single implementation. It's more efficient than
+`@Provides` because it generates less code.
 
 **Pattern:**
+
 ```kotlin
 @Module
 @InstallIn(SingletonComponent::class)
@@ -106,6 +111,7 @@ abstract class RepositoryModule {
 ```
 
 **Real Example from `data/src/main/kotlin/dev/atick/data/di/RepositoryModule.kt`:**
+
 ```kotlin
 @Module
 @InstallIn(SingletonComponent::class)
@@ -127,15 +133,18 @@ abstract class RepositoryModule {
 ```
 
 **When to use:**
+
 - Binding interfaces to implementations
 - When the implementation has `@Inject constructor`
 - When you don't need any custom logic to create the object
 
 #### @Provides (For Complex Construction)
 
-Use `@Provides` when you need custom logic to create objects, or when the type can't have `@Inject` on its constructor (e.g., third-party libraries, builders).
+Use `@Provides` when you need custom logic to create objects, or when the type can't have `@Inject`
+on its constructor (e.g., third-party libraries, builders).
 
 **Real Example from `core/room/src/main/kotlin/dev/atick/core/room/di/DatabaseModule.kt`:**
+
 ```kotlin
 @Module
 @InstallIn(SingletonComponent::class)
@@ -157,7 +166,9 @@ object DatabaseModule {
 }
 ```
 
-**Real Example from `core/network/src/main/kotlin/dev/atick/core/network/di/retrofit/RetrofitModule.kt`:**
+**Real Example
+from `core/network/src/main/kotlin/dev/atick/core/network/di/retrofit/RetrofitModule.kt`:**
+
 ```kotlin
 @Module(
     includes = [
@@ -183,6 +194,7 @@ object RetrofitModule {
 ```
 
 **When to use:**
+
 - Creating objects with builders (Retrofit, Room, OkHttp)
 - Third-party library types
 - Objects requiring complex initialization logic
@@ -197,6 +209,7 @@ Scoping controls the lifecycle of dependencies. This template uses three main sc
 Objects live as long as the application process.
 
 **Example:**
+
 ```kotlin
 @Binds
 @Singleton
@@ -206,6 +219,7 @@ internal abstract fun bindAuthRepository(
 ```
 
 **Use for:**
+
 - Repositories
 - Data sources (Room DAOs, Retrofit services, DataStore)
 - Network clients (OkHttp, Retrofit)
@@ -213,9 +227,11 @@ internal abstract fun bindAuthRepository(
 
 #### @ViewModelScoped
 
-Objects live as long as the ViewModel. Useful for dependencies that should be recreated when the ViewModel is recreated.
+Objects live as long as the ViewModel. Useful for dependencies that should be recreated when the
+ViewModel is recreated.
 
 **Example:**
+
 ```kotlin
 @Provides
 @ViewModelScoped
@@ -233,6 +249,7 @@ Objects live as long as the Activity. Less commonly used in this template.
 Qualifiers differentiate between multiple instances of the same type.
 
 **Real Example from `core/android/src/main/kotlin/dev/atick/core/di/DispatcherModule.kt`:**
+
 ```kotlin
 @Module
 @InstallIn(SingletonComponent::class)
@@ -264,6 +281,7 @@ annotation class MainDispatcher
 ```
 
 **Usage in Data Source:**
+
 ```kotlin
 class NetworkDataSourceImpl @Inject constructor(
     private val restApi: RestApi,
@@ -277,6 +295,7 @@ class NetworkDataSourceImpl @Inject constructor(
 ```
 
 **When to create qualifiers:**
+
 - Multiple instances of the same type with different configurations
 - Different implementations of the same interface for different purposes
 - Named instances (like different dispatchers, different databases)
@@ -286,12 +305,14 @@ class NetworkDataSourceImpl @Inject constructor(
 ### Constructor Injection (Preferred)
 
 This is the most common and recommended pattern. Works for:
+
 - ViewModels (`@HiltViewModel`)
 - Repositories
 - Data sources
 - Any class you control
 
 **ViewModel Example:**
+
 ```kotlin
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
@@ -302,6 +323,7 @@ class SettingsViewModel @Inject constructor(
 ```
 
 **Repository Example:**
+
 ```kotlin
 internal class AuthRepositoryImpl @Inject constructor(
     private val authDataSource: AuthDataSource,
@@ -312,6 +334,7 @@ internal class AuthRepositoryImpl @Inject constructor(
 ```
 
 **Data Source Example:**
+
 ```kotlin
 class FirebaseDataSourceImpl @Inject constructor(
     private val firestore: FirebaseFirestore,
@@ -326,6 +349,7 @@ class FirebaseDataSourceImpl @Inject constructor(
 Used for Android framework components where you can't control constructor.
 
 **Activity Example from `app/src/main/kotlin/dev/atick/compose/MainActivity.kt`:**
+
 ```kotlin
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -357,6 +381,7 @@ class MainActivity : AppCompatActivity() {
 WorkManager Workers need special handling because they receive runtime parameters from WorkManager.
 
 **Real Example from `sync/src/main/kotlin/dev/atick/sync/worker/SyncWorker.kt`:**
+
 ```kotlin
 @HiltWorker
 class SyncWorker @AssistedInject constructor(
@@ -377,6 +402,7 @@ class SyncWorker @AssistedInject constructor(
 ```
 
 **Key Points:**
+
 - Use `@HiltWorker` annotation
 - Use `@AssistedInject` for constructor
 - Mark WorkManager-provided params with `@Assisted`
@@ -384,6 +410,7 @@ class SyncWorker @AssistedInject constructor(
 
 > [!NOTE]
 > You must also use `DelegatingWorker` when enqueuing:
+
 ```kotlin
 fun startUpSyncWork(): OneTimeWorkRequest {
     return OneTimeWorkRequestBuilder<DelegatingWorker>()
@@ -401,56 +428,57 @@ Modules are organized by layer and purpose. Each module contains a `di/` package
 ### Core Module DI Structure
 
 - `core/android/src/main/kotlin/dev/atick/core/di/`
-  - `DispatcherModule.kt` - Coroutine dispatchers
-  - `CoroutineModule.kt` - CoroutineScope
-  - `StringDecoderModule.kt` - URI decoder
+    - `DispatcherModule.kt` - Coroutine dispatchers
+    - `CoroutineModule.kt` - CoroutineScope
+    - `StringDecoderModule.kt` - URI decoder
 - `core/network/src/main/kotlin/dev/atick/core/network/di/`
-  - `retrofit/`
-    - `RetrofitModule.kt` - Retrofit instance
-    - `ConverterModule.kt` - JSON converter
-  - `okhttp/`
-    - `OkHttpClientModule.kt` - OkHttp client
-    - `InterceptorModule.kt` - Interceptors
-  - `coil/`
-    - `CoilModule.kt` - Image loader
-  - `NetworkUtilsModule.kt` - Network utilities
-  - `DataSourceModule.kt` - Network data source
+    - `retrofit/`
+        - `RetrofitModule.kt` - Retrofit instance
+        - `ConverterModule.kt` - JSON converter
+    - `okhttp/`
+        - `OkHttpClientModule.kt` - OkHttp client
+        - `InterceptorModule.kt` - Interceptors
+    - `coil/`
+        - `CoilModule.kt` - Image loader
+    - `NetworkUtilsModule.kt` - Network utilities
+    - `DataSourceModule.kt` - Network data source
 - `core/room/src/main/kotlin/dev/atick/core/room/di/`
-  - `DatabaseModule.kt` - Room database
-  - `DaoModule.kt` - DAOs
-  - `DataSourceModule.kt` - Local data source
+    - `DatabaseModule.kt` - Room database
+    - `DaoModule.kt` - DAOs
+    - `DataSourceModule.kt` - Local data source
 - `core/preferences/src/main/kotlin/dev/atick/core/preferences/di/`
-  - `DatastoreModule.kt` - DataStore
-  - `PreferencesDataSourceModule.kt` - Preferences data source
+    - `DatastoreModule.kt` - DataStore
+    - `PreferencesDataSourceModule.kt` - Preferences data source
 
 ### Data Module DI Structure
 
 - `data/src/main/kotlin/dev/atick/data/di/`
-  - `RepositoryModule.kt` - All repository bindings
+    - `RepositoryModule.kt` - All repository bindings
 
 ### Firebase Module DI Structure
 
 - `firebase/analytics/src/main/kotlin/dev/atick/firebase/analytics/di/`
-  - `FirebaseModule.kt` - Firebase Analytics
-  - `CrashlyticsModule.kt` - CrashReporter
+    - `FirebaseModule.kt` - Firebase Analytics
+    - `CrashlyticsModule.kt` - CrashReporter
 - `firebase/auth/src/main/kotlin/dev/atick/firebase/auth/di/`
-  - `FirebaseAuthModule.kt` - Firebase Auth
-  - `CredentialManagerModule.kt` - Credential Manager
-  - `DataSourceModule.kt` - Auth data source
+    - `FirebaseAuthModule.kt` - Firebase Auth
+    - `CredentialManagerModule.kt` - Credential Manager
+    - `DataSourceModule.kt` - Auth data source
 - `firebase/firestore/src/main/kotlin/dev/atick/firebase/firestore/di/`
-  - `FirebaseModule.kt` - Firestore instance
-  - `DataSourceModule.kt` - Firestore data source
+    - `FirebaseModule.kt` - Firestore instance
+    - `DataSourceModule.kt` - Firestore data source
 
 ### Sync Module DI Structure
 
 - `sync/src/main/kotlin/dev/atick/sync/di/`
-  - `SyncModule.kt` - SyncManager binding
+    - `SyncModule.kt` - SyncManager binding
 
 ### Module Inclusion Pattern
 
 Modules can include other modules to establish dependencies:
 
 **Example from `core/room/di/DaoModule.kt`:**
+
 ```kotlin
 @Module(
     includes = [
@@ -467,13 +495,15 @@ object DaoModule {
 }
 ```
 
-This ensures `DatabaseModule` is processed before `DaoModule`, so the database is available when creating the DAO.
+This ensures `DatabaseModule` is processed before `DaoModule`, so the database is available when
+creating the DAO.
 
 ## Common Patterns
 
 ### Pattern 1: Repository with Multiple Data Sources
 
 **Real Example from `data/src/main/kotlin/dev/atick/data/repository/auth/AuthRepositoryImpl.kt`:**
+
 ```kotlin
 internal class AuthRepositoryImpl @Inject constructor(
     private val authDataSource: AuthDataSource,
@@ -493,6 +523,7 @@ internal class AuthRepositoryImpl @Inject constructor(
 ```
 
 **Binding:**
+
 ```kotlin
 @Binds
 @Singleton
@@ -504,6 +535,7 @@ internal abstract fun bindAuthRepository(
 ### Pattern 2: DataStore with Dispatcher
 
 **Real Example from `core/preferences/di/DatastoreModule.kt`:**
+
 ```kotlin
 @Module
 @InstallIn(SingletonComponent::class)
@@ -527,6 +559,7 @@ object DatastoreModule {
 ```
 
 **Key points:**
+
 - Uses `@ApplicationContext` qualifier for Context
 - Uses `@IoDispatcher` qualifier for CoroutineDispatcher
 - Creates DataStore with custom scope on IO dispatcher
@@ -534,6 +567,7 @@ object DatastoreModule {
 ### Pattern 3: Android System Service
 
 **Real Example from `firebase/auth/di/CredentialManagerModule.kt`:**
+
 ```kotlin
 @Module
 @InstallIn(SingletonComponent::class)
@@ -550,6 +584,7 @@ object CredentialManagerModule {
 ### Pattern 4: Third-Party Library with Builder
 
 **Real Example from Retrofit setup:**
+
 ```kotlin
 @Module(includes = [OkHttpClientModule::class])
 @InstallIn(SingletonComponent::class)
@@ -575,6 +610,7 @@ object RetrofitModule {
 This template uses a **Gradle Convention Plugin** to simplify Hilt setup across modules.
 
 **Convention Plugin (`build-logic/convention/src/main/kotlin/DaggerHiltConventionPlugin.kt`):**
+
 ```kotlin
 class DaggerHiltConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) {
@@ -596,6 +632,7 @@ class DaggerHiltConventionPlugin : Plugin<Project> {
 ```
 
 **Usage in `feature/home/build.gradle.kts`:**
+
 ```kotlin
 plugins {
     alias(libs.plugins.jetpack.ui.library)
@@ -605,6 +642,7 @@ plugins {
 ```
 
 **Benefits:**
+
 - Consistent Hilt setup across all modules
 - Single source of truth for Hilt configuration
 - Easy to update Hilt version across the entire project
@@ -617,6 +655,7 @@ plugins {
 For unit tests, you can use test doubles (fakes or mocks) instead of real implementations.
 
 **Example (Not in codebase, but standard pattern):**
+
 ```kotlin
 class AuthRepositoryTest {
 
@@ -640,6 +679,7 @@ class AuthRepositoryTest {
 ```
 
 **Key points:**
+
 - No Hilt in unit tests
 - Use constructor injection (makes testing easier)
 - Inject fake/mock implementations manually
@@ -649,6 +689,7 @@ class AuthRepositoryTest {
 For Android instrumentation tests, use Hilt's testing library.
 
 **Example (Not in codebase, but standard pattern):**
+
 ```kotlin
 @HiltAndroidTest
 @UninstallModules(RepositoryModule::class)
@@ -677,6 +718,7 @@ class FeatureIntegrationTest {
 **Cause:** Hilt annotation processor hasn't run yet.
 
 **Solution:**
+
 - Build the project: `./gradlew build`
 - Clean and rebuild: `./gradlew clean build`
 - Ensure `@HiltAndroidApp` is on your Application class
@@ -686,11 +728,13 @@ class FeatureIntegrationTest {
 **Cause:** No Hilt module provides this type.
 
 **Solution:**
+
 - Create a module with `@Provides` or `@Binds` for the type
 - If using `@Binds`, ensure the implementation has `@Inject constructor`
 - Check that the module is installed in the correct component (`@InstallIn`)
 
 **Example:**
+
 ```kotlin
 // Problem: AuthRepository not bound
 @Binds
@@ -705,6 +749,7 @@ internal abstract fun bindAuthRepository(
 **Cause:** Field injection doesn't work with private fields.
 
 **Solution:**
+
 ```kotlin
 // ❌ Wrong
 @Inject
@@ -720,6 +765,7 @@ lateinit var repository: Repository
 **Cause:** `@Binds` requires the implementation to have `@Inject constructor`.
 
 **Solution:**
+
 ```kotlin
 // ❌ Wrong
 class AuthRepositoryImpl(
@@ -737,6 +783,7 @@ class AuthRepositoryImpl @Inject constructor(
 **Cause:** Dependency has a shorter scope than the class requesting it.
 
 **Example of problem:**
+
 ```kotlin
 @Singleton
 class Repository @Inject constructor(
@@ -745,6 +792,7 @@ class Repository @Inject constructor(
 ```
 
 **Solution:** Ensure dependencies have equal or longer scopes:
+
 - `@Singleton` can depend on `@Singleton`
 - `@ActivityScoped` can depend on `@Singleton` or `@ActivityScoped`
 - `@ViewModelScoped` can depend on `@Singleton` or `@ViewModelScoped`
@@ -754,6 +802,7 @@ class Repository @Inject constructor(
 **Cause:** KSP configuration issue or cache corruption.
 
 **Solution:**
+
 - Ensure convention plugin applies KSP: `apply("com.google.devtools.ksp")`
 - Invalidate caches and restart Android Studio
 - Clean build directory: `./gradlew clean`
@@ -764,17 +813,20 @@ class Repository @Inject constructor(
 **Cause:** Two classes depend on each other.
 
 **Example:**
+
 ```kotlin
 class A @Inject constructor(val b: B)
 class B @Inject constructor(val a: A)  // Circular!
 ```
 
 **Solutions:**
+
 - Use `Lazy<T>` for one dependency
 - Use `Provider<T>` for one dependency
 - Refactor to break the cycle (extract common logic)
 
 **Example fix:**
+
 ```kotlin
 class A @Inject constructor(val b: Lazy<B>)  // Break cycle with Lazy
 class B @Inject constructor(val a: A)
@@ -810,9 +862,9 @@ class B @Inject constructor(val a: A)
    ```
 
 5. **Organize modules by layer** (following the existing pattern)
-   - `core/*/di/` for core infrastructure
-   - `data/di/` for repositories
-   - `firebase/*/di/` for Firebase integrations
+    - `core/*/di/` for core infrastructure
+    - `data/di/` for repositories
+    - `firebase/*/di/` for Firebase integrations
 
 6. **Use `internal` for implementation bindings**
    ```kotlin
@@ -880,7 +932,9 @@ class B @Inject constructor(val a: A)
 
 ### Custom Components (Not Used in This Template)
 
-Hilt allows creating custom components for specific lifecycles. This template doesn't use custom components, but they can be useful for:
+Hilt allows creating custom components for specific lifecycles. This template doesn't use custom
+components, but they can be useful for:
+
 - Fragment-specific dependencies
 - Service-specific dependencies
 - Custom lifecycle scopes
@@ -890,6 +944,7 @@ Hilt allows creating custom components for specific lifecycles. This template do
 If you need to inject dependencies into a class that Hilt doesn't support, use `@EntryPoint`.
 
 **Example (not in codebase):**
+
 ```kotlin
 @EntryPoint
 @InstallIn(SingletonComponent::class)
@@ -910,6 +965,7 @@ val repository = entryPoint.repository()
 For providing multiple implementations of the same interface (e.g., list of plugins, interceptors).
 
 **Example (not in codebase):**
+
 ```kotlin
 @Module
 @InstallIn(SingletonComponent::class)
@@ -935,6 +991,7 @@ class Client @Inject constructor(
 If you're adding Hilt to an existing project or module:
 
 ### Step 1: Add Convention Plugin
+
 ```kotlin
 // build.gradle.kts
 plugins {
@@ -943,22 +1000,26 @@ plugins {
 ```
 
 ### Step 2: Annotate Application Class
+
 ```kotlin
 @HiltAndroidApp
 class YourApplication : Application()
 ```
 
 ### Step 3: Create Modules
+
 - Create `di/` package in each module
 - Create Hilt modules for existing dependencies
 - Use `@Binds` for interfaces, `@Provides` for complex types
 
 ### Step 4: Migrate Injection
+
 - Replace manual injection with `@Inject constructor`
 - Annotate Activities with `@AndroidEntryPoint`
 - Annotate ViewModels with `@HiltViewModel`
 
 ### Step 5: Test
+
 - Build the project
 - Verify all dependencies are injected
 - Run tests to ensure nothing broke
@@ -981,4 +1042,5 @@ This template follows these DI principles:
 5. **Qualifier annotations** - Used for dispatchers and multiple instances
 6. **Compile-time safety** - Hilt validates dependency graph at build time
 
-By following these patterns, you'll have a maintainable, testable, and efficient DI setup that scales with your project.
+By following these patterns, you'll have a maintainable, testable, and efficient DI setup that
+scales with your project.

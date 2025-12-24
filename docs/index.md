@@ -112,19 +112,22 @@ template [here](https://github.com/atick-faisal?tab=repositories&q=&type=source&
 
 ## 🗺️ Documentation Map
 
-This section provides a complete navigation guide for all documentation in this project. Use this map to find the right documentation for your needs.
+This section provides a complete navigation guide for all documentation in this project. Use this
+map to find the right documentation for your needs.
 
 ### 📍 Documentation Structure
 
 This project has a **dual-documentation system**:
 
 #### 1. Guide Documentation (MkDocs Site)
+
 - **Location**: `/docs/*.md` files
 - **Purpose**: Concepts, patterns, tutorials, and how-to guides
 - **Deployed to**: [GitHub Pages](https://atick.dev/Jetpack-Android-Starter)
 - **Coverage**: Architecture, state management, navigation, Firebase, performance, etc.
 
 #### 2. API Reference (Dokka)
+
 - **Location**: Module `README.md` files + KDoc comments in source code
 - **Purpose**: Module architecture, API documentation, code reference
 - **Generate with**: `./gradlew dokkaGeneratePublicationHtml`
@@ -144,64 +147,84 @@ graph LR
     E --> F[Data Layer & Repositories]
     F --> G[Dependency Injection]
     G --> H[Firebase Setup]
-
-    style A fill:#a6da95
-    style H fill:#f5a97f
+    style A fill: #a6da95
+    style H fill: #f5a97f
 ```
 
 1. **[Quick Start Guide](getting-started.md)** - Set up your project and understand the basics
-2. **[Architecture Overview](architecture.md)** - Learn the two-layer architecture and design decisions
+2. **[Architecture Overview](architecture.md)** - Learn the two-layer architecture and design
+   decisions
 3. **[Adding New Features](guide.md)** - Step-by-step tutorial for creating your first feature
-4. **[State Management](state-management.md)** - Master the `UiState<T>` pattern and ViewModel patterns
-5. **[Navigation Deep Dive](navigation.md)** - Understand type-safe navigation with Kotlin serialization
-6. **[Data Layer & Repositories](data-flow.md)** - Learn offline-first data patterns and repository implementations
-7. **[Dependency Injection](dependency-injection.md)** - Comprehensive Hilt setup and DI patterns (993 lines!)
+4. **[State Management](state-management.md)** - Master the `UiState<T>` pattern and ViewModel
+   patterns
+5. **[Navigation Deep Dive](navigation.md)** - Understand type-safe navigation with Kotlin
+   serialization
+6. **[Data Layer & Repositories](data-flow.md)** - Learn offline-first data patterns and repository
+   implementations
+7. **[Dependency Injection](dependency-injection.md)** - Comprehensive Hilt setup and DI patterns (
+   993 lines!)
 8. **[Firebase Setup](firebase.md)** - Configure Firebase Auth, Firestore, and Crashlytics
 
 ### 🔍 Quick Reference
 
 Need to look something up quickly? Start here:
 
-| Topic | Documentation | What You'll Find |
-|-------|---------------|------------------|
-| **Common Patterns** | [Quick Reference](quick-reference.md) | Cheat sheet for common patterns (ViewModel, Repository, Navigation, etc.) |
-| **Component Usage** | [Component Guide](components.md) | All UI components with examples (buttons, text fields, app bars, etc.) |
+| Topic               | Documentation                               | What You'll Find                                                                    |
+|---------------------|---------------------------------------------|-------------------------------------------------------------------------------------|
+| **Common Patterns** | [Quick Reference](quick-reference.md)       | Cheat sheet for common patterns (ViewModel, Repository, Navigation, etc.)           |
+| **Component Usage** | [Component Guide](components.md)            | All UI components with examples (buttons, text fields, app bars, etc.)              |
 | **Troubleshooting** | [Troubleshooting Guide](troubleshooting.md) | Solutions for common issues (build errors, runtime errors, Firebase, Compose, etc.) |
-| **FAQ** | [Frequently Asked Questions](faq.md) | 20+ questions covering architecture, deployment, performance, Firebase |
-| **Tips & Tricks** | [Tips & Best Practices](tips.md) | IDE productivity, debugging techniques, development workflow |
+| **FAQ**             | [Frequently Asked Questions](faq.md)        | 20+ questions covering architecture, deployment, performance, Firebase              |
+| **Tips & Tricks**   | [Tips & Best Practices](tips.md)            | IDE productivity, debugging techniques, development workflow                        |
 
 ### 📚 Deep Dive Guides
 
 Want to understand concepts in depth? Explore these comprehensive guides:
 
 #### Core Concepts
-- **[Architecture Deep Dive](architecture.md)** - Two-layer architecture, module structure, dependency flow
-- **[State Management](state-management.md)** - `UiState<T>` wrapper, update functions, context parameters, advanced patterns
-- **[Navigation Patterns](navigation.md)** - Type-safe routes, nested navigation, deep links, bottom navigation
-- **[Data Flow](data-flow.md)** - Flow patterns (network-only, local-only, offline-first), caching strategies
+
+- **[Architecture Deep Dive](architecture.md)** - Two-layer architecture, module structure,
+  dependency flow
+- **[State Management](state-management.md)** - `UiState<T>` wrapper, update functions, context
+  parameters, advanced patterns
+- **[Navigation Patterns](navigation.md)** - Type-safe routes, nested navigation, deep links, bottom
+  navigation
+- **[Data Flow](data-flow.md)** - Flow patterns (network-only, local-only, offline-first), caching
+  strategies
 
 #### Implementation Guides
-- **[Adding Features](guide.md)** - Complete tutorial: data models → repositories → UI → navigation → DI
-- **[Component Development](components.md)** - Using components, theming, accessibility, creating custom components
-- **[Dependency Injection](dependency-injection.md)** - Hilt modules, qualifiers, scopes, best practices (993 lines)
-- **[Firebase Integration](firebase.md)** - Auth setup, Firestore integration, Crashlytics, security rules
+
+- **[Adding Features](guide.md)** - Complete tutorial: data models → repositories → UI →
+  navigation → DI
+- **[Component Development](components.md)** - Using components, theming, accessibility, creating
+  custom components
+- **[Dependency Injection](dependency-injection.md)** - Hilt modules, qualifiers, scopes, best
+  practices (993 lines)
+- **[Firebase Integration](firebase.md)** - Auth setup, Firestore integration, Crashlytics, security
+  rules
 
 #### Advanced Topics
-- **[Performance Optimization](performance.md)** - LazyList optimization, image loading, memory leak prevention, startup optimization
-- **[Data Layer Implementation](../data/README.md)** - Repository patterns, error handling, offline-first sync, mappers
-- **[Sync Architecture](../sync/README.md)** - WorkManager setup, sync strategies, conflict resolution, troubleshooting
+
+- **[Performance Optimization](performance.md)** - LazyList optimization, image loading, memory leak
+  prevention, startup optimization
+- **[Data Layer Implementation](../data/README.md)** - Repository patterns, error handling,
+  offline-first sync, mappers
+- **[Sync Architecture](../sync/README.md)** - WorkManager setup, sync strategies, conflict
+  resolution, troubleshooting
 
 ### 🛠️ Tool & Process Documentation
 
 Learn about the tools and processes used in this project:
 
 #### Development Tools
+
 - **[Convention Plugins](plugins.md)** - Gradle convention plugins for standardized builds
 - **[Code Style with Spotless](spotless.md)** - Automated code formatting with ktlint
 - **[Dependency Management](dependency.md)** - Gradle version catalogs and dependency updates
 - **[Design Philosophy](philosophy.md)** - Architectural decisions and design principles
 
 #### Deployment & CI/CD
+
 - **[GitHub CI/CD Setup](github.md)** - Automated build, test, and deployment workflows
 - **[Fastlane Configuration](fastlane.md)** - Release automation with Fastlane
 
@@ -210,6 +233,7 @@ Learn about the tools and processes used in this project:
 Each module has a `README.md` file documenting its architecture and usage:
 
 #### Core Modules
+
 - **[Core UI](../core/ui/README.md)** - UI components, `UiState` wrapper, theme system
 - **[Core Android](../core/android/README.md)** - Android utilities, DI qualifiers, extensions
 - **[Core Network](../core/network/README.md)** - Retrofit, OkHttp, network data sources
@@ -217,15 +241,20 @@ Each module has a `README.md` file documenting its architecture and usage:
 - **[Core Preferences](../core/preferences/README.md)** - DataStore, user preferences
 
 #### Data & Sync
-- **[Data Module](../data/README.md)** - Repository implementations, error handling, offline-first patterns
+
+- **[Data Module](../data/README.md)** - Repository implementations, error handling, offline-first
+  patterns
 - **[Sync Module](../sync/README.md)** - WorkManager background sync, conflict resolution
 
 #### Firebase Modules
+
 - **[Firebase Auth](../firebase/auth/README.md)** - Firebase Authentication wrapper, Google Sign-In
-- **[Firebase Firestore](../firebase/firestore/README.md)** - Cloud Firestore wrapper, reactive access
+- **[Firebase Firestore](../firebase/firestore/README.md)** - Cloud Firestore wrapper, reactive
+  access
 - **[Firebase Analytics](../firebase/analytics/README.md)** - Firebase Crashlytics (crash reporting)
 
 #### Feature Modules
+
 - **[App Module](../app/README.md)** - Main application module, MainActivity responsibilities
 - **[Feature: Auth](../feature/auth/README.md)** - Authentication screens (sign in, sign up)
 - **[Feature: Home](../feature/home/README.md)** - Home screen implementation
@@ -271,7 +300,7 @@ graph TB
         Sync["sync<br/>(WorkManager)"]
     end
 
-    %% App dependencies
+%% App dependencies
     App --> FeatureAuth
     App --> FeatureHome
     App --> FeatureProfile
@@ -279,8 +308,7 @@ graph TB
     App --> CoreUI
     App --> Data
     App --> Sync
-
-    %% Feature dependencies
+%% Feature dependencies
     FeatureAuth --> CoreUI
     FeatureAuth --> Data
     FeatureHome --> CoreUI
@@ -289,39 +317,35 @@ graph TB
     FeatureProfile --> Data
     FeatureSettings --> CoreUI
     FeatureSettings --> Data
-
-    %% Data dependencies
+%% Data dependencies
     Data --> CoreNetwork
     Data --> CoreRoom
     Data --> CorePrefs
     Data --> CoreAndroid
     Data --> FBAuth
     Data --> FBFirestore
-
-    %% Firebase dependencies
+%% Firebase dependencies
     FBAuth --> CoreAndroid
     FBFirestore --> CoreAndroid
     FBAnalytics --> CoreAndroid
-
-    %% Sync dependencies
+%% Sync dependencies
     Sync --> Data
     Sync --> CoreAndroid
-
-    %% Core dependencies
+%% Core dependencies
     CoreUI --> CoreAndroid
     CoreNetwork --> CoreAndroid
     CoreRoom --> CoreAndroid
     CorePrefs --> CoreAndroid
-
-    style app fill:#E8F5E9,stroke:#4CAF50,stroke-width:3px
-    style feature fill:#E1F5FE,stroke:#03A9F4,stroke-width:2px
-    style data fill:#F3E5F5,stroke:#9C27B0,stroke-width:2px
-    style firebase fill:#FFF3E0,stroke:#FF9800,stroke-width:2px
-    style core fill:#FFEBEE,stroke:#F44336,stroke-width:2px
-    style sync fill:#E0F2F1,stroke:#009688,stroke-width:2px
+    style app fill: #E8F5E9, stroke: #4CAF50, stroke-width: 3px
+    style feature fill: #E1F5FE, stroke: #03A9F4, stroke-width: 2px
+    style data fill: #F3E5F5, stroke: #9C27B0, stroke-width: 2px
+    style firebase fill: #FFF3E0, stroke: #FF9800, stroke-width: 2px
+    style core fill: #FFEBEE, stroke: #F44336, stroke-width: 2px
+    style sync fill: #E0F2F1, stroke: #009688, stroke-width: 2px
 ```
 
 **Key Dependency Rules:**
+
 - **Feature modules** → Never depend on other feature modules (isolated)
 - **Feature modules** → Always depend on `:core:ui` and `:data`
 - **Data module** → Depends on all core modules and Firebase modules
@@ -333,10 +357,14 @@ graph TB
 
 Understanding how systems work together:
 
-- **Navigation + State Management**: See [Navigation Deep Dive](navigation.md) for how navigation integrates with `UiState<T>`
-- **Firebase + Data Layer**: See [Firebase Setup](firebase.md) and [Data Layer](../data/README.md) for how Firebase data flows through repositories
-- **DI + Everything**: See [Dependency Injection](dependency-injection.md) for how Hilt ties all layers together
-- **Sync + Repositories**: See [Sync Module](../sync/README.md) for how WorkManager integrates with repository sync operations
+- **Navigation + State Management**: See [Navigation Deep Dive](navigation.md) for how navigation
+  integrates with `UiState<T>`
+- **Firebase + Data Layer**: See [Firebase Setup](firebase.md) and [Data Layer](../data/README.md)
+  for how Firebase data flows through repositories
+- **DI + Everything**: See [Dependency Injection](dependency-injection.md) for how Hilt ties all
+  layers together
+- **Sync + Repositories**: See [Sync Module](../sync/README.md) for how WorkManager integrates with
+  repository sync operations
 
 ### 📊 Documentation Statistics
 
@@ -345,17 +373,19 @@ Understanding how systems work together:
 - **KDoc Coverage**: 87% of Kotlin files (1,022 KDoc blocks)
 - **Module Coverage**: 100% (all modules have READMEs)
 - **Best-in-Class Guides**:
-  - Dependency Injection Guide: 993 lines
-  - State Management Guide: 928 lines
-  - Troubleshooting Guide: ~1,570 lines
-  - Component Guide: 1,428 lines
-  - FAQ: 1,353 lines (20+ questions)
+    - Dependency Injection Guide: 993 lines
+    - State Management Guide: 928 lines
+    - Troubleshooting Guide: ~1,570 lines
+    - Component Guide: 1,428 lines
+    - FAQ: 1,353 lines (20+ questions)
 
 > [!TIP]
-> **First time here?** Start with the [Quick Start Guide](getting-started.md) and follow the **Getting Started Path** above. The path takes you from setup to mastery in a logical progression.
+> **First time here?** Start with the [Quick Start Guide](getting-started.md) and follow the *
+*Getting Started Path** above. The path takes you from setup to mastery in a logical progression.
 
 > [!NOTE]
-> **Looking for API docs?** Run `./gradlew dokkaGeneratePublicationHtml` to generate API documentation from KDoc comments. The output will be at `build/dokka/html/index.html`.
+> **Looking for API docs?** Run `./gradlew dokkaGeneratePublicationHtml` to generate API
+> documentation from KDoc comments. The output will be at `build/dokka/html/index.html`.
 
 <p align="center"><img src="https://raw.githubusercontent.com/catppuccin/catppuccin/main/assets/footers/gray0_ctp_on_line.svg?sanitize=true" /></p>
 <p align="center"><a href="https://sites.google.com/view/mchowdhury" target="_blank">Qatar University Machine Learning Group</a>

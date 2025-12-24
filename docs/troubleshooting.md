@@ -9,22 +9,25 @@ This guide helps you resolve common issues when working with this Android starte
 #### JDK Version Mismatch
 
 **Error:**
+
 ```
 Jetpack requires JDK 17+ but it is currently using JDK 11.
 Java Home: [/path/to/jdk-11]
 ```
 
 **Solution:**
+
 1. Install JDK 21 (required by this template)
 2. Configure Android Studio to use JDK 21:
-   - **File → Project Structure → SDK Location → Gradle Settings**
-   - Set **Gradle JDK** to version 21
+    - **File → Project Structure → SDK Location → Gradle Settings**
+    - Set **Gradle JDK** to version 21
 3. Verify in `settings.gradle.kts`:
    ```kotlin
    check(JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_17))
    ```
 
 **References:**
+
 - settings.gradle.kts:88-94
 - [Android Studio JDK Configuration](https://developer.android.com/build/jdks#jdk-config-in-studio)
 
@@ -33,11 +36,13 @@ Java Home: [/path/to/jdk-11]
 #### Repository Access Issues
 
 **Error:**
+
 ```
 Could not resolve com.google.firebase:firebase-bom:34.4.0
 ```
 
 **Solution:**
+
 1. Check `settings.gradle.kts` repository configuration:
    ```kotlin
    repositories {
@@ -57,6 +62,7 @@ Could not resolve com.google.firebase:firebase-bom:34.4.0
 4. Check if behind a corporate proxy (configure in `gradle.properties`)
 
 **References:**
+
 - settings.gradle.kts:32-44
 
 ---
@@ -64,11 +70,13 @@ Could not resolve com.google.firebase:firebase-bom:34.4.0
 #### Version Catalog Issues
 
 **Error:**
+
 ```
 Could not resolve libs.androidx.core.ktx
 ```
 
 **Solution:**
+
 1. Ensure `gradle/libs.versions.toml` exists and is valid
 2. Check version catalog syntax:
    ```toml
@@ -79,6 +87,7 @@ Could not resolve libs.androidx.core.ktx
 4. Sync project with Gradle files
 
 **References:**
+
 - gradle/libs.versions.toml
 
 ---
@@ -88,11 +97,13 @@ Could not resolve libs.androidx.core.ktx
 #### Hilt Compilation Errors
 
 **Error:**
+
 ```
 [Dagger/MissingBinding] Cannot be provided without an @Inject constructor or an @Provides-annotated method
 ```
 
 **Solution:**
+
 1. Verify Hilt plugin is applied in module's `build.gradle.kts`:
    ```kotlin
    plugins {
@@ -111,6 +122,7 @@ Could not resolve libs.androidx.core.ktx
    ```
 
 **References:**
+
 - build-logic/convention/src/main/kotlin/DaggerHiltConventionPlugin.kt
 - See [Dependency Injection Guide](dependency-injection.md)
 
@@ -119,11 +131,13 @@ Could not resolve libs.androidx.core.ktx
 #### Room Database Compilation Errors
 
 **Error:**
+
 ```
 error: Cannot find setter for field
 ```
 
 **Solution:**
+
 1. Ensure entity class properties match DAO query column names
 2. Add `@ColumnInfo` annotation if database column name differs:
    ```kotlin
@@ -136,6 +150,7 @@ error: Cannot find setter for field
 4. Clean and rebuild project
 
 **References:**
+
 - core/room/src/main/kotlin/dev/atick/core/room/
 
 ---
@@ -145,11 +160,13 @@ error: Cannot find setter for field
 #### Duplicate Class Errors
 
 **Error:**
+
 ```
 Duplicate class kotlin.collections.CollectionsKt found in modules
 ```
 
 **Solution:**
+
 1. Check for conflicting dependency versions in `gradle/libs.versions.toml`
 2. Use BOM (Bill of Materials) for consistent versioning:
    ```kotlin
@@ -163,6 +180,7 @@ Duplicate class kotlin.collections.CollectionsKt found in modules
    ```
 
 **References:**
+
 - gradle/libs.versions.toml
 - build-logic/convention/src/main/kotlin/FirebaseConventionPlugin.kt:35
 
@@ -171,20 +189,24 @@ Duplicate class kotlin.collections.CollectionsKt found in modules
 #### Configuration Cache Warnings
 
 **Error:**
+
 ```
 Configuration cache problems found in this build
 ```
 
 **Solution:**
+
 1. This is expected due to google-services plugin (see gradle.properties:28)
 2. Warning mode is configured intentionally:
    ```properties
    org.gradle.configuration-cache.problems=warn
    ```
 3. Build will complete successfully - these are warnings, not errors
-4. Reference issue: [google/play-services-plugins#246](https://github.com/google/play-services-plugins/issues/246)
+4. Reference
+   issue: [google/play-services-plugins#246](https://github.com/google/play-services-plugins/issues/246)
 
 **References:**
+
 - gradle.properties:24-28
 
 ---
@@ -196,11 +218,13 @@ Configuration cache problems found in this build
 #### Firebase Initialization Failure
 
 **Error (Logcat):**
+
 ```
 java.lang.IllegalStateException: Default FirebaseApp is not initialized
 ```
 
 **Solution:**
+
 1. Verify `google-services.json` exists in `app/` directory
 2. Check Firebase plugin is applied in `app/build.gradle.kts`:
    ```kotlin
@@ -210,10 +234,11 @@ java.lang.IllegalStateException: Default FirebaseApp is not initialized
    ```
 3. Ensure `google-services` plugin is applied (happens automatically via convention plugin)
 4. If using custom `google-services.json`:
-   - Verify package name matches `applicationId` in `build.gradle.kts`
-   - Check Firebase project configuration in Firebase Console
+    - Verify package name matches `applicationId` in `build.gradle.kts`
+    - Check Firebase project configuration in Firebase Console
 
 **References:**
+
 - app/build.gradle.kts:30
 - build-logic/convention/src/main/kotlin/FirebaseConventionPlugin.kt:30
 - [Firebase Setup Guide](firebase.md)
@@ -223,12 +248,14 @@ java.lang.IllegalStateException: Default FirebaseApp is not initialized
 #### Hilt Injection Failures
 
 **Error (Logcat):**
+
 ```
 java.lang.RuntimeException: Unable to create application:
 java.lang.IllegalStateException: Hilt entry point not found
 ```
 
 **Solution:**
+
 1. Verify `Application` class is annotated with `@HiltAndroidApp`:
    ```kotlin
    @HiltAndroidApp
@@ -247,6 +274,7 @@ java.lang.IllegalStateException: Hilt entry point not found
 4. Clean and rebuild project
 
 **References:**
+
 - app/src/main/kotlin/dev/atick/compose/JetpackApplication.kt
 - app/src/main/kotlin/dev/atick/compose/ui/MainActivity.kt
 
@@ -257,11 +285,13 @@ java.lang.IllegalStateException: Hilt entry point not found
 #### Navigation Destination Not Found
 
 **Error (Logcat):**
+
 ```
 java.lang.IllegalArgumentException: Navigation destination that matches request NavDeepLinkRequest cannot be found
 ```
 
 **Solution:**
+
 1. Verify destination is defined in navigation graph:
    ```kotlin
    @Serializable
@@ -281,6 +311,7 @@ java.lang.IllegalArgumentException: Navigation destination that matches request 
 4. Verify nested graphs have correct start destination
 
 **References:**
+
 - app/src/main/kotlin/dev/atick/compose/navigation/
 - [Navigation Deep Dive](navigation.md)
 
@@ -289,11 +320,13 @@ java.lang.IllegalArgumentException: Navigation destination that matches request 
 #### Navigation Argument Serialization Errors
 
 **Error (Logcat):**
+
 ```
 kotlinx.serialization.SerializationException: Serializer for class 'MyData' is not found
 ```
 
 **Solution:**
+
 1. Add `@Serializable` annotation to data class:
    ```kotlin
    @Serializable
@@ -311,6 +344,7 @@ kotlinx.serialization.SerializationException: Serializer for class 'MyData' is n
 3. For custom types, provide custom serializer
 
 **References:**
+
 - [Navigation Deep Dive](navigation.md#complex-types)
 
 ---
@@ -321,6 +355,7 @@ kotlinx.serialization.SerializationException: Serializer for class 'MyData' is n
 Unexpected backstack behavior (duplicate screens, can't go back, wrong screen when pressing back)
 
 **Solution:**
+
 1. For "pop to specific destination", use `popUpTo` with `inclusive`:
    ```kotlin
    navController.navigate(Home) {
@@ -356,6 +391,7 @@ Unexpected backstack behavior (duplicate screens, can't go back, wrong screen wh
    ```
 
 **References:**
+
 - [Navigation Deep Dive](navigation.md#navigation-options)
 - app/src/main/kotlin/dev/atick/compose/navigation/TopLevelNavigation.kt
 
@@ -367,6 +403,7 @@ Unexpected backstack behavior (duplicate screens, can't go back, wrong screen wh
 Nested graphs not working, start destination errors, or can't navigate to nested destinations
 
 **Solution:**
+
 1. Ensure nested graph has explicit start destination:
    ```kotlin
    @Serializable
@@ -412,6 +449,7 @@ Nested graphs not working, start destination errors, or can't navigate to nested
    ```
 
 **References:**
+
 - [Navigation Deep Dive](navigation.md#nested-navigation)
 - app/src/main/kotlin/dev/atick/compose/navigation/JetpackNavHost.kt
 
@@ -423,6 +461,7 @@ Nested graphs not working, start destination errors, or can't navigate to nested
 Arguments passed to destination are null or have default values instead of passed values
 
 **Solution:**
+
 1. Ensure destination parameter names match navigation arguments:
    ```kotlin
    @Serializable
@@ -461,6 +500,7 @@ Arguments passed to destination are null or have default values instead of passe
    ```
 
 **References:**
+
 - [Navigation Deep Dive](navigation.md#passing-arguments)
 
 ---
@@ -473,6 +513,7 @@ Arguments passed to destination are null or have default values instead of passe
 UI doesn't reflect ViewModel state changes
 
 **Solution:**
+
 1. Ensure using `collectAsStateWithLifecycle()` in composables:
    ```kotlin
    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -495,6 +536,7 @@ UI doesn't reflect ViewModel state changes
    ```
 
 **References:**
+
 - core/ui/src/main/kotlin/dev/atick/core/ui/utils/StatefulComposable.kt
 - [State Management Guide](state-management.md)
 
@@ -506,6 +548,7 @@ UI doesn't reflect ViewModel state changes
 Error messages or navigation events trigger multiple times
 
 **Solution:**
+
 1. Use `OneTimeEvent` wrapper for single-consumption events:
    ```kotlin
    data class UiState<T>(
@@ -523,6 +566,7 @@ Error messages or navigation events trigger multiple times
 3. `StatefulComposable` handles event consumption automatically
 
 **References:**
+
 - core/android/src/main/kotlin/dev/atick/core/android/utils/OneTimeEvent.kt
 - core/ui/src/main/kotlin/dev/atick/core/ui/utils/StatefulComposable.kt
 
@@ -534,6 +578,7 @@ Error messages or navigation events trigger multiple times
 Multiple loading indicators showing at once or loading state stuck
 
 **Solution:**
+
 1. Use single `UiState<T>` wrapper per screen (not multiple):
    ```kotlin
    // Wrong - multiple loading states
@@ -560,6 +605,7 @@ Multiple loading indicators showing at once or loading state stuck
 4. Check for exception swallowing that prevents loading state reset
 
 **References:**
+
 - core/ui/src/main/kotlin/dev/atick/core/ui/utils/UiState.kt
 - [State Management Guide](state-management.md#handling-multiple-async-operations)
 
@@ -571,6 +617,7 @@ Multiple loading indicators showing at once or loading state stuck
 `updateStateWith` or `updateWith` doesn't update state or shows compilation error
 
 **Solution:**
+
 1. Ensure Kotlin context parameters feature is enabled (already configured):
    ```kotlin
    // In build.gradle.kts
@@ -600,6 +647,7 @@ Multiple loading indicators showing at once or loading state stuck
 5. If still issues, use explicit `viewModelScope.launch` as fallback
 
 **References:**
+
 - core/ui/src/main/kotlin/dev/atick/core/ui/utils/StateFlowExtensions.kt
 - [State Management Guide](state-management.md#kotlin-context-parameters)
 
@@ -613,6 +661,7 @@ Multiple loading indicators showing at once or loading state stuck
 UI doesn't update even though state has changed
 
 **Solution:**
+
 1. Ensure using `collectAsStateWithLifecycle()` instead of `collectAsState()`:
    ```kotlin
    // Wrong - doesn't respect lifecycle
@@ -632,6 +681,7 @@ UI doesn't update even though state has changed
 4. Ensure `StateFlow` is being used, not `Flow`
 
 **References:**
+
 - core/ui/src/main/kotlin/dev/atick/core/ui/extensions/LifecycleExtensions.kt
 - feature/home/src/main/kotlin/dev/atick/feature/home/ui/home/HomeScreen.kt:68
 
@@ -643,6 +693,7 @@ UI doesn't update even though state has changed
 ViewModel continues executing after screen is destroyed
 
 **Solution:**
+
 1. Always use `viewModelScope` for coroutines in ViewModel:
    ```kotlin
    fun loadData() {
@@ -663,6 +714,7 @@ ViewModel continues executing after screen is destroyed
 4. Verify ViewModel is scoped to navigation destination, not activity
 
 **References:**
+
 - core/ui/src/main/kotlin/dev/atick/core/ui/utils/StateFlowExtensions.kt
 - [State Management Guide](state-management.md#kotlin-context-parameters)
 
@@ -674,6 +726,7 @@ ViewModel continues executing after screen is destroyed
 Error snackbar appears after user has navigated away
 
 **Solution:**
+
 1. This is expected behavior when using `StatefulComposable`
 2. To prevent, handle navigation before error occurs:
    ```kotlin
@@ -699,6 +752,7 @@ Error snackbar appears after user has navigated away
 4. Consider using navigation with result pattern if needed
 
 **References:**
+
 - core/ui/src/main/kotlin/dev/atick/core/ui/utils/StatefulComposable.kt
 - core/android/src/main/kotlin/dev/atick/core/android/utils/OneTimeEvent.kt
 
@@ -710,6 +764,7 @@ Error snackbar appears after user has navigated away
 App state lost during rotation or configuration change
 
 **Solution:**
+
 1. ViewModels survive configuration changes automatically
 2. Ensure state is in ViewModel, not composable:
    ```kotlin
@@ -733,6 +788,7 @@ App state lost during rotation or configuration change
 4. Complex objects need custom Saver implementation
 
 **References:**
+
 - [State Management Guide](state-management.md)
 - feature/home/src/main/kotlin/dev/atick/feature/home/ui/home/HomeViewModel.kt
 
@@ -745,11 +801,13 @@ App state lost during rotation or configuration change
 #### Google Sign-In Fails
 
 **Error:**
+
 ```
 com.google.android.gms.common.api.ApiException: 10:
 ```
 
 **Solution:**
+
 1. Add SHA-1 fingerprint to Firebase Console:
    ```bash
    # Get debug SHA-1
@@ -757,11 +815,12 @@ com.google.android.gms.common.api.ApiException: 10:
    ```
 2. Copy SHA-1 from output under "Variant: debug, Config: debug"
 3. Add to Firebase Console:
-   - **Project Settings → Your apps → SHA certificate fingerprints**
+    - **Project Settings → Your apps → SHA certificate fingerprints**
 4. Download new `google-services.json` and replace in `app/`
 5. Rebuild and reinstall app
 
 **References:**
+
 - [Firebase Setup Guide](firebase.md)
 - firebase/auth/src/main/kotlin/dev/atick/firebase/auth/data/AuthDataSource.kt
 
@@ -770,11 +829,13 @@ com.google.android.gms.common.api.ApiException: 10:
 #### Credential Manager Not Found
 
 **Error (Logcat):**
+
 ```
 CredentialManager is not available
 ```
 
 **Solution:**
+
 1. Ensure device/emulator runs Android 14+ or has Google Play Services
 2. For devices below Android 14, add Jetpack library:
    ```kotlin
@@ -785,6 +846,7 @@ CredentialManager is not available
 3. Verify Google Play Services is up-to-date on device
 
 **References:**
+
 - firebase/auth/src/main/kotlin/dev/atick/firebase/auth/data/AuthDataSource.kt
 - gradle/libs.versions.toml:160-162
 
@@ -793,11 +855,13 @@ CredentialManager is not available
 ### Firestore Permission Denied
 
 **Error (Logcat):**
+
 ```
 PERMISSION_DENIED: Missing or insufficient permissions
 ```
 
 **Solution:**
+
 1. Check Firestore Security Rules in Firebase Console
 2. For development, use permissive rules (⚠️ not for production):
    ```
@@ -814,6 +878,7 @@ PERMISSION_DENIED: Missing or insufficient permissions
 4. Ensure user is authenticated before accessing Firestore
 
 **References:**
+
 - firebase/firestore/src/main/kotlin/dev/atick/firebase/firestore/data/FirebaseDataSource.kt
 - [Firebase Setup Guide](firebase.md#firestore-security-rules)
 
@@ -825,6 +890,7 @@ PERMISSION_DENIED: Missing or insufficient permissions
 Events not appearing in Firebase Analytics console
 
 **Solution:**
+
 1. Verify Firebase Analytics is initialized (happens automatically with Firebase SDK)
 2. Check if Analytics logging is enabled:
    ```kotlin
@@ -850,6 +916,7 @@ Events not appearing in Firebase Analytics console
 6. Verify `google-services.json` has correct Analytics project configuration
 
 **References:**
+
 - firebase/analytics/src/main/kotlin/dev/atick/firebase/analytics/AnalyticsLogger.kt
 - [Firebase Setup Guide](firebase.md#firebase-analytics)
 
@@ -861,6 +928,7 @@ Events not appearing in Firebase Analytics console
 Crashes not appearing in Firebase Crashlytics console
 
 **Solution:**
+
 1. Ensure Crashlytics is enabled in `build.gradle.kts`:
    ```kotlin
    buildTypes {
@@ -894,6 +962,7 @@ Crashes not appearing in Firebase Crashlytics console
    ```
 
 **References:**
+
 - firebase/analytics/src/main/kotlin/dev/atick/firebase/analytics/AnalyticsLogger.kt
 - build-logic/convention/src/main/kotlin/FirebaseConventionPlugin.kt
 - [Firebase Setup Guide](firebase.md)
@@ -906,12 +975,14 @@ Crashes not appearing in Firebase Crashlytics console
 Firebase not initializing properly, causing crashes or missing functionality
 
 **Solution:**
-1. See detailed Firebase initialization troubleshooting in **Runtime Errors → Application Crashes on Startup → Firebase Initialization Failure** (line 195)
+
+1. See detailed Firebase initialization troubleshooting in **Runtime Errors → Application Crashes on
+   Startup → Firebase Initialization Failure** (line 195)
 2. Quick checklist:
-   - ✅ `google-services.json` exists in `app/` directory
-   - ✅ Firebase plugin applied via convention plugin
-   - ✅ Package name matches `applicationId`
-   - ✅ Firebase project properly configured in console
+    - ✅ `google-services.json` exists in `app/` directory
+    - ✅ Firebase plugin applied via convention plugin
+    - ✅ Package name matches `applicationId`
+    - ✅ Firebase project properly configured in console
 3. For emulator testing, use Firebase Emulator Suite:
    ```bash
    firebase emulators:start
@@ -923,6 +994,7 @@ Firebase not initializing properly, causing crashes or missing functionality
    ```
 
 **References:**
+
 - app/build.gradle.kts:30
 - build-logic/convention/src/main/kotlin/FirebaseConventionPlugin.kt
 - [Firebase Setup Guide](firebase.md)
@@ -940,6 +1012,7 @@ Firebase not initializing properly, causing crashes or missing functionality
 UI doesn't update when state changes
 
 **Solution:**
+
 1. Ensure using `collectAsStateWithLifecycle()` for Flow collection:
    ```kotlin
    // Wrong - doesn't observe lifecycle
@@ -974,6 +1047,7 @@ UI doesn't update when state changes
    ```
 
 **References:**
+
 - core/ui/src/main/kotlin/dev/atick/core/ui/extensions/LifecycleExtensions.kt
 - [State Management Guide](state-management.md)
 - See also: **Lifecycle Issues → Compose Recomposition Not Triggering** (line 613)
@@ -986,6 +1060,7 @@ UI doesn't update when state changes
 UI stutters or battery drains due to too frequent recomposition
 
 **Solution:**
+
 1. Use stable parameters in composables:
    ```kotlin
    // Wrong - lambda recreated on every recomposition
@@ -1024,10 +1099,11 @@ UI stutters or battery drains due to too frequent recomposition
    Text("Items: ${state.items.size}")
    ```
 6. Use Layout Inspector to identify recomposition hotspots:
-   - Android Studio → View → Tool Windows → Layout Inspector
-   - Enable "Show Recomposition Counts"
+    - Android Studio → View → Tool Windows → Layout Inspector
+    - Enable "Show Recomposition Counts"
 
 **References:**
+
 - [Performance Guide](performance.md#recomposition-optimization)
 - See also: **Memory Issues → Compose Recomposing Too Often** (line 1295)
 
@@ -1041,10 +1117,11 @@ UI stutters or battery drains due to too frequent recomposition
 Compose previews don't render or show errors
 
 **Solution:**
+
 1. Ensure using Android Studio Hedgehog (2023.1.1) or newer
 2. Enable Compose Preview features:
-   - **Settings → Experimental → Compose**
-   - Enable "Live Edit of Literals"
+    - **Settings → Experimental → Compose**
+    - Enable "Live Edit of Literals"
 3. Verify preview annotations are correct:
    ```kotlin
    @PreviewDevices
@@ -1062,11 +1139,12 @@ Compose previews don't render or show errors
 4. Ensure preview composables are private (not public)
 5. Refresh preview (toolbar icon or Ctrl+Shift+F5 / Cmd+Shift+F5)
 6. If still failing, try:
-   - Build → Refresh All Previews
-   - File → Invalidate Caches / Restart
-   - Clean and rebuild project
+    - Build → Refresh All Previews
+    - File → Invalidate Caches / Restart
+    - Clean and rebuild project
 
 **References:**
+
 - core/ui/src/main/kotlin/dev/atick/core/ui/utils/PreviewDevices.kt
 - core/ui/src/main/kotlin/dev/atick/core/ui/utils/PreviewThemes.kt
 - See also: **Development Environment Issues → Compose Preview Not Working** (line 1020)
@@ -1079,6 +1157,7 @@ Compose previews don't render or show errors
 Preview doesn't reflect light/dark theme correctly
 
 **Solution:**
+
 1. Use `@PreviewThemes` annotation (includes both light and dark):
    ```kotlin
    @PreviewThemes
@@ -1110,6 +1189,7 @@ Preview doesn't reflect light/dark theme correctly
    ```
 
 **References:**
+
 - core/ui/src/main/kotlin/dev/atick/core/ui/utils/PreviewThemes.kt
 - core/ui/src/main/kotlin/dev/atick/core/ui/theme/Theme.kt
 
@@ -1121,6 +1201,7 @@ Preview doesn't reflect light/dark theme correctly
 Preview shows placeholder data, not actual ViewModel state
 
 **Solution:**
+
 1. This is expected behavior - previews should use fake data
 2. For preview data, create sample data objects:
    ```kotlin
@@ -1165,6 +1246,7 @@ Preview shows placeholder data, not actual ViewModel state
 5. This is why Screen composables are separated from Route composables
 
 **References:**
+
 - [State Management Guide](state-management.md#composable-structure)
 - feature/home/src/main/kotlin/dev/atick/feature/home/ui/home/HomeScreen.kt
 
@@ -1178,6 +1260,7 @@ Preview shows placeholder data, not actual ViewModel state
 Scrolling through lists is janky or slow
 
 **Solution:**
+
 1. Always provide `key` parameter:
    ```kotlin
    LazyColumn {
@@ -1224,6 +1307,7 @@ Scrolling through lists is janky or slow
 5. Check for image loading issues (see Memory Issues → Image Loading)
 
 **References:**
+
 - feature/home/src/main/kotlin/dev/atick/feature/home/ui/home/HomeScreen.kt:104
 - [Performance Guide](performance.md#lazylist-optimization)
 - See also: **Memory Issues → Large List Performance Issues** (line 1250)
@@ -1236,6 +1320,7 @@ Scrolling through lists is janky or slow
 UI animation stutters or drops frames
 
 **Solution:**
+
 1. Use `animateFloatAsState` for smooth animations:
    ```kotlin
    val scale by animateFloatAsState(
@@ -1257,12 +1342,12 @@ UI animation stutters or drops frames
    }
    ```
 3. Profile with Android Studio Profiler:
-   - View → Tool Windows → Profiler
-   - Check CPU usage during jank
-   - Identify slow composables
+    - View → Tool Windows → Profiler
+    - Check CPU usage during jank
+    - Identify slow composables
 4. Use Layout Inspector to check composition counts:
-   - Enable "Show Recomposition Counts"
-   - Identify composables recomposing too frequently
+    - Enable "Show Recomposition Counts"
+    - Identify composables recomposing too frequently
 5. Consider using `Modifier.graphicsLayer` for transform animations:
    ```kotlin
    Modifier.graphicsLayer {
@@ -1272,6 +1357,7 @@ UI animation stutters or drops frames
    ```
 
 **References:**
+
 - [Performance Guide](performance.md#recomposition-optimization)
 
 ---
@@ -1284,6 +1370,7 @@ UI animation stutters or drops frames
 State stored with `remember` resets unexpectedly
 
 **Solution:**
+
 1. For configuration changes (rotation), use `rememberSaveable`:
    ```kotlin
    // Wrong - lost on rotation
@@ -1313,6 +1400,7 @@ State stored with `remember` resets unexpectedly
    ```
 
 **References:**
+
 - [State Management Guide](state-management.md)
 
 ---
@@ -1323,6 +1411,7 @@ State stored with `remember` resets unexpectedly
 `LaunchedEffect` executes more than expected
 
 **Solution:**
+
 1. Check key parameters - effect relaunches when keys change:
    ```kotlin
    // Runs on every recomposition (Unit key never changes after first run)
@@ -1363,6 +1452,7 @@ State stored with `remember` resets unexpectedly
    ```
 
 **References:**
+
 - [State Management Guide](state-management.md)
 
 ---
@@ -1374,12 +1464,14 @@ State stored with `remember` resets unexpectedly
 #### Copyright Header Missing
 
 **Error:**
+
 ```
 Step 'licenseHeaderFile' found problem in 'src/main/kotlin/MyFile.kt':
   License header mismatch
 ```
 
 **Solution:**
+
 1. Run Spotless Apply to auto-fix:
    ```bash
    ./gradlew spotlessApply --init-script gradle/init.gradle.kts --no-configuration-cache
@@ -1396,6 +1488,7 @@ Step 'licenseHeaderFile' found problem in 'src/main/kotlin/MyFile.kt':
 3. For custom copyright, modify files in `spotless/` directory
 
 **References:**
+
 - gradle/init.gradle.kts:47
 - spotless/copyright.kt
 - [Spotless Setup Guide](spotless.md)
@@ -1405,12 +1498,14 @@ Step 'licenseHeaderFile' found problem in 'src/main/kotlin/MyFile.kt':
 #### Ktlint Violations
 
 **Error:**
+
 ```
 Step 'ktlint' found problem in 'MyFile.kt':
   Exceeded max line length (120)
 ```
 
 **Solution:**
+
 1. Run Spotless Apply to auto-fix most issues:
    ```bash
    ./gradlew spotlessApply --init-script gradle/init.gradle.kts --no-configuration-cache
@@ -1431,6 +1526,7 @@ Step 'ktlint' found problem in 'MyFile.kt':
 3. For Compose-specific violations, follow custom rules from `io.nlopez.compose.rules:ktlint`
 
 **References:**
+
 - gradle/init.gradle.kts:38-46
 - .editorconfig
 - [Spotless Setup Guide](spotless.md)
@@ -1440,11 +1536,13 @@ Step 'ktlint' found problem in 'MyFile.kt':
 #### CI Build Fails on Spotless Check
 
 **Error (GitHub Actions):**
+
 ```
 Task :spotlessCheck FAILED
 ```
 
 **Solution:**
+
 1. Run Spotless Check locally before pushing:
    ```bash
    ./gradlew spotlessCheck --init-script gradle/init.gradle.kts --no-configuration-cache
@@ -1457,6 +1555,7 @@ Task :spotlessCheck FAILED
 4. **Best Practice:** Set up pre-commit hook to run `spotlessApply`
 
 **References:**
+
 - .github/workflows/ci.yml:35-36
 - [Spotless Setup Guide](spotless.md#ci-cd-integration)
 
@@ -1472,10 +1571,11 @@ Task :spotlessCheck FAILED
 Compose previews don't render or show errors
 
 **Solution:**
+
 1. Ensure using Android Studio Hedgehog or newer
 2. Enable Compose Preview:
-   - **Settings → Experimental → Compose**
-   - Enable "Live Edit of Literals"
+    - **Settings → Experimental → Compose**
+    - Enable "Live Edit of Literals"
 3. Verify preview annotations are correct:
    ```kotlin
    @PreviewDevices
@@ -1491,6 +1591,7 @@ Compose previews don't render or show errors
 5. If still failing, invalidate caches and restart
 
 **References:**
+
 - core/ui/src/main/kotlin/dev/atick/core/ui/utils/PreviewDevices.kt
 - core/ui/src/main/kotlin/dev/atick/core/ui/utils/PreviewThemes.kt
 
@@ -1502,6 +1603,7 @@ Compose previews don't render or show errors
 Gradle builds take too long
 
 **Solution:**
+
 1. Verify Gradle daemon settings in `gradle.properties`:
    ```properties
    org.gradle.jvmargs=-Xmx8g -XX:+HeapDumpOnOutOfMemoryError
@@ -1515,6 +1617,7 @@ Gradle builds take too long
 5. Consider increasing heap size in `gradle.properties` if you have more RAM
 
 **References:**
+
 - gradle.properties:10-28
 
 ---
@@ -1525,6 +1628,7 @@ Gradle builds take too long
 Annotation processing slow during builds
 
 **Solution:**
+
 1. Use KSP instead of Kapt (template already uses KSP for Hilt and Room)
 2. Verify KSP is being used:
    ```kotlin
@@ -1536,6 +1640,7 @@ Annotation processing slow during builds
 4. Close other IDEs/applications consuming memory
 
 **References:**
+
 - build-logic/convention/src/main/kotlin/DaggerHiltConventionPlugin.kt:35
 
 ---
@@ -1548,6 +1653,7 @@ Annotation processing slow during builds
 Installation fails or emulator not detected
 
 **Solution:**
+
 1. Verify emulator is running:
    ```bash
    adb devices
@@ -1565,6 +1671,7 @@ Installation fails or emulator not detected
 5. Check min SDK version matches emulator API level (minSdk: 24)
 
 **References:**
+
 - gradle/libs.versions.toml:68
 
 ---
@@ -1576,11 +1683,13 @@ Installation fails or emulator not detected
 #### Keystore Not Found
 
 **Error:**
+
 ```
 keystore.properties file not found. Using debug key.
 ```
 
 **Solution:**
+
 1. This is expected for debug builds and template usage
 2. For release builds, create `keystore.properties` in project root:
    ```properties
@@ -1590,15 +1699,16 @@ keystore.properties file not found. Using debug key.
    storeFile=your-keystore-file.jks
    ```
 3. Generate keystore if needed:
-   - Android Studio: **Build → Generate Signed Bundle/APK**
-   - Or use command line:
-     ```bash
-     keytool -genkey -v -keystore release-keystore.jks \
-       -keyalg RSA -keysize 2048 -validity 10000 -alias my-alias
-     ```
+    - Android Studio: **Build → Generate Signed Bundle/APK**
+    - Or use command line:
+      ```bash
+      keytool -genkey -v -keystore release-keystore.jks \
+        -keyalg RSA -keysize 2048 -validity 10000 -alias my-alias
+      ```
 4. Place keystore in `app/` directory
 
 **References:**
+
 - app/build.gradle.kts:25, 84-92
 - [Getting Started Guide](getting-started.md#release-build-setup)
 
@@ -1607,11 +1717,13 @@ keystore.properties file not found. Using debug key.
 #### ProGuard/R8 Errors
 
 **Error:**
+
 ```
 Missing class com.google.firebase.FirebaseApp
 ```
 
 **Solution:**
+
 1. Add ProGuard rules in `app/proguard-rules.pro`:
    ```proguard
    -keep class com.google.firebase.** { *; }
@@ -1626,6 +1738,7 @@ Missing class com.google.firebase.FirebaseApp
 4. Check R8 full mode documentation if using
 
 **References:**
+
 - app/proguard-rules.pro
 - app/build.gradle.kts:94-97
 
@@ -1639,6 +1752,7 @@ Missing class com.google.firebase.FirebaseApp
 Repository errors crash app instead of showing in UI
 
 **Solution:**
+
 1. Use `suspendRunCatching` in repositories:
    ```kotlin
    override suspend fun getData(): Result<Data> = suspendRunCatching {
@@ -1656,6 +1770,7 @@ Repository errors crash app instead of showing in UI
 3. `StatefulComposable` will automatically show errors via snackbar
 
 **References:**
+
 - core/android/src/main/kotlin/dev/atick/core/android/utils/CoroutineUtils.kt
 - [State Management Guide](state-management.md#error-handling)
 - [Data Flow Guide](data-flow.md#error-handling)
@@ -1665,11 +1780,13 @@ Repository errors crash app instead of showing in UI
 ### Room Database Migration Issues
 
 **Error (Logcat):**
+
 ```
 java.lang.IllegalStateException: Room cannot verify the data integrity
 ```
 
 **Solution:**
+
 1. For development, use destructive migration:
    ```kotlin
    Room.databaseBuilder(context, AppDatabase::class.java, "database-name")
@@ -1681,6 +1798,7 @@ java.lang.IllegalStateException: Room cannot verify the data integrity
 4. Clear app data and reinstall for testing
 
 **References:**
+
 - core/room/src/main/kotlin/dev/atick/core/room/di/DatabaseModule.kt
 
 ---
@@ -1693,6 +1811,7 @@ java.lang.IllegalStateException: Room cannot verify the data integrity
 Sync operations don't execute
 
 **Solution:**
+
 1. Verify WorkManager is initialized in `Application.onCreate()`:
    ```kotlin
    @HiltAndroidApp
@@ -1719,6 +1838,7 @@ Sync operations don't execute
    ```
 
 **References:**
+
 - sync/src/main/kotlin/dev/atick/sync/utils/Sync.kt
 - sync/src/main/kotlin/dev/atick/sync/workers/SyncWorker.kt
 - app/src/main/kotlin/dev/atick/compose/JetpackApplication.kt
@@ -1733,6 +1853,7 @@ Sync operations don't execute
 LeakCanary reports memory leaks
 
 **Solution:**
+
 1. Check ViewModel lifecycle - ensure not storing Activity/Context
 2. Verify Flow collection uses lifecycle-aware collectors:
    ```kotlin
@@ -1744,6 +1865,7 @@ LeakCanary reports memory leaks
 6. Disable LeakCanary in release builds (already configured)
 
 **References:**
+
 - app/build.gradle.kts:138
 - core/ui/src/main/kotlin/dev/atick/core/ui/extensions/LifecycleExtensions.kt
 
@@ -1752,11 +1874,13 @@ LeakCanary reports memory leaks
 ### App Running Out of Memory
 
 **Error (Logcat):**
+
 ```
 java.lang.OutOfMemoryError: Failed to allocate
 ```
 
 **Solution:**
+
 1. Check for image loading issues - ensure using Coil properly:
    ```kotlin
    // Use DynamicAsyncImage component (handles memory efficiently)
@@ -1788,6 +1912,7 @@ java.lang.OutOfMemoryError: Failed to allocate
    ```
 
 **References:**
+
 - core/network/src/main/kotlin/dev/atick/core/network/di/CoilModule.kt
 - core/ui/src/main/kotlin/dev/atick/core/ui/image/DynamicAsyncImage.kt
 - [Performance Guide](performance.md#image-loading)
@@ -1800,6 +1925,7 @@ java.lang.OutOfMemoryError: Failed to allocate
 App lags or crashes when scrolling through large lists
 
 **Solution:**
+
 1. Always use `LazyColumn`/`LazyRow` for lists (not Column/Row):
    ```kotlin
    // Wrong - loads all items at once
@@ -1834,6 +1960,7 @@ App lags or crashes when scrolling through large lists
 5. Consider using `StaggeredGrid` for varying item sizes
 
 **References:**
+
 - feature/home/src/main/kotlin/dev/atick/feature/home/ui/home/HomeScreen.kt:104
 - [Performance Guide](performance.md#lazylist-optimization)
 
@@ -1845,6 +1972,7 @@ App lags or crashes when scrolling through large lists
 UI stutters or battery drains due to excessive recomposition
 
 **Solution:**
+
 1. Use `derivedStateOf` for computed state:
    ```kotlin
    val filteredItems by remember {
@@ -1870,6 +1998,7 @@ UI stutters or battery drains due to excessive recomposition
 5. Avoid reading state in composition that doesn't affect UI
 
 **References:**
+
 - [Performance Guide](performance.md#recomposition-optimization)
 - [State Management Guide](state-management.md)
 
@@ -1883,15 +2012,17 @@ UI stutters or battery drains due to excessive recomposition
 Test infrastructure not yet implemented
 
 **Solution:**
+
 1. Testing infrastructure is marked as **Upcoming 🚧** in this template
 2. For now, manual testing is required
 3. Future updates will include:
-   - Unit test setup for ViewModels
-   - Repository tests
-   - UI tests with Compose Test
+    - Unit test setup for ViewModels
+    - Repository tests
+    - UI tests with Compose Test
 4. You can add your own testing framework following standard Android practices
 
 **References:**
+
 - docs/guide.md:343-351
 
 ---
@@ -1901,39 +2032,40 @@ Test infrastructure not yet implemented
 If you encounter issues not covered in this guide:
 
 1. **Check Related Guides:**
-   - [Getting Started](getting-started.md) - Setup and initial configuration
-   - [Architecture Overview](architecture.md) - Understanding the app structure
-   - [State Management](state-management.md) - State-related issues
-   - [Navigation Deep Dive](navigation.md) - Navigation problems
-   - [Dependency Injection](dependency-injection.md) - DI issues
-   - [Firebase Setup](firebase.md) - Firebase-specific problems
-   - [Spotless Setup](spotless.md) - Code formatting issues
+    - [Getting Started](getting-started.md) - Setup and initial configuration
+    - [Architecture Overview](architecture.md) - Understanding the app structure
+    - [State Management](state-management.md) - State-related issues
+    - [Navigation Deep Dive](navigation.md) - Navigation problems
+    - [Dependency Injection](dependency-injection.md) - DI issues
+    - [Firebase Setup](firebase.md) - Firebase-specific problems
+    - [Spotless Setup](spotless.md) - Code formatting issues
 
 2. **Search GitHub Issues:**
-   - Check existing issues: [GitHub Issues](https://github.com/atick-faisal/Jetpack-Android-Starter/issues)
-   - Search closed issues for solutions
+    - Check existing
+      issues: [GitHub Issues](https://github.com/atick-faisal/Jetpack-Android-Starter/issues)
+    - Search closed issues for solutions
 
 3. **Enable Debug Logging:**
-   - Timber is included in this template
-   - Add logging to identify issues:
-     ```kotlin
-     Timber.d("Debug message: $variable")
-     Timber.e(throwable, "Error occurred")
-     ```
+    - Timber is included in this template
+    - Add logging to identify issues:
+      ```kotlin
+      Timber.d("Debug message: $variable")
+      Timber.e(throwable, "Error occurred")
+      ```
 
 4. **Clean Build:**
-   - Often resolves mysterious build issues:
-     ```bash
-     ./gradlew clean
-     ./gradlew build --refresh-dependencies
-     ```
+    - Often resolves mysterious build issues:
+      ```bash
+      ./gradlew clean
+      ./gradlew build --refresh-dependencies
+      ```
 
 5. **Invalidate Caches:**
-   - Android Studio: **File → Invalidate Caches / Restart**
+    - Android Studio: **File → Invalidate Caches / Restart**
 
 6. **Report a Bug:**
-   - If you've found a genuine issue with the template, please report it on GitHub with:
-     - Android Studio version
-     - Gradle version
-     - Error logs
-     - Steps to reproduce
+    - If you've found a genuine issue with the template, please report it on GitHub with:
+        - Android Studio version
+        - Gradle version
+        - Error logs
+        - Steps to reproduce
