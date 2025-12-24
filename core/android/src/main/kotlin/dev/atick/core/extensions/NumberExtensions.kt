@@ -20,78 +20,61 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
+import java.util.Currency
 import java.util.Locale
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 
 /**
- * Formats a number (Float or Double) to a string with specified decimal places and thousands separators.
+ * Formats a number to a string with specified decimal places and thousands separators.
  *
- * This function handles edge cases like NaN and Infinity, provides locale-aware formatting,
- * and automatically removes unnecessary trailing zeros.
- *
- * ## Features
- * - Configurable decimal places (default: 2)
- * - Automatic thousands separators (e.g., 1,234.56)
- * - Removes trailing zeros (123.00 → 123)
- * - Handles special values (NaN → "NaN", ±Infinity → "∞"/"-∞")
- * - Uses dot (.) as decimal separator for consistency
- *
- * ## Usage Examples
- *
- * ```kotlin
- * // In UI - display prices
- * Text("Price: $${price.format(2)}")  // $123.45
- *
- * // Display percentages
- * Text("Success rate: ${(successRate * 100).format(1)}%")  // 95.5%
- *
- * // Display measurements with precision
- * Text("Temperature: ${temperature.format(1)}°C")  // 23.5°C
- *
- * // Display large numbers with thousands separator
- * Text("Downloads: ${downloads.format(0)}")  // 1,234,567
- *
- * // Handle sensor data
- * val reading = sensor.getValue()  // might be NaN if sensor fails
- * Text("Reading: ${reading.format()}")  // Shows "NaN" if invalid
- * ```
+ * Handles special values (NaN, Infinity) and provides locale-aware formatting with
+ * configurable precision. When used for currency, enforces 2 decimal places and appends
+ * the currency symbol.
  *
  * ## Examples
- * - `123.4567.format()` → "123.46" (default 2 decimals)
- * - `123.4f.format(1)` → "123.4"
- * - `123.0.format()` → "123" (trailing zeros removed)
- * - `(-123.45).format()` → "-123.45"
- * - `1234567.89.format()` → "1,234,567.89" (thousands separator)
- * - `Double.NaN.format()` → "NaN"
- * - `Float.POSITIVE_INFINITY.format()` → "∞"
- * - `Float.NEGATIVE_INFINITY.format()` → "-∞"
+ * ```kotlin
+ * 123.4567.format()              // "123.46" (default 2 decimals)
+ * 123.4f.format(1)               // "123.4"
+ * 123.0.format()                 // "123" (trailing zeros removed)
+ * 1234567.89.format()            // "1,234,567.89"
+ * 1234.09.format(isCurrency = true)  // "1,234.09$"
+ * Double.NaN.format()            // "NaN"
+ * Float.POSITIVE_INFINITY.format()   // "∞"
+ * ```
  *
- * @receiver T The number to format (must be a Number and Comparable).
- * @param nDecimal Number of decimal places to show (default: 2).
- *                 Use 0 for integers, higher values for more precision.
- *
- * @return Formatted string representation with proper decimal places and thousands separators.
- *
- * @see java.text.DecimalFormat
+ * @param nDecimal Number of decimal places (default: 2). Ignored when isCurrency is true.
+ * @param isCurrency If true, formats as currency with 2 decimals and appends currency symbol.
+ * @return Formatted string with thousands separators and appropriate decimal precision.
  */
-fun <T> T.format(nDecimal: Int = 2): String where T : Number, T : Comparable<T> {
+fun <T> T.format(
+    nDecimal: Int = 2,
+    isCurrency: Boolean = false,
+): String where T : Number, T : Comparable<T> {
     return when {
-        // Handle special cases for both Float and Double
         this.toDouble().isNaN() -> "NaN"
         this.toDouble().isInfinite() -> if (this.toDouble() > 0) "∞" else "-∞"
         else -> {
-            val symbols = DecimalFormatSymbols(Locale.getDefault()).apply {
-                // Ensure consistent decimal separator
-                decimalSeparator = '.'
-            }
+            val locale = Locale.getDefault()
+            val symbols = DecimalFormatSymbols(locale)
 
-            DecimalFormat("#,##0.#").apply {
+            val pattern = if (isCurrency) "#,##0.00" else "#,##0.#"
+
+            val formatted = DecimalFormat(pattern).apply {
                 decimalFormatSymbols = symbols
-                maximumFractionDigits = nDecimal
-                minimumFractionDigits = 0 // Don't force decimal places if not needed
-                isGroupingUsed = true // Use thousands separator
+                if (!isCurrency) {
+                    maximumFractionDigits = nDecimal
+                    minimumFractionDigits = 0
+                }
+                isGroupingUsed = true
             }.format(this)
+
+            if (isCurrency) {
+                val currencySymbol = Currency.getInstance(locale).symbol
+                "$formatted$currencySymbol"
+            } else {
+                formatted
+            }
         }
     }
 }
