@@ -113,7 +113,7 @@
     <h1 class="cover"><span><span>:firebase:auth</span></span></h1>
     <div class="platform-hinted UnderCoverText with-platform-tabs" data-platform-hinted="data-platform-hinted">
       <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":firebase:auth/debug" data-filterable-set=":firebase:auth/debug" data-active="" data-toggle=":firebase:auth/debug">debug</button><button class="platform-bookmark" data-filterable-current=":firebase:auth/main" data-filterable-set=":firebase:auth/main" data-toggle=":firebase:auth/main">androidJvm</button><button class="platform-bookmark" data-filterable-current=":firebase:auth/release" data-filterable-set=":firebase:auth/release" data-toggle=":firebase:auth/release">release</button></div>
-<div class="content sourceset-dependent-content" data-active="" data-togglable=":firebase:auth/debug"></div><div class="content sourceset-dependent-content" data-togglable=":firebase:auth/main"><p class="paragraph">This module handles user authentication using Firebase Authentication. It supports multiple sign-in methods and integrates with Google's Identity Services.</p><h2 class="">Features</h2><ul><li><p class="paragraph">Email/Password Authentication</p></li><li><p class="paragraph">Google Sign-In</p></li><li><p class="paragraph">Credential Management</p></li><li><p class="paragraph">Token Handling</p></li><li><p class="paragraph">Session Management</p></li><li><p class="paragraph">Identity Services Integration</p></li></ul><h2 class="">Dependencies Graph</h2><div class="sample-container"><div id="mermaid-container-2uc7og14mp6kb"></div></div><script>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":firebase:auth/debug"></div><div class="content sourceset-dependent-content" data-togglable=":firebase:auth/main"><p class="paragraph">This module handles user authentication using Firebase Authentication. It supports multiple sign-in methods and integrates with Google's Identity Services.</p><h2 class="">Features</h2><ul><li><p class="paragraph">Email/Password Authentication</p></li><li><p class="paragraph">Google Sign-In</p></li><li><p class="paragraph">Credential Management</p></li><li><p class="paragraph">Token Handling</p></li><li><p class="paragraph">Session Management</p></li><li><p class="paragraph">Identity Services Integration</p></li></ul><h2 class="">Dependencies Graph</h2><div class="sample-container"><div id="mermaid-container-17hdbvunmdfnp"></div></div><script>
 window.addEventListener('load', function() {
   var graphDef =  `graph TD
     A[firebase:auth] --> B[core:android]
@@ -128,9 +128,9 @@ window.addEventListener('load', function() {
         E
         F
     end`;
-  var container = document.getElementById('mermaid-container-2uc7og14mp6kb');
-  container.innerHTML = '<div id="mermaid-target-2uc7og14mp6kb"></div>';
-  var updateGraph2uc7og14mp6kb = function() {
+  var container = document.getElementById('mermaid-container-17hdbvunmdfnp');
+  container.innerHTML = '<div id="mermaid-target-17hdbvunmdfnp"></div>';
+  var updateGraph17hdbvunmdfnp = function() {
     // setTimeout required or else the 1st render could be done before mermaid.initialize() has applied the theme.
     // Also required because we can't listen to localStorage events reliably, and it's changed on the same click event...
     setTimeout(() => {
@@ -141,19 +141,19 @@ window.addEventListener('load', function() {
         theme = 'dark';
       }
       mermaid.initialize({'theme': theme});
-      mermaid.render('mermaid-target-2uc7og14mp6kb', graphDef).then(({ svg, bindFunctions }) => {
+      mermaid.render('mermaid-target-17hdbvunmdfnp', graphDef).then(({ svg, bindFunctions }) => {
           container.innerHTML = svg;
           // Trick to make the graph takes only the required height.
-          document.getElementById('mermaid-target-2uc7og14mp6kb').removeAttribute('height')
+          document.getElementById('mermaid-target-17hdbvunmdfnp').removeAttribute('height')
           bindFunctions?.(element);
       });
     }, 0);
   }
-  updateGraph2uc7og14mp6kb();
+  updateGraph17hdbvunmdfnp();
   
   var themeToggleButton = document.getElementById('theme-toggle-button');
   themeToggleButton.addEventListener('click', () => {
-    updateGraph2uc7og14mp6kb();
+    updateGraph17hdbvunmdfnp();
   });
 });</script><h2 class="">Usage</h2><div class="sample-container"><pre><code class="block lang-kotlin" theme="idea">dependencies {<br>    implementation(project(":firebase:auth"))<br>}</code></pre><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><h3 class="">Authentication Operations</h3><div class="sample-container"><pre><code class="block lang-kotlin" theme="idea">class AuthDataSource @Inject constructor(<br>    private val firebaseAuth: FirebaseAuth,<br>    private val credentialManager: CredentialManager<br>) {<br>    suspend fun signInWithGoogle(activity: Activity): AuthUser {<br>        // Google Sign-In implementation<br>    }<br><br>    suspend fun signInWithEmailPassword(<br>        email: String,<br>        password: String<br>    ): AuthUser {<br>        // Email/Password Sign-In implementation<br>    }<br>}</code></pre><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><h3 class="">Credential Management</h3><p class="paragraph">The module uses Android's Credential Manager API for secure credential storage and retrieval.</p><h2 class="">Setup</h2><blockquote class="quotation"><p class="paragraph">!NOTE For Firebase Authentication setup instructions, including enabling Google Sign-In and Email/Password authentication in the Firebase Console, see the ../../docs/firebase.md.</p></blockquote><h2 class="">Related Documentation</h2><ul><li><p class="paragraph"><strong>../../docs/firebase.md</strong> - Complete Firebase Console and local project setup</p></li><li><p class="paragraph"><strong>../../docs/troubleshooting.md</strong> - Firebase authentication issues and solutions</p></li></ul></div><div class="content sourceset-dependent-content" data-togglable=":firebase:auth/release"></div>    </div>
   </div>

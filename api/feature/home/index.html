@@ -113,7 +113,7 @@
     <h1 class="cover"><span><span>:feature:home</span></span></h1>
     <div class="platform-hinted UnderCoverText with-platform-tabs" data-platform-hinted="data-platform-hinted">
       <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":feature:home/debug" data-filterable-set=":feature:home/debug" data-active="" data-toggle=":feature:home/debug">debug</button><button class="platform-bookmark" data-filterable-current=":feature:home/main" data-filterable-set=":feature:home/main" data-toggle=":feature:home/main">androidJvm</button><button class="platform-bookmark" data-filterable-current=":feature:home/release" data-filterable-set=":feature:home/release" data-toggle=":feature:home/release">release</button></div>
-<div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:home/debug"></div><div class="content sourceset-dependent-content" data-togglable=":feature:home/main"><p class="paragraph">Main feature module implementing the home screen with item list and CRUD operations.</p><h2 class="">Features</h2><ul><li><p class="paragraph">Item List Display</p></li><li><p class="paragraph">Create/Edit Items</p></li><li><p class="paragraph">Delete with Undo</p></li><li><p class="paragraph">Offline Support</p></li><li><p class="paragraph">Pull to Refresh</p></li><li><p class="paragraph">Background Sync</p></li></ul><h2 class="">Dependencies Graph</h2><div class="sample-container"><div id="mermaid-container-2c5fo9kpv9es2"></div></div><script>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":feature:home/debug"></div><div class="content sourceset-dependent-content" data-togglable=":feature:home/main"><p class="paragraph">Main feature module implementing the home screen with item list and CRUD operations.</p><h2 class="">Features</h2><ul><li><p class="paragraph">Item List Display</p></li><li><p class="paragraph">Create/Edit Items</p></li><li><p class="paragraph">Delete with Undo</p></li><li><p class="paragraph">Offline Support</p></li><li><p class="paragraph">Pull to Refresh</p></li><li><p class="paragraph">Background Sync</p></li></ul><h2 class="">Dependencies Graph</h2><div class="sample-container"><div id="mermaid-container-3botlq0sh2jhh"></div></div><script>
 window.addEventListener('load', function() {
   var graphDef =  `graph TD
     A[feature:home] --> B[core:ui]
@@ -124,9 +124,9 @@ window.addEventListener('load', function() {
         C
         D
     end`;
-  var container = document.getElementById('mermaid-container-2c5fo9kpv9es2');
-  container.innerHTML = '<div id="mermaid-target-2c5fo9kpv9es2"></div>';
-  var updateGraph2c5fo9kpv9es2 = function() {
+  var container = document.getElementById('mermaid-container-3botlq0sh2jhh');
+  container.innerHTML = '<div id="mermaid-target-3botlq0sh2jhh"></div>';
+  var updateGraph3botlq0sh2jhh = function() {
     // setTimeout required or else the 1st render could be done before mermaid.initialize() has applied the theme.
     // Also required because we can't listen to localStorage events reliably, and it's changed on the same click event...
     setTimeout(() => {
@@ -137,19 +137,19 @@ window.addEventListener('load', function() {
         theme = 'dark';
       }
       mermaid.initialize({'theme': theme});
-      mermaid.render('mermaid-target-2c5fo9kpv9es2', graphDef).then(({ svg, bindFunctions }) => {
+      mermaid.render('mermaid-target-3botlq0sh2jhh', graphDef).then(({ svg, bindFunctions }) => {
           container.innerHTML = svg;
           // Trick to make the graph takes only the required height.
-          document.getElementById('mermaid-target-2c5fo9kpv9es2').removeAttribute('height')
+          document.getElementById('mermaid-target-3botlq0sh2jhh').removeAttribute('height')
           bindFunctions?.(element);
       });
     }, 0);
   }
-  updateGraph2c5fo9kpv9es2();
+  updateGraph3botlq0sh2jhh();
   
   var themeToggleButton = document.getElementById('theme-toggle-button');
   themeToggleButton.addEventListener('click', () => {
-    updateGraph2c5fo9kpv9es2();
+    updateGraph3botlq0sh2jhh();
   });
 });</script><h2 class="">Key Components</h2><ol><li><p class="paragraph"><strong>Home Screen</strong>: Shows the list of items</p><div class="sample-container"><pre><code class="block lang-kotlin" theme="idea">@Composable<br>fun HomeRoute(<br>    onItemClick: (String) -&gt; Unit,<br>    onShowSnackbar: suspend (String, SnackbarAction, Throwable?) -&gt; Boolean<br>)</code></pre><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></li><li><p class="paragraph"><strong>Item Screen</strong>: Create/Edit item screen</p><div class="sample-container"><pre><code class="block lang-kotlin" theme="idea">@Composable<br>fun ItemRoute(<br>   onBackClick: () -&gt; Unit,<br>   onShowSnackbar: suspend (String, SnackbarAction, Throwable?) -&gt; Boolean<br>)</code></pre><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></li></ol><h2 class="">Related Documentation</h2><ul><li><p class="paragraph"><strong>../../docs/guide.md</strong> - Step-by-step template for creating new features</p></li><li><p class="paragraph"><strong>../../docs/state-management.md</strong> - UiState pattern and ViewModel best practices</p></li><li><p class="paragraph"><strong>../../docs/navigation.md</strong> - Type-safe navigation implementation</p></li><li><p class="paragraph"><strong>../../data/README.md</strong> - Repository patterns used in this feature</p></li></ul></div><div class="content sourceset-dependent-content" data-togglable=":feature:home/release"></div>    </div>
   </div>
