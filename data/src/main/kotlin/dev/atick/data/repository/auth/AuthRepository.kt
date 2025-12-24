@@ -20,6 +20,12 @@ import android.app.Activity
 
 /**
  * Interface defining authentication-related operations.
+ *
+ * This repository provides authentication methods for Firebase Auth, including email/password
+ * and Google Sign-In. It wraps the Firebase Auth SDK to provide a consistent repository pattern
+ * with Result-based error handling.
+ *
+ * @see AuthRepositoryImpl Implementation class with Firebase Auth integration
  */
 interface AuthRepository {
     /**

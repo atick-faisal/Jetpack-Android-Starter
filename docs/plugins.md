@@ -1,5 +1,11 @@
 # Convention Plugins
 
+## Summary
+
+This guide explains the project's convention plugins system that centralizes build configuration in the `build-logic` directory. Learn about the five available plugins (Application, Library, UI Library, Dagger Hilt, Firebase), how to use them in your modules, and how to create custom convention plugins to avoid build configuration duplication.
+
+---
+
 This project uses Gradle Convention Plugins to centralize common build logic and simplify
 module-level build files. These plugins are located in the `build-logic` directory.
 
@@ -189,7 +195,7 @@ To create your own convention plugin:
 > consider creating a new convention plugin instead.
 
 ## Further Reading
-- [Dependency Management](dependency.md): Learn about version catalogs and automatic dependency updates
-- [Architecture Overview](architecture.md): Understand the app's architecture
-- [Design Philosophy](philosophy.md): Learn about design principles
-- [Adding New Features](guide.md): Learn how to add new features to the project
+
+- **[Dependency Management](dependency.md)** - Version catalog management used by convention plugins
+- **[Architecture Overview](architecture.md)** - Module structure and how plugins support it
+- **[Adding New Features](guide.md)** - Step-by-step guide that uses convention plugins

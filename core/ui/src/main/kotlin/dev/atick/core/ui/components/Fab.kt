@@ -26,10 +26,42 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 
 /**
- * Composable function that represents the floating action button in the Jetpack application.
+ * Jetpack extended floating action button.
+ *
+ * An extended FAB with both icon and text label. Provides more context than a standard FAB
+ * while remaining prominent on screen. The icon and text share the same string resource for
+ * content description and label.
+ *
+ * **Features:**
+ * - Combined icon and text for clarity
+ * - Material 3 theming and colors
+ * - Standard FAB elevation and behavior
+ * - Uses the same resource for icon description and button text
+ *
+ * **Usage Example:**
+ * ```kotlin
+ * Scaffold(
+ *     floatingActionButton = {
+ *         JetpackExtendedFab(
+ *             icon = Icons.Default.Add,
+ *             text = R.string.create_item,
+ *             onClick = { navController.navigate(CreateItem) }
+ *         )
+ *     }
+ * ) { padding ->
+ *     ItemList(Modifier.padding(padding))
+ * }
+ * ```
+ *
+ * **When to use:**
+ * - Primary actions that need text label for clarity (e.g., "Create", "Compose")
+ * - When users need extra context beyond just an icon
+ * - First-time user experiences where action should be obvious
+ *
+ * **Note:** For icon-only FABs, use Material 3's `FloatingActionButton` directly.
  *
  * @param icon The icon to be displayed on the floating action button.
- * @param text The text to be displayed on the floating action button.
+ * @param text The string resource for both the text label and icon content description.
  * @param onClick Callback when the floating action button is clicked.
  * @param modifier Modifier to be applied to the floating action button.
  */

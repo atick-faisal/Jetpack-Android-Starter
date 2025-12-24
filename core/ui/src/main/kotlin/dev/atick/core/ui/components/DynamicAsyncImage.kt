@@ -41,7 +41,30 @@ import dev.atick.core.ui.R
 import dev.atick.core.ui.theme.LocalTintTheme
 
 /**
- * A wrapper around [AsyncImage] which determines the colorFilter based on the theme
+ * A wrapper around [AsyncImage] which determines the colorFilter based on the theme.
+ *
+ * This component automatically handles:
+ * - **Loading state**: Displays [JetpackLoadingWheel] while the image is loading
+ * - **Error handling**: Falls back to placeholder image on load failure
+ * - **Theme integration**: Applies tint color from [LocalTintTheme] when appropriate
+ * - **Preview mode**: Shows placeholder in Android Studio preview
+ *
+ * Usage example:
+ * ```kotlin
+ * DynamicAsyncImage(
+ *     imageUrl = "https://example.com/avatar.jpg",
+ *     contentDescription = "User avatar",
+ *     placeholder = painterResource(R.drawable.ic_placeholder),
+ *     modifier = Modifier
+ *         .size(80.dp)
+ *         .clip(CircleShape),
+ * )
+ * ```
+ *
+ * @param imageUrl The URL of the image to load
+ * @param contentDescription Text used by accessibility services to describe the image
+ * @param modifier Modifier to be applied to the image
+ * @param placeholder The painter to display while loading or on error. Defaults to ic_placeholder.
  */
 @Composable
 fun DynamicAsyncImage(

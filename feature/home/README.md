@@ -52,3 +52,10 @@ graph TD
 	   onShowSnackbar: suspend (String, SnackbarAction, Throwable?) -> Boolean
 	)
 	```
+
+## Related Documentation
+
+- **[Adding a Feature Guide](../../docs/guide.md)** - Step-by-step template for creating new features
+- **[State Management](../../docs/state-management.md)** - UiState pattern and ViewModel best practices
+- **[Navigation Deep Dive](../../docs/navigation.md)** - Type-safe navigation implementation
+- **[Data Layer](../../data/README.md)** - Repository patterns used in this feature

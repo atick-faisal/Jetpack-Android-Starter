@@ -173,6 +173,39 @@ fun JetpackNavigationRail(
  * Jetpack navigation suite scaffold with item and content slots.
  * Wraps Material 3 [NavigationSuiteScaffold].
  *
+ * This component automatically adapts the navigation UI based on window size:
+ * - **Compact** screens: Bottom navigation bar
+ * - **Medium** screens: Navigation rail
+ * - **Expanded** screens: Navigation drawer
+ *
+ * Usage example:
+ * ```kotlin
+ * JetpackNavigationSuiteScaffold(
+ *     navigationSuiteItems = {
+ *         destinations.forEach { destination ->
+ *             val selected = destination == currentDestination
+ *             item(
+ *                 selected = selected,
+ *                 onClick = { onNavigateToDestination(destination) },
+ *                 icon = { Icon(destination.unselectedIcon, contentDescription = null) },
+ *                 selectedIcon = { Icon(destination.selectedIcon, contentDescription = null) },
+ *                 label = { Text(stringResource(destination.labelRes)) },
+ *             )
+ *         }
+ *     },
+ * ) {
+ *     // App content here
+ *     NavHost(navController = navController, startDestination = startDestination) {
+ *         // ... navigation graph
+ *     }
+ * }
+ * ```
+ *
+ * See also:
+ * - [JetpackNavigationBar] for bottom navigation only
+ * - [JetpackNavigationRail] for rail navigation only
+ * - Comprehensive examples in the Components Guide documentation
+ *
  * @param modifier Modifier to be applied to the navigation suite scaffold.
  * @param navigationSuiteItems A slot to display multiple items via [JetpackNavigationSuiteScope].
  * @param windowAdaptiveInfo The window adaptive info.

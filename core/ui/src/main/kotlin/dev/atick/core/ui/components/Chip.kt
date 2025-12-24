@@ -32,12 +32,49 @@ import androidx.compose.ui.unit.dp
 /**
  * Jetpack filter chip with included leading checked icon as well as text content slot.
  *
+ * A styled Material 3 FilterChip with custom colors and a circular shape. When selected,
+ * displays a checkmark icon. Use for filtering content or selecting multiple options from a set.
+ *
+ * **Features:**
+ * - Automatic checkmark icon when selected
+ * - Circular pill shape
+ * - Custom border and color styling
+ * - Disabled state support with reduced alpha
+ *
+ * **Usage Example:**
+ * ```kotlin
+ * var selectedCategories by remember { mutableStateOf(setOf<String>()) }
+ *
+ * LazyRow {
+ *     items(categories) { category ->
+ *         JetpackFilterChip(
+ *             selected = category in selectedCategories,
+ *             onSelectedChange = { selected ->
+ *                 selectedCategories = if (selected) {
+ *                     selectedCategories + category
+ *                 } else {
+ *                     selectedCategories - category
+ *                 }
+ *             },
+ *             label = { Text(category) }
+ *         )
+ *     }
+ * }
+ * ```
+ *
+ * **When to use:**
+ * - Filtering lists or content (e.g., "Active", "Completed", "All")
+ * - Multi-select scenarios where users can pick multiple options
+ * - Category or tag selection
+ *
  * @param selected Whether the chip is currently checked.
  * @param onSelectedChange Called when the user clicks the chip and toggles checked.
  * @param modifier Modifier to be applied to the chip.
  * @param enabled Controls the enabled state of the chip. When `false`, this chip will not be
  * clickable and will appear disabled to accessibility services.
  * @param label The text label content.
+ *
+ * @see JetpackTag For non-toggleable tags with different visual style
  */
 @Composable
 fun JetpackFilterChip(

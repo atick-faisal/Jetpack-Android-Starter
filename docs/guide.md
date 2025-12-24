@@ -1,23 +1,42 @@
 # Adding a New Feature
 
-This guide walks through the process of adding a new feature to the app, following our established
-patterns and best practices.
+This guide walks you through the complete process of adding a new feature to the app, following established patterns and best practices.
+
+---
+
+## Summary
+
+To add a new feature to this template, follow this workflow:
+
+1. **Define data models** - Create network, database, and repository models
+2. **Create data sources** - Implement network and local data sources
+3. **Create repository** - Coordinate data sources and handle errors
+4. **Create UI layer** - Build ViewModel with Screen Data and composables
+5. **Set up navigation** - Define type-safe routes and navigation extensions
+6. **Configure DI** - Wire everything together with Hilt modules
+
+This guide provides complete code examples for each step, showing the exact patterns used in this template.
+
+---
 
 ## Overview of Steps
 
-1. Define data models
-2. Create/update data sources
-3. Create repository layer
-4. Create UI layer
-5. Set up navigation
-6. Configure dependency injection
+1. [Define data models](#step-1-data-models)
+2. [Create/update data sources](#step-2-data-sources)
+3. [Create repository layer](#step-3-repository-layer)
+4. [Create UI layer](#step-4-ui-layer)
+5. [Set up navigation](#step-5-navigation)
+6. [Configure dependency injection](#step-6-dependency-injection)
+
+---
 
 ## Step 1: Data Models
 
+---
+
 ### 1.1 Data Source Models
 
-Create models in appropriate core module (for example, `core:network` or `core:room`). Feel free to
-create your own if its not present in the template:
+Create models in the appropriate core module (for example, `core:network` or `core:room`). Create new core modules if needed:
 
 ```kotlin
 // core/network/src/main/kotlin/dev/atick/core/network/model/NetworkFeature.kt
@@ -38,7 +57,11 @@ data class FeatureEntity(
 )
 ```
 
+---
+
 ## Step 2: Data Sources
+
+---
 
 ### 2.1 Network Data Source
 
@@ -92,7 +115,11 @@ class LocalDataSourceImpl @Inject constructor(
 > [!NOTE]
 > Always use `withContext(ioDispatcher)` in data sources to ensure operations run on the IO thread.
 
+---
+
 ## Step 3: Repository Layer
+
+---
 
 ### 3.1 Feature Models
 
@@ -159,9 +186,16 @@ class FeatureRepositoryImpl @Inject constructor(
 > [!TIP]
 > Use `suspendRunCatching` in repositories to handle errors consistently.
 
+> [!NOTE]
+> This is a minimal repository example for the tutorial. For detailed repository patterns including offline-first with sync metadata, network-only, local-only, error handling, and caching strategies, see the [Data Module README](../data/README.md#repository-patterns).
+
+---
+
 ## Step 4: UI Layer
 
-### 4.1 UI Models
+---
+
+### 4.1 Screen Data
 
 ```kotlin
 // feature/feature-name/src/main/kotlin/dev/atick/feature/model/
@@ -249,7 +283,13 @@ private fun FeatureScreen(
 }
 ```
 
+---
+
 ## Step 5: Navigation
+
+This section shows the minimal navigation code needed when adding a new feature. For comprehensive navigation patterns and best practices, see the [Navigation Deep Dive](navigation.md) guide.
+
+---
 
 ```kotlin
 // feature/feature-name/src/main/kotlin/dev/atick/feature/navigation/
@@ -284,7 +324,11 @@ fun NavGraphBuilder.featureNavGraph(
 }
 ```
 
+---
+
 ## Step 6: Dependency Injection
+
+---
 
 ### 6.1 Data Source Module
 
@@ -314,44 +358,63 @@ abstract class RepositoryModule {
 }
 ```
 
+---
+
 ## Best Practices Reminder
 
-1. **Data Sources**:
-	- Use `withContext(ioDispatcher)` for IO operations
-	- Handle raw data models
-	- One responsibility per data source
+**Data Sources:**
+- Use `withContext(ioDispatcher)` for IO operations
+- Handle raw data models
+- One responsibility per data source
 
-2. **Repositories**:
-	- Use `suspendRunCatching` for error handling
-	- Convert between data models
-	- Coordinate between data sources
+**Repositories:**
+- Use `suspendRunCatching` for error handling
+- Convert between data models
+- Coordinate between data sources
 
-3. **ViewModels**:
-	- Use `updateState` and `updateStateWith` utilities
-	- Handle UI logic and state management
-	- Convert to UI models
+**ViewModels:**
+- Use `updateState`, `updateStateWith`, and `updateWith` utilities
+- Handle UI logic and state management
+- Convert to Screen Data
 
-4. **UI Components**:
-	- Use `StatefulComposable` for consistent loading/error handling
-	- Keep composables pure and state-driven
-	- Separate route from screen implementation
+**UI Components:**
+- Use `StatefulComposable` for consistent loading/error handling
+- Keep composables pure and state-driven
+- Separate route from screen implementation
 
 > [!IMPORTANT]
 > Always follow the unidirectional data flow pattern: UI Events → ViewModel → Repository → Data
 > Sources → Back to UI through StateFlow.
 
-## Testing (Upcoming 🚧)
+---
+
+## Testing
+
+> [!NOTE]
+> Testing infrastructure is upcoming. The template doesn't currently include test examples, but you
+> should add tests for production apps.
 
 Remember to add tests for your new feature:
 
-1. **Data Source Tests**: Test IO operations
-2. **Repository Tests**: Test business logic
-3. **ViewModel Tests**: Test state management
-4. **UI Tests**: Test composables
-5. **Integration Tests**: Test full feature flow
+**Data Source Tests** - Test IO operations
+
+**Repository Tests** - Test business logic
+
+**ViewModel Tests** - Test state management
+
+**UI Tests** - Test composables
+
+**Integration Tests** - Test full feature flow
+
+---
 
 ## Further Reading
-- [Firebase Setup Guide](firebase.md): Add Firebase to your app
-- [Dependency Management](dependency.md): Learn about version catalogs and plugin configurations
-- [Architecture Overview](architecture.md): Understand the app's architecture
-- [Design Philosophy](philosophy.md): Learn about design principles
+
+- [Architecture Overview](architecture.md) - Understand the app's architecture
+- [Design Philosophy](philosophy.md) - Learn about design principles
+- [State Management](state-management.md) - Deep dive into UiState patterns
+- [Data Flow](data-flow.md) - Understand data flow patterns
+- [Navigation](navigation.md) - Type-safe navigation guide
+- [Dependency Injection](dependency-injection.md) - Complete DI guide
+- [Firebase Setup Guide](firebase.md) - Add Firebase to your app
+- [Dependency Management](dependency.md) - Version catalogs and configurations

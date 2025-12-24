@@ -50,10 +50,29 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 
 /**
- * Composable function that represents the loading wheel in the Jetpack application.
+ * An animated loading indicator with 12 rotating lines that fade in and out.
  *
- * @param contentDesc The content description for the loading wheel.
- * @param modifier The modifier to be applied to the loading wheel.
+ * This loading wheel uses custom animations with:
+ * - **Rotation animation**: 360-degree continuous rotation
+ * - **Color animation**: Lines transition from base color to progress color
+ * - **Entry animation**: Lines draw out with staggered timing on first appearance
+ * - **Semantic content**: Includes contentDescription for accessibility
+ *
+ * Usage example:
+ * ```kotlin
+ * Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+ *     JetpackLoadingWheel(
+ *         contentDesc = "Loading data",
+ *         modifier = Modifier.size(48.dp),
+ *     )
+ * }
+ * ```
+ *
+ * See also:
+ * - [JetpackOverlayLoadingWheel] for a loading wheel with surface elevation
+ *
+ * @param contentDesc The content description for accessibility services.
+ * @param modifier The modifier to be applied to the loading wheel. Default size is 48.dp.
  */
 @Composable
 fun JetpackLoadingWheel(
@@ -137,10 +156,29 @@ fun JetpackLoadingWheel(
 }
 
 /**
- * Composable function that represents the loading wheel in the Jetpack application with an overlay.
+ * A loading wheel with a semi-transparent surface background and elevation.
  *
- * @param contentDesc The content description for the loading wheel.
- * @param modifier The modifier to be applied to the loading wheel.
+ * This variant wraps [JetpackLoadingWheel] in a rounded surface, making it suitable for
+ * overlay scenarios like blocking UI interactions during loading.
+ *
+ * Usage example:
+ * ```kotlin
+ * Box(modifier = Modifier.fillMaxSize()) {
+ *     // Main content
+ *     Content()
+ *
+ *     // Overlay loading indicator
+ *     if (isLoading) {
+ *         JetpackOverlayLoadingWheel(
+ *             contentDesc = "Loading...",
+ *             modifier = Modifier.align(Alignment.Center),
+ *         )
+ *     }
+ * }
+ * ```
+ *
+ * @param contentDesc The content description for accessibility services.
+ * @param modifier The modifier to be applied to the surface container.
  */
 @Composable
 fun JetpackOverlayLoadingWheel(
