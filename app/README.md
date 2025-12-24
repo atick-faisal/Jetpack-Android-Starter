@@ -143,6 +143,7 @@ The activity uses Hilt to inject:
 ## Version Management
 
 ```kotlin
+// ... build.gradle.kts ...
 // ... Application Version ...
 val majorUpdateVersion = 1
 val minorUpdateVersion = 0

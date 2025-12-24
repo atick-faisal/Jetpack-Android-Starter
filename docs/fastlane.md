@@ -2,7 +2,10 @@
 
 ## Summary
 
-This guide explains how to set up Fastlane for automated Play Store deployments. Learn how to configure Play Store authentication with service account JSON, manage metadata and changelogs, deploy updates to different tracks (internal/alpha/beta/production), and troubleshoot common deployment issues.
+This guide explains how to set up Fastlane for automated Play Store deployments. Learn how to
+configure Play Store authentication with service account JSON, manage metadata and changelogs,
+deploy updates to different tracks (internal/alpha/beta/production), and troubleshoot common
+deployment issues.
 
 ---
 
@@ -19,7 +22,8 @@ Before you begin, make sure you have:
 4. A Play Store API service account (JSON key file)
 
 > [!NOTE]
-> For detailed instructions about setting up Fastlane for Android, refer to the [official Android setup guide](https://docs.fastlane.tools/getting-started/android/setup/).
+> For detailed instructions about setting up Fastlane for Android, refer to
+> the [official Android setup guide](https://docs.fastlane.tools/getting-started/android/setup/).
 
 ## Initial Setup
 
@@ -29,11 +33,14 @@ Before you begin, make sure you have:
    ```
 
 2. Set up Play Store authentication:
-	- Follow the [Fastlane Play Store Setup Guide](https://docs.fastlane.tools/actions/upload_to_play_store/) to create and download your `play-store.json` service account key
-	- Place the `play-store.json` file in your fastlane directory
+    - Follow
+      the [Fastlane Play Store Setup Guide](https://docs.fastlane.tools/actions/upload_to_play_store/)
+      to create and download your `play-store.json` service account key
+    - Place the `play-store.json` file in your fastlane directory
 
 > [!WARNING]
-> Never commit your `play-store.json` file to the repository. Make sure it's included in your `.gitignore`.
+> Never commit your `play-store.json` file to the repository. Make sure it's included in your
+`.gitignore`.
 
 ## Configure Fastlane Files
 
@@ -103,12 +110,12 @@ fastlane supply init
 ## Deploying Updates
 
 1. Update your changelog:
-	- Edit `fastlane/metadata/android/en-US/changelogs/default.txt`
-	- Or create a version-specific changelog: `changelogs/<version_code>.txt`
+    - Edit `fastlane/metadata/android/en-US/changelogs/default.txt`
+    - Or create a version-specific changelog: `changelogs/<version_code>.txt`
 
 2. Update app metadata (if needed):
-	- Edit relevant files in `metadata/android/en-US/`
-	- Update screenshots in `metadata/android/en-US/images/`
+    - Edit relevant files in `metadata/android/en-US/`
+    - Update screenshots in `metadata/android/en-US/images/`
 
 3. Run deployment:
    ```bash
@@ -122,22 +129,23 @@ fastlane supply init
 ## Troubleshooting Common Issues
 
 1. **Authentication Errors**:
-	- Verify your `play-store.json` file is correctly placed
-	- Ensure the service account has appropriate permissions in Play Console
-	- Check if the JSON key is properly formatted
+    - Verify your `play-store.json` file is correctly placed
+    - Ensure the service account has appropriate permissions in Play Console
+    - Check if the JSON key is properly formatted
 
 2. **Upload Failures**:
-	- Verify your app's version code is incremented
-	- Ensure the APK/AAB is properly signed
-	- Check if the track (internal/alpha/beta/production) exists
+    - Verify your app's version code is incremented
+    - Ensure the APK/AAB is properly signed
+    - Check if the track (internal/alpha/beta/production) exists
 
 3. **Metadata Issues**:
-	- Validate all required metadata files exist
-	- Check character limits in descriptions
-	- Ensure screenshot dimensions meet Play Store requirements
+    - Validate all required metadata files exist
+    - Check character limits in descriptions
+    - Ensure screenshot dimensions meet Play Store requirements
 
 > [!NOTE]
-> For more detailed information about Fastlane commands and options, refer to the [Fastlane supply action documentation](https://docs.fastlane.tools/actions/supply/).
+> For more detailed information about Fastlane commands and options, refer to
+> the [Fastlane supply action documentation](https://docs.fastlane.tools/actions/supply/).
 
 ## Further Reading
 

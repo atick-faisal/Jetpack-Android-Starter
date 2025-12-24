@@ -132,13 +132,10 @@ _uiState.updateStateWith {
 
 Each feature is self-contained and follows a consistent structure:
 
-```
-feature/
-└── auth/
-    ├── navigation/    # Navigation-related code
-    ├── ui/           # UI components and ViewModels
-    └── model/       # Feature-specific models
-```
+- `feature/auth/` - Authentication feature module
+  - `navigation/` - Navigation-related code
+  - `ui/` - UI components and ViewModels
+  - `model/` - Feature-specific models
 
 ## Conscious Trade-offs
 

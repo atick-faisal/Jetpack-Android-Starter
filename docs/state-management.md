@@ -31,41 +31,26 @@ The state management pattern in this template follows these principles:
 
 ### Architecture Layers
 
-```
-┌─────────────────────────────────────┐
-│         UI Layer (Compose)          │
-│  ┌───────────────────────────────┐  │
-│  │   StatefulComposable          │  │  Automatic loading/error handling
-│  │   - Shows LoadingIndicator    │  │
-│  │   - Shows ErrorSnackbar       │  │
-│  │   - Renders Screen            │  │
-│  └───────────────────────────────┘  │
-└─────────────────────────────────────┘
-                 ▲
-                 │ UiState<ScreenData>
-                 │
-┌─────────────────────────────────────┐
-│      ViewModel Layer (MVVM)         │
-│  ┌───────────────────────────────┐  │
-│  │   ViewModel                   │  │  State management
-│  │   - _uiState: MutableStateFlow│  │
-│  │   - uiState: StateFlow        │  │
-│  │   - updateState()             │  │
-│  │   - updateStateWith()         │  │
-│  │   - updateWith()              │  │
-│  └───────────────────────────────┘  │
-└─────────────────────────────────────┘
-                 ▲
-                 │ Result<T>
-                 │
-┌─────────────────────────────────────┐
-│      Data Layer (Repository)        │
-│  ┌───────────────────────────────┐  │
-│  │   Repository                  │  │  Business logic
-│  │   - suspendRunCatching { }    │  │
-│  │   - Flow<Data>                │  │
-│  └───────────────────────────────┘  │
-└─────────────────────────────────────┘
+```mermaid
+graph TB
+    subgraph UI["UI Layer (Compose)"]
+        SC[StatefulComposable<br/>- Shows LoadingIndicator<br/>- Shows ErrorSnackbar<br/>- Renders Screen]
+    end
+
+    subgraph VM["ViewModel Layer (MVVM)"]
+        VML[ViewModel<br/>- _uiState: MutableStateFlow<br/>- uiState: StateFlow<br/>- updateState&#40;&#41;<br/>- updateStateWith&#40;&#41;<br/>- updateWith&#40;&#41;]
+    end
+
+    subgraph Data["Data Layer (Repository)"]
+        Repo[Repository<br/>- suspendRunCatching &#123; &#125;<br/>- Flow&lt;Data&gt;]
+    end
+
+    UI -->|UiState&lt;ScreenData&gt;| VM
+    VM -->|Result&lt;T&gt;| Data
+
+    style UI fill:#e1f5ff,stroke:#01579b,stroke-width:2px
+    style VM fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    style Data fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
 ```
 
 ---

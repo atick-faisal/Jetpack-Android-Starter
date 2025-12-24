@@ -31,15 +31,14 @@ This template uses **Jetpack Navigation Compose** with **type-safe navigation** 
 
 ### Key Components
 
-```
-Navigation Layer (in this template)
-├── Route Definitions (@Serializable objects/data classes)
-├── Navigation Extensions (NavController.navigateToX())
-├── Graph Builders (NavGraphBuilder.xScreen())
-├── Top-Level Destinations (TopLevelDestination enum)
-├── App State (JetpackAppState)
-└── NavHost Setup (JetpackNavHost)
-```
+The Navigation Layer consists of:
+
+- **Route Definitions** - `@Serializable` objects/data classes
+- **Navigation Extensions** - `NavController.navigateToX()`
+- **Graph Builders** - `NavGraphBuilder.xScreen()`
+- **Top-Level Destinations** - `TopLevelDestination` enum
+- **App State** - `JetpackAppState`
+- **NavHost Setup** - `JetpackNavHost`
 
 ### Navigation Flow
 
@@ -140,18 +139,9 @@ data object HomeNavGraph
 
 Each feature module has a `navigation/` directory with a single file defining all routes:
 
-```
-feature/
-├── auth/
-│   └── navigation/
-│       └── AuthNavigation.kt  # AuthNavGraph, SignIn, SignUp
-├── home/
-│   └── navigation/
-│       └── HomeNavigation.kt  # HomeNavGraph, Home, Item
-└── profile/
-    └── navigation/
-        └── ProfileNavigation.kt  # Profile
-```
+- `feature/auth/navigation/` - Contains `AuthNavigation.kt` defining `AuthNavGraph`, `SignIn`, `SignUp`
+- `feature/home/navigation/` - Contains `HomeNavigation.kt` defining `HomeNavGraph`, `Home`, `Item`
+- `feature/profile/navigation/` - Contains `ProfileNavigation.kt` defining `Profile`
 
 **Example from this template:**
 
@@ -673,8 +663,7 @@ JetpackNavigationSuiteScaffold(/* ... */)
 The back stack is a LIFO (Last In, First Out) stack of destinations:
 
 ```
-[Home] -> [Profile] -> [Item] -> [Detail]
-                                 ↑ Current
+[Home] → [Profile] → [Item] → [Detail]  ← Current
 ```
 
 ### Navigating Up

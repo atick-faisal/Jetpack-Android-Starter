@@ -1,6 +1,7 @@
 # Frequently Asked Questions (FAQ)
 
-This FAQ answers common questions about using and extending this Android starter template. Questions are organized by category for easy reference.
+This FAQ answers common questions about using and extending this Android starter template. Questions
+are organized by category for easy reference.
 
 ---
 
@@ -22,19 +23,25 @@ This FAQ answers common questions about using and extending this Android starter
 
 **TL;DR:** To keep the template simple and avoid over-engineering.
 
-The template intentionally uses a **two-layer architecture** (UI + Data) instead of the traditional three-layer approach:
+The template intentionally uses a **two-layer architecture** (UI + Data) instead of the traditional
+three-layer approach:
 
-```
-UI Layer (ViewModel) → Data Layer (Repository + Data Sources)
+```mermaid
+graph LR
+    UI[UI Layer<br/>ViewModel] --> Data[Data Layer<br/>Repository + Data Sources]
+    style UI fill: #e1f5ff, stroke: #01579b, stroke-width: 2px
+    style Data fill: #f3e5f5, stroke: #4a148c, stroke-width: 2px
 ```
 
 **Reasons:**
+
 - **Reduces complexity**: Fewer layers means less boilerplate and easier navigation
 - **Faster development**: No need to create use cases for simple CRUD operations
 - **Easier to understand**: New developers can grasp the architecture quickly
 - **Pragmatic**: Most apps don't need the extra layer
 
 **When to add a domain layer:**
+
 - Multiple ViewModels share complex business logic
 - Business rules become too complex for repositories
 - You need to transform data between multiple repositories
@@ -96,7 +103,8 @@ class PostsViewModel @Inject constructor(
 
 #### 2. **Complex Data Transformations**
 
-When you need to combine data from multiple repositories with complex transformation logic, use cases keep this logic testable and reusable.
+When you need to combine data from multiple repositories with complex transformation logic, use
+cases keep this logic testable and reusable.
 
 ```kotlin
 class GetUserDashboardUseCase @Inject constructor(
@@ -161,6 +169,7 @@ class PublishPostUseCase @Inject constructor(
 ```
 
 **How to add:**
+
 1. Create `domain` module: `mkdir -p domain/src/main/kotlin/dev/atick/domain/usecase`
 2. Create use case classes with `operator fun invoke()`
 3. Inject into ViewModels instead of repositories
@@ -178,6 +187,7 @@ The two-layer architecture prioritizes:
 4. **Direct Communication**: ViewModels can directly call repositories
 
 This is a **conscious trade-off**:
+
 - ✅ Simpler codebase
 - ✅ Faster development
 - ✅ Less abstraction overhead
@@ -261,48 +271,50 @@ import androidx.compose.ui.Modifier
  *
  * Example:
  * ```
- * CustomCard(
- *     title = "Featured Post",
- *     subtitle = "Read more about..."
- * ) {
- *     Text("Card content")
- * }
- * ```
- *
- * @param title Card title
- * @param subtitle Card subtitle
- * @param modifier Modifier to customize appearance
- * @param content Card body content
- */
-@Composable
-fun CustomCard(
-    title: String,
-    subtitle: String,
-    modifier: Modifier = Modifier,
-    content: @Composable () -> Unit
-) {
-    Card(
-        modifier = modifier,
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant
-        )
-    ) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            Text(
-                text = title,
-                style = MaterialTheme.typography.titleLarge,
-                color = MaterialTheme.colorScheme.onSurface
-            )
-            Text(
-                text = subtitle,
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            content()
-        }
-    }
-}
+
+* CustomCard(
+*     title = "Featured Post",
+*     subtitle = "Read more about..."
+* ) {
+*     Text("Card content")
+* }
+* ```
+*
+* @param title Card title
+* @param subtitle Card subtitle
+* @param modifier Modifier to customize appearance
+* @param content Card body content
+  */
+  @Composable
+  fun CustomCard(
+  title: String,
+  subtitle: String,
+  modifier: Modifier = Modifier,
+  content: @Composable () -> Unit
+  ) {
+  Card(
+  modifier = modifier,
+  colors = CardDefaults.cardColors(
+  containerColor = MaterialTheme.colorScheme.surfaceVariant
+  )
+  ) {
+  Column(modifier = Modifier.padding(16.dp)) {
+  Text(
+  text = title,
+  style = MaterialTheme.typography.titleLarge,
+  color = MaterialTheme.colorScheme.onSurface
+  )
+  Text(
+  text = subtitle,
+  style = MaterialTheme.typography.bodyMedium,
+  color = MaterialTheme.colorScheme.onSurfaceVariant
+  )
+  Spacer(modifier = Modifier.height(8.dp))
+  content()
+  }
+  }
+  }
+
 ```
 
 #### 2. Add Previews
@@ -329,19 +341,20 @@ See [components.md](./components.md#custom-component-creation) for complete guid
 
 ### When should I use which component?
 
-| Component | Use Case | Example |
-|-----------|----------|---------|
-| `JetpackButton` | Primary action | Save, Submit, Continue |
-| `JetpackOutlinedButton` | Secondary action | Cancel, Skip |
-| `JetpackTextButton` | Tertiary / low-emphasis | Learn More, View Details |
-| `JetpackTextFiled` | Standard text input | Name, Email, Address |
-| `JetpackPasswordFiled` | Password input | Password, PIN |
-| `JetpackTopAppBar` | Screen title + actions | Most screens |
-| `JetpackActionBar` | Screen with text action | Edit Profile (Save button) |
-| `JetpackLoadingWheel` | Content loading | Inside LazyColumn |
-| `JetpackOverlayLoadingWheel` | Full-screen loading | Initial data load |
+| Component                    | Use Case                | Example                    |
+|------------------------------|-------------------------|----------------------------|
+| `JetpackButton`              | Primary action          | Save, Submit, Continue     |
+| `JetpackOutlinedButton`      | Secondary action        | Cancel, Skip               |
+| `JetpackTextButton`          | Tertiary / low-emphasis | Learn More, View Details   |
+| `JetpackTextFiled`           | Standard text input     | Name, Email, Address       |
+| `JetpackPasswordFiled`       | Password input          | Password, PIN              |
+| `JetpackTopAppBar`           | Screen title + actions  | Most screens               |
+| `JetpackActionBar`           | Screen with text action | Edit Profile (Save button) |
+| `JetpackLoadingWheel`        | Content loading         | Inside LazyColumn          |
+| `JetpackOverlayLoadingWheel` | Full-screen loading     | Initial data load          |
 
 **General Rules:**
+
 - Use **filled button** for the most important action
 - Use **outlined button** for secondary actions alongside primary
 - Use **text button** for low-emphasis actions or inline links
@@ -472,22 +485,27 @@ See [data-flow.md](./data-flow.md) for complete patterns.
 
 ### How do I choose between Room, DataStore, and Firestore?
 
-| Data Source | Use Case | Pros | Cons |
-|-------------|----------|------|------|
-| **Room** | Structured relational data, offline-first | Fast, SQL queries, type-safe | More setup, migration complexity |
-| **DataStore** | Simple key-value preferences | Easy setup, type-safe, Flow support | Not for large datasets |
-| **Firestore** | Real-time sync, multi-device | Real-time, serverless, scalable | Requires network, query limitations |
+| Data Source   | Use Case                                  | Pros                                | Cons                                |
+|---------------|-------------------------------------------|-------------------------------------|-------------------------------------|
+| **Room**      | Structured relational data, offline-first | Fast, SQL queries, type-safe        | More setup, migration complexity    |
+| **DataStore** | Simple key-value preferences              | Easy setup, type-safe, Flow support | Not for large datasets              |
+| **Firestore** | Real-time sync, multi-device              | Real-time, serverless, scalable     | Requires network, query limitations |
 
 **Decision Tree:**
 
-```
-Do you need real-time multi-device sync?
-├─ YES → Use Firestore (+ Room for offline)
-└─ NO → Do you need complex queries or relationships?
-    ├─ YES → Use Room
-    └─ NO → Is it simple preferences/settings?
-        ├─ YES → Use DataStore
-        └─ NO → Use Room (structured data)
+```mermaid
+graph TD
+    Start{Do you need<br/>real-time multi-device sync?}
+    Start -->|YES| Firestore[Use Firestore<br/>+ Room for offline]
+    Start -->|NO| Complex{Do you need complex<br/>queries or relationships?}
+    Complex -->|YES| Room1[Use Room]
+    Complex -->|NO| Preferences{Is it simple<br/>preferences/settings?}
+    Preferences -->|YES| DataStore[Use DataStore]
+    Preferences -->|NO| Room2[Use Room<br/>structured data]
+    style Firestore fill: #fff3e0, stroke: #e65100, stroke-width: 2px
+    style Room1 fill: #e1f5ff, stroke: #01579b, stroke-width: 2px
+    style Room2 fill: #e1f5ff, stroke: #01579b, stroke-width: 2px
+    style DataStore fill: #f3e5f5, stroke: #4a148c, stroke-width: 2px
 ```
 
 **Examples:**
@@ -600,7 +618,8 @@ override suspend fun syncPosts(): Result<Unit> {
             when (post.syncAction) {
                 SyncAction.UPSERT -> networkDataSource.upsertPost(post)
                 SyncAction.DELETE -> networkDataSource.deletePost(post.id)
-                SyncAction.NONE -> { /* skip */ }
+                SyncAction.NONE -> { /* skip */
+                }
             }
             localDataSource.markAsSynced(post.id)
         }
@@ -629,7 +648,8 @@ syncManager.isSyncing.collect { isSyncing ->
 }
 ```
 
-See [data-flow.md](./data-flow.md#offline-first-pattern-network--local) for complete offline-first pattern.
+See [data-flow.md](./data-flow.md#offline-first-pattern-network--local) for complete offline-first
+pattern.
 
 ---
 
@@ -639,12 +659,16 @@ See [data-flow.md](./data-flow.md#offline-first-pattern-network--local) for comp
 
 **Quick Decision Tree:**
 
-```
-Does this operation involve async work (network, database, etc.)?
-├─ NO → Use updateState
-└─ YES → Does it return new data to display?
-    ├─ YES → Use updateStateWith
-    └─ NO → Use updateWith
+```mermaid
+graph TD
+    Start{Does this operation<br/>involve async work?}
+    Start -->|NO| UpdateState[Use updateState]
+    Start -->|YES| ReturnData{Does it return<br/>new data to display?}
+    ReturnData -->|YES| UpdateStateWith[Use updateStateWith]
+    ReturnData -->|NO| UpdateWith[Use updateWith]
+    style UpdateState fill: #e1f5ff, stroke: #01579b, stroke-width: 2px
+    style UpdateStateWith fill: #fff3e0, stroke: #e65100, stroke-width: 2px
+    style UpdateWith fill: #f3e5f5, stroke: #4a148c, stroke-width: 2px
 ```
 
 #### Use `updateState` for synchronous state changes
@@ -1029,12 +1053,12 @@ The template includes GitHub Actions workflow (`.github/workflows/ci.yml`):
 
 ```yaml
 1. Lint Job:
-   - Validates Gradle wrapper
-   - Runs spotlessCheck (code formatting)
+  - Validates Gradle wrapper
+  - Runs spotlessCheck (code formatting)
 
 2. Build Job (only if lint passes):
-   - Clean project
-   - Build debug APK
+  - Clean project
+  - Build debug APK
 ```
 
 **To extend for release builds:**
@@ -1081,12 +1105,13 @@ release:
 ```
 
 **Add GitHub Secrets:**
+
 1. Go to repository Settings → Secrets
 2. Add:
-   - `KEYSTORE_BASE64`: Base64-encoded keystore
-   - `KEY_ALIAS`: Keystore alias
-   - `KEY_PASSWORD`: Key password
-   - `STORE_PASSWORD`: Store password
+    - `KEYSTORE_BASE64`: Base64-encoded keystore
+    - `KEY_ALIAS`: Keystore alias
+    - `KEY_PASSWORD`: Key password
+    - `STORE_PASSWORD`: Store password
 
 ---
 
@@ -1260,10 +1285,11 @@ Firebase is already configured in the template. You just need to add your projec
 1. Go to Firebase Console → Authentication
 2. Click "Get Started"
 3. Enable sign-in methods you need:
-   - Email/Password
-   - Google
+    - Email/Password
+    - Google
 
 That's it! The template already includes:
+
 - ✅ Firebase Crashlytics (`firebase:analytics`)
 - ✅ Firebase Auth (`firebase:auth`)
 - ✅ Firebase Firestore (`firebase:firestore`)
@@ -1299,7 +1325,8 @@ defaultConfig {
 
 #### 3. Credential Manager Not Available (Android < 14)
 
-Google Sign-In uses Credential Manager (Android 14+). On older devices, it falls back to standard Google Sign-In flow.
+Google Sign-In uses Credential Manager (Android 14+). On older devices, it falls back to standard
+Google Sign-In flow.
 
 **Check implementation:**
 
@@ -1338,15 +1365,19 @@ See [troubleshooting.md](./troubleshooting.md#firebase-issues) for more solution
 
 ### Module Documentation
 
-- **Core UI**: [core/ui/README.md](../core/ui/README.md) - UI components and state management utilities
+- **Core UI**: [core/ui/README.md](../core/ui/README.md) - UI components and state management
+  utilities
 - **Data Layer**: [data/README.md](../data/README.md) - Repository patterns and data sources
-- **Firebase Auth**: [firebase/auth/README.md](../firebase/auth/README.md) - Firebase Authentication integration
-- **Firebase Firestore**: [firebase/firestore/README.md](../firebase/firestore/README.md) - Cloud Firestore integration
+- **Firebase Auth**: [firebase/auth/README.md](../firebase/auth/README.md) - Firebase Authentication
+  integration
+- **Firebase Firestore**: [firebase/firestore/README.md](../firebase/firestore/README.md) - Cloud
+  Firestore integration
 - **Sync**: [sync/README.md](../sync/README.md) - Background data synchronization
 - **App Module**: [app/README.md](../app/README.md) - Main application architecture
 
 > [!NOTE]
-> **API Documentation** is available after running `./gradlew dokkaGeneratePublicationHtml`. The generated docs will be at `build/dokka/html/index.html`.
+> **API Documentation** is available after running `./gradlew dokkaGeneratePublicationHtml`. The
+> generated docs will be at `build/dokka/html/index.html`.
 
 ---
 
@@ -1357,8 +1388,8 @@ If your question isn't answered here:
 1. Check the [Troubleshooting Guide](./troubleshooting.md)
 2. Search existing [GitHub Issues](https://github.com/atick-faisal/Jetpack-Android-Starter/issues)
 3. Create a new issue with:
-   - Clear description of the problem
-   - Steps to reproduce
-   - Expected vs actual behavior
-   - Relevant code snippets
-   - Android Studio version and device info
+    - Clear description of the problem
+    - Steps to reproduce
+    - Expected vs actual behavior
+    - Relevant code snippets
+    - Android Studio version and device info

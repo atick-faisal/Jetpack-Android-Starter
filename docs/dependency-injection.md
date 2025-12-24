@@ -400,61 +400,51 @@ Modules are organized by layer and purpose. Each module contains a `di/` package
 
 ### Core Module DI Structure
 
-```
-core/
-├── android/src/main/kotlin/dev/atick/core/di/
-│   ├── DispatcherModule.kt        # Coroutine dispatchers
-│   ├── CoroutineModule.kt         # CoroutineScope
-│   └── StringDecoderModule.kt     # URI decoder
-├── network/src/main/kotlin/dev/atick/core/network/di/
-│   ├── retrofit/
-│   │   ├── RetrofitModule.kt      # Retrofit instance
-│   │   └── ConverterModule.kt     # JSON converter
-│   ├── okhttp/
-│   │   ├── OkHttpClientModule.kt  # OkHttp client
-│   │   └── InterceptorModule.kt   # Interceptors
-│   ├── coil/
-│   │   └── CoilModule.kt          # Image loader
-│   ├── NetworkUtilsModule.kt      # Network utilities
-│   └── DataSourceModule.kt        # Network data source
-├── room/src/main/kotlin/dev/atick/core/room/di/
-│   ├── DatabaseModule.kt          # Room database
-│   ├── DaoModule.kt               # DAOs
-│   └── DataSourceModule.kt        # Local data source
-└── preferences/src/main/kotlin/dev/atick/core/preferences/di/
-    ├── DatastoreModule.kt         # DataStore
-    └── PreferencesDataSourceModule.kt  # Preferences data source
-```
+- `core/android/src/main/kotlin/dev/atick/core/di/`
+  - `DispatcherModule.kt` - Coroutine dispatchers
+  - `CoroutineModule.kt` - CoroutineScope
+  - `StringDecoderModule.kt` - URI decoder
+- `core/network/src/main/kotlin/dev/atick/core/network/di/`
+  - `retrofit/`
+    - `RetrofitModule.kt` - Retrofit instance
+    - `ConverterModule.kt` - JSON converter
+  - `okhttp/`
+    - `OkHttpClientModule.kt` - OkHttp client
+    - `InterceptorModule.kt` - Interceptors
+  - `coil/`
+    - `CoilModule.kt` - Image loader
+  - `NetworkUtilsModule.kt` - Network utilities
+  - `DataSourceModule.kt` - Network data source
+- `core/room/src/main/kotlin/dev/atick/core/room/di/`
+  - `DatabaseModule.kt` - Room database
+  - `DaoModule.kt` - DAOs
+  - `DataSourceModule.kt` - Local data source
+- `core/preferences/src/main/kotlin/dev/atick/core/preferences/di/`
+  - `DatastoreModule.kt` - DataStore
+  - `PreferencesDataSourceModule.kt` - Preferences data source
 
 ### Data Module DI Structure
 
-```
-data/src/main/kotlin/dev/atick/data/di/
-└── RepositoryModule.kt            # All repository bindings
-```
+- `data/src/main/kotlin/dev/atick/data/di/`
+  - `RepositoryModule.kt` - All repository bindings
 
 ### Firebase Module DI Structure
 
-```
-firebase/
-├── analytics/src/main/kotlin/dev/atick/firebase/analytics/di/
-│   ├── FirebaseModule.kt          # Firebase Analytics
-│   └── CrashlyticsModule.kt       # CrashReporter
-├── auth/src/main/kotlin/dev/atick/firebase/auth/di/
-│   ├── FirebaseAuthModule.kt      # Firebase Auth
-│   ├── CredentialManagerModule.kt # Credential Manager
-│   └── DataSourceModule.kt        # Auth data source
-└── firestore/src/main/kotlin/dev/atick/firebase/firestore/di/
-    ├── FirebaseModule.kt          # Firestore instance
-    └── DataSourceModule.kt        # Firestore data source
-```
+- `firebase/analytics/src/main/kotlin/dev/atick/firebase/analytics/di/`
+  - `FirebaseModule.kt` - Firebase Analytics
+  - `CrashlyticsModule.kt` - CrashReporter
+- `firebase/auth/src/main/kotlin/dev/atick/firebase/auth/di/`
+  - `FirebaseAuthModule.kt` - Firebase Auth
+  - `CredentialManagerModule.kt` - Credential Manager
+  - `DataSourceModule.kt` - Auth data source
+- `firebase/firestore/src/main/kotlin/dev/atick/firebase/firestore/di/`
+  - `FirebaseModule.kt` - Firestore instance
+  - `DataSourceModule.kt` - Firestore data source
 
 ### Sync Module DI Structure
 
-```
-sync/src/main/kotlin/dev/atick/sync/di/
-└── SyncModule.kt                  # SyncManager binding
-```
+- `sync/src/main/kotlin/dev/atick/sync/di/`
+  - `SyncModule.kt` - SyncManager binding
 
 ### Module Inclusion Pattern
 
