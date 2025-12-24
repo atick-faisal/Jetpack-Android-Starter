@@ -33,9 +33,26 @@ import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 
 /**
- * [ViewModel] for [SignUpScreen].
+ * ViewModel for the sign-up screen, managing user registration and form validation.
  *
- * @param authRepository [AuthRepository].
+ * This ViewModel handles new user registration with both Google Sign-In and email/password
+ * methods. Similar to [dev.atick.feature.auth.ui.signin.SignInViewModel], it demonstrates
+ * form validation with [TextFiledData] using [updateState] for field updates and [updateWith]
+ * for async registration operations.
+ *
+ * Form validation uses extension functions:
+ * - [dev.atick.core.extensions.isValidFullName] for name validation
+ * - [dev.atick.core.extensions.isEmailValid] for email validation
+ * - [dev.atick.core.extensions.isPasswordValid] for password validation
+ *
+ * @param authRepository Repository providing authentication and registration operations.
+ *
+ * @see SignUpScreenData Immutable data class representing registration form state
+ * @see UiState State wrapper with loading and error handling
+ * @see updateState Extension function for synchronous state updates
+ * @see updateWith Extension function for async operations
+ * @see TextFiledData Data class for text field state with validation
+ * @see AuthRepository Data layer interface for authentication
  */
 @HiltViewModel
 class SignUpViewModel @Inject constructor(
@@ -94,11 +111,31 @@ class SignUpViewModel @Inject constructor(
 }
 
 /**
- * Data for [SignUpScreen].
+ * Immutable data class representing the state of the registration form.
  *
- * @param name [TextFiledData].
- * @param email [TextFiledData].
- * @param password [TextFiledData].
+ * This class manages the state of the sign-up form with three validated fields. Each field
+ * uses [TextFiledData] to encapsulate both the field value and validation error messages,
+ * providing real-time feedback to users as they fill out the form.
+ *
+ * Form validation is performed in [SignUpViewModel] methods ([SignUpViewModel.updateName],
+ * [SignUpViewModel.updateEmail], [SignUpViewModel.updatePassword]) which update the corresponding
+ * [TextFiledData.errorMessage] based on validation rules. The form is considered valid when all
+ * three fields have null error messages.
+ *
+ * Usage context:
+ * - Route composable observes [SignUpViewModel.signUpUiState] which wraps this data class
+ * - Text field composables bind to [name], [email], and [password] with two-way data flow
+ * - Error messages from [TextFiledData] are displayed below each input field
+ * - Submit button is enabled only when all fields are valid (no error messages)
+ * - Registration success triggers navigation to home screen via repository flow
+ *
+ * @param name Name field state with validation for full name format.
+ * @param email Email field state with validation for email format.
+ * @param password Password field state with validation for minimum requirements.
+ *
+ * @see SignUpViewModel ViewModel that manages this screen data
+ * @see TextFiledData Data class for text field state with validation
+ * @see UiState Wrapper providing loading and error state
  */
 @Immutable
 data class SignUpScreenData(

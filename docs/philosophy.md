@@ -132,13 +132,10 @@ _uiState.updateStateWith {
 
 Each feature is self-contained and follows a consistent structure:
 
-```
-feature/
-└── auth/
-    ├── navigation/    # Navigation-related code
-    ├── ui/           # UI components and ViewModels
-    └── model/       # Feature-specific models
-```
+- `feature/auth/` - Authentication feature module
+  - `navigation/` - Navigation-related code
+  - `ui/` - UI components and ViewModels
+  - `model/` - Feature-specific models
 
 ## Conscious Trade-offs
 
@@ -195,7 +192,22 @@ While these patterns serve well for most cases, consider alternatives when:
 > When deviating from these patterns, document your reasoning to help other developers understand
 > the context of your decisions.
 
+---
+
+## Summary
+
+This template's design philosophy prioritizes:
+
+- **Pragmatic simplicity** over theoretical purity
+- **Centralized state management** with UiState and StatefulComposable
+- **Direct, explicit state updates** for readability and debuggability
+- **Consistent error handling** across all layers
+- **Strong conventions** over flexible configuration
+
+These trade-offs favor maintainability, readability, and easier onboarding at the cost of some flexibility.
+
 ## Further Reading
-- [Architecture Overview](architecture.md): Understand the architecture and design principles
-- [Adding New Features](guide.md): Get started with adding new features to the project
-- [CI/CD Setup](github.md): Set up continuous integration and deployment for the project
+
+- [Architecture Overview](architecture.md) - Understand the two-layer architecture
+- [State Management](state-management.md) - Deep dive into UiState and update functions
+- [Adding Features](guide.md) - Step-by-step guide applying these principles

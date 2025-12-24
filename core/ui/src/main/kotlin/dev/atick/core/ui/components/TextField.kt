@@ -46,14 +46,39 @@ import dev.atick.core.ui.R
 /**
  * A Jetpack Compose text field with customizable appearance and optional error message display.
  *
+ * This component automatically handles:
+ * - **Error state**: Red border and error message display when errorMessage is not null
+ * - **Animated error**: Error message appears/disappears with animation
+ * - **Rounded shape**: Uses 50% rounded corners for a pill-shaped appearance
+ *
+ * Usage example:
+ * ```kotlin
+ * var email by remember { mutableStateOf("") }
+ * var emailError by remember { mutableStateOf<String?>(null) }
+ *
+ * JetpackTextFiled(
+ *     value = email,
+ *     onValueChange = { email = it },
+ *     label = { Text("Email") },
+ *     leadingIcon = { Icon(Icons.Default.Email, contentDescription = null) },
+ *     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+ *     errorMessage = emailError,
+ *     modifier = Modifier.fillMaxWidth(),
+ * )
+ * ```
+ *
+ * See also:
+ * - [JetpackPasswordFiled] for password input with visibility toggle
+ * - Use with [TextFieldData] for integrated state management
+ *
  * @param value The current text value of the text field.
  * @param onValueChange The callback invoked when the text value changes.
  * @param label A composable function that represents the label of the text field.
  * @param leadingIcon A composable function that represents the leading icon of the text field.
  * @param modifier The modifier for this text field.
- * @param keyboardOptions The keyboard options for the text field.
+ * @param keyboardOptions The keyboard options for the text field (e.g., email, number).
  * @param trailingIcon A composable function that represents the trailing icon of the text field.
- * @param errorMessage The error message to display below the text field, if any.
+ * @param errorMessage The error message to display below the text field. Shows red border when not null.
  */
 @Composable
 fun JetpackTextFiled(
@@ -79,14 +104,36 @@ fun JetpackTextFiled(
 }
 
 /**
- * A Jetpack Compose password field with customizable appearance and optional error message display.
+ * A Jetpack Compose password field with visibility toggle and error message display.
+ *
+ * This component automatically provides:
+ * - **Password masking**: Text is hidden by default with PasswordVisualTransformation
+ * - **Visibility toggle**: Trailing icon button to show/hide password
+ * - **Keyboard type**: Automatically sets keyboard type to Password
+ * - **Error handling**: Red border and error message when errorMessage is not null
+ * - **State preservation**: Password visibility state survives configuration changes
+ *
+ * Usage example:
+ * ```kotlin
+ * var password by remember { mutableStateOf("") }
+ * var passwordError by remember { mutableStateOf<String?>(null) }
+ *
+ * JetpackPasswordFiled(
+ *     value = password,
+ *     onValueChange = { password = it },
+ *     label = { Text("Password") },
+ *     leadingIcon = { Icon(Icons.Default.Lock, contentDescription = null) },
+ *     errorMessage = passwordError,
+ *     modifier = Modifier.fillMaxWidth(),
+ * )
+ * ```
  *
  * @param value The current text value of the password field.
  * @param onValueChange The callback invoked when the text value changes.
  * @param label A composable function that represents the label of the password field.
  * @param leadingIcon A composable function that represents the leading icon of the password field.
  * @param modifier The modifier for this password field.
- * @param errorMessage The error message to display below the password field, if any.
+ * @param errorMessage The error message to display below the password field. Shows red border when not null.
  */
 @Composable
 fun JetpackPasswordFiled(

@@ -1,5 +1,11 @@
 # Dependency Management
 
+## Summary
+
+This guide explains the project's dependency management strategy using Gradle Version Catalogs and automated update tools (Renovate/Dependabot). Learn how to add dependencies, manage versions centrally, use BOMs for version compatibility, and leverage automated dependency updates to keep the project current.
+
+---
+
 This project uses Version Catalogs and automated dependency updates to maintain a clean and
 up-to-date dependency management system.
 
@@ -174,8 +180,7 @@ dependencies {
 ```
 
 ## Further Reading
-- [Architecture Overview](architecture.md): Understand the architecture and design principles
-- [Design Philosophy](philosophy.md): Learn about the design philosophy behind the project
-- [Adding New Features](guide.md): Get started with adding new features to the project
-- [Performance Optimization](performance.md): Learn about performance optimization techniques
-- [Useful Tips & Tricks](tips.md): Explore useful tips and tricks for Android development
+
+- **[Convention Plugins](plugins.md)** - Build logic and plugin configuration that uses version catalog
+- **[Adding New Features](guide.md)** - Step-by-step guide for implementing new features
+- **[Architecture Overview](architecture.md)** - Module structure and architectural patterns

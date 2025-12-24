@@ -50,22 +50,31 @@ template [here](https://github.com/atick-faisal?tab=repositories&q=&type=source&
 
 ### 💾 Core Libraries
 
-- **UI**: [Jetpack Compose](https://developer.android.com/compose), [Material3](https://m3.material.io/)
+- **UI
+  **: [Jetpack Compose](https://developer.android.com/compose), [Material3](https://m3.material.io/)
 - **DI**: [Dagger Hilt](https://dagger.dev/hilt/)
-- **Async**: [Kotlin Coroutines](https://kotlinlang.org/docs/coroutines-overview.html) & [Flow](https://kotlinlang.org/docs/flow.html)
-- **Network**: [Retrofit](https://square.github.io/retrofit/), [OkHttp](https://square.github.io/okhttp/)
-- **Storage**: [Room DB](https://developer.android.com/training/data-storage/room), [DataStore](https://developer.android.com/topic/libraries/architecture/datastore)
-- **Firebase**: [Auth](https://firebase.google.com/docs/auth/android/start), [Firestore](https://firebase.google.com/docs/firestore/quickstart), [Analytics](https://firebase.google.com/docs/analytics), [Performance](https://firebase.google.com/docs/perf-mon)
-- **Others**: [WorkManager](https://developer.android.com/topic/libraries/architecture/workmanager), [Coil](https://coil-kt.github.io/coil/), [Timber](https://github.com/JakeWharton/timber), [Lottie](https://airbnb.io/lottie/)
+- **Async
+  **: [Kotlin Coroutines](https://kotlinlang.org/docs/coroutines-overview.html) & [Flow](https://kotlinlang.org/docs/flow.html)
+- **Network
+  **: [Retrofit](https://square.github.io/retrofit/), [OkHttp](https://square.github.io/okhttp/)
+- **Storage
+  **: [Room DB](https://developer.android.com/training/data-storage/room), [DataStore](https://developer.android.com/topic/libraries/architecture/datastore)
+- **Firebase
+  **: [Auth](https://firebase.google.com/docs/auth/android/start), [Firestore](https://firebase.google.com/docs/firestore/quickstart), [Analytics](https://firebase.google.com/docs/analytics), [Performance](https://firebase.google.com/docs/perf-mon)
+- **Others
+  **: [WorkManager](https://developer.android.com/topic/libraries/architecture/workmanager), [Coil](https://coil-kt.github.io/coil/), [Timber](https://github.com/JakeWharton/timber), [Lottie](https://airbnb.io/lottie/)
 
 ### 🏗️ Build & Tools
 
 - [Kotlin 2.0](https://kotlinlang.org/)
-- [Gradle 8.11.1](https://docs.gradle.org/current/userguide/userguide.html) with [Version Catalogs](https://docs.gradle.org/current/userguide/version_catalogs.html)
+- [Gradle 8.11.1](https://docs.gradle.org/current/userguide/userguide.html)
+  with [Version Catalogs](https://docs.gradle.org/current/userguide/version_catalogs.html)
 - [Java 21](https://openjdk.java.net/projects/jdk/21/)
 - Custom [Gradle Convention Plugins](https://docs.gradle.org/current/userguide/custom_plugins.html)
-- [Dokka](https://kotlinlang.org/docs/dokka-introduction.html) and [MkDocs Material](https://squidfunk.github.io/mkdocs-material/) for documentation
-- [ktlint](https://github.com/pinterest/ktlint) and [Spotless](https://github.com/diffplug/spotless) for code formatting
+- [Dokka](https://kotlinlang.org/docs/dokka-introduction.html)
+  and [MkDocs Material](https://squidfunk.github.io/mkdocs-material/) for documentation
+- [ktlint](https://github.com/pinterest/ktlint) and [Spotless](https://github.com/diffplug/spotless)
+  for code formatting
 
 ![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
 

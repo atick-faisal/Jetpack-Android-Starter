@@ -17,7 +17,6 @@
 package dev.atick.core.ui.components
 
 import androidx.compose.material3.FilledIconToggleButton
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -26,15 +25,51 @@ import androidx.compose.ui.graphics.Color
 
 /**
  * Jetpack toggle button with icon and checked icon content slots. Wraps Material 3
- * [IconButton].
+ * [FilledIconToggleButton].
+ *
+ * A filled icon button that toggles between two states with different icons. Uses primary
+ * container color when checked. Common use cases include favorites, bookmarks, or visibility toggles.
+ *
+ * **Features:**
+ * - Automatic icon switching between checked/unchecked states
+ * - Filled background with rounded shape
+ * - Primary container color when checked, transparent when unchecked
+ * - Disabled state support with reduced alpha
+ *
+ * **Usage Example:**
+ * ```kotlin
+ * var isFavorite by remember { mutableStateOf(false) }
+ *
+ * JetpackIconToggleButton(
+ *     checked = isFavorite,
+ *     onCheckedChange = { isFavorite = it },
+ *     icon = {
+ *         Icon(
+ *             imageVector = Icons.Default.FavoriteBorder,
+ *             contentDescription = "Add to favorites"
+ *         )
+ *     },
+ *     checkedIcon = {
+ *         Icon(
+ *             imageVector = Icons.Default.Favorite,
+ *             contentDescription = "Remove from favorites"
+ *         )
+ *     }
+ * )
+ * ```
+ *
+ * **When to use:**
+ * - Binary toggle actions (favorite/unfavorite, bookmark/unbookmark)
+ * - Visibility toggles (show/hide password, expand/collapse)
+ * - State indicators that can be toggled
  *
  * @param checked Whether the toggle button is currently checked.
  * @param onCheckedChange Called when the user clicks the toggle button and toggles checked.
+ * @param icon The icon content to show when unchecked.
  * @param modifier Modifier to be applied to the toggle button.
  * @param enabled Controls the enabled state of the toggle button. When `false`, this toggle button
  * will not be clickable and will appear disabled to accessibility services.
- * @param icon The icon content to show when unchecked.
- * @param checkedIcon The icon content to show when checked.
+ * @param checkedIcon The icon content to show when checked. Defaults to [icon] if not provided.
  */
 @Composable
 fun JetpackIconToggleButton(

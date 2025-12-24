@@ -20,12 +20,41 @@ import dev.atick.core.preferences.model.DarkThemeConfigPreferences
 import dev.atick.core.preferences.model.UserDataPreferences
 
 /**
- * Data class representing editable user settings related to themes and appearance.
+ * Domain model representing user-configurable application settings.
  *
- * @property useDynamicColor Indicates whether dynamic colors are enabled.
- * @property darkThemeConfig Configuration for the dark theme.
- * @property language The language of the app.
- * @constructor Creates a [Settings] instance with optional parameters.
+ * This model encapsulates all editable user preferences for themes, appearance, and localization.
+ * Settings are persisted in DataStore via [UserDataPreferences] and observed by the app's theme
+ * system in [dev.atick.app.JetpackApp] to apply user preferences across the entire application.
+ *
+ * Settings data flow:
+ * - User modifies settings in [dev.atick.feature.settings.ui.SettingsScreen]
+ * - [dev.atick.feature.settings.ui.SettingsViewModel] updates via [dev.atick.data.repository.settings.SettingsRepository]
+ * - Repository persists changes to DataStore immediately (no sync required)
+ * - App composable observes settings and applies theme/language changes reactively
+ * - Settings survive app restarts and device reboots (DataStore persistence)
+ *
+ * Mapping extensions for layer conversion:
+ * - [UserDataPreferences.asSettings]: Convert from DataStore preferences to domain model
+ * - [DarkThemeConfigPreferences.toDarkThemeConfig]: Convert theme enum from preferences
+ * - [DarkThemeConfig.toDarkThemeConfigPreferences]: Convert theme enum to preferences
+ *
+ * Usage context:
+ * - Applied in app-level theme configuration ([dev.atick.app.JetpackApp])
+ * - Displayed and edited in settings screen
+ * - [useDynamicColor] enables Material You dynamic theming on Android 12+
+ * - [darkThemeConfig] controls light/dark/system theme preference
+ * - [language] controls app localization (English/Arabic)
+ *
+ * @property userName Optional user name displayed in settings (nullable for unauthenticated users).
+ * @property useDynamicColor Whether to enable Material You dynamic colors (default: true).
+ * @property darkThemeConfig Theme preference: follow system, light, or dark (default: FOLLOW_SYSTEM).
+ * @property language App language preference (default: ENGLISH).
+ *
+ * @see UserDataPreferences DataStore preferences model for persistence
+ * @see DarkThemeConfig Enum representing theme configuration options
+ * @see Language Enum representing supported languages
+ * @see dev.atick.data.repository.settings.SettingsRepository Repository providing settings operations
+ * @see dev.atick.feature.settings.ui.SettingsViewModel ViewModel managing settings state
  */
 data class Settings(
     val userName: String? = null,

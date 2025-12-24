@@ -51,8 +51,14 @@ play-store.json
 # Mac OS
 .DS_Store
 
+# Generated Docs
+docs/index.md
+docs/api/*
+
 # AI Tools
 .claude/*
 .gemini/*
 GEMINI.local.md
 CLAUDE.local.md
+CHECKLIST.local.md
+CHANGELOG.local.md

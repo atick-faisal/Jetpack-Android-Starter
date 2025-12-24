@@ -28,12 +28,54 @@ import androidx.compose.ui.Modifier
 /**
  * Jetpack tag.
  *
+ * A clickable tag component with follow/unfollow state. When followed, displays with primary
+ * container color; when unfollowed, shows with reduced opacity surface variant. Use for topics,
+ * interests, or categories that users can follow.
+ *
+ * **Features:**
+ * - Visual distinction between followed (solid) and unfollowed (translucent) states
+ * - Rounded button shape with small text
+ * - Theme-aware colors
+ * - Disabled state support
+ *
+ * **Usage Example:**
+ * ```kotlin
+ * var followedTopics by remember { mutableStateOf(setOf<String>()) }
+ * val availableTopics = listOf("Android", "Kotlin", "Compose", "Testing")
+ *
+ * FlowRow(
+ *     horizontalArrangement = Arrangement.spacedBy(8.dp),
+ *     verticalArrangement = Arrangement.spacedBy(8.dp)
+ * ) {
+ *     availableTopics.forEach { topic ->
+ *         JetpackTag(
+ *             followed = topic in followedTopics,
+ *             onClick = {
+ *                 followedTopics = if (topic in followedTopics) {
+ *                     followedTopics - topic
+ *                 } else {
+ *                     followedTopics + topic
+ *                 }
+ *             },
+ *             text = { Text(topic) }
+ *         )
+ *     }
+ * }
+ * ```
+ *
+ * **When to use:**
+ * - Interest or topic selection (e.g., "Follow topics you're interested in")
+ * - Category management
+ * - Tag-based filtering with persistent selection
+ *
  * @param followed Whether this tag is followed or not.
  * @param onClick The callback to be invoked when this tag is clicked.
  * @param modifier Modifier to be applied to the tag.
  * @param enabled Controls the enabled state of the tag. When `false`, this tag will not be
  * clickable and will appear disabled to accessibility services.
  * @param text The text label content.
+ *
+ * @see JetpackFilterChip For temporary filtering (non-persistent selection)
  */
 @Composable
 fun JetpackTag(

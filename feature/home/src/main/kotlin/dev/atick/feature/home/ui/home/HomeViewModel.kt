@@ -36,9 +36,18 @@ import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
 /**
- * Home view model.
+ * ViewModel for the home screen, managing the list of Jetpack libraries.
  *
- * @param homeRepository [HomeRepository].
+ * This ViewModel follows the standard state management pattern using [UiState] to wrap
+ * [HomeScreenData]. It observes the repository's Flow and automatically updates the UI state.
+ * The [deleteJetpack] method uses [updateWith] for async operations with automatic error handling.
+ *
+ * @param homeRepository Repository providing Jetpack data and operations.
+ *
+ * @see HomeScreenData Immutable data class representing the screen state
+ * @see UiState State wrapper with loading and error handling
+ * @see updateWith Extension function for async operations that don't return new data
+ * @see HomeRepository Data layer interface for home screen operations
  */
 @HiltViewModel
 class HomeViewModel @Inject constructor(
@@ -65,9 +74,17 @@ class HomeViewModel @Inject constructor(
 }
 
 /**
- * Home screen data.
+ * Immutable data class representing the state of the home screen.
  *
- * @param jetpacks List of [Jetpack].
+ * This class is wrapped in [UiState] by [HomeViewModel] to provide loading and error handling.
+ * Being immutable (via @Immutable annotation) enables Compose to skip recomposition when the
+ * data hasn't changed.
+ *
+ * @param jetpacks List of Jetpack libraries to display on the home screen.
+ *
+ * @see HomeViewModel ViewModel that manages this screen data
+ * @see UiState Wrapper providing loading and error state
+ * @see Jetpack Domain model for Jetpack library items
  */
 @Immutable
 data class HomeScreenData(

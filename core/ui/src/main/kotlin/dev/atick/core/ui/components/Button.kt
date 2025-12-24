@@ -67,6 +67,23 @@ fun JetpackButton(
 /**
  * Jetpack filled button with text and icon content slots.
  *
+ * This is the most commonly used button variant for primary actions. Uses
+ * [MaterialTheme.colorScheme.onBackground] as the container color.
+ *
+ * Usage example:
+ * ```kotlin
+ * JetpackButton(
+ *     onClick = { viewModel.submitForm() },
+ *     text = { Text("Submit") },
+ *     leadingIcon = { Icon(Icons.Default.Send, contentDescription = null) },
+ *     modifier = Modifier.fillMaxWidth(),
+ * )
+ * ```
+ *
+ * See also:
+ * - [JetpackOutlinedButton] for secondary actions
+ * - [JetpackTextButton] for tertiary actions
+ *
  * @param onClick Will be called when the user clicks the button.
  * @param text The button text label content.
  * @param modifier Modifier to be applied to the button.

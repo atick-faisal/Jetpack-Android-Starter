@@ -45,9 +45,59 @@ import java.io.InputStream
 import java.io.OutputStream
 
 /**
- * Provides the activity from Context (https://stackoverflow.com/a/68423182/12737399)
+ * Recursively retrieves the ComponentActivity from any Context.
  *
- * @return The activity associated with the context, or `null` if the context is not an activity.
+ * This function is useful when you have a Context (e.g., from a composable's LocalContext)
+ * and need to access Activity-specific APIs like requesting permissions, accessing the
+ * lifecycle, or showing dialogs that require an Activity reference.
+ *
+ * The function recursively unwraps ContextWrapper instances until it finds a ComponentActivity
+ * or reaches a context that is not a wrapper.
+ *
+ * ## Usage Examples
+ *
+ * ```kotlin
+ * // In a Composable - get activity for permission requests
+ * @Composable
+ * fun MyScreen() {
+ *     val context = LocalContext.current
+ *     val activity = context.getActivity()
+ *
+ *     Button(onClick = {
+ *         activity?.let {
+ *             // Request permissions using activity
+ *             ActivityCompat.requestPermissions(
+ *                 it,
+ *                 arrayOf(Manifest.permission.CAMERA),
+ *                 REQUEST_CODE
+ *             )
+ *         }
+ *     }) {
+ *         Text("Request Camera Permission")
+ *     }
+ * }
+ *
+ * // Access lifecycle in a utility function
+ * fun observeLifecycle(context: Context) {
+ *     context.getActivity()?.lifecycle?.addObserver(myObserver)
+ * }
+ *
+ * // Show a dialog that requires Activity
+ * fun showDialog(context: Context) {
+ *     context.getActivity()?.let { activity ->
+ *         AlertDialog.Builder(activity)
+ *             .setTitle("Title")
+ *             .show()
+ *     }
+ * }
+ * ```
+ *
+ * @receiver Context Any Android context (Activity, Application, Service context, etc.).
+ * @return The ComponentActivity if this context is or wraps an Activity, null otherwise.
+ *         Returns null for Application context, Service context, or other non-Activity contexts.
+ *
+ * @see androidx.activity.ComponentActivity
+ * @see android.content.ContextWrapper
  */
 fun Context.getActivity(): ComponentActivity? {
     return when (this) {
