@@ -113,15 +113,15 @@
     <h1 class="cover"><span><span>:firebase:analytics</span></span></h1>
     <div class="platform-hinted UnderCoverText with-platform-tabs" data-platform-hinted="data-platform-hinted">
       <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list"><button class="platform-bookmark" data-filterable-current=":firebase:analytics/debug" data-filterable-set=":firebase:analytics/debug" data-active="" data-toggle=":firebase:analytics/debug">debug</button><button class="platform-bookmark" data-filterable-current=":firebase:analytics/main" data-filterable-set=":firebase:analytics/main" data-toggle=":firebase:analytics/main">androidJvm</button><button class="platform-bookmark" data-filterable-current=":firebase:analytics/release" data-filterable-set=":firebase:analytics/release" data-toggle=":firebase:analytics/release">release</button></div>
-<div class="content sourceset-dependent-content" data-active="" data-togglable=":firebase:analytics/debug"></div><div class="content sourceset-dependent-content" data-togglable=":firebase:analytics/main"><p class="paragraph">This module handles crash reporting through Firebase Crashlytics. It provides a centralized way to track app crashes and report exceptions.</p><blockquote class="quotation"><p class="paragraph">!NOTE Despite the module name <code class="lang-kotlin">firebase:analytics</code>, this module provides <strong>Crashlytics</strong> (crash reporting), not Firebase Analytics (event tracking). Firebase Analytics is not included in this template.</p></blockquote><h2 class="">Features</h2><ul><li><p class="paragraph">Crash Reporting</p></li><li><p class="paragraph">Error Tracking</p></li><li><p class="paragraph">Exception Handling</p></li><li><p class="paragraph">Custom Error Reports</p></li></ul><h2 class="">Dependencies Graph</h2><div class="sample-container"><div id="mermaid-container-419ibudlllej7"></div></div><script>
+<div class="content sourceset-dependent-content" data-active="" data-togglable=":firebase:analytics/debug"></div><div class="content sourceset-dependent-content" data-togglable=":firebase:analytics/main"><p class="paragraph">This module handles crash reporting through Firebase Crashlytics. It provides a centralized way to track app crashes and report exceptions.</p><blockquote class="quotation"><p class="paragraph">!NOTE Despite the module name <code class="lang-kotlin">firebase:analytics</code>, this module provides <strong>Crashlytics</strong> (crash reporting), not Firebase Analytics (event tracking). Firebase Analytics is not included in this template.</p></blockquote><h2 class="">Features</h2><ul><li><p class="paragraph">Crash Reporting</p></li><li><p class="paragraph">Error Tracking</p></li><li><p class="paragraph">Exception Handling</p></li><li><p class="paragraph">Custom Error Reports</p></li></ul><h2 class="">Dependencies Graph</h2><div class="sample-container"><div id="mermaid-container-600rvih0a3g8d"></div></div><script>
 window.addEventListener('load', function() {
   var graphDef =  `graph TD
     A[firebase:analytics] --> B[core:android]
     A --> C[firebase.bom]
     C --> D[firebase.crashlytics]`;
-  var container = document.getElementById('mermaid-container-419ibudlllej7');
-  container.innerHTML = '<div id="mermaid-target-419ibudlllej7"></div>';
-  var updateGraph419ibudlllej7 = function() {
+  var container = document.getElementById('mermaid-container-600rvih0a3g8d');
+  container.innerHTML = '<div id="mermaid-target-600rvih0a3g8d"></div>';
+  var updateGraph600rvih0a3g8d = function() {
     // setTimeout required or else the 1st render could be done before mermaid.initialize() has applied the theme.
     // Also required because we can't listen to localStorage events reliably, and it's changed on the same click event...
     setTimeout(() => {
@@ -132,19 +132,19 @@ window.addEventListener('load', function() {
         theme = 'dark';
       }
       mermaid.initialize({'theme': theme});
-      mermaid.render('mermaid-target-419ibudlllej7', graphDef).then(({ svg, bindFunctions }) => {
+      mermaid.render('mermaid-target-600rvih0a3g8d', graphDef).then(({ svg, bindFunctions }) => {
           container.innerHTML = svg;
           // Trick to make the graph takes only the required height.
-          document.getElementById('mermaid-target-419ibudlllej7').removeAttribute('height')
+          document.getElementById('mermaid-target-600rvih0a3g8d').removeAttribute('height')
           bindFunctions?.(element);
       });
     }, 0);
   }
-  updateGraph419ibudlllej7();
+  updateGraph600rvih0a3g8d();
   
   var themeToggleButton = document.getElementById('theme-toggle-button');
   themeToggleButton.addEventListener('click', () => {
-    updateGraph419ibudlllej7();
+    updateGraph600rvih0a3g8d();
   });
 });</script><h2 class="">Usage</h2><div class="sample-container"><pre><code class="block lang-kotlin" theme="idea">dependencies {<br>    implementation(project(":firebase:analytics"))<br>}</code></pre><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><h3 class="">Error Reporting</h3><div class="sample-container"><pre><code class="block lang-kotlin" theme="idea">class YourClass @Inject constructor(<br>    private val crashReporter: CrashReporter<br>) {<br>    fun handleError(error: Throwable) {<br>        crashReporter.reportException(error)<br>    }<br>}</code></pre><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><p class="paragraph">The module integrates with the app's error handling system to automatically report uncaught exceptions to Firebase Crashlytics.</p><h2 class="">Setup</h2><blockquote class="quotation"><p class="paragraph">!NOTE For Firebase setup instructions, including enabling Crashlytics in the Firebase Console, see the ../../docs/firebase.md.</p></blockquote><h2 class="">Related Documentation</h2><ul><li><p class="paragraph"><strong>../../docs/firebase.md</strong> - Complete Firebase Console and local project setup</p></li><li><p class="paragraph"><strong>../../docs/troubleshooting.md</strong> - Firebase Crashlytics issues and solutions</p></li><li><p class="paragraph"><a href="https://firebase.google.com/docs/crashlytics"><strong>Firebase Crashlytics Docs</strong></a> - Official Firebase Crashlytics documentation</p></li></ul></div><div class="content sourceset-dependent-content" data-togglable=":firebase:analytics/release"></div>    </div>
   </div>
