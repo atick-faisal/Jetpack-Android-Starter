@@ -36,6 +36,7 @@ platform :android do
     changelog = changelog_from_git_commits(commits_count: 5)
     changelogPath = File.join(Dir.pwd, "..", "fastlane", "metadata", "android",
         "en-US", "changelogs", "default.txt")
+    FileUtils.mkdir_p(File.dirname(changelogPath))
     File.open(changelogPath, "w") do |file|
         file.write(changelog)
       end
