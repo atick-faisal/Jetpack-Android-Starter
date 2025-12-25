@@ -55,6 +55,12 @@ play-store.json
 docs/index.md
 docs/api/*
 
+# Fastlane
+.bundle
+vendor/*
+fastlane/report.xml
+fastlane/**/default.txt
+
 # AI Tools
 .claude/*
 .gemini/*

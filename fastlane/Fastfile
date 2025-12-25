@@ -23,7 +23,7 @@ platform :android do
 
   desc "Submit a new Beta Build to Crashlytics Beta"
   lane :beta do
-    gradle(task: "clean assembleRelease")
+    gradle(task: "assembleRelease")
     crashlytics
   
     # sh "your_script.sh"
@@ -32,8 +32,8 @@ platform :android do
 
   desc "Deploy a new version to the Google Play"
   lane :deploy do
-    gradle(task: "clean bundleRelease")
-    changelog = changelog_from_git_commits(commits_count: 5)
+    gradle(task: "bundleRelease")
+    changelog = changelog_from_git_commits(commits_count: 10)
     changelogPath = File.join(Dir.pwd, "..", "fastlane", "metadata", "android",
         "en-US", "changelogs", "default.txt")
     File.open(changelogPath, "w") do |file|
