@@ -70,7 +70,12 @@ fun <T> T.format(
             }.format(this)
 
             if (isCurrency) {
-                val currencySymbol = Currency.getInstance(locale).symbol
+                val currencySymbol = try {
+                    Currency.getInstance(locale).symbol
+                } catch (e: IllegalArgumentException) {
+                    // Fallback for locales without country code (e.g., "en" instead of "en_US")
+                    "$"
+                }
                 "$formatted$currencySymbol"
             } else {
                 formatted
