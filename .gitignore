@@ -59,7 +59,7 @@ docs/api/*
 .bundle
 vendor/*
 fastlane/report.xml
-fastlane/**/default.txt
+**/changelogs/*
 
 # AI Tools
 .claude/*

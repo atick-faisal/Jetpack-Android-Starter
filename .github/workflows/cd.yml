@@ -153,6 +153,7 @@ jobs:
       - name: ☁️ Upload to Play Store
         run: |
           echo "${PLAY_STORE_JSON// /}" | base64 --decode > fastlane/play-store.json
+          bundle install
           bundle exec fastlane android deploy
         env:
           PLAY_STORE_JSON: ${{ secrets.PLAY_STORE_JSON }}
