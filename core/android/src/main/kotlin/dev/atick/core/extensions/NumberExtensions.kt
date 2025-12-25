@@ -18,6 +18,7 @@ package dev.atick.core.extensions
 
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
+import timber.log.Timber
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
 import java.util.Currency
@@ -74,7 +75,9 @@ fun <T> T.format(
                     Currency.getInstance(locale).symbol
                 } catch (e: IllegalArgumentException) {
                     // Fallback for locales without country code (e.g., "en" instead of "en_US")
-                    "$"
+                    // Use US locale as a safe default
+                    Timber.w(e, "Failed to get currency for locale: $locale, falling back to USD")
+                    Currency.getInstance(Locale.US).symbol
                 }
                 "$formatted$currencySymbol"
             } else {
