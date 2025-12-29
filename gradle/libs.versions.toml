@@ -37,7 +37,7 @@ retrofit = "3.0.0"
 coil = "2.7.0"
 
 # ... STORAGE:PREFERENCES ...
-androidxDataStore = "1.1.7"
+androidxDataStore = "1.2.0"
 
 # ... STORAGE:ROOM ...
 room = "2.8.4"
