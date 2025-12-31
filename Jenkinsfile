@@ -10,7 +10,7 @@ pipeline {
             agent {
                 docker {
                     image 'eclipse-temurin:21-jdk'
-                    args '-v $HOME/.gradle:/root/.gradle'
+                    args '-u root:root -v $HOME/.gradle:/root/.gradle'
                 }
             }
 
