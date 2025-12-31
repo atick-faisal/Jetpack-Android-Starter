@@ -9,7 +9,7 @@ pipeline {
         stage('Generate & Deploy Docs') {
             agent {
                 docker {
-                    image 'eclipse-temurin:21-jdk'
+                    image 'ghcr.io/runningcode/android-docker:latest'
                     args '-u root:root -v $HOME/.gradle:/root/.gradle'
                 }
             }
