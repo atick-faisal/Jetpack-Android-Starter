@@ -9,7 +9,7 @@ pipeline {
         stage('Generate & Deploy Docs') {
             agent {
                 docker {
-                    image 'ghcr.io/runningcode/android-docker:latest'
+                    image 'thyrlian/android-sdk:latest'
                     args '-u root:root -v $HOME/.gradle:/root/.gradle'
                 }
             }
