@@ -32,12 +32,12 @@ The version catalog is organized into several sections:
    [versions]
    # Core versions
    java = "21"
-   kotlin = "2.1.10"
+   kotlin = "2.3.0"
    
    # SDK Configuration
    minSdk = "24"
-   compileSdk = "35"
-   targetSdk = "35"
+   compileSdk = "36"
+   targetSdk = "36"
    ```
 
 2. **Plugins**
