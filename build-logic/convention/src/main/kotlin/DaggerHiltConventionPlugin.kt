@@ -32,6 +32,7 @@ class DaggerHiltConventionPlugin : Plugin<Project> {
 
             dependencies {
                 "implementation"(libs.findLibrary("dagger.hilt.android").get())
+                "ksp"(libs.findLibrary("kotlin.metadata.jvm").get())
                 "ksp"(libs.findLibrary("dagger.hilt.compiler").get())
             }
         }
