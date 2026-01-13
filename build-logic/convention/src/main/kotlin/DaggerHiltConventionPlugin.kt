@@ -33,6 +33,7 @@ class DaggerHiltConventionPlugin : Plugin<Project> {
             dependencies {
                 "implementation"(libs.findLibrary("dagger.hilt.android").get())
                 "ksp"(libs.findLibrary("kotlin.metadata.jvm").get())
+                // ... Added this to fix Hilt error (https://github.com/google/dagger/issues/5001)
                 "ksp"(libs.findLibrary("dagger.hilt.compiler").get())
             }
         }
