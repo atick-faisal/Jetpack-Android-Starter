@@ -3,9 +3,9 @@
 # ... PROJECT ...
 java = "21"
 kotlin = "2.3.0"
-androidGradlePlugin = "8.13.2"
+androidGradlePlugin = "9.0.0"
 gmsPlugin = "4.4.4"
-ksp = "2.3.4"
+ksp = "2.3.5"
 dokka = "2.1.0"
 dokkaMermaid = "0.6.0"
 secrets = "2.0.1"
@@ -14,22 +14,22 @@ secrets = "2.0.1"
 androidxCore = "1.17.0"
 kotlinxCoroutines = "1.10.2"
 kotlinxDatetime = "0.7.1-0.6.x-compat"
-kotlinxSerializationJson = "1.9.0"
+kotlinxSerializationJson = "1.10.0"
 timber = "5.0.1"
 
 # ... CORE:UI ...
-androidxNavigation = "2.9.6"
+androidxNavigation = "2.9.7"
 androidxFragment = "1.8.9"
 androidxAppCompat = "1.7.1"
-androidxActivity = "1.12.2"
+androidxActivity = "1.12.3"
 androidxLifecycle = "2.10.0"
-androidxComposeBom = "2025.10.01"
+androidxComposeBom = "2026.01.01"
 androidxComposeCompiler = "1.5.15"
 androidxCoreSplashscreen = "1.2.0"
 androidxHiltNavigationCompose = "1.3.0"
 lottieCompose = "6.7.1"
 # FIXME: Remove this once stable
-materialExpressive = "1.5.0-alpha12"
+materialExpressive = "1.5.0-alpha13"
 
 # ... NETWORK ...
 okhttp = "5.3.2"
@@ -45,7 +45,7 @@ room = "2.8.4"
 # ... AUTH ...
 playServicesAuth = "21.5.0"
 androidxCredentials = "1.5.0"
-identityGoogleId = "1.1.1"
+identityGoogleId = "1.2.0"
 
 # ... FIREBASE ...
 firebaseBom = "34.8.0"
@@ -53,7 +53,7 @@ firebaseCrashlyticsPlugin = "3.0.6"
 firebasePerfPlugin = "2.0.2"
 
 # ... DAGGER-HILT ...
-daggerHilt = "2.58"
+daggerHilt = "2.59"
 daggerHiltExt = "1.3.0"
 
 # ... Open Source Licenses ...
@@ -64,7 +64,7 @@ googleOssPlugin = "0.10.10"
 leakcanaryAndroid = "2.14"
 
 # ... WORK MANAGER ...
-workVersion = "2.11.0"
+workVersion = "2.11.1"
 
 # ... SDK-CONFIG ...
 minSdk = "24"
