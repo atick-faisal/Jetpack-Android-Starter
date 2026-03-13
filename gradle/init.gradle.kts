@@ -14,10 +14,10 @@
  *   limitations under the License.
  */
 
-val ktlintVersion = "1.4.0"
-
+// TODO: Verify Spotless task discoverability in Gradle 9.4.0 (Issue #580)
+// Note: Spotless tasks may not appear in standard task listings but still execute correctly
 initscript {
-    val spotlessVersion = "7.2.1"
+    val spotlessVersion = "8.3.0"
 
     repositories {
         mavenCentral()
@@ -29,6 +29,8 @@ initscript {
 }
 
 rootProject {
+    val ktlintVersion = "1.6.0"
+
     subprojects {
         apply<com.diffplug.gradle.spotless.SpotlessPlugin>()
         extensions.configure<com.diffplug.gradle.spotless.SpotlessExtension> {
@@ -41,7 +43,7 @@ rootProject {
                     ),
                 ).customRuleSets(
                     listOf(
-                        "io.nlopez.compose.rules:ktlint:0.4.26",
+                        "io.nlopez.compose.rules:ktlint:0.5.6",
                     ),
                 )
                 licenseHeaderFile(rootProject.file("spotless/copyright.kt"))

@@ -44,6 +44,22 @@ import dev.atick.core.ui.R
 /**
  * A Jetpack Compose top app bar with a title, navigation icon, and action icon.
  *
+ * Center-aligned top app bar with navigation and action icons. Use for screens
+ * that need both back navigation and a primary action.
+ *
+ * **Usage Example:**
+ * ```kotlin
+ * JetpackTopAppBar(
+ *     titleRes = R.string.edit_profile,
+ *     navigationIcon = Icons.AutoMirrored.Filled.ArrowBack,
+ *     navigationIconContentDescription = "Navigate back",
+ *     actionIcon = Icons.Default.Save,
+ *     actionIconContentDescription = "Save changes",
+ *     onNavigationClick = { navController.navigateUp() },
+ *     onActionClick = { viewModel.saveProfile() }
+ * )
+ * ```
+ *
  * @param titleRes The string resource ID for the title of the top app bar.
  * @param navigationIcon The navigation icon to be displayed on the top app bar.
  * @param navigationIconContentDescription The content description for the navigation icon.
@@ -63,7 +79,7 @@ fun JetpackTopAppBar(
     actionIcon: ImageVector,
     actionIconContentDescription: String?,
     modifier: Modifier = Modifier,
-    colors: TopAppBarColors = TopAppBarDefaults.centerAlignedTopAppBarColors(),
+    colors: TopAppBarColors = TopAppBarDefaults.topAppBarColors(),
     onNavigationClick: () -> Unit = {},
     onActionClick: () -> Unit = {},
 ) {
@@ -95,6 +111,19 @@ fun JetpackTopAppBar(
 /**
  * A Jetpack Compose top app bar with a title and action icon.
  *
+ * Center-aligned top app bar with only an action icon (no navigation icon).
+ * Use for top-level screens where back navigation isn't needed.
+ *
+ * **Usage Example:**
+ * ```kotlin
+ * JetpackTopAppBar(
+ *     titleRes = R.string.settings,
+ *     actionIcon = Icons.Default.Info,
+ *     actionIconContentDescription = "About",
+ *     onActionClick = { navController.navigate(About) }
+ * )
+ * ```
+ *
  * @param titleRes The string resource ID for the title of the top app bar.
  * @param actionIcon The action icon to be displayed on the top app bar.
  * @param actionIconContentDescription The content description for the action icon.
@@ -109,7 +138,7 @@ fun JetpackTopAppBar(
     actionIcon: ImageVector,
     actionIconContentDescription: String?,
     modifier: Modifier = Modifier,
-    colors: TopAppBarColors = TopAppBarDefaults.centerAlignedTopAppBarColors(),
+    colors: TopAppBarColors = TopAppBarDefaults.topAppBarColors(),
     onActionClick: () -> Unit = {},
 ) {
     CenterAlignedTopAppBar(
@@ -131,6 +160,21 @@ fun JetpackTopAppBar(
 /**
  * A Jetpack Compose top app bar with a title and avatar.
  *
+ * Center-aligned top app bar with a user avatar as the action item. Avatar is loaded
+ * asynchronously with Coil, with fallback to a default avatar icon.
+ *
+ * **Usage Example:**
+ * ```kotlin
+ * val userAvatar by viewModel.userAvatar.collectAsStateWithLifecycle()
+ *
+ * JetpackTopAppBarWithAvatar(
+ *     titleRes = R.string.home,
+ *     avatarUri = userAvatar,
+ *     avatarContentDescription = "User profile",
+ *     onAvatarClick = { navController.navigate(Profile) }
+ * )
+ * ```
+ *
  * @param titleRes The string resource ID for the title of the top app bar.
  * @param avatarUri The URI for the avatar image.
  * @param avatarContentDescription The content description for the avatar.
@@ -145,7 +189,7 @@ fun JetpackTopAppBarWithAvatar(
     avatarUri: String?,
     avatarContentDescription: String?,
     modifier: Modifier = Modifier,
-    colors: TopAppBarColors = TopAppBarDefaults.centerAlignedTopAppBarColors(),
+    colors: TopAppBarColors = TopAppBarDefaults.topAppBarColors(),
     onAvatarClick: () -> Unit = {},
 ) {
     CenterAlignedTopAppBar(
@@ -171,12 +215,25 @@ fun JetpackTopAppBarWithAvatar(
 /**
  * A Jetpack Compose top app bar with a title, navigation icon, and action button.
  *
+ * Left-aligned top app bar with a text button instead of an icon for the action.
+ * Use when the action needs to be more prominent or when text is clearer than an icon.
+ *
+ * **Usage Example:**
+ * ```kotlin
+ * JetpackActionBar(
+ *     titleRes = R.string.select_items,
+ *     actionRes = R.string.done,
+ *     onActionClick = { viewModel.confirmSelection() },
+ *     onNavigateBackClick = { navController.navigateUp() }
+ * )
+ * ```
+ *
  * @param titleRes The string resource ID for the title of the top app bar.
  * @param actionRes The string resource ID for the action button.
  * @param onActionClick The callback when the action button is clicked.
  * @param onNavigateBackClick The callback when the navigation icon is clicked.
- * @param colors The colors for this top app bar.
  * @param modifier The modifier for this top app bar.
+ * @param colors The colors for this top app bar.
  */
 @Composable
 fun JetpackActionBar(

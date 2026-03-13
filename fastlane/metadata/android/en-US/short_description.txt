@@ -1,1 +1,1 @@
-Jetpack Compose Sample
+Sample application to demonstrate the Jetpack Android Starter Template

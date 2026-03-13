@@ -40,8 +40,36 @@ import kotlin.math.tan
  * The main background for the app.
  * Uses [LocalBackgroundTheme] to set the color and tonal elevation of a [Surface].
  *
+ * A theme-aware background component that wraps content with proper Material 3 theming.
+ * The background color and elevation adapt based on the provided theme values.
+ *
+ * **Features:**
+ * - Automatic color from LocalBackgroundTheme
+ * - Tonal elevation support for depth
+ * - Resets absolute tonal elevation for nested surfaces
+ * - Fills max size by default
+ *
+ * **Usage Example:**
+ * ```kotlin
+ * @Composable
+ * fun MyApp() {
+ *     AppBackground {
+ *         // Your app content
+ *         Scaffold(
+ *             topBar = { JetpackTopAppBar(...) },
+ *             content = { padding ->
+ *                 MainContent(Modifier.padding(padding))
+ *             }
+ *         )
+ *     }
+ * }
+ * ```
+ *
  * @param modifier Modifier to be applied to the background.
  * @param content The background content.
+ *
+ * @see AppGradientBackground For gradient backgrounds on specific screens
+ * @see LocalBackgroundTheme Theme provider for background customization
  */
 @Composable
 fun AppBackground(
@@ -62,12 +90,52 @@ fun AppBackground(
 }
 
 /**
- * A gradient background for select screens. Uses [LocalBackgroundTheme] to set the gradient colors
+ * A gradient background for select screens. Uses [LocalGradientColors] to set the gradient colors
  * of a [Box] within a [Surface].
  *
+ * A decorative gradient background with top and bottom color fades at an 11.06-degree angle.
+ * Use for hero sections, onboarding screens, or feature highlights.
+ *
+ * **Features:**
+ * - Dual gradient (top fades out at 72.4%, bottom fades in at 25.5%)
+ * - Angled at 11.06 degrees for visual interest
+ * - Theme-aware gradient colors from LocalGradientColors
+ * - Container background with gradient overlay
+ *
+ * **Usage Example:**
+ * ```kotlin
+ * @Composable
+ * fun OnboardingScreen() {
+ *     AppGradientBackground(
+ *         gradientColors = GradientColors(
+ *             top = Color(0xFF4CAF50),
+ *             bottom = Color(0xFF2196F3),
+ *             container = MaterialTheme.colorScheme.surface
+ *         )
+ *     ) {
+ *         Column(
+ *             modifier = Modifier.fillMaxSize(),
+ *             verticalArrangement = Arrangement.Center
+ *         ) {
+ *             Text("Welcome!", style = MaterialTheme.typography.displayLarge)
+ *             Text("Get started with our app")
+ *         }
+ *     }
+ * }
+ * ```
+ *
+ * **When to use:**
+ * - Onboarding or welcome screens
+ * - Feature announcements or promotions
+ * - Hero sections with visual emphasis
+ * - Special event or seasonal theming
+ *
  * @param modifier Modifier to be applied to the background.
- * @param gradientColors The gradient colors to be rendered.
+ * @param gradientColors The gradient colors to be rendered. Defaults to LocalGradientColors.
  * @param content The background content.
+ *
+ * @see AppBackground For standard solid backgrounds
+ * @see LocalGradientColors Theme provider for gradient customization
  */
 @Composable
 fun AppGradientBackground(

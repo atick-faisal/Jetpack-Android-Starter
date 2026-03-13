@@ -57,6 +57,6 @@ class ProfileViewModel @Inject constructor(
     }
 
     fun signOut() {
-        _profileUiState.updateWith(viewModelScope) { profileRepository.signOut() }
+        _profileUiState.updateWith { profileRepository.signOut() }
     }
 }

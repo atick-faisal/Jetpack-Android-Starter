@@ -1,5 +1,14 @@
 # Dependency Management
 
+## Summary
+
+This guide explains the project's dependency management strategy using Gradle Version Catalogs and
+automated update tools (Renovate/Dependabot). Learn how to add dependencies, manage versions
+centrally, use BOMs for version compatibility, and leverage automated dependency updates to keep the
+project current.
+
+---
+
 This project uses Version Catalogs and automated dependency updates to maintain a clean and
 up-to-date dependency management system.
 
@@ -19,32 +28,32 @@ The version catalog is organized into several sections:
 
 1. **Versions**
 
-	```toml
-	[versions]
-	# Core versions
-	java = "21"
-	kotlin = "2.1.10"
-	
-	# SDK Configuration
-	minSdk = "24"
-	compileSdk = "35"
-	targetSdk = "35"
-	```
+   ```toml
+   [versions]
+   # Core versions
+   java = "21"
+   kotlin = "2.1.10"
+   
+   # SDK Configuration
+   minSdk = "24"
+   compileSdk = "35"
+   targetSdk = "35"
+   ```
 
 2. **Plugins**
 
-	```toml
-	[plugins]
-	kotlin = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
-	android-library = { id = "com.android.library", version.ref = "androidGradlePlugin" }
-	```
+   ```toml
+   [plugins]
+   kotlin = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+   android-library = { id = "com.android.library", version.ref = "androidGradlePlugin" }
+   ```
 
 3. **Libraries**
 
-	```toml
-	[libraries]
-	androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "androidxCore" }
-	```
+   ```toml
+   [libraries]
+   androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "androidxCore" }
+   ```
 
 > [!NOTE]
 > Some versions in the catalog, like `java` and SDK versions, are not direct dependencies but are
@@ -125,37 +134,37 @@ To enable Dependabot, ensure Dependabot is enabled in your repository settings
 ## Best Practices
 
 1. **Version Organization**:
-	- Group related versions together
-	- Use comments to separate sections
-	- Keep SDK configurations in a dedicated section
+    - Group related versions together
+    - Use comments to separate sections
+    - Keep SDK configurations in a dedicated section
 
 2. **Version References**:
 
-	```toml
-	[versions]
-	compose-compiler = "1.5.3"
-	
-	[libraries]
-	compose-compiler = { group = "androidx.compose.compiler", name = "compiler", version.ref = "compose-compiler" }
-	```
+   ```toml
+   [versions]
+   compose-compiler = "1.5.3"
+   
+   [libraries]
+   compose-compiler = { group = "androidx.compose.compiler", name = "compiler", version.ref = "compose-compiler" }
+   ```
 
 3. **Version Bundles**:
    Use BOM (Bill of Materials) when available:
 
-	```toml
-	[libraries]
-	compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "androidxComposeBom" }
-	```
+   ```toml
+   [libraries]
+   compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "androidxComposeBom" }
+   ```
 
 4. **Custom Properties**:
    Store important project configuration in the version catalog:
 
-	```toml
-	[versions]
-	minSdk = "24"
-	compileSdk = "35"
-	targetSdk = "35"
-	```
+   ```toml
+   [versions]
+   minSdk = "24"
+   compileSdk = "35"
+   targetSdk = "35"
+   ```
 
 > [!WARNING]
 > Don't mix different versions of the same library family. Use BOMs when available to ensure
@@ -174,8 +183,8 @@ dependencies {
 ```
 
 ## Further Reading
-- [Architecture Overview](architecture.md): Understand the architecture and design principles
-- [Design Philosophy](philosophy.md): Learn about the design philosophy behind the project
-- [Adding New Features](guide.md): Get started with adding new features to the project
-- [Performance Optimization](performance.md): Learn about performance optimization techniques
-- [Useful Tips & Tricks](tips.md): Explore useful tips and tricks for Android development
+
+- **[Convention Plugins](plugins.md)** - Build logic and plugin configuration that uses version
+  catalog
+- **[Adding New Features](guide.md)** - Step-by-step guide for implementing new features
+- **[Architecture Overview](architecture.md)** - Module structure and architectural patterns

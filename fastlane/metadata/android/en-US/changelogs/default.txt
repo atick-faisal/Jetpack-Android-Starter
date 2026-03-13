@@ -1,5 +1,0 @@
-Add non standard gems to gemfile
-Try again with bundle
-Try again with bundle
-Try with bundle
-Remove bundle exec before fastlane

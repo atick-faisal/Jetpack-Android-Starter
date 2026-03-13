@@ -1,5 +1,14 @@
 # GitHub CI/CD Setup
 
+## Summary
+
+This guide explains the project's three GitHub Actions workflows: Build (runs on PRs with Spotless
+checks), Documentation (deploys to GitHub Pages), and Release (builds signed APKs and deploys to
+Play Store). Learn how to set up required secrets, create releases with tags, and troubleshoot
+failed workflows.
+
+---
+
 This project uses GitHub Actions for continuous integration and deployment. We have three main
 workflows:
 
@@ -41,27 +50,27 @@ The release workflow is triggered when you push a tag with the format `v*.*.*` (
 Before you can use the release workflow, you need to set up the following GitHub secrets:
 
 1. `GOOGLE_SERVICES`: Base64 encoded content of your `google-services.json` file
-	```bash
-	base64 -i google-services.json | tr -d '\n'
-	```
+   ```bash
+   base64 -i google-services.json | tr -d '\n'
+   ```
 
 2. `KEYSTORE`: Base64 encoded content of your keystore file
-	```bash
-	base64 -i your-keystore.jks | tr -d '\n'
-	```
+   ```bash
+   base64 -i your-keystore.jks | tr -d '\n'
+   ```
 
 3. `KEYSTORE_PROPERTIES`: Base64 encoded content of your keystore.properties file containing:
-	```properties
-	storeFile=key.jks
-	storePassword=your-store-password
-	keyAlias=your-key-alias
-	keyPassword=your-key-password
-	```
- 
+   ```properties
+   storeFile=key.jks
+   storePassword=your-store-password
+   keyAlias=your-key-alias
+   keyPassword=your-key-password
+   ```
+
 4. `PLAY_STORE_JSON`: Base64 encoded content of your `play-store.json` file
-	```bash
-	base64 -i play-store.json | tr -d '\n'
-	```
+   ```bash
+   base64 -i play-store.json | tr -d '\n'
+   ```
 
 > [!WARNING]
 > Never commit your keystore file, keystore properties, google-services.json or play-store.json
@@ -73,10 +82,10 @@ To create a new release:
 
 1. Update the `CHANGELOG.md` file with your release notes
 2. Create and push a new tag:
-	```bash
-	git tag -a v1.0.0 -m "Release v1.0.0"
-	git push origin v1.0.0
-	```
+   ```bash
+   git tag -a v1.0.0 -m "Release v1.0.0"
+   git push origin v1.0.0
+   ```
 
 The workflow will automatically:
 
@@ -104,4 +113,7 @@ If the release workflow fails, check:
 > the workflow file.
 
 ## Further Reading
-- [Publishing to Play Store](fastlane.md): Learn how to publish your app to the Google Play Store
+
+- **[Fastlane Setup](fastlane.md)** - Play Store deployment automation used by release workflow
+- **[Firebase Setup](firebase.md)** - Firebase configuration needed for release builds
+- **[Spotless](spotless.md)** - Code formatting checked by build workflow

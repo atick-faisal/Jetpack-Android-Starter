@@ -49,7 +49,16 @@ import androidx.compose.ui.unit.dp
 /**
  * A data class representing a toggle option.
  *
- * @param text The text to display for the option.
+ * Usage example:
+ * ```kotlin
+ * val themeOptions = listOf(
+ *     ToggleOption(text = R.string.light_theme, icon = Icons.Default.LightMode),
+ *     ToggleOption(text = R.string.dark_theme, icon = Icons.Default.DarkMode),
+ *     ToggleOption(text = R.string.system_theme, icon = Icons.Default.Settings),
+ * )
+ * ```
+ *
+ * @param text The string resource ID for the text to display for the option.
  * @param icon The icon to display for the option.
  */
 data class ToggleOption(
@@ -58,10 +67,30 @@ data class ToggleOption(
 )
 
 /**
- * A row of toggle options that can be selected.
+ * A row of toggle options that can be selected. Displays a segmented button-style selector
+ * with animated transitions between states.
  *
- * @param options The list of options to display.
- * @param selectedIndex The index of the selected option.
+ * This component is useful for mutually exclusive choices like theme selection (Light/Dark/System),
+ * view modes (List/Grid), or any other set of 2-4 options.
+ *
+ * Usage example:
+ * ```kotlin
+ * val themeOptions = listOf(
+ *     ToggleOption(text = R.string.light, icon = Icons.Default.LightMode),
+ *     ToggleOption(text = R.string.dark, icon = Icons.Default.DarkMode),
+ *     ToggleOption(text = R.string.system, icon = Icons.Default.SettingsBrightness),
+ * )
+ * var selectedTheme by remember { mutableIntStateOf(2) } // System
+ *
+ * JetpackToggleOptions(
+ *     options = themeOptions,
+ *     selectedIndex = selectedTheme,
+ *     onSelectionChange = { selectedTheme = it },
+ * )
+ * ```
+ *
+ * @param options The list of options to display. Recommended 2-4 options for best UX.
+ * @param selectedIndex The zero-based index of the selected option.
  * @param onSelectionChange The callback to invoke when the selected option changes.
  * @param modifier The modifier to apply to the row.
  */

@@ -21,25 +21,63 @@ import androidx.annotation.StringRes
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 
-// ... UiText by Phillip Lackner
-// ... https://youtu.be/mB1Lej0aDus
-
 /**
- * A sealed class that represents a string that can be either a string resource or a dynamic string.
+ * Represents text that can be either a string resource (localized) or a dynamic string (runtime).
+ *
+ * This sealed class ensures type-safe handling of text throughout the application,
+ * particularly useful for passing text from business logic to UI without requiring Android Context.
+ *
+ * @see DynamicString For runtime-generated strings
+ * @see StringResource For localized string resources
  */
 sealed class UiText {
     /**
-     * A dynamic string that can be used to represent a string that is not known at compile time.
+     * Represents a dynamic string generated at runtime.
      *
-     * @param value The string value.
+     * Use this for:
+     * - User-generated content (names, messages, etc.)
+     * - API responses (error messages from server)
+     * - Formatted numbers or dates
+     * - Any text that isn't localized
+     *
+     * ## Examples
+     * ```kotlin
+     * UiText.DynamicString("Welcome, ${user.name}!")
+     * UiText.DynamicString(apiError.message)
+     * UiText.DynamicString("${count} items")
+     * ```
+     *
+     * @property value The string content to display.
      */
     data class DynamicString(val value: String) : UiText()
 
     /**
-     * A string resource that can be used to represent a string that is known at compile time.
+     * Represents a localized string resource with optional formatting arguments.
      *
-     * @param resId The string resource id.
-     * @param args The string resource arguments.
+     * Use this for:
+     * - All user-facing static text
+     * - Error messages that should be localized
+     * - Labels, titles, descriptions
+     * - Any text that needs translation
+     *
+     * ## Examples
+     * ```kotlin
+     * // Simple string resource
+     * UiText.StringResource(R.string.app_name)
+     *
+     * // With single argument
+     * UiText.StringResource(R.string.welcome_user, userName)
+     *
+     * // With multiple arguments
+     * UiText.StringResource(
+     *     R.string.items_count_format,  // "%d of %d items"
+     *     currentCount,
+     *     totalCount
+     * )
+     * ```
+     *
+     * @property resId The string resource ID from R.string.
+     * @property args Optional formatting arguments for string placeholders (%s, %d, etc.).
      */
     class StringResource(
         @StringRes val resId: Int,
@@ -47,7 +85,12 @@ sealed class UiText {
     ) : UiText()
 
     /**
-     * Returns the string value of this [UiText].
+     * Resolves this UiText to a String within a Composable context.
+     *
+     * This is the preferred method for resolving UiText in Compose UI, as it properly
+     * handles configuration changes and recomposition.
+     *
+     * @return The resolved string value.
      */
     @Composable
     fun asString(): String {
@@ -58,7 +101,18 @@ sealed class UiText {
     }
 
     /**
-     * Returns the string value of this [UiText].
+     * Resolves this UiText to a String using an Android Context.
+     *
+     * Use this method in non-Composable code such as:
+     * - WorkManager workers
+     * - Notification builders
+     * - Service classes
+     * - ViewModels (when absolutely necessary)
+     *
+     * **Note:** Prefer the Composable `asString()` variant in UI code.
+     *
+     * @param context Android context for resolving string resources.
+     * @return The resolved string value.
      */
     fun asString(context: Context): String {
         return when (this) {

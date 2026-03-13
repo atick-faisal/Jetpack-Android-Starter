@@ -22,6 +22,11 @@ import kotlinx.coroutines.flow.Flow
 
 /**
  * Repository for managing user settings.
+ *
+ * This repository uses DataStore for local persistence of user preferences like theme
+ * configuration and dynamic color preferences. All settings are stored locally only.
+ *
+ * @see SettingsRepositoryImpl Implementation class with DataStore integration
  */
 interface SettingsRepository {
     /**

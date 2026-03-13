@@ -21,6 +21,11 @@ import kotlinx.coroutines.flow.Flow
 
 /**
  * Interface for managing profile-related operations.
+ *
+ * This repository observes Firebase Auth state to provide profile information and handle
+ * sign-out operations. Profile data is cached locally for offline access.
+ *
+ * @see ProfileRepositoryImpl Implementation class with Firebase Auth integration
  */
 interface ProfileRepository {
     /**

@@ -19,10 +19,6 @@ graph TD
     A[firebase:firestore] --> B[core:android]
     A --> C[firebase.bom]
     C --> D[firebase.firestore]
-    style A fill: #4CAF50, stroke: #333, stroke-width: 2px
-    style B fill: #64B5F6, stroke: #333, stroke-width: 2px
-    style C fill: #FFA726, stroke: #333, stroke-width: 2px
-    style D fill: #FFA726, stroke: #333, stroke-width: 2px
 ```
 
 ## Usage
@@ -59,9 +55,7 @@ class FirestoreDataSource @Inject constructor(
 
 ### Security Rules
 
-The module expects proper Firestore security rules to be set up. Checkout
-the [Firestore Security Rules](https://firebase.google.com/docs/firestore/security/get-started)
-documentation for more details.
+The module expects proper Firestore security rules to be set up. Here's a basic example:
 
 ```javascript
 rules_version = '2';
@@ -74,4 +68,18 @@ service cloud.firestore {
 }
 ```
 
+> [!NOTE]
+> For complete Firestore setup and production-ready security rules examples, see the [Firebase Setup Guide](../../docs/firebase.md#firestore-security-rules).
+
 All operations are performed with proper security context and error handling.
+
+## Setup
+
+> [!NOTE]
+> For Firebase Firestore setup instructions, including enabling Firestore in the Firebase Console and configuring security rules, see the [Firebase Setup Guide](../../docs/firebase.md).
+
+## Related Documentation
+
+- **[Firebase Setup Guide](../../docs/firebase.md)** - Complete Firebase Console and Firestore setup
+- **[Troubleshooting Guide](../../docs/troubleshooting.md)** - Firebase Firestore issues and solutions
+- **[Firestore Security Rules](https://firebase.google.com/docs/firestore/security/get-started)** - Official Firebase security rules documentation

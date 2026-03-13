@@ -26,12 +26,6 @@ graph TD
         C
         E
     end
-
-    style A fill: #4CAF50, stroke: #333, stroke-width: 2px
-    style B fill: #64B5F6, stroke: #333, stroke-width: 2px
-    style C fill: #64B5F6, stroke: #333, stroke-width: 2px
-    style D fill: #FF7043, stroke: #333, stroke-width: 2px
-    style E fill: #64B5F6, stroke: #333, stroke-width: 2px
 ```
 
 ## Usage
@@ -77,3 +71,9 @@ fun SettingsDialog(
 	```
 
 The module uses DataStore Preferences for persistent storage of user settings.
+
+## Related Documentation
+
+- **[Adding a Feature Guide](../../docs/guide.md)** - Step-by-step template for creating new features
+- **[State Management](../../docs/state-management.md)** - UiState pattern and ViewModel best practices
+- **[Core Preferences](../../core/preferences/README.md)** - DataStore implementation for settings persistence

@@ -254,7 +254,7 @@ private fun JetpackScaffold(
                     titleRes = destination.titleTextId,
                     avatarUri = appState.userProfilePictureUri,
                     avatarContentDescription = stringResource(id = R.string.settings),
-                    colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                    colors = TopAppBarDefaults.topAppBarColors(
                         containerColor = Color.Transparent,
                     ),
                     onAvatarClick = { onTopAppBarActionClick() },

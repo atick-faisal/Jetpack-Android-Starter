@@ -50,3 +50,21 @@ play-store.json
 
 # Mac OS
 .DS_Store
+
+# Generated Docs
+docs/index.md
+docs/api/*
+
+# Fastlane
+.bundle
+vendor/*
+fastlane/report.xml
+**/changelogs/*
+
+# AI Tools
+.claude/*
+.gemini/*
+GEMINI.local.md
+CLAUDE.local.md
+CHECKLIST.local.md
+CHANGELOG.local.md

@@ -20,7 +20,67 @@ import dev.atick.core.room.model.JetpackEntity
 import kotlinx.coroutines.flow.Flow
 
 /**
- * Data source interface for managing local storage operations related to [JetpackEntity] objects.
+ * Local data source for managing offline-first data persistence using Room database.
+ *
+ * This interface defines the contract for local database operations, enabling:
+ * - **Offline-first architecture**: Data is always available locally
+ * - **Sync management**: Tracks which entities need synchronization with remote
+ * - **Soft deletes**: Marks items as deleted instead of removing immediately
+ * - **Reactive queries**: Returns [Flow] for real-time UI updates
+ *
+ * ## Design Pattern
+ *
+ * This follows the **Repository Pattern with Local Data Source**:
+ * - Abstracts Room DAO implementation details
+ * - Provides domain-agnostic data access
+ * - Handles sync metadata automatically
+ * - Executes queries on IO dispatcher (handled by Room)
+ *
+ * ## Sync Strategy
+ *
+ * The data source tracks sync state using:
+ * - `lastUpdated`: When the entity was last modified locally
+ * - `lastSynced`: When the entity was last synced with remote
+ * - `needsSync`: Flag indicating sync is required
+ * - `syncAction`: Action to perform during sync (UPSERT, DELETE, NONE)
+ *
+ * ## Usage in Repositories
+ *
+ * ```kotlin
+ * class JetpackRepository @Inject constructor(
+ *     private val localDataSource: LocalDataSource,
+ *     private val networkDataSource: NetworkDataSource
+ * ) {
+ *     // Reactive query for UI
+ *     fun observeJetpacks(userId: String): Flow<List<Jetpack>> =
+ *         localDataSource.getJetpacks(userId)
+ *             .map { entities -> entities.map { it.toDomain() } }
+ *
+ *     // Sync local changes to remote
+ *     suspend fun syncLocalChanges(userId: String): Result<Unit> = suspendRunCatching {
+ *         val unsyncedItems = localDataSource.getUnsyncedJetpacks(userId)
+ *         unsyncedItems.forEach { entity ->
+ *             when (entity.syncAction) {
+ *                 SyncAction.UPSERT -> networkDataSource.upsert(entity.toNetwork())
+ *                 SyncAction.DELETE -> networkDataSource.delete(entity.id)
+ *                 SyncAction.NONE -> {}
+ *             }
+ *             localDataSource.markAsSynced(entity.id)
+ *         }
+ *     }
+ *
+ *     // Sync remote changes to local
+ *     suspend fun syncRemoteChanges(userId: String): Result<Unit> = suspendRunCatching {
+ *         val lastUpdate = localDataSource.getLatestUpdateTimestamp(userId)
+ *         val remoteChanges = networkDataSource.getChanges(since = lastUpdate)
+ *         localDataSource.upsertJetpacks(remoteChanges.map { it.toEntity() })
+ *     }
+ * }
+ * ```
+ *
+ * @see JetpackEntity
+ * @see JetpackDao
+ * @see SyncAction
  */
 interface LocalDataSource {
     /**

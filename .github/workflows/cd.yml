@@ -11,33 +11,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: ⬇️ Checkout Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: ✅ Validate Gradle Wrapper
-        uses: gradle/actions/wrapper-validation@v4
-
-      - name: 📜 Set up Google Services
-        run: |
-          touch app/google-services.json
-          echo "${CONTENT// /}" | base64 --decode > app/google-services.json
-        env:
-          CONTENT: ${{ secrets.GOOGLE_SERVICES }}
+        uses: gradle/actions/wrapper-validation@v5
 
       - name: 🏗️ Set up JDK 21
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           java-version: 21
           distribution: 'temurin'
           cache: gradle
 
-      - name: 💎 Setup Ruby & Bundler
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: 3.0
-          bundler-cache: true
-
-      - name: ⚙️ Setup Gradle
-        uses: gradle/actions/setup-gradle@v4
+      - name: 🧼 Run Spotless Check
+        run: ./gradlew spotlessCheck --init-script gradle/init.gradle.kts --no-configuration-cache
 
   build:
     name: 🏗️ Build Signed APK
@@ -46,7 +33,24 @@ jobs:
     timeout-minutes: 45
     steps:
       - name: ⬇️ Checkout Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
+
+      - name: ✅ Validate Gradle Wrapper
+        uses: gradle/actions/wrapper-validation@v5
+
+      - name: 🏗️ Set up JDK 21
+        uses: actions/setup-java@v5
+        with:
+          java-version: 21
+          distribution: 'temurin'
+          cache: gradle
+
+      - name: 📜 Set up Google Services
+        run: |
+          touch app/google-services.json
+          echo "${CONTENT// /}" | base64 --decode > app/google-services.json
+        env:
+          CONTENT: ${{ secrets.GOOGLE_SERVICES }}
 
       - name: 🔑 Set up Signing Key
         run: |
@@ -58,6 +62,13 @@ jobs:
           KEYSTORE: ${{ secrets.KEYSTORE }}
           KEYSTORE_PROPERTIES: ${{ secrets.KEYSTORE_PROPERTIES }}
 
+      - name: 🔐 Set up Local Properties
+        run: |
+          touch local.properties
+          echo "GOOGLE_WEB_CLIENT_ID=$GOOGLE_WEB_CLIENT_ID" >> local.properties
+        env:
+          GOOGLE_WEB_CLIENT_ID: ${{ secrets.GOOGLE_WEB_CLIENT_ID }}
+
       - name: 🧹 Clean Project
         run: ./gradlew clean
 
@@ -65,30 +76,84 @@ jobs:
         run: ./gradlew assembleRelease
 
       - name: 📦 Upload APK as Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
+          name: release-apk
           path: app/build/outputs/apk/release/*.apk
+          retention-days: 30
 
-  release:
-    name: 🚀 Publish Release
+  github-release:
+    name: 📋 Create GitHub Release
     needs: build  # Runs only if the APK build is successful ✅
     runs-on: ubuntu-latest
     permissions:
       contents: write
     steps:
       - name: ⬇️ Checkout Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
+
+      - name: 📦 Download APK Artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: release-apk
+          path: ./apk
 
       - name: 📝 Create GitHub Release
         uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/')
         with:
           body_path: CHANGELOG.md
-          files: app/build/outputs/apk/release/*.apk
+          files: ./apk/*.apk
+
+  play-store-release:
+    name: ☁️ Deploy to Play Store
+    needs: build  # Runs only if the APK build is successful ✅
+    runs-on: ubuntu-latest
+    steps:
+      - name: ⬇️ Checkout Repository
+        uses: actions/checkout@v6
+
+      - name: 🏗️ Set up JDK 21
+        uses: actions/setup-java@v5
+        with:
+          java-version: 21
+          distribution: 'temurin'
+          cache: gradle
+
+      - name: 💎 Setup Ruby & Bundler
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 4.0.1
+          bundler-cache: true
+
+      - name: 📜 Set up Google Services
+        run: |
+          touch app/google-services.json
+          echo "${CONTENT// /}" | base64 --decode > app/google-services.json
+        env:
+          CONTENT: ${{ secrets.GOOGLE_SERVICES }}
+
+      - name: 🔑 Set up Signing Key
+        run: |
+          touch app/key.jks
+          echo "${KEYSTORE// /}" | base64 --decode > app/key.jks
+          touch keystore.properties
+          echo "${KEYSTORE_PROPERTIES// /}" | base64 --decode > keystore.properties
+        env:
+          KEYSTORE: ${{ secrets.KEYSTORE }}
+          KEYSTORE_PROPERTIES: ${{ secrets.KEYSTORE_PROPERTIES }}
+
+      - name: 🔐 Set up Local Properties
+        run: |
+          touch local.properties
+          echo "GOOGLE_WEB_CLIENT_ID=$GOOGLE_WEB_CLIENT_ID" >> local.properties
+        env:
+          GOOGLE_WEB_CLIENT_ID: ${{ secrets.GOOGLE_WEB_CLIENT_ID }}
 
       - name: ☁️ Upload to Play Store
         run: |
           echo "${PLAY_STORE_JSON// /}" | base64 --decode > fastlane/play-store.json
+          bundle install
           bundle exec fastlane android deploy
         env:
           PLAY_STORE_JSON: ${{ secrets.PLAY_STORE_JSON }}

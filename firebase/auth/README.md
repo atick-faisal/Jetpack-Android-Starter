@@ -29,12 +29,6 @@ graph TD
         E
         F
     end
-
-    style A fill: #4CAF50, stroke: #333, stroke-width: 2px
-    style B fill: #64B5F6, stroke: #333, stroke-width: 2px
-    style C fill: #FFA726, stroke: #333, stroke-width: 2px
-    style E fill: #FFA726, stroke: #333, stroke-width: 2px
-    style F fill: #FFA726, stroke: #333, stroke-width: 2px
 ```
 
 ## Usage
@@ -68,3 +62,13 @@ class AuthDataSource @Inject constructor(
 ### Credential Management
 
 The module uses Android's Credential Manager API for secure credential storage and retrieval.
+
+## Setup
+
+> [!NOTE]
+> For Firebase Authentication setup instructions, including enabling Google Sign-In and Email/Password authentication in the Firebase Console, see the [Firebase Setup Guide](../../docs/firebase.md).
+
+## Related Documentation
+
+- **[Firebase Setup Guide](../../docs/firebase.md)** - Complete Firebase Console and local project setup
+- **[Troubleshooting Guide](../../docs/troubleshooting.md)** - Firebase authentication issues and solutions

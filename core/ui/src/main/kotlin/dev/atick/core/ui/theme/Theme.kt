@@ -20,7 +20,7 @@ import android.os.Build
 import androidx.annotation.ChecksSdkIntAtLeast
 import androidx.annotation.VisibleForTesting
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MaterialExpressiveTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
@@ -134,7 +134,6 @@ fun JetpackTheme(
         color = colorScheme.surface,
         tonalElevation = 2.dp,
     )
-    val backgroundTheme = defaultBackgroundTheme
 
     val tintTheme = when {
         !disableDynamicTheming && supportsDynamicTheming() -> TintTheme(colorScheme.primary)
@@ -143,10 +142,10 @@ fun JetpackTheme(
     // Composition locals
     CompositionLocalProvider(
         LocalGradientColors provides gradientColors,
-        LocalBackgroundTheme provides backgroundTheme,
+        LocalBackgroundTheme provides defaultBackgroundTheme,
         LocalTintTheme provides tintTheme,
     ) {
-        MaterialTheme(
+        MaterialExpressiveTheme(
             colorScheme = colorScheme,
             typography = JetpackTypography,
             content = content,
