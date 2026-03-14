@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import com.android.build.gradle.LibraryExtension
+import com.android.build.api.dsl.LibraryExtension
 import org.gradle.api.JavaVersion
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -34,7 +34,8 @@ class LibraryConventionPlugin : Plugin<Project> {
 
             with(pluginManager) {
                 apply("com.android.library")
-                apply("org.jetbrains.kotlin.android")
+                // AGP 9.0+ has built-in Kotlin support - kotlin-android plugin removed
+                // See: https://kotl.in/gradle/agp-built-in-kotlin
                 apply("kotlinx-serialization")
             }
 

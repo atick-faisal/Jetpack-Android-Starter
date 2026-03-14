@@ -37,7 +37,8 @@ class ApplicationConventionPlugin : Plugin<Project> {
 
             with(pluginManager) {
                 apply("com.android.application")
-                apply("org.jetbrains.kotlin.android")
+                // AGP 9.0+ has built-in Kotlin support - kotlin-android plugin removed
+                // See: https://kotl.in/gradle/agp-built-in-kotlin
                 apply("org.jetbrains.kotlin.plugin.compose")
                 apply("com.google.android.gms.oss-licenses-plugin")
                 apply("kotlinx-serialization")

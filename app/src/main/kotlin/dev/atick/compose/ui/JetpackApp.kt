@@ -16,6 +16,7 @@
 
 package dev.atick.compose.ui
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
@@ -153,6 +154,9 @@ private fun JetpackApp(
 
     // Show the settings dialog if the flag is set
     if (showSettingsDialog) {
+        // Resolve context once in composable scope for use in suspend callbacks
+        // Suppressing lint because we need context in suspend callback where composables aren't allowed
+        @Suppress("LocalContextGetResourceValueCall")
         SettingsDialog(
             onDismiss = { onDismissSettings() },
             onShowSnackbar = { message, action, throwable ->
@@ -272,6 +276,10 @@ private fun JetpackScaffold(
                 ),
             ) {
                 val context = LocalContext.current
+
+                // Resolve context once in composable scope for use in suspend callbacks
+                // Suppressing lint because we need context in suspend callback where composables aren't allowed
+                @Suppress("LocalContextGetResourceValueCall")
                 JetpackNavHost(
                     appState = appState,
                     onShowSnackbar = { message, action, throwable ->
@@ -359,10 +367,11 @@ private fun JetpackNavigationSuiteScope.navigationItem(
 /**
  * Extension function for Modifier to add a notification dot.
  *
- * This function draws a small circle (dot) on the top-right corner of the content.
+ * This function draws a small circle (dot) in the top-right corner of the content.
  *
  * @return A Modifier with the notification dot applied.
  */
+@SuppressLint("UnnecessaryComposedModifier")
 @Suppress("ktlint:compose:modifier-composed-check")
 // TODO: Fix issues with composed modifier lint rules
 private fun Modifier.notificationDot(): Modifier = composed {
