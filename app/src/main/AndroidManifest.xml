@@ -54,13 +54,8 @@
                 android:value="true" />
         </service>
 
-        <activity
-            android:name="com.google.android.gms.oss.licenses.OssLicensesMenuActivity"
-            android:theme="@style/Theme.OptOutEdgeToEdgeEnforcement" />
+        <activity android:name="com.google.android.gms.oss.licenses.v2.OssLicensesMenuActivity" />
 
-        <activity
-            android:name="com.google.android.gms.oss.licenses.OssLicensesActivity"
-            android:theme="@style/Theme.OptOutEdgeToEdgeEnforcement" />
     </application>
 
 </manifest>
