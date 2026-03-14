@@ -149,6 +149,9 @@ private fun JetpackApp(
     // Get the current navigation destination
     val currentDestination = appState.currentDestination
 
+    // Resolve context once in composable scope for use in suspend callbacks
+    // Suppressing lint because we need context in suspend callback where composables aren't allowed
+    @Suppress("LocalContextGetResourceValueCall")
     val context = LocalContext.current
 
     // Show the settings dialog if the flag is set
@@ -271,6 +274,9 @@ private fun JetpackScaffold(
                     },
                 ),
             ) {
+                // Resolve context once in composable scope for use in suspend callbacks
+                // Suppressing lint because we need context in suspend callback where composables aren't allowed
+                @Suppress("LocalContextGetResourceValueCall")
                 val context = LocalContext.current
                 JetpackNavHost(
                     appState = appState,
