@@ -1,12 +1,17 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this
+repository.
 
 ## Project Overview
 
-This is a production-ready Android starter template built on modern Jetpack libraries, following the architecture patterns from [Now In Android](https://github.com/android/nowinandroid). It uses a **two-layer architecture** (UI + Data) with clean separation of concerns, Firebase integration, and comprehensive tooling for Android development.
+This is a production-ready Android starter template built on modern Jetpack libraries, following the
+architecture patterns from [Now In Android](https://github.com/android/nowinandroid). It uses a *
+*two-layer architecture** (UI + Data) with clean separation of concerns, Firebase integration, and
+comprehensive tooling for Android development.
 
 **Key Technologies:**
+
 - Jetpack Compose with Material3
 - Dagger Hilt for dependency injection
 - Kotlin Coroutines & Flow
@@ -46,7 +51,8 @@ This is a production-ready Android starter template built on modern Jetpack libr
 ./gradlew check
 ```
 
-**IMPORTANT:** Always run `./gradlew spotlessApply` before committing to avoid CI failures. The project uses Spotless with ktlint and custom Compose rules configured in `gradle/init.gradle.kts`.
+**IMPORTANT:** Always run `./gradlew spotlessApply` before committing to avoid CI failures. The
+project uses Spotless with ktlint and custom Compose rules configured in `gradle/init.gradle.kts`.
 
 ### Documentation
 
@@ -114,7 +120,9 @@ The project follows a modular architecture organized by feature and layer:
 1. **UI Layer**: Composables + ViewModels using MVVM pattern
 2. **Data Layer**: Repositories + Data Sources (Network, Local, Firebase)
 
-**Note:** Unlike official Android guidelines, this template intentionally omits the domain layer to reduce complexity. Add a domain layer (with use cases) only when you have complex business logic or need to share logic between multiple ViewModels.
+**Note:** Unlike official Android guidelines, this template intentionally omits the domain layer to
+reduce complexity. Add a domain layer (with use cases) only when you have complex business logic or
+need to share logic between multiple ViewModels.
 
 ### State Management Pattern
 
@@ -135,22 +143,27 @@ class HomeViewModel @Inject constructor(
     val uiState = _uiState.asStateFlow()
 
     // Update state directly
-    _uiState.updateState { copy(items = newItems) }
+    _uiState.updateState
+    { copy(items = newItems) }
 
     // Update state with async operation
-    _uiState.updateStateWith {
+    _uiState.updateStateWith
+    {
         repository.fetchItems()
     }
 }
 ```
 
 **Key State Utilities** (in `core:ui`):
+
 - `UiState<T>`: Wrapper with data, loading, and error handling
 - `updateState {}`: Synchronous state updates
 - `updateStateWith {}`: Async operations with automatic loading/error handling
 - `StatefulComposable`: Consistent loading/error UI presentation
 
-**Context Parameters:** The project uses Kotlin's `-Xcontext-parameters` compiler flag, so `updateStateWith` and `updateWith` automatically access the ViewModel's scope without explicitly passing `viewModelScope`.
+**Context Parameters:** The project uses Kotlin's `-Xcontext-parameters` compiler flag, so
+`updateStateWith` and `updateWith` automatically access the ViewModel's scope without explicitly
+passing `viewModelScope`.
 
 ### Navigation Pattern
 
@@ -245,12 +258,14 @@ class HomeViewModel @Inject constructor(
 @Composable
 fun HomeRoute(
     viewModel: HomeViewModel = hiltViewModel()
-) { /* ... */ }
+) { /* ... */
+}
 ```
 
 ## Convention Plugins
 
-The `build-logic/convention/` directory contains custom Gradle convention plugins to avoid build configuration duplication:
+The `build-logic/convention/` directory contains custom Gradle convention plugins to avoid build
+configuration duplication:
 
 - **`dev.atick.application`**: Application module setup (Compose, BuildConfig, Kotlin)
 - **`dev.atick.library`**: Base library setup (Kotlin, KotlinX Serialization)
@@ -259,6 +274,7 @@ The `build-logic/convention/` directory contains custom Gradle convention plugin
 - **`dev.atick.firebase`**: Firebase services (BoM, Analytics, Crashlytics, Performance)
 
 **Usage in module build files:**
+
 ```kotlin
 plugins {
     alias(libs.plugins.jetpack.ui.library)  // For feature modules
@@ -267,6 +283,7 @@ plugins {
 ```
 
 **Key Configuration:**
+
 - Java 21 target (defined in version catalog)
 - Kotlin context parameters enabled (`-Xcontext-parameters`)
 - Material3 experimental APIs opted-in
@@ -277,39 +294,40 @@ plugins {
 Follow this workflow when implementing new features:
 
 1. **Define models** in appropriate layers:
-   - Network models in `core:network` (with `@Serializable`)
-   - Database entities in `core:room` (with `@Entity`)
-   - Domain models in `data` module
+    - Network models in `core:network` (with `@Serializable`)
+    - Database entities in `core:room` (with `@Entity`)
+    - Domain models in `data` module
 
 2. **Create data sources** (if needed):
-   - Network: extends `NetworkDataSource` in `core:network`
-   - Local: extends `LocalDataSource` in `core:room`
-   - Use `@IoDispatcher` and wrap IO operations with `withContext(ioDispatcher)`
+    - Network: extends `NetworkDataSource` in `core:network`
+    - Local: extends `LocalDataSource` in `core:room`
+    - Use `@IoDispatcher` and wrap IO operations with `withContext(ioDispatcher)`
 
 3. **Create repository**:
-   - Interface and implementation in `data/repository`
-   - Use `suspendRunCatching` for error handling
-   - Return `Flow` for observable data, `Result<T>` for one-time operations
+    - Interface and implementation in `data/repository`
+    - Use `suspendRunCatching` for error handling
+    - Return `Flow` for observable data, `Result<T>` for one-time operations
 
 4. **Create UI layer**:
-   - Screen data class (immutable state)
-   - `@HiltViewModel` with `UiState<ScreenData>`
-   - Composable with `StatefulComposable` wrapper
-   - Separate `*Route` (stateful) from `*Screen` (stateless) composables
+    - Screen data class (immutable state)
+    - `@HiltViewModel` with `UiState<ScreenData>`
+    - Composable with `StatefulComposable` wrapper
+    - Separate `*Route` (stateful) from `*Screen` (stateless) composables
 
 5. **Set up navigation**:
-   - Define `@Serializable` route object
-   - Create `NavController.navigateTo*()` extension
-   - Create `NavGraphBuilder.*Screen()` extension
+    - Define `@Serializable` route object
+    - Create `NavController.navigateTo*()` extension
+    - Create `NavGraphBuilder.*Screen()` extension
 
 6. **Configure DI**:
-   - Bind data sources in appropriate modules
-   - Bind repository interface to implementation
-   - ViewModels auto-discovered via `@HiltViewModel`
+    - Bind data sources in appropriate modules
+    - Bind repository interface to implementation
+    - ViewModels auto-discovered via `@HiltViewModel`
 
 ## Firebase Setup
 
-The debug build includes a template `google-services.json` but Firebase features won't work until configured:
+The debug build includes a template `google-services.json` but Firebase features won't work until
+configured:
 
 1. Create Firebase project at [console.firebase.google.com](https://console.firebase.google.com)
 2. Add Android app with package name `dev.atick.compose`
@@ -337,6 +355,7 @@ jetpack-application = { id = "dev.atick.application", version = "unspecified" }
 ```
 
 **Adding dependencies:**
+
 1. Add version to `[versions]` section
 2. Add library/plugin reference in appropriate section
 3. Use in modules: `implementation(libs.androidx.compose.ui)`
@@ -344,17 +363,20 @@ jetpack-application = { id = "dev.atick.application", version = "unspecified" }
 ## Code Style and Formatting
 
 **Spotless Configuration** (`gradle/init.gradle.kts`):
+
 - ktlint for Kotlin formatting
 - Custom Compose rules from `io.nlopez.compose.rules:ktlint`
 - License headers auto-applied from `spotless/copyright.*` files
 - `.editorconfig` for IDE integration
 
 **Before every commit:**
+
 ```bash
 ./gradlew spotlessApply
 ```
 
 **Kotlin Compiler Flags:**
+
 - Context parameters enabled (`-Xcontext-parameters`)
 - Material3 experimental APIs opted-in
 - `kotlin.RequiresOptIn` enabled globally
@@ -377,11 +399,13 @@ APK naming pattern: `Jetpack_release_v{version}_{timestamp}.apk`
 ## CI/CD
 
 GitHub Actions workflows in `.github/workflows/`:
+
 - **`ci.yml`**: Build, lint (spotlessCheck), test on PRs
 - **`cd.yml`**: Release builds and GitHub releases
 - **`docs.yml`**: Deploy MkDocs documentation to GitHub Pages
 
 **Required secrets** for CD:
+
 - `KEYSTORE`: Base64-encoded keystore file
 - `KEYSTORE_PASSWORD`, `KEY_ALIAS`, `KEY_PASSWORD`
 - `GOOGLE_SERVICES_JSON`: Firebase config
@@ -408,6 +432,7 @@ GitHub Actions workflows in `.github/workflows/`:
 ## Documentation
 
 **Comprehensive guides** in `docs/`:
+
 - `architecture.md`: Architecture deep dive
 - `guide.md`: Step-by-step feature implementation
 - `state-management.md`: State patterns and utilities
@@ -419,7 +444,8 @@ GitHub Actions workflows in `.github/workflows/`:
 - `plugins.md`: Convention plugins guide
 - `troubleshooting.md`: Common issues and solutions
 
-**Live documentation**: [atick.dev/Jetpack-Android-Starter](https://atick.dev/Jetpack-Android-Starter)
+**Live documentation
+**: [atick.dev/Jetpack-Android-Starter](https://atick.dev/Jetpack-Android-Starter)
 
 ## AGP 9 Migration Notes
 
@@ -428,29 +454,33 @@ This project has been migrated to **Android Gradle Plugin 9.1.0** (March 2026). 
 ### Breaking Changes Applied
 
 1. **Built-in Kotlin Support**: Removed `kotlin-android` plugin from all convention plugins
-   - AGP 9+ includes Kotlin support by default
-   - See: https://kotl.in/gradle/agp-built-in-kotlin
+    - AGP 9+ includes Kotlin support by default
+    - See: https://kotl.in/gradle/agp-built-in-kotlin
 
 2. **New Variant API**: Migrated from `applicationVariants` to `androidComponents.onVariants`
-   - Old variant API completely removed in AGP 9
-   - Direct output file manipulation no longer supported
+    - Old variant API completely removed in AGP 9
+    - Direct output file manipulation no longer supported
 
 3. **DSL Updates**: Updated to new DSL interfaces
-   - Changed `com.android.build.gradle.LibraryExtension` → `com.android.build.api.dsl.LibraryExtension`
+    - Changed `com.android.build.gradle.LibraryExtension` →
+      `com.android.build.api.dsl.LibraryExtension`
 
 ### Known Issues & Workarounds
 
 ⚠️ **Dokka AGP 9 Compatibility** (Issue #578)
+
 - Warnings during configuration: `AndroidExtensionWrapper could not get Android Extension`
 - Workaround: Configuration wrapped in `afterEvaluate` + using `configureEach`
 - **TODO**: Upgrade to Dokka 2.2.0-Beta when stable
 
 ⚠️ **Custom APK Naming** (Issue #579)
+
 - Previous custom naming removed (AGP 9 API change)
 - Currently using default APK naming scheme
 - **TODO**: Implement AGP 9-compatible approach using variant artifacts API
 
 ⚠️ **Spotless Task Discovery** (Issue #580)
+
 - Spotless tasks not discoverable via `./gradlew tasks`
 - Tasks may still execute during builds
 - **TODO**: Investigate Gradle 9.4.0 compatibility
@@ -471,4 +501,5 @@ This project has been migrated to **Android Gradle Plugin 9.1.0** (March 2026). 
 - **Gradle 9.4.0**: Uses configuration cache and build scans (CI only)
 - **LeakCanary**: Enabled in debug builds (comment out in `app/build.gradle.kts` to disable)
 - **Compose Metrics**: Generated when `enableComposeCompilerMetrics=true` in `gradle.properties`
-- **Configuration Cache**: May be discarded due to incompatible tasks (e.g., OssLicensesTask) - this is harmless
+- **Configuration Cache**: May be discarded due to incompatible tasks (e.g., OssLicensesTask) - this
+  is harmless
