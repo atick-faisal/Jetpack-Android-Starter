@@ -19,11 +19,11 @@ package dev.atick.core.ui.extensions
 import android.app.Activity
 import android.content.Intent
 import android.content.res.Configuration
-import android.net.Uri
 import android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS
 import androidx.activity.ComponentActivity
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.net.toUri
 import androidx.core.util.Consumer
 import dev.atick.core.extensions.isAllPermissionsGranted
 import dev.atick.core.extensions.showToast
@@ -247,7 +247,7 @@ inline fun ComponentActivity.checkForPermissions(
 fun ComponentActivity.openPermissionSettings() {
     val intent = Intent(
         ACTION_APPLICATION_DETAILS_SETTINGS,
-        Uri.parse("package:$packageName"),
+        "package:$packageName".toUri(),
     )
     intent.addCategory(Intent.CATEGORY_DEFAULT)
     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
