@@ -53,6 +53,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextAlign
@@ -128,18 +129,18 @@ private fun SettingsDialog(
     onSignOut: () -> Unit,
     supportDynamicColor: Boolean = supportsDynamicTheming(),
 ) {
-    val configuration = LocalConfiguration.current
+    val window = LocalWindowInfo.current
 
     /**
      * usePlatformDefaultWidth = false is use as a temporary fix to allow
      * height recalculation during recomposition. This, however, causes
-     * Dialog's to occupy full width in Compact mode. Therefore max width
+     * Dialog's to occupy full width in Compact mode. Therefore, max width
      * is configured below. This should be removed when there's fix to
      * https://issuetracker.google.com/issues/221643630
      */
     AlertDialog(
         properties = DialogProperties(usePlatformDefaultWidth = false),
-        modifier = Modifier.widthIn(max = configuration.screenWidthDp.dp - 80.dp),
+        modifier = Modifier.widthIn(max = window.containerDpSize.width - 80.dp),
         onDismissRequest = { onDismiss() },
         title = {
             Text(
@@ -180,7 +181,7 @@ private fun SettingsDialog(
 
 /**
  * Settings panel.
- * ColumnScope] is used for using the [ColumnScope.AnimatedVisibility] extension overload composable.
+ * [ColumnScope] is used for using the [ColumnScope.AnimatedVisibility] extension overload composable.
  *
  * @param settings [Settings].
  * @param supportDynamicColor Whether dynamic color is supported.
