@@ -123,7 +123,7 @@ jobs:
       - name: 💎 Setup Ruby & Bundler
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 4.0.1
+          ruby-version: 4.0.2
           bundler-cache: true
 
       - name: 📜 Set up Google Services
