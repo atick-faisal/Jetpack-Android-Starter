@@ -17,7 +17,7 @@
 // TODO: Verify Spotless task discoverability in Gradle 9.4.0 (Issue #580)
 // Note: Spotless tasks may not appear in standard task listings but still execute correctly
 initscript {
-    val spotlessVersion = "8.3.0"
+    val spotlessVersion = "8.4.0"
 
     repositories {
         mavenCentral()

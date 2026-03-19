@@ -50,7 +50,7 @@ androidxCredentials = "1.5.0"
 identityGoogleId = "1.2.0"
 
 # ... FIREBASE ...
-firebaseBom = "34.10.0"
+firebaseBom = "34.11.0"
 firebaseCrashlyticsPlugin = "3.0.6"
 firebasePerfPlugin = "2.0.2"
 
@@ -60,7 +60,7 @@ daggerHiltExt = "1.3.0"
 
 # ... Open Source Licenses ...
 googleOss = "17.4.0"
-googleOssPlugin = "0.10.10"
+googleOssPlugin = "0.11.0"
 
 # ... LEAK CANARY ...
 leakcanaryAndroid = "2.14"
