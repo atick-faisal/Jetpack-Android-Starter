@@ -16,9 +16,6 @@
 
 package dev.atick.core.preferences.model
 
-import dev.atick.core.preferences.model.DarkThemeConfigPreferences.DARK
-import dev.atick.core.preferences.model.DarkThemeConfigPreferences.FOLLOW_SYSTEM
-import dev.atick.core.preferences.model.DarkThemeConfigPreferences.LIGHT
 import kotlinx.serialization.Serializable
 
 /**

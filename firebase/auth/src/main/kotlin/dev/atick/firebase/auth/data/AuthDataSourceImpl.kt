@@ -16,6 +16,7 @@
 
 package dev.atick.firebase.auth.data
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import androidx.credentials.CreatePasswordRequest
 import androidx.credentials.CreatePasswordResponse
@@ -46,6 +47,7 @@ import javax.inject.Inject
  * @param credentialManager The [CredentialManager] for handling credential operations.
  * @param ioDispatcher The [CoroutineDispatcher] for executing suspend functions in an IO context.
  */
+@SuppressLint("CredentialManagerMisuse")
 internal class AuthDataSourceImpl @Inject constructor(
     private val firebaseAuth: FirebaseAuth,
     private val credentialManager: CredentialManager,

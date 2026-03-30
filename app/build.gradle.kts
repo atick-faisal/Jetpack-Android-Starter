@@ -16,14 +16,13 @@
 
 @file:Suppress("UnstableApiUsage")
 
-import com.android.build.api.variant.ApplicationAndroidComponentsExtension
 import java.io.FileInputStream
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Properties
 
 val keystorePropertiesFile: File = rootProject.file("keystore.properties")
-val formatter = DateTimeFormatter.ofPattern("yyyy_MM_dd_hh_mm_a")
+val formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy_MM_dd_hh_mm_a")
 val currentTime: String = LocalDateTime.now().format(formatter)
 
 plugins {

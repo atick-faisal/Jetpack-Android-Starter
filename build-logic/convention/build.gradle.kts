@@ -28,8 +28,8 @@ group = "dev.atick.build.logic"
 val javaVersion = libs.versions.java.get().toInt()
 
 java {
-    sourceCompatibility = JavaVersion.values()[javaVersion - 1]
-    targetCompatibility = JavaVersion.values()[javaVersion - 1]
+    sourceCompatibility = JavaVersion.entries.toTypedArray()[javaVersion - 1]
+    targetCompatibility = JavaVersion.entries.toTypedArray()[javaVersion - 1]
 }
 
 kotlin {

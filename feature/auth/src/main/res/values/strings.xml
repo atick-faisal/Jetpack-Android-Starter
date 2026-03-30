@@ -25,10 +25,7 @@
     <string name="email">Email</string>
     <string name="name">Full Name</string>
     <string name="sign_up_with_google">Sign Up with Google</string>
-    <string name="already_have_an_account">Already have an account?</string>
-    <string name="login">Login</string>
     <string name="or">or</string>
-    <string name="password_spec">Password should contain: uppercase letters (A-Z), lowercase letters (a-z), numbers (0-9) and special characters (#$@?)</string>
     <string name="agree_to_terms">Before continuing, you agree to our</string>
     <string name="privacy_policy">Privacy Policy</string>
     <string name="feedback">Feedback</string>

@@ -17,20 +17,11 @@
 
 <resources>
     <string name="app_name">جيت باك</string>
-    <string name="btn_click_text">احصل على العنصر</string>
     <string name="home">الرئيسية</string>
-    <string name="error_item_loading">خطأ في تحميل العنصر</string>
     <string name="profile">الملف الشخصي</string>
-    <string name="search">بحث</string>
-    <string name="more">المزيد</string>
     <string name="back">رجوع</string>
-    <string name="top_app_bar_action_icon_description">الإعدادات</string>
-    <string name="top_app_bar_navigation_icon_description">بحث</string>
     <string name="settings">الإعدادات</string>
-    <string name="loading">جارٍ التحميل…</string>
     <string name="not_connected">⚠️ أنت غير متصل بالإنترنت</string>
     <string name="profile_picture">صورة الملف الشخصي</string>
-    <string name="done">تم</string>
-    <string name="purchase_premium">شراء جيت باك بريميوم</string>
     <string name="add">إضافة</string>
 </resources>

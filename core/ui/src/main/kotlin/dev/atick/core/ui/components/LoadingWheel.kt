@@ -85,7 +85,7 @@ fun JetpackLoadingWheel(
     val startValue = if (LocalInspectionMode.current) 0F else 1F
     val floatAnimValues = (0 until NUM_OF_LINES).map { remember { Animatable(startValue) } }
     LaunchedEffect(floatAnimValues) {
-        (0 until NUM_OF_LINES).map { index ->
+        (0 until NUM_OF_LINES).forEach { index ->
             launch {
                 floatAnimValues[index].animateTo(
                     targetValue = 0F,

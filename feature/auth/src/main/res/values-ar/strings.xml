@@ -25,10 +25,7 @@
     <string name="email">البريد الإلكتروني</string>
     <string name="name">الاسم الكامل</string>
     <string name="sign_up_with_google">التسجيل باستخدام Google</string>
-    <string name="already_have_an_account">هل لديك حساب بالفعل؟</string>
-    <string name="login">تسجيل الدخول</string>
     <string name="or">أو</string>
-    <string name="password_spec">يجب أن تحتوي كلمة المرور على: حروف كبيرة (A-Z)، حروف صغيرة (a-z)، أرقام (0-9) ورموز خاصة (#$@؟)</string>
     <string name="agree_to_terms">قبل المتابعة، توافق على</string>
     <string name="privacy_policy">سياسة الخصوصية</string>
     <string name="feedback">تقديم ملاحظات</string>
