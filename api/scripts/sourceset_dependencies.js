@@ -1,1 +1,1 @@
-sourceset_dependencies='{}'
+sourceset_dependencies = '{":core:preferences/release":[],":feature:profile/release":[],":core:android/release":[],":data/release":[],":core:network/release":[],":firebase:auth/release":[],":feature:home/release":[],":sync/release":[],":feature:auth/release":[],":firebase:analytics/release":[],":feature:settings/release":[],":core:ui/release":[],":app/release":[],":firebase:firestore/release":[],":core:room/release":[]}'
