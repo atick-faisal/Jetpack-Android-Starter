@@ -64,7 +64,7 @@ googleOssPlugin = "0.11.0"
 leakcanaryAndroid = "2.14"
 
 # ... WORK MANAGER ...
-workVersion = "2.11.1"
+workVersion = "2.11.2"
 
 # ... SDK-CONFIG ...
 minSdk = "24"
