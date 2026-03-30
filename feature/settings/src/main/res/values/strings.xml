@@ -18,11 +18,7 @@
 <resources>
     <string name="privacy_policy">Privacy Policy</string>
     <string name="licenses">Licenses</string>
-    <string name="brand_guidelines">Brand Guidelines</string>
     <string name="feedback">Feedback</string>
-    <string name="theme">Theme</string>
-    <string name="brand_default">Default</string>
-    <string name="brand_android">Android</string>
     <string name="dark_mode_preference">Dark mode preference</string>
     <string name="dark_mode_config_system_default">System default</string>
     <string name="dark_mode_config_light">Light</string>

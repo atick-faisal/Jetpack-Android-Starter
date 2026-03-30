@@ -18,11 +18,7 @@
 <resources>
     <string name="privacy_policy">سياسة الخصوصية</string>
     <string name="licenses">التراخيص</string>
-    <string name="brand_guidelines">إرشادات العلامة التجارية</string>
     <string name="feedback">التعليقات</string>
-    <string name="theme">السمة</string>
-    <string name="brand_default">الافتراضي</string>
-    <string name="brand_android">أندرويد</string>
     <string name="dark_mode_preference">تفضيل الوضع الداكن</string>
     <string name="dark_mode_config_system_default">افتراضي النظام</string>
     <string name="dark_mode_config_light">فاتح</string>

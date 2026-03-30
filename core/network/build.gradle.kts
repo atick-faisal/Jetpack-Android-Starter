@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-@file:Suppress("UnstableApiUsage")
-
 plugins {
     alias(libs.plugins.jetpack.library)
     alias(libs.plugins.jetpack.dagger.hilt)
