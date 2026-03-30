@@ -8,7 +8,7 @@ gmsPlugin = "4.4.4"
 ksp = "2.3.6"
 # TODO: Upgrade to Dokka 2.2.0-Beta when stable for better AGP 9 compatibility
 # FIXME: Current version has AGP 9 compatibility warnings (Issue #578)
-dokka = "2.1.0"
+dokka = "2.2.0"
 dokkaMermaid = "0.6.0"
 secrets = "2.0.1"
 
