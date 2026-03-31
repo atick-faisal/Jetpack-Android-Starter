@@ -35,19 +35,12 @@ class DokkaConventionPlugin : Plugin<Project> {
             }
 
             // TODO: AGP 9 Migration - Dokka Configuration Workaround
-            // FIXME: Upgrade to Dokka 2.2.0-Beta when stable for better AGP 9 support
-            // Current workaround: afterEvaluate + configureEach to avoid source set resolution issues
-            // See: https://github.com/Kotlin/dokka/issues/4256
-            // Tracking: GitHub Issue #578
             afterEvaluate {
                 extensions.configure<DokkaExtension> {
                     moduleName.set(path)
-                    // Use configureEach instead of named for AGP 9 compatibility
-                    dokkaSourceSets.configureEach {
-                        if (name == "main") {
-                            includes.from("README.md")
-                            suppressGeneratedFiles.set(true)
-                        }
+                    dokkaSourceSets.named("main") {
+                        includes.from("README.md")
+                        suppressGeneratedFiles.set(true)
                     }
                     pluginsConfiguration.withType<DokkaHtmlPluginParameters> {
                         footerMessage.set("Made with ❤\uFE0F by Atick Faisal")
