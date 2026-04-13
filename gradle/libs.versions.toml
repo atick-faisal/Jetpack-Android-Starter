@@ -49,7 +49,7 @@ identityGoogleId = "1.2.0"
 
 # ... FIREBASE ...
 firebaseBom = "34.12.0"
-firebaseCrashlyticsPlugin = "3.0.6"
+firebaseCrashlyticsPlugin = "3.0.7"
 firebasePerfPlugin = "2.0.2"
 
 # ... DAGGER-HILT ...
