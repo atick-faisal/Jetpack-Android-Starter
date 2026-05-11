@@ -68,7 +68,7 @@ workVersion = "2.11.2"
 
 # ... SDK-CONFIG ...
 minSdk = "24"
-compileSdk = "36"
+compileSdk = "37"
 targetSdk = "36"
 
 
