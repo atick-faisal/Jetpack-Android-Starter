@@ -43,7 +43,7 @@ androidxDataStore = "1.2.1"
 room = "2.8.4"
 
 # ... AUTH ...
-playServicesAuth = "21.5.1"
+playServicesAuth = "21.6.0"
 androidxCredentials = "1.6.0"
 identityGoogleId = "1.2.0"
 
