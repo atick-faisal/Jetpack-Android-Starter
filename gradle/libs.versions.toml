@@ -4,7 +4,7 @@
 java = "21"
 kotlin = "2.4.0"
 androidGradlePlugin = "9.2.1"
-gmsPlugin = "4.4.4"
+gmsPlugin = "4.5.0"
 ksp = "2.3.9"
 dokka = "2.2.0"
 dokkaMermaid = "0.6.0"
