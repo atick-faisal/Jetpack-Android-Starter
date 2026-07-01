@@ -4,7 +4,7 @@
 java = "21"
 kotlin = "2.4.0"
 androidGradlePlugin = "9.2.1"
-gmsPlugin = "4.4.4"
+gmsPlugin = "4.5.0"
 ksp = "2.3.9"
 dokka = "2.2.0"
 dokkaMermaid = "0.6.0"
@@ -22,14 +22,14 @@ androidxNavigation = "2.9.8"
 androidxFragment = "1.8.9"
 androidxAppCompat = "1.7.1"
 androidxActivity = "1.13.0"
-androidxLifecycle = "2.10.0"
-androidxComposeBom = "2026.05.01"
+androidxLifecycle = "2.11.0"
+androidxComposeBom = "2026.06.01"
 androidxComposeCompiler = "1.5.15"
 androidxCoreSplashscreen = "1.2.0"
-androidxHiltNavigationCompose = "1.3.0"
+androidxHiltNavigationCompose = "1.4.0"
 lottieCompose = "6.7.1"
 # FIXME: Remove this once stable
-materialExpressive = "1.5.0-alpha21"
+materialExpressive = "1.5.0-alpha23"
 
 # ... NETWORK ...
 okhttp = "5.4.0"
@@ -48,13 +48,13 @@ androidxCredentials = "1.6.0"
 identityGoogleId = "1.2.0"
 
 # ... FIREBASE ...
-firebaseBom = "34.14.1"
+firebaseBom = "34.15.0"
 firebaseCrashlyticsPlugin = "3.0.7"
 firebasePerfPlugin = "2.0.2"
 
 # ... DAGGER-HILT ...
-daggerHilt = "2.59.2"
-daggerHiltExt = "1.3.0"
+daggerHilt = "2.60"
+daggerHiltExt = "1.4.0"
 
 # ... Open Source Licenses ...
 googleOss = "17.5.1"
