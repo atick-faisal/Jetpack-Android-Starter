@@ -43,7 +43,7 @@ rootProject {
                     ),
                 ).customRuleSets(
                     listOf(
-                        "io.nlopez.compose.rules:ktlint:0.6.2",
+                        "io.nlopez.compose.rules:ktlint:0.6.3",
                     ),
                 )
                 licenseHeaderFile(rootProject.file("spotless/copyright.kt"))
