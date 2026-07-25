@@ -31,4 +31,6 @@ dependencies {
 
     // ... OSS Licenses
     implementation(libs.google.oss.licenses)
+
+    testImplementation(projects.core.testing)
 }
