@@ -18,6 +18,7 @@ import com.android.build.api.dsl.ApplicationExtension
 import com.android.build.api.variant.ApplicationAndroidComponentsExtension
 import dev.atick.configureAndroidCompose
 import dev.atick.configureBadgingTasks
+import dev.atick.configureAndroidLint
 import dev.atick.configureAndroidTest
 import dev.atick.configureKotlinAndroid
 import dev.atick.intVersion
@@ -47,6 +48,7 @@ class ApplicationConventionPlugin : Plugin<Project> {
                 configureKotlinAndroid(this)
                 configureAndroidCompose(this)
                 configureAndroidTest(this)
+                configureAndroidLint(this)
 
                 defaultConfig {
                     targetSdk = libs.intVersion("targetSdk")

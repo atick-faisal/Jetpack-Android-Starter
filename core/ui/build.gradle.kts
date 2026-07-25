@@ -73,5 +73,9 @@ dependencies {
     // ... Lottie
     api(libs.lottie.compose)
 
+    // Ships the custom lint checks to every consumer of the design system, so a module using
+    // a raw Material composable is flagged without wiring anything up itself.
+    lintPublish(projects.lint)
+
     testImplementation(projects.core.testing)
 }

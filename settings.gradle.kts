@@ -85,6 +85,9 @@ include(":firebase:analytics")
 include(":firebase:firestore")
 include(":firebase:auth")
 
+// ... Lint
+include(":lint")
+
 // ... Sync
 include(":sync")
 
