@@ -16,6 +16,7 @@
 
 import com.android.build.api.dsl.LibraryExtension
 import dev.atick.configureAndroidCompose
+import dev.atick.configureAndroidLint
 import dev.atick.configureAndroidTest
 import dev.atick.configureKotlinAndroid
 import dev.atick.configureResourcePrefix
@@ -39,6 +40,7 @@ class UiLibraryConventionPlugin : Plugin<Project> {
                 configureAndroidCompose(this)
                 configureResourcePrefix(this)
                 configureAndroidTest(this)
+                configureAndroidLint(this)
             }
         }
     }

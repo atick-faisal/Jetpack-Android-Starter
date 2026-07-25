@@ -10,6 +10,8 @@ dokka = "2.2.0"
 dokkaMermaid = "0.6.0"
 secrets = "2.0.1"
 dependencyGuard = "0.5.0"
+# Lint tooling version tracks AGP: AGP 9.x maps to android tools 32.x
+androidTools = "32.3.1"
 
 # ... CORE:ANDROID ...
 androidxCore = "1.19.0"
@@ -87,6 +89,7 @@ targetSdk = "36"
 [plugins]
 
 kotlin = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 android-library = { id = "com.android.library", version.ref = "androidGradlePlugin" }
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
@@ -225,6 +228,12 @@ androidx-test-runner = { group = "androidx.test", name = "runner", version.ref =
 androidx-room-testing = { group = "androidx.room", name = "room-testing", version.ref = "room" }
 androidx-lifecycle-viewModel-testing = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-testing", version.ref = "androidxLifecycle" }
 dagger-hilt-android-testing = { group = "com.google.dagger", name = "hilt-android-testing", version.ref = "daggerHilt" }
+
+# ... LINT ...
+lint-api = { group = "com.android.tools.lint", name = "lint-api", version.ref = "androidTools" }
+lint-checks = { group = "com.android.tools.lint", name = "lint-checks", version.ref = "androidTools" }
+lint-tests = { group = "com.android.tools.lint", name = "lint-tests", version.ref = "androidTools" }
+kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib", version.ref = "kotlin" }
 
 # ... DOKKA PLUGINS ...
 dokka-android-plugin = { module = "org.jetbrains.dokka:android-documentation-plugin", version.ref = "dokka" }
