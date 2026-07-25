@@ -192,7 +192,10 @@ data class UiState<T : Any>(
  * @see updateWith for async operations that return Unit
  */
 inline fun <T : Any> MutableStateFlow<UiState<T>>.updateState(update: T.() -> T) {
-    update { UiState(update(it.data)) }
+    // copy() rather than UiState(...): building a fresh wrapper would discard `loading` and any
+    // error event that has not been consumed yet, so a keystroke arriving mid-request would
+    // silently cancel the loading indicator and swallow a pending error.
+    update { it.copy(data = update(it.data)) }
 }
 
 /**

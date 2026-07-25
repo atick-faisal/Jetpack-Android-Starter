@@ -70,4 +70,6 @@ dependencies {
 
     // ... Lottie
     api(libs.lottie.compose)
+
+    testImplementation(projects.core.testing)
 }
