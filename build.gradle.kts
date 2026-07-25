@@ -31,31 +31,31 @@ plugins {
 }
 
 dependencies {
-    dokka(project(":app"))
+    dokka(projects.app)
 
     // ... Core
-    dokka(project(":core:android"))
-    dokka(project(":core:network"))
-    dokka(project(":core:preferences"))
-    dokka(project(":core:room"))
-    dokka(project(":core:ui"))
+    dokka(projects.core.android)
+    dokka(projects.core.network)
+    dokka(projects.core.preferences)
+    dokka(projects.core.room)
+    dokka(projects.core.ui)
 
     // ... Data
-    dokka(project(":data"))
+    dokka(projects.data)
 
     // ... Feature
-    dokka(project(":feature:auth"))
-    dokka(project(":feature:home"))
-    dokka(project(":feature:profile"))
-    dokka(project(":feature:settings"))
+    dokka(projects.feature.auth)
+    dokka(projects.feature.home)
+    dokka(projects.feature.profile)
+    dokka(projects.feature.settings)
 
     // ... Firebase
-    dokka(project(":firebase:analytics"))
-    dokka(project(":firebase:firestore"))
-    dokka(project(":firebase:auth"))
+    dokka(projects.firebase.analytics)
+    dokka(projects.firebase.firestore)
+    dokka(projects.firebase.auth)
 
     // ... Sync
-    dokka(project(":sync"))
+    dokka(projects.sync)
 
     // ... Dokka Plugins
     dokkaPlugin(libs.dokka.android.plugin)

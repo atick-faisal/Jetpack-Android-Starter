@@ -26,8 +26,8 @@ android {
 
 dependencies {
     // ... Modules
-    implementation(project(":core:android"))
-    implementation(project(":data"))
+    implementation(projects.core.android)
+    implementation(projects.data)
 
     // ... Work Manager
     implementation(libs.androidx.work.runtime.ktx)

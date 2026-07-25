@@ -24,7 +24,7 @@ android {
 }
 
 dependencies {
-    api(project(":core:android"))
+    api(projects.core.android)
 
     // ... AppCompat
     api(libs.androidx.appcompat)

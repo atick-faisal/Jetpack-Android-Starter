@@ -16,18 +16,18 @@
 -->
 
 <resources>
-    <string name="password">كلمة المرور</string>
-    <string name="show_password">إظهار كلمة المرور</string>
-    <string name="hide_password">إخفاء كلمة المرور</string>
-    <string name="sign_in">تسجيل الدخول</string>
-    <string name="do_not_have_an_account">"ليس لديك حساب؟ "</string>
-    <string name="sign_up">إنشاء حساب</string>
-    <string name="email">البريد الإلكتروني</string>
-    <string name="name">الاسم الكامل</string>
-    <string name="sign_up_with_google">التسجيل باستخدام Google</string>
-    <string name="or">أو</string>
-    <string name="agree_to_terms">قبل المتابعة، توافق على</string>
-    <string name="privacy_policy">سياسة الخصوصية</string>
-    <string name="feedback">تقديم ملاحظات</string>
-    <string name="terms_of_service">شروط الخدمة</string>
+    <string name="feature_auth_password">كلمة المرور</string>
+    <string name="feature_auth_show_password">إظهار كلمة المرور</string>
+    <string name="feature_auth_hide_password">إخفاء كلمة المرور</string>
+    <string name="feature_auth_sign_in">تسجيل الدخول</string>
+    <string name="feature_auth_do_not_have_an_account">"ليس لديك حساب؟ "</string>
+    <string name="feature_auth_sign_up">إنشاء حساب</string>
+    <string name="feature_auth_email">البريد الإلكتروني</string>
+    <string name="feature_auth_name">الاسم الكامل</string>
+    <string name="feature_auth_sign_up_with_google">التسجيل باستخدام Google</string>
+    <string name="feature_auth_or">أو</string>
+    <string name="feature_auth_agree_to_terms">قبل المتابعة، توافق على</string>
+    <string name="feature_auth_privacy_policy">سياسة الخصوصية</string>
+    <string name="feature_auth_feedback">تقديم ملاحظات</string>
+    <string name="feature_auth_terms_of_service">شروط الخدمة</string>
 </resources>

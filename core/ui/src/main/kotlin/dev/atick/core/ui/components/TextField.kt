@@ -166,9 +166,9 @@ fun JetpackPasswordField(
                 Icons.Filled.VisibilityOff
             }
             val description = if (passwordVisible) {
-                stringResource(R.string.hide_password)
+                stringResource(R.string.core_ui_hide_password)
             } else {
-                stringResource(R.string.show_password)
+                stringResource(R.string.core_ui_show_password)
             }
             IconButton(onClick = { passwordVisible = !passwordVisible }) {
                 Icon(imageVector = image, description)

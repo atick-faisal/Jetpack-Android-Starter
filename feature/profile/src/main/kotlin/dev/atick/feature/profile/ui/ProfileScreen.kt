@@ -95,9 +95,9 @@ private fun ProfileScreen(
         Spacer(modifier = Modifier.height(64.dp))
         AsyncImage(
             model = profile.profilePictureUri,
-            contentDescription = stringResource(R.string.profile_picture),
-            placeholder = painterResource(id = R.drawable.ic_avatar),
-            fallback = painterResource(id = R.drawable.ic_avatar),
+            contentDescription = stringResource(R.string.feature_profile_profile_picture),
+            placeholder = painterResource(id = R.drawable.feature_profile_ic_avatar),
+            fallback = painterResource(id = R.drawable.feature_profile_ic_avatar),
             modifier = Modifier
                 .size(96.dp)
                 .clip(CircleShape),
@@ -106,7 +106,7 @@ private fun ProfileScreen(
         Text(text = profile.userName, style = MaterialTheme.typography.headlineLarge)
         Spacer(modifier = Modifier.weight(1f))
         JetpackOutlinedButton(modifier = Modifier.fillMaxWidth(), onClick = onSignOutClick) {
-            Text(text = stringResource(id = R.string.sign_out))
+            Text(text = stringResource(id = R.string.feature_profile_sign_out))
         }
         Spacer(Modifier.windowInsetsBottomHeight(WindowInsets.safeDrawing))
     }

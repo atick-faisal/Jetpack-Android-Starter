@@ -63,7 +63,7 @@ private fun Context.syncWorkNotification(total: Int, current: Int): Notification
         title = R.string.sync_work_notification_title,
         total = total,
         current = current,
-        icon = R.drawable.ic_sync,
+        icon = R.drawable.sync_ic_sync,
         pendingIntent = getDefaultIntent(this),
     )
 }

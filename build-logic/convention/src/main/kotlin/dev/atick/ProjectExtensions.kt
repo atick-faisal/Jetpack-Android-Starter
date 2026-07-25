@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Atick Faisal
+ * Copyright 2026 Atick Faisal
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,21 +14,18 @@
  * limitations under the License.
  */
 
-plugins {
-    alias(libs.plugins.jetpack.ui.library)
-    alias(libs.plugins.jetpack.dagger.hilt)
-    alias(libs.plugins.jetpack.dokka)
-}
+package dev.atick
 
-android {
-    namespace = "dev.atick.feature.settings"
-}
+import org.gradle.api.Project
+import org.gradle.api.artifacts.VersionCatalog
+import org.gradle.api.artifacts.VersionCatalogsExtension
+import org.gradle.kotlin.dsl.getByType
 
-dependencies {
-    // ... Modules
-    implementation(projects.core.ui)
-    implementation(projects.data)
+internal val Project.libs: VersionCatalog
+    get() = extensions.getByType<VersionCatalogsExtension>().named("libs")
 
-    // ... OSS Licenses
-    implementation(libs.google.oss.licenses)
-}
+internal fun VersionCatalog.version(name: String): String =
+    findVersion(name).get().toString()
+
+internal fun VersionCatalog.intVersion(name: String): Int =
+    version(name).toInt()

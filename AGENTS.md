@@ -285,6 +285,27 @@ feature/* → data → core:* → firebase:*
 - **JVM heap**: 8GB configured in `gradle.properties`
 - **Parallel builds**: Enabled for performance
 
+### Isolated Projects
+Not enabled by default yet, but the build is verified against it:
+
+```bash
+./gradlew assembleDebug -Dorg.gradle.unsafe.isolated-projects=true
+```
+
+The convention plugins and `app/build.gradle.kts` are IP-clean — they resolve root-relative
+paths through `isolated.rootProject.projectDirectory` rather than `rootProject.file(...)`.
+
+Two violations remain, both from the third-party `secrets-gradle-plugin` reading
+`secrets.defaults.properties` off the root project. They surface on `:core:network` and
+`:firebase:auth`, the only two modules that apply it, and cannot be fixed from this repo.
+Isolated Projects should not be turned on by default until that plugin is fixed or dropped.
+
+### Resource Prefixes
+Every library module sets `resourcePrefix` derived from its Gradle path, so a resource in
+`:feature:home` must be named `feature_home_*`. Library resources share one namespace after
+merging, so without the prefix two modules can define the same name and the winner depends on
+merge order. Lint reports any resource that does not match.
+
 ### Spotless & Code Formatting
 - **CRITICAL**: Always run `./gradlew spotlessApply` before committing
 - CI will fail if code is not formatted

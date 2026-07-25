@@ -136,16 +136,16 @@ private fun SignInScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Spacer(Modifier.windowInsetsTopHeight(WindowInsets.safeDrawing))
-        Text(stringResource(R.string.sign_in), style = MaterialTheme.typography.headlineLarge)
+        Text(stringResource(R.string.feature_auth_sign_in), style = MaterialTheme.typography.headlineLarge)
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Text(text = stringResource(R.string.do_not_have_an_account))
+            Text(text = stringResource(R.string.feature_auth_do_not_have_an_account))
             JetpackTextButton(onClick = onSignUpClick) {
                 Text(
-                    text = stringResource(R.string.sign_up),
+                    text = stringResource(R.string.feature_auth_sign_up),
                     color = MaterialTheme.colorScheme.primary,
                 )
             }
@@ -155,12 +155,12 @@ private fun SignInScreen(
             value = screenData.email.value,
             errorMessage = screenData.email.errorMessage,
             onValueChange = onEmailChange,
-            label = { Text(stringResource(R.string.email)) },
+            label = { Text(stringResource(R.string.feature_auth_email)) },
             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Email),
             leadingIcon = {
                 Icon(
                     imageVector = Icons.Default.Email,
-                    contentDescription = stringResource(R.string.email),
+                    contentDescription = stringResource(R.string.feature_auth_email),
                 )
             },
         )
@@ -168,11 +168,11 @@ private fun SignInScreen(
             value = screenData.password.value,
             errorMessage = screenData.password.errorMessage,
             onValueChange = onPasswordChange,
-            label = { Text(stringResource(R.string.password)) },
+            label = { Text(stringResource(R.string.feature_auth_password)) },
             leadingIcon = {
                 Icon(
                     imageVector = Icons.Default.Password,
-                    contentDescription = stringResource(R.string.password),
+                    contentDescription = stringResource(R.string.feature_auth_password),
                 )
             },
             modifier = Modifier.fillMaxWidth(),
@@ -184,15 +184,15 @@ private fun SignInScreen(
                 onSignInClick.invoke()
             },
             modifier = Modifier.fillMaxWidth(),
-            text = { Text(stringResource(R.string.sign_in)) },
+            text = { Text(stringResource(R.string.feature_auth_sign_in)) },
         )
-        DividerWithText(text = R.string.or, modifier = Modifier.padding(vertical = 16.dp))
+        DividerWithText(text = R.string.feature_auth_or, modifier = Modifier.padding(vertical = 16.dp))
         JetpackOutlinedButton(
             onClick = { activity?.run(onSignInWithGoogleClick) },
             text = { Text(text = "Sign In with Google") },
             leadingIcon = {
                 Icon(
-                    painter = painterResource(id = R.drawable.ic_google),
+                    painter = painterResource(id = R.drawable.feature_auth_ic_google),
                     contentDescription = "Google",
                 )
             },
@@ -203,7 +203,7 @@ private fun SignInScreen(
         )
         Spacer(modifier = Modifier.height(40.dp))
         Text(
-            text = stringResource(R.string.agree_to_terms),
+            text = stringResource(R.string.feature_auth_agree_to_terms),
             style = MaterialTheme.typography.bodySmall,
             textAlign = TextAlign.Center,
             color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
@@ -217,7 +217,7 @@ private fun SignInScreen(
                 onClick = { uriHandler.openUri(PRIVACY_POLICY_URL) },
             ) {
                 Text(
-                    text = stringResource(R.string.privacy_policy),
+                    text = stringResource(R.string.feature_auth_privacy_policy),
                     color = MaterialTheme.colorScheme.primary,
                 )
             }
@@ -225,7 +225,7 @@ private fun SignInScreen(
                 onClick = { uriHandler.openUri(TERMS_OF_SERVICE_URL) },
             ) {
                 Text(
-                    text = stringResource(R.string.terms_of_service),
+                    text = stringResource(R.string.feature_auth_terms_of_service),
                     color = MaterialTheme.colorScheme.primary,
                 )
             }

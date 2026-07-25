@@ -31,7 +31,7 @@ android {
 
 dependencies {
     // ... Modules
-    implementation(project(":core:android"))
+    implementation(projects.core.android)
 
     // ... Firebase Firestore
     implementation(platform(libs.firebase.bom))

@@ -37,7 +37,7 @@ secrets {
 
 dependencies {
     // ... Modules
-    implementation(project(":core:android"))
+    implementation(projects.core.android)
 
     // ... Firebase Auth
     implementation(platform(libs.firebase.bom))

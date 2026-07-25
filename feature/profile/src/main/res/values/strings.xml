@@ -16,6 +16,6 @@
 -->
 
 <resources>
-    <string name="profile_picture">Profile Picture</string>
-    <string name="sign_out">Sign Out</string>
+    <string name="feature_profile_profile_picture">Profile Picture</string>
+    <string name="feature_profile_sign_out">Sign Out</string>
 </resources>

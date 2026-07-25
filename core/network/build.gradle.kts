@@ -36,7 +36,7 @@ secrets {
 }
 
 dependencies {
-    implementation(project(":core:android"))
+    implementation(projects.core.android)
 
     // ... OkHTTP
     implementation(platform(libs.okhttp.bom))

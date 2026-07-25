@@ -132,16 +132,16 @@ private fun SignUpScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Spacer(Modifier.windowInsetsTopHeight(WindowInsets.safeDrawing))
-        Text(stringResource(id = R.string.sign_up), style = MaterialTheme.typography.headlineLarge)
+        Text(stringResource(id = R.string.feature_auth_sign_up), style = MaterialTheme.typography.headlineLarge)
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Text(text = stringResource(R.string.do_not_have_an_account))
+            Text(text = stringResource(R.string.feature_auth_do_not_have_an_account))
             JetpackTextButton(onClick = onSignInClick) {
                 Text(
-                    text = stringResource(R.string.sign_in),
+                    text = stringResource(R.string.feature_auth_sign_in),
                     color = MaterialTheme.colorScheme.primary,
                 )
             }
@@ -151,11 +151,11 @@ private fun SignUpScreen(
             value = screenData.name.value,
             errorMessage = screenData.name.errorMessage,
             onValueChange = onNameChange,
-            label = { Text(stringResource(R.string.name)) },
+            label = { Text(stringResource(R.string.feature_auth_name)) },
             leadingIcon = {
                 Icon(
                     imageVector = Icons.Default.Person,
-                    contentDescription = stringResource(R.string.name),
+                    contentDescription = stringResource(R.string.feature_auth_name),
                 )
             },
         )
@@ -163,12 +163,12 @@ private fun SignUpScreen(
             value = screenData.email.value,
             errorMessage = screenData.email.errorMessage,
             onValueChange = onEmailChange,
-            label = { Text(stringResource(R.string.email)) },
+            label = { Text(stringResource(R.string.feature_auth_email)) },
             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Email),
             leadingIcon = {
                 Icon(
                     imageVector = Icons.Default.Email,
-                    contentDescription = stringResource(R.string.email),
+                    contentDescription = stringResource(R.string.feature_auth_email),
                 )
             },
         )
@@ -176,11 +176,11 @@ private fun SignUpScreen(
             value = screenData.password.value,
             errorMessage = screenData.password.errorMessage,
             onValueChange = onPasswordChange,
-            label = { Text(stringResource(R.string.password)) },
+            label = { Text(stringResource(R.string.feature_auth_password)) },
             leadingIcon = {
                 Icon(
                     imageVector = Icons.Default.Password,
-                    contentDescription = stringResource(R.string.password),
+                    contentDescription = stringResource(R.string.feature_auth_password),
                 )
             },
             modifier = Modifier.fillMaxWidth(),
@@ -192,15 +192,15 @@ private fun SignUpScreen(
                 activity?.run(onSignUpClick)
             },
             modifier = Modifier.fillMaxWidth(),
-            text = { Text(stringResource(R.string.sign_up)) },
+            text = { Text(stringResource(R.string.feature_auth_sign_up)) },
         )
-        DividerWithText(text = R.string.or, modifier = Modifier.padding(vertical = 16.dp))
+        DividerWithText(text = R.string.feature_auth_or, modifier = Modifier.padding(vertical = 16.dp))
         JetpackOutlinedButton(
             onClick = { activity?.run(onRegisterWithGoogleClick) },
-            text = { Text(text = stringResource(R.string.sign_up_with_google)) },
+            text = { Text(text = stringResource(R.string.feature_auth_sign_up_with_google)) },
             leadingIcon = {
                 Icon(
-                    painter = painterResource(id = R.drawable.ic_google),
+                    painter = painterResource(id = R.drawable.feature_auth_ic_google),
                     contentDescription = "Google",
                 )
             },
@@ -211,7 +211,7 @@ private fun SignUpScreen(
         )
         Spacer(modifier = Modifier.height(40.dp))
         Text(
-            text = stringResource(R.string.agree_to_terms),
+            text = stringResource(R.string.feature_auth_agree_to_terms),
             style = MaterialTheme.typography.bodySmall,
             textAlign = TextAlign.Center,
             color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
@@ -225,7 +225,7 @@ private fun SignUpScreen(
                 onClick = { uriHandler.openUri(PRIVACY_POLICY_URL) },
             ) {
                 Text(
-                    text = stringResource(R.string.privacy_policy),
+                    text = stringResource(R.string.feature_auth_privacy_policy),
                     color = MaterialTheme.colorScheme.primary,
                 )
             }
@@ -233,7 +233,7 @@ private fun SignUpScreen(
                 onClick = { uriHandler.openUri(TERMS_OF_SERVICE_URL) },
             ) {
                 Text(
-                    text = stringResource(R.string.terms_of_service),
+                    text = stringResource(R.string.feature_auth_terms_of_service),
                     color = MaterialTheme.colorScheme.primary,
                 )
             }

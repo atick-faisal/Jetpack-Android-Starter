@@ -16,6 +16,6 @@
 -->
 
 <resources>
-    <string name="profile_picture">صورة الملف الشخصي</string>
-    <string name="sign_out">تسجيل الخروج</string>
+    <string name="feature_profile_profile_picture">صورة الملف الشخصي</string>
+    <string name="feature_profile_sign_out">تسجيل الخروج</string>
 </resources>

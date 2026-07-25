@@ -16,19 +16,19 @@
 -->
 
 <resources>
-    <string name="privacy_policy">سياسة الخصوصية</string>
-    <string name="licenses">التراخيص</string>
-    <string name="feedback">التعليقات</string>
-    <string name="dark_mode_preference">تفضيل الوضع الداكن</string>
-    <string name="dark_mode_config_system_default">افتراضي النظام</string>
-    <string name="dark_mode_config_light">فاتح</string>
-    <string name="dark_mode_config_dark">داكن</string>
-    <string name="dynamic_color_preference">استخدام الألوان الديناميكية</string>
-    <string name="dynamic_color_yes">نعم</string>
-    <string name="dynamic_color_no">لا</string>
-    <string name="dismiss_dialog_button_text">حسنًا</string>
-    <string name="sign_out">تسجيل الخروج</string>
-    <string name="settings">الإعدادات</string>
-    <string name="language">اللغة</string>
-    <string name="terms_of_service">شروط الخدمة</string>
+    <string name="feature_settings_privacy_policy">سياسة الخصوصية</string>
+    <string name="feature_settings_licenses">التراخيص</string>
+    <string name="feature_settings_feedback">التعليقات</string>
+    <string name="feature_settings_dark_mode_preference">تفضيل الوضع الداكن</string>
+    <string name="feature_settings_dark_mode_config_system_default">افتراضي النظام</string>
+    <string name="feature_settings_dark_mode_config_light">فاتح</string>
+    <string name="feature_settings_dark_mode_config_dark">داكن</string>
+    <string name="feature_settings_dynamic_color_preference">استخدام الألوان الديناميكية</string>
+    <string name="feature_settings_dynamic_color_yes">نعم</string>
+    <string name="feature_settings_dynamic_color_no">لا</string>
+    <string name="feature_settings_dismiss_dialog_button_text">حسنًا</string>
+    <string name="feature_settings_sign_out">تسجيل الخروج</string>
+    <string name="feature_settings_settings">الإعدادات</string>
+    <string name="feature_settings_language">اللغة</string>
+    <string name="feature_settings_terms_of_service">شروط الخدمة</string>
 </resources>

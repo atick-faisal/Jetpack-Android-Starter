@@ -92,7 +92,7 @@ enum class SnackbarAction(@StringRes val actionText: Int) {
      *
      * Example: "Data synced successfully"
      */
-    NONE(R.string.empty),
+    NONE(R.string.core_ui_empty),
 
     /**
      * Shows a "Report" action button.
@@ -102,7 +102,7 @@ enum class SnackbarAction(@StringRes val actionText: Int) {
      *
      * Example: "Failed to load data" with REPORT action
      */
-    REPORT(R.string.report),
+    REPORT(R.string.core_ui_report),
 
     /**
      * Shows an "Undo" action button.
@@ -112,5 +112,5 @@ enum class SnackbarAction(@StringRes val actionText: Int) {
      *
      * Example: "Item deleted" with UNDO action
      */
-    UNDO(R.string.undo),
+    UNDO(R.string.core_ui_undo),
 }

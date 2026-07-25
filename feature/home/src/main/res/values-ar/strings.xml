@@ -16,8 +16,8 @@
 -->
 
 <resources>
-    <string name="jetpack">جيت باك</string>
-    <string name="save">حفظ</string>
-    <string name="jetpack_name">اسم جيت باك</string>
-    <string name="price">السعر</string>
+    <string name="feature_home_jetpack">جيت باك</string>
+    <string name="feature_home_save">حفظ</string>
+    <string name="feature_home_jetpack_name">اسم جيت باك</string>
+    <string name="feature_home_price">السعر</string>
 </resources>
