@@ -55,9 +55,14 @@ import dev.atick.feature.home.R
  */
 @Composable
 internal fun ItemScreen(
+    itemId: String?,
     onBackClick: () -> Unit,
     onShowSnackbar: suspend (String, SnackbarAction, Throwable?) -> Boolean,
-    itemViewModel: ItemViewModel = hiltViewModel(),
+    // Navigation 3 passes destination arguments through the NavKey rather than a
+    // SavedStateHandle, so the id is handed to the ViewModel by assisted injection.
+    itemViewModel: ItemViewModel = hiltViewModel<ItemViewModel, ItemViewModel.Factory>(
+        creationCallback = { factory -> factory.create(itemId) },
+    ),
 ) {
     val itemUiState by itemViewModel.itemUiState.collectAsStateWithLifecycle()
 

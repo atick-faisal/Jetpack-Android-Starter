@@ -47,6 +47,8 @@ internal fun Project.configureAndroidCompose(
                 "-opt-in=androidx.compose.foundation.layout.ExperimentalLayoutApi",
                 // Material 3 Expressive
                 "-opt-in=androidx.compose.material3.ExperimentalMaterial3ExpressiveApi",
+                // Adaptive layouts, including the Navigation 3 list-detail scene strategy
+                "-opt-in=androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi",
             )
         }
     }

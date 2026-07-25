@@ -23,39 +23,55 @@ import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.navigation3.runtime.NavKey
 import dev.atick.compose.R
-import dev.atick.feature.home.navigation.Home
-import dev.atick.feature.profile.navigation.Profile
-import kotlin.reflect.KClass
+import dev.atick.feature.home.navigation.HomeNavKey
+import dev.atick.feature.profile.navigation.ProfileNavKey
 
 /**
- * Enum class representing top-level destinations in a navigation system.
+ * The destinations shown in the navigation bar or rail.
  *
- * @property selectedIcon The selected icon associated with the destination.
- * @property unselectedIcon The unselected icon associated with the destination.
- * @property iconTextId The resource ID for the icon's content description text.
- * @property titleTextId The resource ID for the title text.
- * @property route The route associated with the destination.
+ * Each entry owns a back stack of its own, so switching between them preserves where the user
+ * was. The first entry is the start destination: the app exits from there, and back from any
+ * other top-level destination returns to it.
+ *
+ * @property selectedIcon Icon shown when this destination is current.
+ * @property unselectedIcon Icon shown otherwise.
+ * @property iconTextId Label under the icon.
+ * @property titleTextId Title shown in the top app bar.
+ * @property key The navigation key this destination maps to.
  */
 enum class TopLevelDestination(
     val selectedIcon: ImageVector,
     val unselectedIcon: ImageVector,
     @StringRes val iconTextId: Int,
     @StringRes val titleTextId: Int,
-    val route: KClass<*>,
+    val key: NavKey,
 ) {
     HOME(
         selectedIcon = Icons.Filled.Home,
         unselectedIcon = Icons.Outlined.Home,
         iconTextId = R.string.home,
         titleTextId = R.string.home,
-        route = Home::class,
+        key = HomeNavKey,
     ),
     PROFILE(
         selectedIcon = Icons.Filled.Person,
         unselectedIcon = Icons.Outlined.Person,
         iconTextId = R.string.profile,
         titleTextId = R.string.profile,
-        route = Profile::class,
+        key = ProfileNavKey,
     ),
+    ;
+
+    companion object {
+        /** The destination the app starts on and exits from. */
+        val START: TopLevelDestination = HOME
+
+        /** Every top-level key, for building the navigation state. */
+        val keys: Set<NavKey> = entries.map { it.key }.toSet()
+
+        /** The destination [key] belongs to, or null if it is not a top-level key. */
+        fun fromKey(key: NavKey): TopLevelDestination? = entries.firstOrNull { it.key == key }
+    }
 }

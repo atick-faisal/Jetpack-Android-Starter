@@ -16,106 +16,61 @@
 
 package dev.atick.feature.auth.navigation
 
-import androidx.navigation.NavController
-import androidx.navigation.NavGraphBuilder
-import androidx.navigation.NavOptions
-import androidx.navigation.compose.composable
-import androidx.navigation.navigation
+import androidx.navigation3.runtime.EntryProviderScope
+import androidx.navigation3.runtime.NavKey
+import dev.atick.core.navigation.Navigator
 import dev.atick.core.ui.utils.SnackbarAction
 import dev.atick.feature.auth.ui.signin.SignInScreen
 import dev.atick.feature.auth.ui.signup.SignUpScreen
 import kotlinx.serialization.Serializable
 
 /**
- * Auth navigation graph.
+ * Sign-in destination, and the entry point of the signed-out flow.
  */
 @Serializable
-data object AuthNavGraph
+data object SignInNavKey : NavKey
 
 /**
- * Sign in route.
+ * Sign-up destination.
  */
 @Serializable
-data object SignIn
+data object SignUpNavKey : NavKey
 
 /**
- * Sign up route.
+ * Navigates to sign in.
  */
-@Serializable
-data object SignUp
+fun Navigator.navigateToSignIn() = navigate(SignInNavKey)
 
 /**
- * Navigate to the auth navigation graph.
+ * Navigates to sign up.
+ */
+fun Navigator.navigateToSignUp() = navigate(SignUpNavKey)
+
+/**
+ * Registers the signed-out destinations.
  *
- * @param navOptions [NavOptions].
- */
-fun NavController.navigateToAuthNavGraph(navOptions: NavOptions? = null) {
-    navigate(AuthNavGraph, navOptions)
-}
-
-/**
- * Navigate to the sign in route.
+ * These live in a navigation graph of their own, shown only while the user is signed out.
+ * Nothing navigates from here into the signed-in graph: the app swaps graphs when the auth state
+ * changes, so no stale back stack survives signing in or out.
  *
- * @param navOptions [NavOptions].
+ * @param navigator Used to move between sign in and sign up.
+ * @param onShowSnackbar Shows a message, returning true if the action was taken.
  */
-fun NavController.navigateToSignInScreen(navOptions: NavOptions? = null) {
-    navigate(SignIn, navOptions)
-}
-
-/**
- * Navigate to the sign up route.
- *
- * @param navOptions [NavOptions].
- */
-fun NavController.navigateToSignUpScreen(navOptions: NavOptions? = null) {
-    navigate(SignUp, navOptions)
-}
-
-/**
- * Sign in screen.
- *
- * @param onSignUpClick Callback when sign up is clicked.
- * @param onShowSnackbar Callback to show a snackbar.
- */
-fun NavGraphBuilder.signInScreen(
-    onSignUpClick: () -> Unit,
+fun EntryProviderScope<NavKey>.authEntries(
+    navigator: Navigator,
     onShowSnackbar: suspend (String, SnackbarAction, Throwable?) -> Boolean,
 ) {
-    composable<SignIn> {
+    entry<SignInNavKey> {
         SignInScreen(
-            onSignUpClick = onSignUpClick,
+            onSignUpClick = navigator::navigateToSignUp,
             onShowSnackbar = onShowSnackbar,
         )
     }
-}
 
-/**
- * Sign up screen.
- *
- * @param onSignInClick Callback when sign in is clicked.
- * @param onShowSnackbar Callback to show a snackbar.
- */
-fun NavGraphBuilder.signUpScreen(
-    onSignInClick: () -> Unit,
-    onShowSnackbar: suspend (String, SnackbarAction, Throwable?) -> Boolean,
-) {
-    composable<SignUp> {
+    entry<SignUpNavKey> {
         SignUpScreen(
-            onSignInClick = onSignInClick,
+            onSignInClick = navigator::navigateToSignIn,
             onShowSnackbar = onShowSnackbar,
         )
-    }
-}
-
-/**
- * Auth navigation graph.
- *
- * @param nestedNavGraphs Nested navigation graphs.
- */
-fun NavGraphBuilder.authNavGraph(
-    nestedNavGraphs: NavGraphBuilder.() -> Unit,
-) {
-    navigation<AuthNavGraph>(startDestination = SignIn) {
-        nestedNavGraphs()
     }
 }

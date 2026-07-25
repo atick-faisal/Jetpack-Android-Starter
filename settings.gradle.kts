@@ -64,6 +64,7 @@ include(":app")
 
 // ... Core
 include(":core:android")
+include(":core:navigation")
 include(":core:network")
 include(":core:preferences")
 include(":core:room")
