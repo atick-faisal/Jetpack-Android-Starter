@@ -30,6 +30,7 @@ val currentTime: String = LocalDateTime.now().format(formatter)
 
 plugins {
     alias(libs.plugins.jetpack.application)
+    alias(libs.plugins.baselineprofile)
     alias(libs.plugins.jetpack.dagger.hilt)
     alias(libs.plugins.jetpack.firebase)
     alias(libs.plugins.jetpack.dokka)
@@ -124,6 +125,10 @@ androidComponents {
 }
 
 dependencies {
+    // Applies the baseline profile at install so ART can compile the startup path ahead of time.
+    implementation(libs.androidx.profileinstaller)
+    baselineProfile(projects.benchmarks)
+
     // ... Core
     implementation(projects.core.ui)
     implementation(projects.core.network)
@@ -150,6 +155,14 @@ dependencies {
     // ... LeakCanary
     // TODO: Comment out the following line to disable LeakCanary
     debugImplementation(libs.leakcanary.android)
+}
+
+baselineProfile {
+    // Generating on every build would make every build wait for an emulator. Run
+    // ./gradlew :app:generateReleaseBaselineProfile when the startup path changes.
+    automaticGenerationDuringBuild = false
+    // Lets R8 group profile-listed methods together in the dex, which helps startup further.
+    dexLayoutOptimization = true
 }
 
 // Fails the build when the release runtime classpath drifts from the committed baseline, so a
