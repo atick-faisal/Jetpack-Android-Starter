@@ -46,8 +46,8 @@ import androidx.compose.ui.unit.dp
  * ```kotlin
  * Column {
  *     // Email sign-in form
- *     JetpackTextFiled(...)
- *     JetpackPasswordFiled(...)
+ *     JetpackTextField(...)
+ *     JetpackPasswordField(...)
  *     JetpackButton(onClick = { ... }) { Text("Sign In") }
  *
  *     DividerWithText(text = R.string.or)

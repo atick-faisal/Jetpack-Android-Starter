@@ -56,7 +56,7 @@ import dev.atick.core.ui.R
  * var email by remember { mutableStateOf("") }
  * var emailError by remember { mutableStateOf<String?>(null) }
  *
- * JetpackTextFiled(
+ * JetpackTextField(
  *     value = email,
  *     onValueChange = { email = it },
  *     label = { Text("Email") },
@@ -68,7 +68,7 @@ import dev.atick.core.ui.R
  * ```
  *
  * See also:
- * - [JetpackPasswordFiled] for password input with visibility toggle
+ * - [JetpackPasswordField] for password input with visibility toggle
  * - Use with [TextFieldData] for integrated state management
  *
  * @param value The current text value of the text field.
@@ -81,7 +81,7 @@ import dev.atick.core.ui.R
  * @param errorMessage The error message to display below the text field. Shows red border when not null.
  */
 @Composable
-fun JetpackTextFiled(
+fun JetpackTextField(
     value: String,
     onValueChange: (String) -> Unit,
     label: @Composable () -> Unit,
@@ -118,7 +118,7 @@ fun JetpackTextFiled(
  * var password by remember { mutableStateOf("") }
  * var passwordError by remember { mutableStateOf<String?>(null) }
  *
- * JetpackPasswordFiled(
+ * JetpackPasswordField(
  *     value = password,
  *     onValueChange = { password = it },
  *     label = { Text("Password") },
@@ -136,7 +136,7 @@ fun JetpackTextFiled(
  * @param errorMessage The error message to display below the password field. Shows red border when not null.
  */
 @Composable
-fun JetpackPasswordFiled(
+fun JetpackPasswordField(
     value: String,
     onValueChange: (String) -> Unit,
     label: @Composable () -> Unit,

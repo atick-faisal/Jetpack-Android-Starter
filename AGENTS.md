@@ -59,7 +59,7 @@ This file provides AI coding agents with project-specific instructions, conventi
 ## Project Context
 
 ### Tech Stack Overview
-- **Language**: Kotlin 2.3.20 with coroutines & Flow
+- **Language**: Kotlin 2.4.10 with coroutines & Flow
 - **UI**: Jetpack Compose with Material3 (declarative UI)
 - **Architecture**: Two-layer MVVM (UI + Data, intentionally no Domain layer)
 - **DI**: Dagger Hilt (compile-time injection)
@@ -67,7 +67,7 @@ This file provides AI coding agents with project-specific instructions, conventi
 - **Networking**: Retrofit + OkHttp + Kotlinx Serialization
 - **Backend**: Firebase (Auth, Firestore, Crashlytics, Performance)
 - **Background Work**: WorkManager with sync constraints
-- **Build**: Gradle 8.11.1, AGP 9.1.0, Java 21
+- **Build**: Gradle 9.6.1, AGP 9.3.1, Java 21
 
 ### Architecture Pattern
 **Two-Layer Architecture** (simplified from Android's three-layer approach):
@@ -275,7 +275,7 @@ feature/* → data → core:* → firebase:*
 ## Known Gotchas & Special Notes
 
 ### AGP 9 Migration (Completed March 2026)
-⚠️ Project recently migrated to Android Gradle Plugin 9.1.0. Known issues:
+⚠️ Project migrated to Android Gradle Plugin 9.x (currently 9.3.1). Known issues:
 - **Dokka warnings**: `AndroidExtensionWrapper could not get Android Extension` (harmless)
 - **Spotless task discovery**: Tasks not visible in `./gradlew tasks` but still execute
 - **Custom APK naming**: Temporarily disabled due to API changes

@@ -62,7 +62,7 @@ class AuthViewModel @Inject constructor(
     fun updateEmail(email: String) {
         _uiState.updateState {
             copy(
-                email = TextFiledData(
+                email = TextFieldData(
                     value = email,
                     errorMessage = email.validateEmail()
                 )
