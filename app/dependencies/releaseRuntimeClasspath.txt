@@ -155,7 +155,7 @@ androidx.navigationevent:navigationevent:1.1.2
 androidx.print:print:1.0.0
 androidx.privacysandbox.ads:ads-adservices-java:1.1.0-beta11
 androidx.privacysandbox.ads:ads-adservices:1.1.0-beta11
-androidx.profileinstaller:profileinstaller:1.4.0
+androidx.profileinstaller:profileinstaller:1.4.1
 androidx.recyclerview:recyclerview:1.2.1
 androidx.resourceinspection:resourceinspection-annotation:1.0.1
 androidx.room:room-common-jvm:2.8.4

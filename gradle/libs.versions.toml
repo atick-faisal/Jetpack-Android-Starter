@@ -12,6 +12,10 @@ secrets = "2.0.1"
 dependencyGuard = "0.5.0"
 # Lint tooling version tracks AGP: AGP 9.x maps to android tools 32.x
 androidTools = "32.3.1"
+# Macrobenchmark and the baseline profile plugin share a version; 1.5.x is the AGP 9 line.
+androidxMacroBenchmark = "1.5.0-alpha07"
+androidxProfileInstaller = "1.4.1"
+androidxUiAutomator = "2.3.0"
 
 # ... CORE:ANDROID ...
 androidxCore = "1.19.0"
@@ -103,6 +107,8 @@ secrets = { id = "com.google.android.libraries.mapsplatform.secrets-gradle-plugi
 kotlin-compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 google-oss-licenses = { id = "com.google.android.gms.oss-licenses-plugin", version.ref = "googleOssPlugin" }
 dependency-guard = { id = "com.dropbox.dependency-guard", version.ref = "dependencyGuard" }
+android-test = { id = "com.android.test", version.ref = "androidGradlePlugin" }
+baselineprofile = { id = "androidx.baselineprofile", version.ref = "androidxMacroBenchmark" }
 
 # ... Custom Plugins ...
 jetpack-library = { id = "dev.atick.library" }
@@ -111,6 +117,7 @@ jetpack-application = { id = "dev.atick.application" }
 jetpack-dagger-hilt = { id = "dev.atick.dagger.hilt" }
 jetpack-firebase = { id = "dev.atick.firebase" }
 jetpack-dokka = { id = "dev.atick.dokka" }
+jetpack-test = { id = "dev.atick.test" }
 
 [libraries]
 
@@ -228,6 +235,11 @@ androidx-test-runner = { group = "androidx.test", name = "runner", version.ref =
 androidx-room-testing = { group = "androidx.room", name = "room-testing", version.ref = "room" }
 androidx-lifecycle-viewModel-testing = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-testing", version.ref = "androidxLifecycle" }
 dagger-hilt-android-testing = { group = "com.google.dagger", name = "hilt-android-testing", version.ref = "daggerHilt" }
+
+# ... BENCHMARK ...
+androidx-benchmark-macro = { group = "androidx.benchmark", name = "benchmark-macro-junit4", version.ref = "androidxMacroBenchmark" }
+androidx-profileinstaller = { group = "androidx.profileinstaller", name = "profileinstaller", version.ref = "androidxProfileInstaller" }
+androidx-uiautomator = { group = "androidx.test.uiautomator", name = "uiautomator", version.ref = "androidxUiAutomator" }
 
 # ... LINT ...
 lint-api = { group = "com.android.tools.lint", name = "lint-api", version.ref = "androidTools" }

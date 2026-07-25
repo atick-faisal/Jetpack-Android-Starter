@@ -71,5 +71,9 @@ gradlePlugin {
             id = "dev.atick.dokka"
             implementationClass = "DokkaConventionPlugin"
         }
+        register("test") {
+            id = "dev.atick.test"
+            implementationClass = "TestConventionPlugin"
+        }
     }
 }

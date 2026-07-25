@@ -61,6 +61,7 @@ rootProject.name = "Jetpack"
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 include(":app")
+include(":benchmarks")
 
 // ... Core
 include(":core:android")
