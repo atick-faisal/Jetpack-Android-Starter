@@ -15,6 +15,7 @@
  */
 
 import com.android.build.api.dsl.LibraryExtension
+import dev.atick.configureAndroidTest
 import dev.atick.configureKotlinAndroid
 import dev.atick.configureResourcePrefix
 import org.gradle.api.Plugin
@@ -34,6 +35,7 @@ class LibraryConventionPlugin : Plugin<Project> {
             extensions.configure<LibraryExtension> {
                 configureKotlinAndroid(this)
                 configureResourcePrefix(this)
+                configureAndroidTest(this)
             }
         }
     }
