@@ -61,8 +61,6 @@ import kotlinx.coroutines.launch
  * }
  * ```
  *
- * @sample dev.atick.feature.home.ui.home.HomeScreen Standard usage with repository data observation
- * @sample dev.atick.feature.auth.ui.signin.SignInScreen Usage with form validation
  *
  * ## Pattern
  * This composable enforces a clean separation of concerns:
@@ -181,8 +179,6 @@ data class UiState<T : Any>(
  * }
  * ```
  *
- * @sample dev.atick.feature.auth.ui.signin.SignInViewModel.updateEmail Real-world form field validation
- * @sample dev.atick.feature.auth.ui.signin.SignInViewModel.updatePassword Form field with validation
  *
  * @param T The type of the screen data.
  * @param update Lambda that receives current data and returns updated data.
@@ -252,7 +248,6 @@ inline fun <T : Any> MutableStateFlow<UiState<T>>.updateState(update: T.() -> T)
  * If called while `loading = true`, the function returns immediately to prevent
  * duplicate concurrent operations.
  *
- * @sample dev.atick.feature.home.ui.item.ItemViewModel.createOrUpdateJetpack Creating/updating with navigation event
  *
  * @param T The type of the screen data.
  * @param operation Suspend lambda that receives current data and returns `Result<T>` with new data.
@@ -342,9 +337,6 @@ context(viewModel: ViewModel) inline fun <reified T : Any> MutableStateFlow<UiSt
  * }
  * ```
  *
- * @sample dev.atick.feature.home.ui.home.HomeViewModel.deleteJetpack Deleting an item
- * @sample dev.atick.feature.auth.ui.signin.SignInViewModel.signInWithGoogle Authentication with Google
- * @sample dev.atick.feature.auth.ui.signin.SignInViewModel.loginWithEmailAndPassword Email/password authentication
  *
  * ## Difference from updateStateWith
  * - `updateStateWith`: For operations that return new data → Updates [UiState.data]

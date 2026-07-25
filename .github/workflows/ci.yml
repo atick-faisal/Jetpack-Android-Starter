@@ -8,6 +8,11 @@ on:
       - '**/*'
       - '!**/.github/workflows/**'
 
+permissions:
+  contents: read
+  # Required to upload lint findings to GitHub code scanning.
+  security-events: write
+
 jobs:
   lint:
     name: 🔍 Lint & Code Style Check
@@ -35,11 +40,16 @@ jobs:
       - name: 🧼 Run Spotless Check
         run: ./gradlew spotlessCheck --init-script gradle/init.gradle.kts --no-configuration-cache
 
+      # The convention plugins are the build's own source code and can break the build for
+      # every module, so they are validated before anything that depends on them runs.
+      - name: 🧩 Check Convention Plugins
+        run: ./gradlew :build-logic:convention:check
+
   build:
-    name: 🏗️ Build & Compile
+    name: 🏗️ Build & Test
     needs: lint  # Only runs if lint passes ✅
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 60
     steps:
       - name: ⬇️ Checkout Repository
         uses: actions/checkout@v7
@@ -57,8 +67,53 @@ jobs:
       - name: ⚙️ Setup Gradle
         uses: gradle/actions/setup-gradle@v6.3.0
 
-      - name: 🧹 Clean Project
-        run: ./gradlew clean
+      # Fails when the release runtime classpath drifts from app/dependencies/. If the change
+      # is intended, run ./gradlew :app:dependencyGuardBaseline and commit the result.
+      - name: 🔒 Check Dependency Baseline
+        run: ./gradlew :app:dependencyGuard
+
+      - name: 🧪 Run Unit Tests
+        run: ./gradlew test
+
+      - name: 🔬 Run Custom Lint Check Tests
+        run: ./gradlew :lint:test
 
       - name: 🔨 Build Project
         run: ./gradlew build
+
+      # Runs after the build so a compile error surfaces as a compile error rather than as a
+      # confusing lint failure.
+      - name: 🔍 Run Android Lint
+        run: ./gradlew :app:lintRelease :lint:lint
+
+      - name: 📤 Upload Lint Findings to Code Scanning
+        uses: github/codeql-action/upload-sarif@v4
+        # Report findings even when lint failed the build; that is when they are most useful.
+        if: ${{ !cancelled() }}
+        continue-on-error: true
+        with:
+          sarif_file: app/build/reports/lint-results-release.sarif
+          category: lint-app
+
+      # Catches a permission, SDK level or density change that arrived through a dependency
+      # rather than a manifest edit. Update with ./gradlew :app:updateReleaseBadging.
+      - name: 🏷️ Check APK Badging
+        run: ./gradlew :app:checkReleaseBadging
+
+      - name: 📊 Upload Test Results
+        uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: test-results
+          path: '**/build/test-results/**/*.xml'
+          if-no-files-found: ignore
+          retention-days: 7
+
+      - name: 📋 Upload Lint Reports
+        uses: actions/upload-artifact@v4
+        if: ${{ failure() }}
+        with:
+          name: lint-reports
+          path: '**/build/reports/lint-results-*'
+          if-no-files-found: ignore
+          retention-days: 7
