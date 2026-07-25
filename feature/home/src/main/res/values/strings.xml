@@ -16,8 +16,8 @@
 -->
 
 <resources>
-    <string name="jetpack">Jetpack</string>
-    <string name="save">Save</string>
-    <string name="jetpack_name">Jetpack Name</string>
-    <string name="price">Price</string>
+    <string name="feature_home_jetpack">Jetpack</string>
+    <string name="feature_home_save">Save</string>
+    <string name="feature_home_jetpack_name">Jetpack Name</string>
+    <string name="feature_home_price">Price</string>
 </resources>

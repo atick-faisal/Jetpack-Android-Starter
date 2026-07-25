@@ -144,7 +144,7 @@ private fun SettingsDialog(
         title = {
             Text(
                 modifier = Modifier.fillMaxWidth(),
-                text = settings.userName ?: stringResource(R.string.settings),
+                text = settings.userName ?: stringResource(R.string.feature_settings_settings),
                 style = MaterialTheme.typography.titleLarge,
                 textAlign = TextAlign.Center,
             )
@@ -167,7 +167,7 @@ private fun SettingsDialog(
         },
         confirmButton = {
             Text(
-                text = stringResource(R.string.dismiss_dialog_button_text),
+                text = stringResource(R.string.feature_settings_dismiss_dialog_button_text),
                 style = MaterialTheme.typography.labelLarge,
                 color = MaterialTheme.colorScheme.primary,
                 modifier = Modifier
@@ -205,7 +205,7 @@ private fun ColumnScope.SettingsPanel(
         )
     }
 
-    SettingsDialogSectionTitle(text = stringResource(R.string.language))
+    SettingsDialogSectionTitle(text = stringResource(R.string.feature_settings_language))
     Box(
         modifier = Modifier.fillMaxWidth(),
         contentAlignment = Alignment.Center,
@@ -221,35 +221,35 @@ private fun ColumnScope.SettingsPanel(
     }
     AnimatedVisibility(visible = supportDynamicColor) {
         Column {
-            SettingsDialogSectionTitle(text = stringResource(R.string.dynamic_color_preference))
+            SettingsDialogSectionTitle(text = stringResource(R.string.feature_settings_dynamic_color_preference))
             Column(Modifier.selectableGroup()) {
                 SettingsDialogThemeChooserRow(
-                    text = stringResource(R.string.dynamic_color_yes),
+                    text = stringResource(R.string.feature_settings_dynamic_color_yes),
                     selected = settings.useDynamicColor,
                     onClick = { onChangeDynamicColorPreference(true) },
                 )
                 SettingsDialogThemeChooserRow(
-                    text = stringResource(R.string.dynamic_color_no),
+                    text = stringResource(R.string.feature_settings_dynamic_color_no),
                     selected = !settings.useDynamicColor,
                     onClick = { onChangeDynamicColorPreference(false) },
                 )
             }
         }
     }
-    SettingsDialogSectionTitle(text = stringResource(R.string.dark_mode_preference))
+    SettingsDialogSectionTitle(text = stringResource(R.string.feature_settings_dark_mode_preference))
     Column(Modifier.selectableGroup()) {
         SettingsDialogThemeChooserRow(
-            text = stringResource(R.string.dark_mode_config_system_default),
+            text = stringResource(R.string.feature_settings_dark_mode_config_system_default),
             selected = settings.darkThemeConfig == DarkThemeConfig.FOLLOW_SYSTEM,
             onClick = { onChangeDarkThemeConfig(DarkThemeConfig.FOLLOW_SYSTEM) },
         )
         SettingsDialogThemeChooserRow(
-            text = stringResource(R.string.dark_mode_config_light),
+            text = stringResource(R.string.feature_settings_dark_mode_config_light),
             selected = settings.darkThemeConfig == DarkThemeConfig.LIGHT,
             onClick = { onChangeDarkThemeConfig(DarkThemeConfig.LIGHT) },
         )
         SettingsDialogThemeChooserRow(
-            text = stringResource(R.string.dark_mode_config_dark),
+            text = stringResource(R.string.feature_settings_dark_mode_config_dark),
             selected = settings.darkThemeConfig == DarkThemeConfig.DARK,
             onClick = { onChangeDarkThemeConfig(DarkThemeConfig.DARK) },
         )
@@ -261,7 +261,7 @@ private fun ColumnScope.SettingsPanel(
         },
         modifier = Modifier.fillMaxWidth(),
     ) {
-        Text(text = stringResource(R.string.sign_out))
+        Text(text = stringResource(R.string.feature_settings_sign_out))
     }
 }
 
@@ -329,12 +329,12 @@ private fun LinksPanel() {
         JetpackTextButton(
             onClick = { uriHandler.openUri(PRIVACY_POLICY_URL) },
         ) {
-            Text(text = stringResource(R.string.privacy_policy))
+            Text(text = stringResource(R.string.feature_settings_privacy_policy))
         }
         JetpackTextButton(
             onClick = { uriHandler.openUri(TERMS_OF_SERVICE_URL) },
         ) {
-            Text(text = stringResource(R.string.terms_of_service))
+            Text(text = stringResource(R.string.feature_settings_terms_of_service))
         }
         val context = LocalContext.current
         JetpackTextButton(
@@ -342,12 +342,12 @@ private fun LinksPanel() {
                 context.startActivity(Intent(context, OssLicensesMenuActivity::class.java))
             },
         ) {
-            Text(text = stringResource(R.string.licenses))
+            Text(text = stringResource(R.string.feature_settings_licenses))
         }
         JetpackTextButton(
             onClick = { uriHandler.openUri(FEEDBACK_URL) },
         ) {
-            Text(text = stringResource(R.string.feedback))
+            Text(text = stringResource(R.string.feature_settings_feedback))
         }
     }
 }
@@ -355,8 +355,8 @@ private fun LinksPanel() {
 private fun getLanguageOptions(): List<ToggleOption> {
     return Language.entries.map { language: Language ->
         when (language) {
-            Language.ENGLISH -> ToggleOption(R.string.en, Icons.Default.Language)
-            Language.ARABIC -> ToggleOption(R.string.ar, Icons.Default.Translate)
+            Language.ENGLISH -> ToggleOption(R.string.feature_settings_en, Icons.Default.Language)
+            Language.ARABIC -> ToggleOption(R.string.feature_settings_ar, Icons.Default.Translate)
         }
     }
 }

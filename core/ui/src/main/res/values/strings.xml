@@ -16,11 +16,11 @@
 -->
 
 <resources>
-    <string name="hide_password">Hide Password</string>
-    <string name="show_password">Show Password</string>
-    <string name="profile_picture">Profile Picture</string>
-    <string name="empty" />
-    <string name="report">Report</string>
-    <string name="undo">Undo</string>
-    <string name="back">Back</string>
+    <string name="core_ui_hide_password">Hide Password</string>
+    <string name="core_ui_show_password">Show Password</string>
+    <string name="core_ui_profile_picture">Profile Picture</string>
+    <string name="core_ui_empty" />
+    <string name="core_ui_report">Report</string>
+    <string name="core_ui_undo">Undo</string>
+    <string name="core_ui_back">Back</string>
 </resources>

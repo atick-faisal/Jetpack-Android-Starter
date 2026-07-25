@@ -21,7 +21,10 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Properties
 
-val keystorePropertiesFile: File = rootProject.file("keystore.properties")
+// isolated.rootProject rather than rootProject.file(...): under Gradle's Isolated Projects mode
+// a project may not reach across into another project's model at configuration time.
+val keystorePropertiesFile: File =
+    isolated.rootProject.projectDirectory.file("keystore.properties").asFile
 val formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy_MM_dd_hh_mm_a")
 val currentTime: String = LocalDateTime.now().format(formatter)
 
@@ -122,21 +125,21 @@ androidComponents {
 
 dependencies {
     // ... Core
-    implementation(project(":core:ui"))
-    implementation(project(":core:network"))
-    implementation(project(":core:preferences"))
+    implementation(projects.core.ui)
+    implementation(projects.core.network)
+    implementation(projects.core.preferences)
 
     // ... Features
-    implementation(project(":feature:auth"))
-    implementation(project(":feature:home"))
-    implementation(project(":feature:profile"))
-    implementation(project(":feature:settings"))
+    implementation(projects.feature.auth)
+    implementation(projects.feature.home)
+    implementation(projects.feature.profile)
+    implementation(projects.feature.settings)
 
     // ... Analytics
-    implementation(project(":firebase:analytics"))
+    implementation(projects.firebase.analytics)
 
     // ... Sync
-    implementation(project(":sync"))
+    implementation(projects.sync)
 
     // ... Splash Screen
     implementation(libs.androidx.core.splashscreen)

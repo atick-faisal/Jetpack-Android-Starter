@@ -28,20 +28,20 @@ enum class NetworkState(@StringRes val description: Int) {
     /**
      * Network is connected.
      */
-    CONNECTED(R.string.network_connected),
+    CONNECTED(R.string.core_network_network_connected),
 
     /**
      * Network is connecting.
      */
-    LOSING(R.string.network_losing),
+    LOSING(R.string.core_network_network_losing),
 
     /**
      * Network is disconnected.
      */
-    LOST(R.string.network_lost),
+    LOST(R.string.core_network_network_lost),
 
     /**
      * Network is unavailable.
      */
-    UNAVAILABLE(R.string.network_not_available),
+    UNAVAILABLE(R.string.core_network_network_not_available),
 }

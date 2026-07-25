@@ -16,11 +16,11 @@
 -->
 
 <resources>
-    <string name="hide_password">إخفاء كلمة المرور</string>
-    <string name="show_password">إظهار كلمة المرور</string>
-    <string name="profile_picture">صورة الملف الشخصي</string>
-    <string name="empty" />
-    <string name="report">الإبلاغ</string>
-    <string name="undo">تراجع</string>
-    <string name="back">رجوع</string>
+    <string name="core_ui_hide_password">إخفاء كلمة المرور</string>
+    <string name="core_ui_show_password">إظهار كلمة المرور</string>
+    <string name="core_ui_profile_picture">صورة الملف الشخصي</string>
+    <string name="core_ui_empty" />
+    <string name="core_ui_report">الإبلاغ</string>
+    <string name="core_ui_undo">تراجع</string>
+    <string name="core_ui_back">رجوع</string>
 </resources>

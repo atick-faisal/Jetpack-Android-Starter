@@ -104,8 +104,8 @@ private fun ItemScreen(
 ) {
     Column(modifier = Modifier.fillMaxWidth()) {
         JetpackActionBar(
-            titleRes = R.string.jetpack,
-            actionRes = R.string.save,
+            titleRes = R.string.feature_home_jetpack,
+            actionRes = R.string.feature_home_save,
             onActionClick = onSaveClick,
             onNavigateBackClick = onBackClick,
             colors = TopAppBarDefaults.topAppBarColors(
@@ -145,11 +145,11 @@ private fun EditItemForm(
         JetpackTextField(
             value = name,
             onValueChange = onUpdateName,
-            label = { Text(text = stringResource(id = R.string.jetpack_name)) },
+            label = { Text(text = stringResource(id = R.string.feature_home_jetpack_name)) },
             leadingIcon = {
                 Icon(
                     imageVector = Icons.Default.RocketLaunch,
-                    contentDescription = stringResource(id = R.string.jetpack_name),
+                    contentDescription = stringResource(id = R.string.feature_home_jetpack_name),
                 )
             },
         )
@@ -157,11 +157,11 @@ private fun EditItemForm(
         JetpackTextField(
             value = price.toString(),
             onValueChange = onUpdatePrice,
-            label = { Text(text = stringResource(id = R.string.price)) },
+            label = { Text(text = stringResource(id = R.string.feature_home_price)) },
             leadingIcon = {
                 Icon(
                     imageVector = Icons.Default.Wallet,
-                    contentDescription = stringResource(id = R.string.price),
+                    contentDescription = stringResource(id = R.string.feature_home_price),
                 )
             },
             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),

@@ -26,6 +26,6 @@ android {
 
 dependencies {
     // ... Modules
-    implementation(project(":core:ui"))
-    implementation(project(":data"))
+    implementation(projects.core.ui)
+    implementation(projects.data)
 }

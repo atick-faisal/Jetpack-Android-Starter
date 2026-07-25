@@ -29,7 +29,7 @@ android {
 
 dependencies {
     // ... Modules
-    implementation(project(":core:android"))
+    implementation(projects.core.android)
 
     // ... DataStore
     implementation(libs.androidx.dataStore.core)

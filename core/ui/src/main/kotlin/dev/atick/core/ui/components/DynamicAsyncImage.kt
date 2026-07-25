@@ -54,7 +54,7 @@ import dev.atick.core.ui.theme.LocalTintTheme
  * DynamicAsyncImage(
  *     imageUrl = "https://example.com/avatar.jpg",
  *     contentDescription = "User avatar",
- *     placeholder = painterResource(R.drawable.ic_placeholder),
+ *     placeholder = painterResource(R.drawable.core_ui_ic_placeholder),
  *     modifier = Modifier
  *         .size(80.dp)
  *         .clip(CircleShape),
@@ -71,7 +71,7 @@ fun DynamicAsyncImage(
     imageUrl: String,
     contentDescription: String?,
     modifier: Modifier = Modifier,
-    placeholder: Painter = painterResource(R.drawable.ic_placeholder),
+    placeholder: Painter = painterResource(R.drawable.core_ui_ic_placeholder),
 ) {
     val iconTint = LocalTintTheme.current.iconTint
     var isLoading by remember { mutableStateOf(true) }

@@ -199,8 +199,8 @@ fun JetpackTopAppBarWithAvatar(
                 AsyncImage(
                     model = avatarUri,
                     contentDescription = avatarContentDescription,
-                    placeholder = painterResource(id = R.drawable.ic_avatar),
-                    fallback = painterResource(id = R.drawable.ic_avatar),
+                    placeholder = painterResource(id = R.drawable.core_ui_ic_avatar),
+                    fallback = painterResource(id = R.drawable.core_ui_ic_avatar),
                     modifier = Modifier
                         .size(30.dp)
                         .clip(CircleShape),
@@ -250,7 +250,7 @@ fun JetpackActionBar(
             IconButton(onClick = onNavigateBackClick) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = stringResource(id = R.string.back),
+                    contentDescription = stringResource(id = R.string.core_ui_back),
                 )
             }
         },

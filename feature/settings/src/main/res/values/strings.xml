@@ -16,21 +16,21 @@
 -->
 
 <resources>
-    <string name="privacy_policy">Privacy Policy</string>
-    <string name="licenses">Licenses</string>
-    <string name="feedback">Feedback</string>
-    <string name="dark_mode_preference">Dark mode preference</string>
-    <string name="dark_mode_config_system_default">System default</string>
-    <string name="dark_mode_config_light">Light</string>
-    <string name="dark_mode_config_dark">Dark</string>
-    <string name="dynamic_color_preference">Use Dynamic Color</string>
-    <string name="dynamic_color_yes">Yes</string>
-    <string name="dynamic_color_no">No</string>
-    <string name="dismiss_dialog_button_text">OK</string>
-    <string name="sign_out">Sign Out</string>
-    <string name="settings">Settings</string>
-    <string name="language">Language</string>
-    <string name="ar" translatable="false">AR</string>
-    <string name="en" translatable="false">EN</string>
-    <string name="terms_of_service">Terms of Service</string>
+    <string name="feature_settings_privacy_policy">Privacy Policy</string>
+    <string name="feature_settings_licenses">Licenses</string>
+    <string name="feature_settings_feedback">Feedback</string>
+    <string name="feature_settings_dark_mode_preference">Dark mode preference</string>
+    <string name="feature_settings_dark_mode_config_system_default">System default</string>
+    <string name="feature_settings_dark_mode_config_light">Light</string>
+    <string name="feature_settings_dark_mode_config_dark">Dark</string>
+    <string name="feature_settings_dynamic_color_preference">Use Dynamic Color</string>
+    <string name="feature_settings_dynamic_color_yes">Yes</string>
+    <string name="feature_settings_dynamic_color_no">No</string>
+    <string name="feature_settings_dismiss_dialog_button_text">OK</string>
+    <string name="feature_settings_sign_out">Sign Out</string>
+    <string name="feature_settings_settings">Settings</string>
+    <string name="feature_settings_language">Language</string>
+    <string name="feature_settings_ar" translatable="false">AR</string>
+    <string name="feature_settings_en" translatable="false">EN</string>
+    <string name="feature_settings_terms_of_service">Terms of Service</string>
 </resources>

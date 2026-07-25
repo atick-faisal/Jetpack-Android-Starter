@@ -26,12 +26,12 @@ android {
 
 dependencies {
     // ... Core
-    implementation(project(":core:android"))
-    implementation(project(":core:network"))
-    implementation(project(":core:preferences"))
-    implementation(project(":core:room"))
+    implementation(projects.core.android)
+    implementation(projects.core.network)
+    implementation(projects.core.preferences)
+    implementation(projects.core.room)
 
     // ... Firebase
-    implementation(project(":firebase:auth"))
-    implementation(project(":firebase:firestore"))
+    implementation(projects.firebase.auth)
+    implementation(projects.firebase.firestore)
 }
