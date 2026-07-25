@@ -17,7 +17,9 @@
 package dev.atick
 
 import com.android.build.api.dsl.CommonExtension
+import com.android.build.api.dsl.LibraryExtension
 import org.gradle.api.Project
+import org.gradle.api.tasks.testing.Test
 
 /**
  * Gives every module the same unit test stack so individual build files do not have to repeat
@@ -32,6 +34,23 @@ internal fun Project.configureAndroidTest(commonExtension: CommonExtension) {
         defaultConfig.testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         testOptions.unitTests.isIncludeAndroidResources = true
         testOptions.unitTests.isReturnDefaultValues = true
+
+        // Library modules have no targetSdk of their own, so their test manifest inherits
+        // compileSdk. Robolectric refuses to run against an SDK it has no shadows for, and
+        // compileSdk deliberately runs ahead of the newest release. Pin tests to targetSdk.
+        //
+        // Library-only: AGP rejects testOptions.targetSdk on an application module, which
+        // already declares a real targetSdk in defaultConfig.
+        if (this is LibraryExtension) {
+            testOptions.targetSdk = libs.intVersion("targetSdk")
+        }
+    }
+
+    // Gradle 9 fails a test task that compiles test sources but discovers no tests. Most
+    // modules here legitimately have none — and an adopter deleting the demo feature should not
+    // be greeted by a build failure — so report that as "nothing to do" rather than an error.
+    tasks.withType(Test::class.java).configureEach {
+        failOnNoDiscoveredTests.set(false)
     }
 
     dependencies.apply {
