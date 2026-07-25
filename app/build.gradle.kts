@@ -152,3 +152,10 @@ dependencies {
     // TODO: Comment out the following line to disable LeakCanary
     debugImplementation(libs.leakcanary.android)
 }
+
+// Fails the build when the release runtime classpath drifts from the committed baseline, so a
+// new transitive dependency has to be reviewed rather than arriving unnoticed.
+// Regenerate with: ./gradlew :app:dependencyGuardBaseline
+dependencyGuard {
+    configuration("releaseRuntimeClasspath")
+}

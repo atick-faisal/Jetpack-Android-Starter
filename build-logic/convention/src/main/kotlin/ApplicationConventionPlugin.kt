@@ -15,7 +15,9 @@
  */
 
 import com.android.build.api.dsl.ApplicationExtension
+import com.android.build.api.variant.ApplicationAndroidComponentsExtension
 import dev.atick.configureAndroidCompose
+import dev.atick.configureBadgingTasks
 import dev.atick.configureAndroidTest
 import dev.atick.configureKotlinAndroid
 import dev.atick.intVersion
@@ -34,7 +36,12 @@ class ApplicationConventionPlugin : Plugin<Project> {
                 apply("org.jetbrains.kotlin.plugin.compose")
                 apply("com.google.android.gms.oss-licenses-plugin")
                 apply("kotlinx-serialization")
+                apply("com.dropbox.dependency-guard")
             }
+
+            configureBadgingTasks(
+                extensions.getByType(ApplicationAndroidComponentsExtension::class.java),
+            )
 
             extensions.configure<ApplicationExtension> {
                 configureKotlinAndroid(this)

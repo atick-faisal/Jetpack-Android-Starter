@@ -9,6 +9,7 @@ ksp = "2.3.11"
 dokka = "2.2.0"
 dokkaMermaid = "0.6.0"
 secrets = "2.0.1"
+dependencyGuard = "0.5.0"
 
 # ... CORE:ANDROID ...
 androidxCore = "1.19.0"
@@ -98,6 +99,7 @@ dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
 secrets = { id = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin", version.ref = "secrets" }
 kotlin-compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 google-oss-licenses = { id = "com.google.android.gms.oss-licenses-plugin", version.ref = "googleOssPlugin" }
+dependency-guard = { id = "com.dropbox.dependency-guard", version.ref = "dependencyGuard" }
 
 # ... Custom Plugins ...
 jetpack-library = { id = "dev.atick.library" }

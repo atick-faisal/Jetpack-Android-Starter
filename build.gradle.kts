@@ -27,6 +27,7 @@ plugins {
     alias(libs.plugins.gms) apply (false)
     alias(libs.plugins.ksp) apply (false)
     alias(libs.plugins.google.oss.licenses) apply (false)
+    alias(libs.plugins.dependency.guard) apply (false)
     alias(libs.plugins.dokka)
 }
 
