@@ -39,7 +39,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.atick.core.ui.components.JetpackActionBar
-import dev.atick.core.ui.components.JetpackTextFiled
+import dev.atick.core.ui.components.JetpackTextField
 import dev.atick.core.ui.utils.PreviewDevices
 import dev.atick.core.ui.utils.PreviewThemes
 import dev.atick.core.ui.utils.SnackbarAction
@@ -142,7 +142,7 @@ private fun EditItemForm(
             .padding(horizontal = 24.dp),
     ) {
         Spacer(modifier = Modifier.height(16.dp))
-        JetpackTextFiled(
+        JetpackTextField(
             value = name,
             onValueChange = onUpdateName,
             label = { Text(text = stringResource(id = R.string.jetpack_name)) },
@@ -154,7 +154,7 @@ private fun EditItemForm(
             },
         )
         Spacer(modifier = Modifier.height(16.dp))
-        JetpackTextFiled(
+        JetpackTextField(
             value = price.toString(),
             onValueChange = onUpdatePrice,
             label = { Text(text = stringResource(id = R.string.price)) },

@@ -57,9 +57,9 @@ import dev.atick.core.extensions.getActivity
 import dev.atick.core.ui.components.DividerWithText
 import dev.atick.core.ui.components.JetpackButton
 import dev.atick.core.ui.components.JetpackOutlinedButton
-import dev.atick.core.ui.components.JetpackPasswordFiled
+import dev.atick.core.ui.components.JetpackPasswordField
 import dev.atick.core.ui.components.JetpackTextButton
-import dev.atick.core.ui.components.JetpackTextFiled
+import dev.atick.core.ui.components.JetpackTextField
 import dev.atick.core.ui.utils.PreviewDevices
 import dev.atick.core.ui.utils.PreviewThemes
 import dev.atick.core.ui.utils.SnackbarAction
@@ -147,7 +147,7 @@ private fun SignUpScreen(
             }
         }
         Spacer(modifier = Modifier.height(24.dp))
-        JetpackTextFiled(
+        JetpackTextField(
             value = screenData.name.value,
             errorMessage = screenData.name.errorMessage,
             onValueChange = onNameChange,
@@ -159,7 +159,7 @@ private fun SignUpScreen(
                 )
             },
         )
-        JetpackTextFiled(
+        JetpackTextField(
             value = screenData.email.value,
             errorMessage = screenData.email.errorMessage,
             onValueChange = onEmailChange,
@@ -172,7 +172,7 @@ private fun SignUpScreen(
                 )
             },
         )
-        JetpackPasswordFiled(
+        JetpackPasswordField(
             value = screenData.password.value,
             errorMessage = screenData.password.errorMessage,
             onValueChange = onPasswordChange,

@@ -26,8 +26,8 @@ package dev.atick.core.ui.utils
  * ## Usage in Screen Data
  * ```kotlin
  * data class LoginScreenData(
- *     val email: TextFiledData = TextFiledData(""),
- *     val password: TextFiledData = TextFiledData("")
+ *     val email: TextFieldData = TextFieldData(""),
+ *     val password: TextFieldData = TextFieldData("")
  * )
  * ```
  *
@@ -42,7 +42,7 @@ package dev.atick.core.ui.utils
  *
  *     fun updateEmail(email: String) {
  *         _uiState.updateState {
- *             copy(email = TextFiledData(email, validateEmail(email)))
+ *             copy(email = TextFieldData(email, validateEmail(email)))
  *         }
  *     }
  *
@@ -75,7 +75,7 @@ package dev.atick.core.ui.utils
  *
  * ## With UiText for Type-Safe Errors
  * ```kotlin
- * data class TextFiledData(
+ * data class TextFieldData(
  *     val value: String,
  *     val errorMessage: UiText? = null  // Use UiText instead of String
  * )
@@ -92,7 +92,7 @@ package dev.atick.core.ui.utils
  * @see UiState
  * @see UiText
  */
-data class TextFiledData(
+data class TextFieldData(
     val value: String,
     val errorMessage: String? = null,
 )

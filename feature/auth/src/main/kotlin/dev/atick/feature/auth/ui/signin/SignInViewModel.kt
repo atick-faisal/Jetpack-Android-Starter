@@ -22,7 +22,7 @@ import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.atick.core.extensions.isEmailValid
 import dev.atick.core.extensions.isPasswordValid
-import dev.atick.core.ui.utils.TextFiledData
+import dev.atick.core.ui.utils.TextFieldData
 import dev.atick.core.ui.utils.UiState
 import dev.atick.core.ui.utils.updateState
 import dev.atick.core.ui.utils.updateWith
@@ -34,7 +34,7 @@ import javax.inject.Inject
 /**
  * ViewModel for the sign-in screen, managing authentication state and validation.
  *
- * This ViewModel demonstrates form validation with [TextFiledData] and uses [updateState]
+ * This ViewModel demonstrates form validation with [TextFieldData] and uses [updateState]
  * for synchronous field updates and [updateWith] for async authentication operations.
  * Field validation uses extension functions from core module (isEmailValid, isPasswordValid).
  *
@@ -44,7 +44,7 @@ import javax.inject.Inject
  * @see UiState State wrapper with loading and error handling
  * @see updateState Extension function for synchronous state updates
  * @see updateWith Extension function for async operations
- * @see TextFiledData Data class for text field state with validation
+ * @see TextFieldData Data class for text field state with validation
  * @see AuthRepository Data layer interface for authentication
  */
 @HiltViewModel
@@ -57,7 +57,7 @@ class SignInViewModel @Inject constructor(
     fun updateEmail(email: String) {
         _signInUiState.updateState {
             copy(
-                email = TextFiledData(
+                email = TextFieldData(
                     value = email,
                     errorMessage = if (email.isEmailValid()) null else "Email Not Valid",
                 ),
@@ -68,7 +68,7 @@ class SignInViewModel @Inject constructor(
     fun updatePassword(password: String) {
         _signInUiState.updateState {
             copy(
-                password = TextFiledData(
+                password = TextFieldData(
                     value = password,
                     errorMessage = if (password.isPasswordValid()) null else "Password Not Valid",
                 ),
@@ -99,18 +99,18 @@ class SignInViewModel @Inject constructor(
 /**
  * Immutable data class representing the state of the sign-in form.
  *
- * This class uses [TextFiledData] for form fields to encapsulate both the field value and
+ * This class uses [TextFieldData] for form fields to encapsulate both the field value and
  * validation error messages. Being immutable enables efficient Compose recomposition.
  *
  * @param email Email field state with validation error message.
  * @param password Password field state with validation error message.
  *
  * @see SignInViewModel ViewModel that manages this screen data
- * @see TextFiledData Data class for text field state with validation
+ * @see TextFieldData Data class for text field state with validation
  * @see UiState Wrapper providing loading and error state
  */
 @Immutable
 data class SignInScreenData(
-    val email: TextFiledData = TextFiledData(String()),
-    val password: TextFiledData = TextFiledData(String()),
+    val email: TextFieldData = TextFieldData(String()),
+    val password: TextFieldData = TextFieldData(String()),
 )

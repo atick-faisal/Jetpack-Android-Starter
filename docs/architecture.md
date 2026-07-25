@@ -102,14 +102,19 @@ Example Data Layer structure:
 ```kotlin
 class HomeRepositoryImpl @Inject constructor(
     private val localDataSource: LocalDataSource,
-    private val networkDataSource: NetworkDataSource
+    private val syncManager: SyncManager,
 ) : HomeRepository {
-    override fun getData(): Flow<List<Data>> =
-        networkBoundResource(
-            query = { localDataSource.getData() },
-            fetch = { networkDataSource.getData() },
-            saveFetchResult = { localDataSource.saveData(it) }
-        )
+    // Room is the single source of truth. The remote source never feeds the UI
+    // directly — it writes to Room, and Room emits.
+    override fun getData(): Flow<List<Data>> {
+        syncManager.requestSync()
+        return localDataSource.getData().map { it.mapToData() }
+    }
+
+    // Writes return Result<T> via suspendRunCatching, never throw into the UI.
+    override suspend fun saveData(data: Data): Result<Unit> = suspendRunCatching {
+        localDataSource.saveData(data.mapToEntity())
+    }
 }
 ```
 

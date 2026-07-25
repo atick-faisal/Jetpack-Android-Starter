@@ -66,8 +66,8 @@ template [here](https://github.com/atick-faisal?tab=repositories&q=&type=source&
 
 ### 🏗️ Build & Tools
 
-- [Kotlin 2.0](https://kotlinlang.org/)
-- [Gradle 8.11.1](https://docs.gradle.org/current/userguide/userguide.html)
+- [Kotlin 2.4](https://kotlinlang.org/)
+- [Gradle 9.6](https://docs.gradle.org/current/userguide/userguide.html)
   with [Version Catalogs](https://docs.gradle.org/current/userguide/version_catalogs.html)
 - [Java 21](https://openjdk.java.net/projects/jdk/21/)
 - Custom [Gradle Convention Plugins](https://docs.gradle.org/current/userguide/custom_plugins.html)

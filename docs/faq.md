@@ -344,8 +344,8 @@ See [components.md](./components.md#custom-component-creation) for complete guid
 | `JetpackButton`              | Primary action          | Save, Submit, Continue     |
 | `JetpackOutlinedButton`      | Secondary action        | Cancel, Skip               |
 | `JetpackTextButton`          | Tertiary / low-emphasis | Learn More, View Details   |
-| `JetpackTextFiled`           | Standard text input     | Name, Email, Address       |
-| `JetpackPasswordFiled`       | Password input          | Password, PIN              |
+| `JetpackTextField`           | Standard text input     | Name, Email, Address       |
+| `JetpackPasswordField`       | Password input          | Password, PIN              |
 | `JetpackTopAppBar`           | Screen title + actions  | Most screens               |
 | `JetpackActionBar`           | Screen with text action | Edit Profile (Save button) |
 | `JetpackLoadingWheel`        | Content loading         | Inside LazyColumn          |

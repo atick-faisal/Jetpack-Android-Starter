@@ -44,8 +44,8 @@ graph TD
     Input -->|Action| ActionType{Action Type?}
     Input -->|Navigation| NavType{Navigation Type?}
     Input -->|Display| DisplayType{Display Type?}
-    TextType -->|Regular Text| JetpackTextFiled
-    TextType -->|Password| JetpackPasswordFiled
+    TextType -->|Regular Text| JetpackTextField
+    TextType -->|Password| JetpackPasswordField
     SelectType -->|Multi - select Filter| JetpackFilterChip
     SelectType -->|Follow/Unfollow| JetpackTag
     SelectType -->|Toggle State| JetpackIconToggleButton
@@ -192,7 +192,7 @@ Row(
 
 ### Text Fields
 
-#### JetpackTextFiled
+#### JetpackTextField
 
 **Purpose**: Standard text input with validation support
 
@@ -201,7 +201,7 @@ Row(
 ```kotlin
 var email by remember { mutableStateOf("") }
 
-JetpackTextFiled(
+JetpackTextField(
     value = email,
     onValueChange = { email = it },
     label = { Text("Email") },
@@ -219,7 +219,7 @@ JetpackTextFiled(
 ```kotlin
 val emailData by viewModel.emailData.collectAsStateWithLifecycle()
 
-JetpackTextFiled(
+JetpackTextField(
     value = emailData.value,
     onValueChange = viewModel::updateEmail,
     label = { Text("Email") },
@@ -245,7 +245,7 @@ JetpackTextFiled(
 - `modifier`: Modifier to customize appearance
 
 **Validation Pattern**:
-The recommended pattern uses `TextFiledData` from `core:ui`:
+The recommended pattern uses `TextFieldData` from `core:ui`:
 
 ```kotlin
 // In ViewModel
@@ -254,7 +254,7 @@ private val _uiState = MutableStateFlow(UiState(ScreenData()))
 fun updateEmail(email: String) {
     _uiState.updateState {
         copy(
-            email = TextFiledData(
+            email = TextFieldData(
                 value = email,
                 errorMessage = if (email.isEmailValid()) null else "Invalid email"
             )
@@ -264,7 +264,7 @@ fun updateEmail(email: String) {
 
 // Data class
 data class ScreenData(
-    val email: TextFiledData = TextFiledData("")
+    val email: TextFieldData = TextFieldData("")
 )
 ```
 
@@ -274,7 +274,7 @@ data class ScreenData(
 - Red border/color when error is present
 - Animated error message appearance
 
-#### JetpackPasswordFiled
+#### JetpackPasswordField
 
 **Purpose**: Password input with visibility toggle
 
@@ -283,7 +283,7 @@ data class ScreenData(
 ```kotlin
 var password by remember { mutableStateOf("") }
 
-JetpackPasswordFiled(
+JetpackPasswordField(
     value = password,
     onValueChange = { password = it },
     label = { Text("Password") },
@@ -313,7 +313,7 @@ Column(
         .padding(16.dp),
     verticalArrangement = Arrangement.spacedBy(16.dp)
 ) {
-    JetpackTextFiled(
+    JetpackTextField(
         value = email,
         onValueChange = viewModel::updateEmail,
         label = { Text("Email") },
@@ -321,7 +321,7 @@ Column(
         errorMessage = emailData.errorMessage
     )
 
-    JetpackPasswordFiled(
+    JetpackPasswordField(
         value = password,
         onValueChange = viewModel::updatePassword,
         label = { Text("Password") },
@@ -940,8 +940,8 @@ Column {
 ```kotlin
 Column {
     // Email sign-in form
-    JetpackTextFiled(...)
-    JetpackPasswordFiled(...)
+    JetpackTextField(...)
+    JetpackPasswordField(...)
     JetpackButton(onClick = { ... }) { Text("Sign In") }
 
     DividerWithText(text = R.string.or)
@@ -1497,7 +1497,7 @@ If migrating from XML to Compose, use these mappings:
 | XML View        | Jetpack Component     |
 |-----------------|-----------------------|
 | `<Button>`      | `JetpackButton`       |
-| `<EditText>`    | `JetpackTextFiled`    |
+| `<EditText>`    | `JetpackTextField`    |
 | `<Toolbar>`     | `JetpackTopAppBar`    |
 | `<ProgressBar>` | `JetpackLoadingWheel` |
 | `<ImageView>`   | `DynamicAsyncImage`   |

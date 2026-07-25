@@ -422,35 +422,6 @@ sequenceDiagram
 - Complementary to time-based caching
 - Provides user control
 
-### 3. Network-Bound Resource Pattern
-
-Utility for coordinating network + local data with automatic caching.
-
-**Flow:**
-
-```mermaid
-graph TD
-    Start[Network-Bound Resource] --> Loading1[1. Emit Loading state]
-    Loading1 --> Query[2. Query local database]
-    Query --> Loading2[3. Emit Loading with local data]
-    Loading2 --> ShouldFetch{4. Should fetch<br/>from network?}
-    ShouldFetch -->|YES| Fetch[Fetch from network]
-    Fetch --> Save[Save to local database]
-    Save --> Success[Emit Success with fresh data]
-    ShouldFetch -->|NO| CachedSuccess[Emit Success with cached data]
-    Fetch -. Network Error .-> Error[Emit Error<br/>with stale local data]
-```
-
-**Use When:**
-
-- Want automatic cache-then-network pattern
-- Need loading states with cached data
-- Want to show stale data on network errors
-
-> [!NOTE]
-> For `networkBoundResource` implementation and usage examples, see
-> the [Data Module README](../data/README.md).
-
 ---
 
 ## Error Handling
