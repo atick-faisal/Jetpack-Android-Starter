@@ -67,6 +67,7 @@ include(":core:android")
 include(":core:network")
 include(":core:preferences")
 include(":core:room")
+include(":core:testing")
 include(":core:ui")
 
 // ... Data

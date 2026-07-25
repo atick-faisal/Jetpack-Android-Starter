@@ -16,6 +16,7 @@
 
 import com.android.build.api.dsl.ApplicationExtension
 import dev.atick.configureAndroidCompose
+import dev.atick.configureAndroidTest
 import dev.atick.configureKotlinAndroid
 import dev.atick.intVersion
 import dev.atick.libs
@@ -38,6 +39,7 @@ class ApplicationConventionPlugin : Plugin<Project> {
             extensions.configure<ApplicationExtension> {
                 configureKotlinAndroid(this)
                 configureAndroidCompose(this)
+                configureAndroidTest(this)
 
                 defaultConfig {
                     targetSdk = libs.intVersion("targetSdk")

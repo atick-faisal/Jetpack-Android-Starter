@@ -66,6 +66,14 @@ leakcanaryAndroid = "2.14"
 # ... WORK MANAGER ...
 workVersion = "2.11.2"
 
+# ... TESTING ...
+junit = "4.13.2"
+androidxTestExt = "1.3.0"
+androidxTestRunner = "1.7.0"
+robolectric = "4.16"
+turbine = "1.2.1"
+truth = "1.4.5"
+
 # ... SDK-CONFIG ...
 minSdk = "24"
 compileSdk = "37"
@@ -194,6 +202,20 @@ leakcanary-android = { module = "com.squareup.leakcanary:leakcanary-android", ve
 
 # ... WORK_MANAGER ...
 androidx-work-runtime-ktx = { module = "androidx.work:work-runtime-ktx", version.ref = "workVersion" }
+
+# ... TESTING ...
+junit = { group = "junit", name = "junit", version.ref = "junit" }
+kotlin-test = { group = "org.jetbrains.kotlin", name = "kotlin-test", version.ref = "kotlin" }
+kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "kotlinxCoroutines" }
+turbine = { group = "app.cash.turbine", name = "turbine", version.ref = "turbine" }
+truth = { group = "com.google.truth", name = "truth", version.ref = "truth" }
+robolectric = { group = "org.robolectric", name = "robolectric", version.ref = "robolectric" }
+androidx-test-core = { group = "androidx.test", name = "core", version.ref = "androidxTestExt" }
+androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidxTestExt" }
+androidx-test-runner = { group = "androidx.test", name = "runner", version.ref = "androidxTestRunner" }
+androidx-room-testing = { group = "androidx.room", name = "room-testing", version.ref = "room" }
+androidx-lifecycle-viewModel-testing = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-testing", version.ref = "androidxLifecycle" }
+dagger-hilt-android-testing = { group = "com.google.dagger", name = "hilt-android-testing", version.ref = "daggerHilt" }
 
 # ... DOKKA PLUGINS ...
 dokka-android-plugin = { module = "org.jetbrains.dokka:android-documentation-plugin", version.ref = "dokka" }
