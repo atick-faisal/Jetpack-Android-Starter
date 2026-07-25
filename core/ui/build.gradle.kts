@@ -59,9 +59,11 @@ dependencies {
     debugApi(libs.androidx.compose.ui.tooling)
 
     // ... Navigation
-    api(libs.androidx.navigation.fragment)
-    api(libs.androidx.navigation.compose)
+    // Navigation 3. Re-exported so feature modules get NavKey and the entry provider DSL
+    // through :core:ui, the way they already get Compose.
+    api(projects.core.navigation)
     api(libs.androidx.hilt.navigation.compose)
+    api(libs.androidx.compose.material3.adaptive.navigation3)
 
 
     // ... Coil

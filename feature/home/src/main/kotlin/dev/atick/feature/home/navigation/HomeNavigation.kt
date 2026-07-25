@@ -16,97 +16,69 @@
 
 package dev.atick.feature.home.navigation
 
-import androidx.navigation.NavController
-import androidx.navigation.NavGraphBuilder
-import androidx.navigation.NavOptions
-import androidx.navigation.compose.composable
-import androidx.navigation.navigation
+import androidx.compose.material3.adaptive.navigation3.ListDetailSceneStrategy
+import androidx.navigation3.runtime.EntryProviderScope
+import androidx.navigation3.runtime.NavKey
+import dev.atick.core.navigation.Navigator
 import dev.atick.core.ui.utils.SnackbarAction
 import dev.atick.feature.home.ui.home.HomeScreen
 import dev.atick.feature.home.ui.item.ItemScreen
 import kotlinx.serialization.Serializable
 
 /**
- * Home navigation.
+ * Top-level destination for the home tab.
  */
 @Serializable
-data object Home
+data object HomeNavKey : NavKey
 
 /**
- * Home navigation graph.
+ * Detail destination for a single item.
+ *
+ * @property itemId The item to edit, or null to create a new one.
  */
 @Serializable
-data object HomeNavGraph
+data class ItemNavKey(val itemId: String?) : NavKey
 
 /**
- * Item navigation.
+ * Navigates to the home tab. Re-selecting it pops back to the list.
  */
-@Serializable
-data class Item(val itemId: String?)
+fun Navigator.navigateToHome() = navigate(HomeNavKey)
 
 /**
- * Navigates to the Home navigation graph.
+ * Opens the item screen. Pass null to create a new item.
+ */
+fun Navigator.navigateToItem(itemId: String?) = navigate(ItemNavKey(itemId))
+
+/**
+ * Registers the home tab's destinations.
  *
- * @param navOptions Optional navigation options to configure the navigation behavior.
- */
-fun NavController.navigateToHomeNavGraph(navOptions: NavOptions? = null) {
-    navigate(HomeNavGraph, navOptions)
-}
-
-/**
- * Navigates to the Item screen.
+ * The list and detail panes carry [ListDetailSceneStrategy] metadata, so on a wide screen they
+ * render side by side and on a phone they behave as separate screens. Which layout applies is
+ * decided by the scene strategy in the app module, not here.
  *
- * @param itemId The item ID.
+ * @param navigator Used to move between the two destinations.
+ * @param onShowSnackbar Shows a message, returning true if the action was taken.
  */
-fun NavController.navigateToItemScreen(itemId: String?) {
-    navigate(Item(itemId)) { launchSingleTop = true }
-}
-
-/**
- * Home screen.
- *
- * @param onJetpackClick The click listener for the jetpack.
- * @param onShowSnackbar The snackbar listener.
- */
-fun NavGraphBuilder.homeScreen(
-    onJetpackClick: (String) -> Unit,
+fun EntryProviderScope<NavKey>.homeEntries(
+    navigator: Navigator,
     onShowSnackbar: suspend (String, SnackbarAction, Throwable?) -> Boolean,
 ) {
-    composable<Home> {
+    entry<HomeNavKey>(
+        metadata = ListDetailSceneStrategy.listPane(),
+    ) {
         HomeScreen(
-            onJetpackClick = onJetpackClick,
+            onJetpackClick = navigator::navigateToItem,
             onShowSnackbar = onShowSnackbar,
         )
     }
-}
 
-/**
- * Item screen.
- *
- * @param onBackClick The back click listener.
- * @param onShowSnackbar The snackbar listener.
- */
-fun NavGraphBuilder.itemScreen(
-    onBackClick: () -> Unit,
-    onShowSnackbar: suspend (String, SnackbarAction, Throwable?) -> Boolean,
-) {
-    composable<Item> {
+    entry<ItemNavKey>(
+        metadata = ListDetailSceneStrategy.detailPane(),
+    ) { key ->
         ItemScreen(
-            onBackClick = onBackClick,
+            itemId = key.itemId,
+            onBackClick = navigator::goBack,
             onShowSnackbar = onShowSnackbar,
         )
-    }
-}
-
-/**
- * Home navigation graph.
- *
- * @param nestedNavGraphs The nested navigation graphs.
- */
-fun NavGraphBuilder.homeNavGraph(
-    nestedNavGraphs: NavGraphBuilder.() -> Unit,
-) {
-    navigation<HomeNavGraph>(startDestination = Home) {
-        nestedNavGraphs()
     }
 }

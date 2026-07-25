@@ -16,38 +16,33 @@
 
 package dev.atick.feature.profile.navigation
 
-import androidx.navigation.NavController
-import androidx.navigation.NavGraphBuilder
-import androidx.navigation.NavOptions
-import androidx.navigation.compose.composable
+import androidx.navigation3.runtime.EntryProviderScope
+import androidx.navigation3.runtime.NavKey
+import dev.atick.core.navigation.Navigator
 import dev.atick.core.ui.utils.SnackbarAction
 import dev.atick.feature.profile.ui.ProfileScreen
 import kotlinx.serialization.Serializable
 
 /**
- * Serializable data object representing the Profile.
+ * Top-level destination for the profile tab.
  */
 @Serializable
-data object Profile
+data object ProfileNavKey : NavKey
 
 /**
- * Extension function to navigate to the Profile screen.
- *
- * @param navOptions Options to configure the navigation behavior.
+ * Navigates to the profile tab.
  */
-fun NavController.navigateToProfileScreen(navOptions: NavOptions?) {
-    navigate(Profile, navOptions)
-}
+fun Navigator.navigateToProfile() = navigate(ProfileNavKey)
 
 /**
- * Adds the Profile screen to the navigation graph.
+ * Registers the profile tab's destinations.
  *
- * @param onShowSnackbar Lambda function to show a snackbar message.
+ * @param onShowSnackbar Shows a message, returning true if the action was taken.
  */
-fun NavGraphBuilder.profileScreen(
+fun EntryProviderScope<NavKey>.profileEntries(
     onShowSnackbar: suspend (String, SnackbarAction, Throwable?) -> Boolean,
 ) {
-    composable<Profile> {
+    entry<ProfileNavKey> {
         ProfileScreen(
             onShowSnackbar = onShowSnackbar,
         )

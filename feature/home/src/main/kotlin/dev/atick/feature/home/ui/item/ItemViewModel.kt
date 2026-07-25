@@ -17,10 +17,11 @@
 package dev.atick.feature.home.ui.item
 
 import androidx.compose.runtime.Immutable
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.toRoute
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.atick.core.extensions.asOneTimeEvent
 import dev.atick.core.extensions.stateInDelayed
@@ -30,30 +31,28 @@ import dev.atick.core.ui.utils.updateStateWith
 import dev.atick.core.utils.OneTimeEvent
 import dev.atick.data.model.home.Jetpack
 import dev.atick.data.repository.home.HomeRepository
-import dev.atick.feature.home.navigation.Item
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import java.util.UUID
-import javax.inject.Inject
 
 /**
  * ViewModel for the create/edit item screen, managing Jetpack library creation and updates.
  *
- * This ViewModel handles both creating new Jetpack items and editing existing ones. It uses
- * [SavedStateHandle] to retrieve the optional item ID from navigation arguments. If an ID is
- * present, the screen operates in edit mode; otherwise, it creates a new item with a generated UUID.
+ * This ViewModel handles both creating new Jetpack items and editing existing ones. The optional
+ * item ID arrives by assisted injection from the navigation key. If an ID is present, the screen
+ * operates in edit mode; otherwise, it creates a new item with a generated UUID.
  *
  * The ViewModel demonstrates:
- * - Navigation argument handling via [SavedStateHandle.toRoute]
+ * - Navigation argument handling by assisted injection from a Navigation 3 key
  * - Form state management with [updateState] for field updates
  * - Navigation events using [OneTimeEvent] to trigger back navigation after save
  * - Async operations with [updateStateWith] for create/update operations
  *
  * @param homeRepository Repository providing Jetpack data operations.
- * @param savedStateHandle Navigation state containing optional item ID from route.
+ * @param existingJetpackId The item to edit, or null to create a new one.
  *
  * @see ItemScreenData Immutable data class representing form state
  * @see UiState State wrapper with loading and error handling
@@ -62,12 +61,26 @@ import javax.inject.Inject
  * @see OneTimeEvent Ensures navigation events are consumed only once
  * @see HomeRepository Data layer interface for home screen operations
  */
-@HiltViewModel
-class ItemViewModel @Inject constructor(
+@HiltViewModel(assistedFactory = ItemViewModel.Factory::class)
+class ItemViewModel @AssistedInject constructor(
     private val homeRepository: HomeRepository,
-    savedStateHandle: SavedStateHandle,
+    @Assisted private val existingJetpackId: String?,
 ) : ViewModel() {
-    private val existingJetpackId: String? = savedStateHandle.toRoute<Item>().itemId
+
+    /**
+     * Creates an [ItemViewModel] for a given item.
+     *
+     * Navigation 3 carries destination arguments on the [dev.atick.feature.home.navigation.ItemNavKey]
+     * itself rather than in a SavedStateHandle, so the id is supplied here at the point the entry
+     * is composed.
+     */
+    @AssistedFactory
+    interface Factory {
+        /**
+         * @param existingJetpackId The item to edit, or null to create a new one.
+         */
+        fun create(existingJetpackId: String?): ItemViewModel
+    }
 
     private val _itemUiState = MutableStateFlow(UiState(ItemScreenData()))
     val itemUiState = _itemUiState
