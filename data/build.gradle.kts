@@ -34,4 +34,6 @@ dependencies {
     // ... Firebase
     implementation(projects.firebase.auth)
     implementation(projects.firebase.firestore)
+
+    testImplementation(projects.core.testing)
 }

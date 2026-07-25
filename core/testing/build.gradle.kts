@@ -25,8 +25,9 @@ android {
 
 dependencies {
     implementation(projects.core.android)
-    // api: consumers of FakeUserPreferencesDataSource need the interface and models it implements.
+    // api: consumers of the fakes need the interfaces and models they implement.
     api(projects.core.preferences)
+    api(projects.firebase.auth)
 
     // Test libraries are api() here: this module exists to be consumed from testImplementation,
     // so anything a test needs to use the rules and fakes below has to come with it.
