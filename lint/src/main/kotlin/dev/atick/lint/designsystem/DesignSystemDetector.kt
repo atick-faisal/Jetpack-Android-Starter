@@ -48,10 +48,14 @@ class DesignSystemDetector : Detector(), Detector.UastScanner {
                 val name = node.methodName ?: return
                 val preferredName = METHOD_NAMES[name] ?: return
 
-                // Do not flag the wrapper's own definition, which necessarily calls the
-                // Material composable it wraps.
-                val enclosingFile = node.getContainingUFile()?.sourcePsi?.name
-                if (enclosingFile != null && enclosingFile in DESIGN_SYSTEM_FILES) return
+                // Match on where the call resolves to, not just its name. Plenty of libraries
+                // declare a Tab, a Button or an Icon, and this issue is an ERROR — flagging
+                // one of those would fail a build over code the design system has no claim on.
+                if (node.resolvePackageName() != MATERIAL3_PACKAGE) return
+
+                // Do not flag the wrappers' own definitions, which necessarily call the
+                // Material composables they wrap.
+                if (node.getContainingUFile()?.packageName == DESIGN_SYSTEM_PACKAGE) return
 
                 context.report(
                     ISSUE,
@@ -113,21 +117,22 @@ class DesignSystemDetector : Detector(), Detector.UastScanner {
             "ExtendedFloatingActionButton" to "JetpackExtendedFab",
         )
 
-        /**
-         * Files in `:core:ui` that define the wrappers, and so are allowed to call the Material
-         * composables directly.
-         */
-        private val DESIGN_SYSTEM_FILES = setOf(
-            "Button.kt",
-            "Chip.kt",
-            "Fab.kt",
-            "IconButton.kt",
-            "Navigation.kt",
-            "Tabs.kt",
-            "Tag.kt",
-            "TextField.kt",
-            "ToggleButton.kt",
-            "TopAppBar.kt",
-        )
+        private const val MATERIAL3_PACKAGE = "androidx.compose.material3"
+
+        /** The package holding the wrappers, and so allowed to call Material directly. */
+        private const val DESIGN_SYSTEM_PACKAGE = "dev.atick.core.ui.components"
     }
+}
+
+/**
+ * The package the call resolves to, or null if it cannot be resolved.
+ *
+ * A top-level Kotlin function compiles to a static method on a file facade class
+ * (`androidx.compose.material3.ButtonKt`), so the package is that class' qualified name minus
+ * its last segment.
+ */
+private fun UCallExpression.resolvePackageName(): String? {
+    val declaringClass = resolve()?.containingClass?.qualifiedName ?: return null
+    return declaringClass.substringBeforeLast('.', missingDelimiterValue = "")
+        .takeIf(String::isNotEmpty)
 }

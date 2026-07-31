@@ -36,6 +36,7 @@ class DesignSystemDetectorTest {
                 @Suppress("LintImplTrimIndent")
                 kotlin(
                     """
+                    |import androidx.compose.material3.Button
                     |import androidx.compose.runtime.Composable
                     |
                     |@Composable
@@ -50,6 +51,33 @@ class DesignSystemDetectorTest {
     }
 
     @Test
+    fun `does not flag a same-named composable from another library`() {
+        // The issue is an ERROR, so a name-only match would fail a build over a Tab, Button or
+        // Icon the design system has no claim on.
+        lint()
+            .issues(ISSUE)
+            .allowMissingSdk()
+            .files(
+                COMPOSABLE_STUB,
+                THIRD_PARTY_STUBS,
+                @Suppress("LintImplTrimIndent")
+                kotlin(
+                    """
+                    |import androidx.compose.runtime.Composable
+                    |import com.example.widgets.*
+                    |
+                    |@Composable
+                    |fun Screen() {
+                    ${METHOD_NAMES.keys.joinToString("\n") { "|    $it()" }}
+                    |}
+                    """.trimMargin(),
+                ).indented(),
+            )
+            .run()
+            .expectClean()
+    }
+
+    @Test
     fun `flags every mapped Material composable`() {
         lint()
             .issues(ISSUE)
@@ -60,6 +88,7 @@ class DesignSystemDetectorTest {
                 @Suppress("LintImplTrimIndent")
                 kotlin(
                     """
+                    |import androidx.compose.material3.*
                     |import androidx.compose.runtime.Composable
                     |
                     |@Composable
@@ -87,6 +116,7 @@ class DesignSystemDetectorTest {
                 kotlin(
                     """
                     |import androidx.compose.runtime.Composable
+                    |import dev.atick.core.ui.components.*
                     |
                     |@Composable
                     |fun Screen() {
@@ -115,6 +145,7 @@ class DesignSystemDetectorTest {
                     """
                     |package dev.atick.core.ui.components
                     |
+                    |import androidx.compose.material3.Button
                     |import androidx.compose.runtime.Composable
                     |
                     |@Composable
@@ -136,9 +167,15 @@ class DesignSystemDetectorTest {
             """.trimIndent(),
         ).indented()
 
-        /** Declarations for the Material composables, so the calls under test resolve. */
+        /**
+         * Declarations for the Material composables, so the calls under test resolve. The
+         * package matters: the detector gates on where a call resolves to, not on its name.
+         */
         private val MATERIAL_STUBS: TestFile = kotlin(
+            "src/androidx/compose/material3/Material3.kt",
             """
+            |package androidx.compose.material3
+            |
             |import androidx.compose.runtime.Composable
             |
             ${METHOD_NAMES.keys.joinToString("\n") { "|@Composable fun $it() = {}" }}
@@ -148,10 +185,28 @@ class DesignSystemDetectorTest {
 
         /** Declarations for the design system wrappers. */
         private val WRAPPER_STUBS: TestFile = kotlin(
+            "src/dev/atick/core/ui/components/Wrappers.kt",
             """
+            |package dev.atick.core.ui.components
+            |
             |import androidx.compose.runtime.Composable
             |
             ${METHOD_NAMES.values.distinct().joinToString("\n") { "|@Composable fun $it() = {}" }}
+            |
+            """.trimMargin(),
+        ).indented()
+
+        /**
+         * Same names, unrelated library. Nothing here should ever be flagged.
+         */
+        private val THIRD_PARTY_STUBS: TestFile = kotlin(
+            "src/com/example/widgets/Widgets.kt",
+            """
+            |package com.example.widgets
+            |
+            |import androidx.compose.runtime.Composable
+            |
+            ${METHOD_NAMES.keys.joinToString("\n") { "|@Composable fun $it() = {}" }}
             |
             """.trimMargin(),
         ).indented()
