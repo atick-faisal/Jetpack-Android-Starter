@@ -169,7 +169,7 @@ private fun SignedOutNavigation(
         NavDisplay(
             backStack = navigationState.backStack,
             entryDecorators = rememberDefaultEntryDecorators(),
-            onBack = { if (navigator.canGoBack()) navigator.goBack() },
+            onBack = navigator::goBack,
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
@@ -201,6 +201,11 @@ private fun SignedInNavigation(
 
     val currentTopLevelDestination =
         TopLevelDestination.fromKey(navigationState.currentTopLevelKey)
+
+    // Known limitation: in the wide-window list-detail scene the list pane is still on screen
+    // beside the detail, but the last key is the detail, so the top app bar and FAB hide. Every
+    // way to tell from here whether ListDetailSceneStrategy actually engaged is a guess from the
+    // window size, and guessing wrong stacks two app bars on a full-screen nested destination.
     val isAtTopLevel = navigationState.currentKey == navigationState.currentTopLevelKey
 
     var showSettingsDialog by rememberSaveable { mutableStateOf(false) }
@@ -211,13 +216,16 @@ private fun SignedInNavigation(
         )
     }
 
-    // Only handle back while there is somewhere to go. At the start destination this stays
-    // disabled so the system finishes the activity, rather than Navigator.goBack() throwing.
+    // NavDisplay installs its own back handler, but only while the current scene has entries
+    // behind it. In the two-pane list-detail scene the list and the detail are one scene with
+    // nothing behind it, so this handler is what pops the detail there. At the start destination
+    // both are disabled and the system finishes the activity.
     BackHandler(enabled = navigator.canGoBack()) { navigator.goBack() }
 
     val shouldShowGradientBackground = currentTopLevelDestination == TopLevelDestination.HOME
 
     AppGradientBackground(
+        modifier = modifier,
         gradientColors = if (shouldShowGradientBackground) {
             LocalGradientColors.current
         } else {
@@ -234,7 +242,6 @@ private fun SignedInNavigation(
             windowAdaptiveInfo = windowAdaptiveInfo,
         ) {
             Scaffold(
-                modifier = modifier,
                 containerColor = Color.Transparent,
                 contentColor = MaterialTheme.colorScheme.onBackground,
                 contentWindowInsets = WindowInsets(0, 0, 0, 0),
@@ -289,7 +296,7 @@ private fun SignedInNavigation(
                             // Renders list and detail side by side when the window is wide
                             // enough, and as separate screens when it is not.
                             sceneStrategies = listOf(rememberListDetailSceneStrategy<NavKey>()),
-                            onBack = { if (navigator.canGoBack()) navigator.goBack() },
+                            onBack = navigator::goBack,
                             entryProvider = entryProvider {
                                 homeEntries(navigator, onShowSnackbar)
                                 profileEntries(onShowSnackbar)
