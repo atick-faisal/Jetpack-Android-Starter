@@ -16,8 +16,8 @@
 -->
 
 <resources>
-    <string name="core_network_network_connected">Network Connected</string>
-    <string name="core_network_network_losing">Losing Network Connection</string>
-    <string name="core_network_network_lost">Network Connection Lost</string>
-    <string name="core_network_network_not_available">Network Not Available</string>
+    <string name="core_network_connected">Network Connected</string>
+    <string name="core_network_losing">Losing Network Connection</string>
+    <string name="core_network_lost">Network Connection Lost</string>
+    <string name="core_network_not_available">Network Not Available</string>
 </resources>

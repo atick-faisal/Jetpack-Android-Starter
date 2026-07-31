@@ -16,8 +16,8 @@
 -->
 
 <resources>
-    <string name="core_network_network_connected">تم الاتصال بالشبكة</string>
-    <string name="core_network_network_losing">جارٍ فقدان اتصال الشبكة</string>
-    <string name="core_network_network_lost">تم فقدان اتصال الشبكة</string>
-    <string name="core_network_network_not_available">الشبكة غير متاحة</string>
+    <string name="core_network_connected">تم الاتصال بالشبكة</string>
+    <string name="core_network_losing">جارٍ فقدان اتصال الشبكة</string>
+    <string name="core_network_lost">تم فقدان اتصال الشبكة</string>
+    <string name="core_network_not_available">الشبكة غير متاحة</string>
 </resources>

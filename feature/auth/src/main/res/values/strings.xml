@@ -17,8 +17,6 @@
 
 <resources>
     <string name="feature_auth_password">Password</string>
-    <string name="feature_auth_show_password">Show password</string>
-    <string name="feature_auth_hide_password">Hide password</string>
     <string name="feature_auth_sign_in">Sign In</string>
     <string name="feature_auth_do_not_have_an_account">"Do not have an account? "</string>
     <string name="feature_auth_sign_up">Sign Up</string>
@@ -28,6 +26,5 @@
     <string name="feature_auth_or">or</string>
     <string name="feature_auth_agree_to_terms">Before continuing, you agree to our</string>
     <string name="feature_auth_privacy_policy">Privacy Policy</string>
-    <string name="feature_auth_feedback">Feedback</string>
     <string name="feature_auth_terms_of_service">Terms of Service</string>
 </resources>
