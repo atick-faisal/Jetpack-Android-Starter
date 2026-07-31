@@ -19,9 +19,7 @@
     <string name="app_name">جيت باك</string>
     <string name="home">الرئيسية</string>
     <string name="profile">الملف الشخصي</string>
-    <string name="back">رجوع</string>
     <string name="settings">الإعدادات</string>
     <string name="not_connected">⚠️ أنت غير متصل بالإنترنت</string>
-    <string name="profile_picture">صورة الملف الشخصي</string>
     <string name="add">إضافة</string>
 </resources>
