@@ -37,7 +37,17 @@ internal fun Project.configureAndroidCompose(
 
     val bom = libs.findLibrary("androidx-compose-bom").get()
     dependencies.add("implementation", dependencies.platform(bom))
+    dependencies.add("testImplementation", dependencies.platform(bom))
     dependencies.add("androidTestImplementation", dependencies.platform(bom))
+
+    // Compose tests run on Robolectric alongside the plain unit tests, so every UI module can
+    // write one without repeating the setup. ui-test-manifest supplies the activity that
+    // createComposeRule launches into.
+    dependencies.add("testImplementation", libs.findLibrary("androidx-compose-ui-test").get())
+    dependencies.add(
+        "debugImplementation",
+        libs.findLibrary("androidx-compose-ui-test-manifest").get(),
+    )
 
     extensions.configure<KotlinAndroidProjectExtension> {
         compilerOptions {
