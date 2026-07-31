@@ -37,7 +37,7 @@ androidxCoreSplashscreen = "1.2.0"
 androidxHiltNavigationCompose = "1.4.0"
 lottieCompose = "6.7.1"
 # FIXME: Remove this once stable
-materialExpressive = "1.5.0-alpha24"
+materialExpressive = "1.5.0-alpha25"
 
 # ... NETWORK ...
 okhttp = "5.4.0"
@@ -56,7 +56,7 @@ androidxCredentials = "1.6.0"
 identityGoogleId = "1.2.0"
 
 # ... FIREBASE ...
-firebaseBom = "34.16.0"
+firebaseBom = "34.17.0"
 firebaseCrashlyticsPlugin = "3.0.7"
 firebasePerfPlugin = "2.0.2"
 

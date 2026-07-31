@@ -74,6 +74,7 @@ android {
         }
         release {
             isMinifyEnabled = true
+            isShrinkResources = true
             signingConfig = if (keystorePropertiesFile.exists()) {
                 signingConfigs.getByName("release")
             } else {
