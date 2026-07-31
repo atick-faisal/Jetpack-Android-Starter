@@ -39,6 +39,12 @@ class Navigator(val state: NavigationState) {
      *   "tap the selected tab again to go home" gesture
      * - another top-level destination: switches to it, preserving where the user was
      * - anything else: pushes onto the current top-level destination's stack
+     *
+     * A non-top-level [key] must belong to exactly one top-level destination. Pushing the same
+     * key from two different tabs puts it in [NavigationState.backStack] twice, and Navigation 3
+     * identifies an entry by `NavEntry.contentKey`, which defaults to the key itself — so the two
+     * copies would share one `rememberSaveable` bundle and one `ViewModelStore`. Give each tab
+     * its own key type rather than reusing one across tabs.
      */
     fun navigate(key: NavKey) {
         when (key) {
@@ -54,13 +60,14 @@ class Navigator(val state: NavigationState) {
      * At the root of a non-start top-level destination this returns to the previously visited
      * top-level destination rather than popping within the current one.
      *
-     * @throws IllegalStateException if called from [NavigationState.startKey]. There is nowhere
-     * left to go, and the system back handler should be allowed to finish the activity instead.
-     * Callers should guard with [canGoBack].
+     * Calling this from [NavigationState.startKey] does nothing: there is nowhere left to go, and
+     * only the system back handler can finish the activity. Screens can therefore wire a back
+     * button straight to this method — a second tap arriving during an exit transition is
+     * harmless. Use [canGoBack] to decide whether to *handle* back at all.
      */
     fun goBack() {
         when (state.currentKey) {
-            state.startKey -> error("Cannot go back from the start destination")
+            state.startKey -> Unit
             state.currentTopLevelKey -> state.topLevelStack.removeLastOrNull()
             else -> state.currentSubStack.removeLastOrNull()
         }

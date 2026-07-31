@@ -16,10 +16,10 @@
 
 package dev.atick.core.navigation
 
-import androidx.annotation.VisibleForTesting
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.remember
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.NavBackStack
@@ -44,7 +44,13 @@ fun rememberNavigationState(
     topLevelKeys: Set<NavKey>,
 ): NavigationState {
     val topLevelStack = rememberNavBackStack(startKey)
-    val subStacks = topLevelKeys.associateWith { key -> rememberNavBackStack(key) }
+
+    // key() is what gives each sub stack its own saved state slot. Without it every iteration
+    // shares the composition's compound key hash, so all the stacks register under one key and
+    // are restored by position rather than by which destination they belong to.
+    val subStacks = topLevelKeys.associateWith { topLevelKey ->
+        key(topLevelKey) { rememberNavBackStack(topLevelKey) }
+    }
 
     return remember(startKey, topLevelKeys) {
         NavigationState(
@@ -75,7 +81,6 @@ class NavigationState(
     val topLevelKeys: Set<NavKey> get() = subStacks.keys
 
     /** The back stack belonging to [currentTopLevelKey]. */
-    @get:VisibleForTesting
     val currentSubStack: NavBackStack<NavKey>
         get() = subStacks[currentTopLevelKey]
             ?: error("Sub stack for $currentTopLevelKey does not exist")
@@ -90,6 +95,9 @@ class NavigationState(
  *
  * Keeping the start destination's stack first is what makes back from another tab return to
  * home rather than exiting the app.
+ *
+ * Every key in the result must be unique — see [Navigator.navigate] for why, and for the
+ * constraint that keeps it that way.
  */
 val NavigationState.backStack: List<NavKey>
     get() = topLevelStack.flatMap { subStacks[it].orEmpty() }

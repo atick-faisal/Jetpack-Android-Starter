@@ -21,7 +21,6 @@ import androidx.navigation3.runtime.NavKey
 import com.google.common.truth.Truth.assertThat
 import kotlinx.serialization.Serializable
 import org.junit.Test
-import kotlin.test.assertFailsWith
 
 /**
  * Back stack behaviour is the part of navigation users notice immediately when it is wrong —
@@ -192,10 +191,16 @@ class NavigatorTest {
     }
 
     @Test
-    fun `going back from the start destination fails rather than emptying the stack`() {
+    fun `going back from the start destination is a no-op rather than emptying the stack`() {
         val navigator = navigator()
 
-        // The system back handler should finish the activity instead of calling this.
-        assertFailsWith<IllegalStateException> { navigator.goBack() }
+        // A screen can wire a back button straight to goBack, so a repeat tap arriving during
+        // an exit transition must not crash or leave the stack empty. Exiting the app is the
+        // system back handler's job, gated by canGoBack.
+        repeat(3) { navigator.goBack() }
+
+        assertThat(navigator.state.currentKey).isEqualTo(Home)
+        assertThat(navigator.state.topLevelStack).containsExactly(Home)
+        assertThat(navigator.state.subStacks.getValue(Home)).containsExactly(Home)
     }
 }
