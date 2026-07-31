@@ -81,8 +81,11 @@ abstract class GenerateBadgingTask : DefaultTask() {
  * A plain task rather than a `Copy` into the project directory: `Copy` would declare the whole
  * module directory as its output, which overlaps the inputs of other tasks in `:app` and makes
  * Gradle reject the build. This declares only the single file it actually writes.
+ *
+ * Deliberately not `@CacheableTask`: its only output is a file inside the source tree that is
+ * committed to git, so a shared cache would be repopulating a working copy from someone else's
+ * build. Copying one file is cheap anyway.
  */
-@CacheableTask
 abstract class UpdateBadgingTask : DefaultTask() {
 
     @get:PathSensitive(PathSensitivity.NONE)

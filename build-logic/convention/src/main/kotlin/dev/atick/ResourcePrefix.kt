@@ -31,7 +31,6 @@ internal fun Project.configureResourcePrefix(commonExtension: CommonExtension) {
     commonExtension.resourcePrefix = path
         .split("""\W""".toRegex())
         .drop(1)
-        .distinct()
         .joinToString(separator = "_")
         .lowercase() + "_"
 }
