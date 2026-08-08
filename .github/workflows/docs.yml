@@ -43,7 +43,7 @@ jobs:
 
       - name: 🏗️ Generate Documentation
         run: |
-          pip install mkdocs mkdocs-material mkdocs-github-admonitions-plugin Pygments
+          pip install mkdocs mkdocs-material mkdocs-github-admonitions-plugin==0.1.1 Pygments
           ./gradlew dokkaGeneratePublicationHtml
           mkdir -p docs/api
           mv build/dokka/html/* docs/api/

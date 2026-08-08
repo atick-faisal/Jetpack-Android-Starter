@@ -16,11 +16,11 @@ Findings referenced as A1-A10 (stale), B1-B10 (duplication), C1-C15 (comments) a
 
 Do the deletions and the `mkdocs.yml` nav rewrite in **one commit** so the site never has dangling entries.
 
-- [ ] `git rm --cached docs/index.md` — already in `.gitignore:55` and overwritten by CI (A7)
-- [ ] Delete: `faq.md`, `tips.md`, `quick-reference.md`, `philosophy.md`, `data-flow.md`, `plugins.md`, `spotless.md`, `github.md`, `fastlane.md`, `dependency.md`, `performance.md`, `license.md`
-- [ ] Rewrite `mkdocs.yml` nav to the 10 surviving files; keep the API Reference entry; point License at `/LICENSE`
-- [ ] Pin the plugin version in `.github/workflows/docs.yml` (currently installs unpinned; Beta-stage 0.1.1)
-- [ ] **Accept:** `mkdocs build --strict` passes
+- [x] `git rm --cached docs/index.md` — already in `.gitignore:55` and overwritten by CI (A7)
+- [x] Delete: `faq.md`, `tips.md`, `quick-reference.md`, `philosophy.md`, `data-flow.md`, `plugins.md`, `spotless.md`, `github.md`, `fastlane.md`, `dependency.md`, `performance.md`, `license.md`
+- [x] Rewrite `mkdocs.yml` nav — 8 of the 10 target files exist today and are in nav (plus the still-live `dependency-injection.md`, absorbed into `data.md` in Phase 2); `data.md` and `build-and-tooling.md` get nav entries in Phase 2 when those files are created, per principle 5 ("no aspirational content" — no nav entry should point at a file that doesn't exist yet). Kept the API Reference entry; License now points at the GitHub blob URL (`https://github.com/atick-faisal/Jetpack-Android-Starter/blob/main/LICENSE`), same pattern already used in `README.md:113`.
+- [x] Pin the plugin version in `.github/workflows/docs.yml` (currently installs unpinned; Beta-stage 0.1.1) — pinned to `==0.1.1`
+- [ ] **Accept:** `mkdocs build --strict` passes — **does not fully pass yet**: 55 → 50 warnings after this phase's deletions. Remaining 50 are (a) dangling links *inside* surviving files (`guide.md`, `getting-started.md`, `troubleshooting.md`, `firebase.md`, `architecture.md`, `components.md`, `state-management.md`, `navigation.md`) that still reference now-deleted docs by name — fixed as each file is rewritten in Phase 2, not by deletion alone; (b) the cross-directory README link limitation from A11 (`../data/README.md` etc., unresolved by mkdocs' strict validator outside `docs_dir`); (c) a handful of dead in-page anchors, also A11. None of these are introduced by this phase's changes — full pass is a Phase 2/Phase 6 outcome.
 
 > [!TIP]
 > Salvage before deleting. Each deleted file has unique content that must land somewhere — work through
