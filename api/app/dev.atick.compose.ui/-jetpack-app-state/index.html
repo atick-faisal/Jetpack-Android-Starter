@@ -94,24 +94,24 @@
   <div class="breadcrumbs"><a href="../../index.html">:app</a><span class="delimiter">/</span><a href="../index.html">dev.atick.compose.ui</a><span class="delimiter">/</span><span class="current">JetpackAppState</span></div>
   <div class="cover ">
     <h1 class="cover"><span>Jetpack</span><wbr><span>App</span><wbr><span><span>State</span></span></h1>
-    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":app/release"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><a href="https://developer.android.com/reference/kotlin/androidx/compose/runtime/Stable.html"><span class="token annotation builtin">Stable</span></a></div></div><span class="token keyword">class </span><a href="index.html">JetpackAppState</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword">val </span>isUserLoggedIn<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>userProfilePictureUri<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>navController<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/androidx/navigation/NavHostController.html">NavHostController</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>windowSizeClass<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/androidx/compose/material3/windowsizeclass/WindowSizeClass.html">WindowSizeClass</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>crashReporter<span class="token operator">: </span><a href="../../../firebase/analytics/dev.atick.firebase.analytics.utils/-crash-reporter/index.html">CrashReporter</a><span class="token punctuation">, </span></span><span class="parameter ">coroutineScope<span class="token operator">: </span><span data-unresolved-link="kotlinx.coroutines/CoroutineScope///PointingToDeclaration/">CoroutineScope</span><span class="token punctuation">, </span></span><span class="parameter ">networkUtils<span class="token operator">: </span><a href="../../../core/network/dev.atick.core.network.utils/-network-utils/index.html">NetworkUtils</a></span></span><span class="token punctuation">)</span></div><p class="paragraph">State holder class for the Jetpack Compose application.</p><h4 class="tableheader">Parameters</h4><div class="table"><div class="table-row table-row_content" data-filterable-current=":app/release" data-filterable-set=":app/release"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><u><span>coroutine</span><wbr><span><span>Scope</span></span></u></div></span></div><div><div class="title"><p class="paragraph">The coroutine scope for managing coroutines.</p></div></div></div></div><div class="table-row table-row_content" data-filterable-current=":app/release" data-filterable-set=":app/release"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><u><span>network</span><wbr><span><span>Utils</span></span></u></div></span></div><div><div class="title"><p class="paragraph">Utility for network state management.</p></div></div></div></div></div></div></div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":app/release"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><a href="https://developer.android.com/reference/kotlin/androidx/compose/runtime/Stable.html"><span class="token annotation builtin">Stable</span></a></div></div><span class="token keyword">class </span><a href="index.html">JetpackAppState</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword">val </span>isUserLoggedIn<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>userProfilePictureUri<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>windowSizeClass<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/androidx/compose/material3/windowsizeclass/WindowSizeClass.html">WindowSizeClass</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>crashReporter<span class="token operator">: </span><a href="../../../firebase/analytics/dev.atick.firebase.analytics.utils/-crash-reporter/index.html">CrashReporter</a><span class="token punctuation">, </span></span><span class="parameter ">coroutineScope<span class="token operator">: </span><span data-unresolved-link="kotlinx.coroutines/CoroutineScope///PointingToDeclaration/">CoroutineScope</span><span class="token punctuation">, </span></span><span class="parameter ">networkUtils<span class="token operator">: </span><a href="../../../core/network/dev.atick.core.network.utils/-network-utils/index.html">NetworkUtils</a></span></span><span class="token punctuation">)</span></div><p class="paragraph">App-wide state that is not navigation.</p><p class="paragraph">Navigation state deliberately lives outside this class. It is created inside the signed-in and signed-out branches of <a href="../-jetpack-app.html">JetpackApp</a> so that each has its own back stacks, and so that signing in or out discards the other branch's history rather than leaving it to be returned to.</p><h4 class="tableheader">Parameters</h4><div class="table"><div class="table-row table-row_content" data-filterable-current=":app/release" data-filterable-set=":app/release"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><u><span>coroutine</span><wbr><span><span>Scope</span></span></u></div></span></div><div><div class="title"><p class="paragraph">Scope backing <a href="is-offline.html">isOffline</a>.</p></div></div></div></div><div class="table-row table-row_content" data-filterable-current=":app/release" data-filterable-set=":app/release"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><u><span>network</span><wbr><span><span>Utils</span></span></u></div></span></div><div><div class="title"><p class="paragraph">Source of connectivity state.</p></div></div></div></div></div></div></div>
   </div>
   <div class="tabbedcontent">
     <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
     <div class="tabs-section-body">
       <div data-togglable="CONSTRUCTOR">
         <h2 class="tableheader">Constructors</h2>
-        <div class="table"><a data-name="-1169885172%2FConstructors%2F-865142711" anchor-label="JetpackAppState" id="-1169885172%2FConstructors%2F-865142711" data-filterable-set=":app/release"></a>
+        <div class="table"><a data-name="1898494715%2FConstructors%2F-865142711" anchor-label="JetpackAppState" id="1898494715%2FConstructors%2F-865142711" data-filterable-set=":app/release"></a>
           <div class="table-row table-row_content" data-togglable="CONSTRUCTOR" data-filterable-current=":app/release" data-filterable-set=":app/release">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-jetpack-app-state.html"><span>Jetpack</span><wbr><span>App</span><wbr><span><span>State</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1169885172%2FConstructors%2F-865142711"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1898494715%2FConstructors%2F-865142711"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":app/release"><div class="symbol monospace"><span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">isUserLoggedIn<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token punctuation">, </span></span><span class="parameter ">userProfilePictureUri<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span><span class="token punctuation">, </span></span><span class="parameter ">navController<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/androidx/navigation/NavHostController.html">NavHostController</a><span class="token punctuation">, </span></span><span class="parameter ">windowSizeClass<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/androidx/compose/material3/windowsizeclass/WindowSizeClass.html">WindowSizeClass</a><span class="token punctuation">, </span></span><span class="parameter ">crashReporter<span class="token operator">: </span><a href="../../../firebase/analytics/dev.atick.firebase.analytics.utils/-crash-reporter/index.html">CrashReporter</a><span class="token punctuation">, </span></span><span class="parameter ">coroutineScope<span class="token operator">: </span><span data-unresolved-link="kotlinx.coroutines/CoroutineScope///PointingToDeclaration/">CoroutineScope</span><span class="token punctuation">, </span></span><span class="parameter ">networkUtils<span class="token operator">: </span><a href="../../../core/network/dev.atick.core.network.utils/-network-utils/index.html">NetworkUtils</a></span></span><span class="token punctuation">)</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":app/release"><div class="symbol monospace"><span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">isUserLoggedIn<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token punctuation">, </span></span><span class="parameter ">userProfilePictureUri<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span><span class="token punctuation">, </span></span><span class="parameter ">windowSizeClass<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/androidx/compose/material3/windowsizeclass/WindowSizeClass.html">WindowSizeClass</a><span class="token punctuation">, </span></span><span class="parameter ">crashReporter<span class="token operator">: </span><a href="../../../firebase/analytics/dev.atick.firebase.analytics.utils/-crash-reporter/index.html">CrashReporter</a><span class="token punctuation">, </span></span><span class="parameter ">coroutineScope<span class="token operator">: </span><span data-unresolved-link="kotlinx.coroutines/CoroutineScope///PointingToDeclaration/">CoroutineScope</span><span class="token punctuation">, </span></span><span class="parameter ">networkUtils<span class="token operator">: </span><a href="../../../core/network/dev.atick.core.network.utils/-network-utils/index.html">NetworkUtils</a></span></span><span class="token punctuation">)</span></div></div></div>
                 </div>
               </div>
             </div>
@@ -130,37 +130,7 @@
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":app/release"><div class="symbol monospace"><span class="token keyword">val </span><a href="crash-reporter.html">crashReporter</a><span class="token operator">: </span><a href="../../../firebase/analytics/dev.atick.firebase.analytics.utils/-crash-reporter/index.html">CrashReporter</a></div><div class="brief "><p class="paragraph">Utility for reporting exceptions.</p></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-<a data-name="709459365%2FProperties%2F-865142711" anchor-label="currentDestination" id="709459365%2FProperties%2F-865142711" data-filterable-set=":app/release"></a>
-          <div class="table-row table-row_content" data-filterable-current=":app/release" data-filterable-set=":app/release">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="current-destination.html"><span>current</span><wbr><span><span>Destination</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="709459365%2FProperties%2F-865142711"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":app/release"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@get:</span><a href="https://developer.android.com/reference/kotlin/androidx/compose/runtime/Composable.html"><span class="token annotation builtin">Composable</span></a></div></div><span class="token keyword">val </span><a href="current-destination.html">currentDestination</a><span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/androidx/navigation/NavDestination.html">NavDestination</a><span class="token operator">?</span></div><div class="brief "><p class="paragraph">The current navigation destination.</p></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-<a data-name="328836980%2FProperties%2F-865142711" anchor-label="currentTopLevelDestination" id="328836980%2FProperties%2F-865142711" data-filterable-set=":app/release"></a>
-          <div class="table-row table-row_content" data-filterable-current=":app/release" data-filterable-set=":app/release">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="current-top-level-destination.html"><span>current</span><wbr><span>Top</span><wbr><span>Level</span><wbr><span><span>Destination</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="328836980%2FProperties%2F-865142711"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":app/release"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@get:</span><a href="https://developer.android.com/reference/kotlin/androidx/compose/runtime/Composable.html"><span class="token annotation builtin">Composable</span></a></div></div><span class="token keyword">val </span><a href="current-top-level-destination.html">currentTopLevelDestination</a><span class="token operator">: </span><a href="../../dev.atick.compose.navigation/-top-level-destination/index.html">TopLevelDestination</a><span class="token operator">?</span></div><div class="brief "><p class="paragraph">The current top-level navigation destination.</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":app/release"><div class="symbol monospace"><span class="token keyword">val </span><a href="crash-reporter.html">crashReporter</a><span class="token operator">: </span><a href="../../../firebase/analytics/dev.atick.firebase.analytics.utils/-crash-reporter/index.html">CrashReporter</a></div><div class="brief "><p class="paragraph">Used to report errors the user chooses to send.</p></div></div></div>
                 </div>
               </div>
             </div>
@@ -175,7 +145,7 @@
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":app/release"><div class="symbol monospace"><span class="token keyword">val </span><a href="is-offline.html">isOffline</a><span class="token operator">: </span><span data-unresolved-link="kotlinx.coroutines.flow/StateFlow///PointingToDeclaration/">StateFlow</span><span class="token operator">&lt;</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Indicates if the application is offline.</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":app/release"><div class="symbol monospace"><span class="token keyword">val </span><a href="is-offline.html">isOffline</a><span class="token operator">: </span><span data-unresolved-link="kotlinx.coroutines.flow/StateFlow///PointingToDeclaration/">StateFlow</span><span class="token operator">&lt;</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Whether the device is currently offline.</p></div></div></div>
                 </div>
               </div>
             </div>
@@ -190,67 +160,7 @@
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":app/release"><div class="symbol monospace"><span class="token keyword">val </span><a href="is-user-logged-in.html">isUserLoggedIn</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div><div class="brief "><p class="paragraph">Indicates if the user is logged in.</p></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-<a data-name="1318835265%2FProperties%2F-865142711" anchor-label="navController" id="1318835265%2FProperties%2F-865142711" data-filterable-set=":app/release"></a>
-          <div class="table-row table-row_content" data-filterable-current=":app/release" data-filterable-set=":app/release">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="nav-controller.html"><span>nav</span><wbr><span><span>Controller</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1318835265%2FProperties%2F-865142711"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":app/release"><div class="symbol monospace"><span class="token keyword">val </span><a href="nav-controller.html">navController</a><span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/androidx/navigation/NavHostController.html">NavHostController</a></div><div class="brief "><p class="paragraph">The navigation controller for managing navigation.</p></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-<a data-name="-1428412727%2FProperties%2F-865142711" anchor-label="shouldShowFab" id="-1428412727%2FProperties%2F-865142711" data-filterable-set=":app/release"></a>
-          <div class="table-row table-row_content" data-filterable-current=":app/release" data-filterable-set=":app/release">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="should-show-fab.html"><span>should</span><wbr><span>Show</span><wbr><span><span>Fab</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1428412727%2FProperties%2F-865142711"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":app/release"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@get:</span><a href="https://developer.android.com/reference/kotlin/androidx/compose/runtime/Composable.html"><span class="token annotation builtin">Composable</span></a></div></div><span class="token keyword">val </span><a href="should-show-fab.html">shouldShowFab</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div><div class="brief "><p class="paragraph">Indicates if the FAB should be shown.</p></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-<a data-name="2127788326%2FProperties%2F-865142711" anchor-label="topLevelDestinations" id="2127788326%2FProperties%2F-865142711" data-filterable-set=":app/release"></a>
-          <div class="table-row table-row_content" data-filterable-current=":app/release" data-filterable-set=":app/release">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="top-level-destinations.html"><span>top</span><wbr><span>Level</span><wbr><span><span>Destinations</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2127788326%2FProperties%2F-865142711"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":app/release"><div class="symbol monospace"><span class="token keyword">val </span><a href="top-level-destinations.html">topLevelDestinations</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><a href="../../dev.atick.compose.navigation/-top-level-destination/index.html">TopLevelDestination</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">List of top-level destinations.</p></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-<a data-name="-1163489212%2FProperties%2F-865142711" anchor-label="topLevelDestinationsWithUnreadResources" id="-1163489212%2FProperties%2F-865142711" data-filterable-set=":app/release"></a>
-          <div class="table-row table-row_content" data-filterable-current=":app/release" data-filterable-set=":app/release">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="top-level-destinations-with-unread-resources.html"><span>top</span><wbr><span>Level</span><wbr><span>Destinations</span><wbr><span>With</span><wbr><span>Unread</span><wbr><span><span>Resources</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1163489212%2FProperties%2F-865142711"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":app/release"><div class="symbol monospace"><span class="token keyword">val </span><a href="top-level-destinations-with-unread-resources.html">topLevelDestinationsWithUnreadResources</a><span class="token operator">: </span><span data-unresolved-link="kotlinx.coroutines.flow/StateFlow///PointingToDeclaration/">StateFlow</span><span class="token operator">&lt;</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-set/index.html">Set</a><span class="token operator">&lt;</span><a href="../../dev.atick.compose.navigation/-top-level-destination/index.html">TopLevelDestination</a><span class="token operator">&gt;</span><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">State flow of top-level destinations with unread resources.</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":app/release"><div class="symbol monospace"><span class="token keyword">val </span><a href="is-user-logged-in.html">isUserLoggedIn</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div><div class="brief "><p class="paragraph">Whether a user is signed in. Decides which navigation graph is shown.</p></div></div></div>
                 </div>
               </div>
             </div>
@@ -265,7 +175,7 @@
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":app/release"><div class="symbol monospace"><span class="token keyword">val </span><a href="user-profile-picture-uri.html">userProfilePictureUri</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span></div><div class="brief "><p class="paragraph">The URI of the user's profile picture.</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":app/release"><div class="symbol monospace"><span class="token keyword">val </span><a href="user-profile-picture-uri.html">userProfilePictureUri</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span></div><div class="brief "><p class="paragraph">Avatar shown in the top app bar.</p></div></div></div>
                 </div>
               </div>
             </div>
@@ -281,40 +191,6 @@
               <div>
                 <div class="title">
                   <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":app/release"><div class="symbol monospace"><span class="token keyword">val </span><a href="window-size-class.html">windowSizeClass</a><span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/androidx/compose/material3/windowsizeclass/WindowSizeClass.html">WindowSizeClass</a></div><div class="brief "><p class="paragraph">The current window size class.</p></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div data-togglable="FUNCTION">
-        <h2 class="tableheader">Functions</h2>
-        <div class="table"><a data-name="-1310096977%2FFunctions%2F-865142711" anchor-label="navigateToItemScreen" id="-1310096977%2FFunctions%2F-865142711" data-filterable-set=":app/release"></a>
-          <div class="table-row table-row_content" data-filterable-current=":app/release" data-filterable-set=":app/release">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="navigate-to-item-screen.html"><span>navigate</span><wbr><span>To</span><wbr><span>Item</span><wbr><span><span>Screen</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1310096977%2FFunctions%2F-865142711"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":app/release"><div class="symbol monospace"><span class="token keyword">fun </span><a href="navigate-to-item-screen.html"><span class="token function">navigateToItemScreen</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Navigates to the item screen with no item ID (creates new item).</p></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-<a data-name="1429994179%2FFunctions%2F-865142711" anchor-label="navigateToTopLevelDestination" id="1429994179%2FFunctions%2F-865142711" data-filterable-set=":app/release"></a>
-          <div class="table-row table-row_content" data-filterable-current=":app/release" data-filterable-set=":app/release">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="navigate-to-top-level-destination.html"><span>navigate</span><wbr><span>To</span><wbr><span>Top</span><wbr><span>Level</span><wbr><span><span>Destination</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1429994179%2FFunctions%2F-865142711"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":app/release"><div class="symbol monospace"><span class="token keyword">fun </span><a href="navigate-to-top-level-destination.html"><span class="token function">navigateToTopLevelDestination</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">topLevelDestination<span class="token operator">: </span><a href="../../dev.atick.compose.navigation/-top-level-destination/index.html">TopLevelDestination</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Navigates to the specified top-level destination.</p></div></div></div>
                 </div>
               </div>
             </div>

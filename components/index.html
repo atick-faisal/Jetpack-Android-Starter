@@ -716,10 +716,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#jetpacktextfiled" class="md-nav__link">
+  <a href="#jetpacktextfield" class="md-nav__link">
     <span class="md-ellipsis">
       
-        JetpackTextFiled
+        JetpackTextField
       
     </span>
   </a>
@@ -727,10 +727,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#jetpackpasswordfiled" class="md-nav__link">
+  <a href="#jetpackpasswordfield" class="md-nav__link">
     <span class="md-ellipsis">
       
-        JetpackPasswordFiled
+        JetpackPasswordField
       
     </span>
   </a>
@@ -2342,10 +2342,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#jetpacktextfiled" class="md-nav__link">
+  <a href="#jetpacktextfield" class="md-nav__link">
     <span class="md-ellipsis">
       
-        JetpackTextFiled
+        JetpackTextField
       
     </span>
   </a>
@@ -2353,10 +2353,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#jetpackpasswordfiled" class="md-nav__link">
+  <a href="#jetpackpasswordfield" class="md-nav__link">
     <span class="md-ellipsis">
       
-        JetpackPasswordFiled
+        JetpackPasswordField
       
     </span>
   </a>
@@ -3235,8 +3235,8 @@ styling and behavior patterns. These components are located in
     Input --&gt;|Action| ActionType{Action Type?}
     Input --&gt;|Navigation| NavType{Navigation Type?}
     Input --&gt;|Display| DisplayType{Display Type?}
-    TextType --&gt;|Regular Text| JetpackTextFiled
-    TextType --&gt;|Password| JetpackPasswordFiled
+    TextType --&gt;|Regular Text| JetpackTextField
+    TextType --&gt;|Password| JetpackPasswordField
     SelectType --&gt;|Multi - select Filter| JetpackFilterChip
     SelectType --&gt;|Follow/Unfollow| JetpackTag
     SelectType --&gt;|Toggle State| JetpackIconToggleButton
@@ -3352,12 +3352,12 @@ and icon content.</p>
 </span><span id="__span-5-15"><a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="p">}</span>
 </span></code></pre></div>
 <h3 id="text-fields">Text Fields</h3>
-<h4 id="jetpacktextfiled">JetpackTextFiled</h4>
+<h4 id="jetpacktextfield">JetpackTextField</h4>
 <p><strong>Purpose</strong>: Standard text input with validation support</p>
 <p><strong>Basic Usage</strong>:</p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="kd">var</span><span class="w"> </span><span class="nv">email</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="n">remember</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">mutableStateOf</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">}</span>
 </span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="n">JetpackTextFiled</span><span class="p">(</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="n">JetpackTextField</span><span class="p">(</span>
 </span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">    </span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">email</span><span class="p">,</span>
 </span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">    </span><span class="n">onValueChange</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">email</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">it</span><span class="w"> </span><span class="p">},</span>
 </span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">    </span><span class="n">label</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">Text</span><span class="p">(</span><span class="s">&quot;Email&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">},</span>
@@ -3372,7 +3372,7 @@ and icon content.</p>
 <p><strong>With Validation</strong>:</p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="kd">val</span><span class="w"> </span><span class="nv">emailData</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="n">viewModel</span><span class="p">.</span><span class="na">emailData</span><span class="p">.</span><span class="na">collectAsStateWithLifecycle</span><span class="p">()</span>
 </span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>
-</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="n">JetpackTextFiled</span><span class="p">(</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="n">JetpackTextField</span><span class="p">(</span>
 </span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">    </span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">emailData</span><span class="p">.</span><span class="na">value</span><span class="p">,</span>
 </span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">    </span><span class="n">onValueChange</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">viewModel</span><span class="o">::</span><span class="n">updateEmail</span><span class="p">,</span>
 </span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">    </span><span class="n">label</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">Text</span><span class="p">(</span><span class="s">&quot;Email&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">},</span>
@@ -3397,14 +3397,14 @@ and icon content.</p>
 <li><code>modifier</code>: Modifier to customize appearance</li>
 </ul>
 <p><strong>Validation Pattern</strong>:
-The recommended pattern uses <code>TextFiledData</code> from <code>core:ui</code>:</p>
+The recommended pattern uses <code>TextFieldData</code> from <code>core:ui</code>:</p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1">// In ViewModel</span>
 </span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="kd">private</span><span class="w"> </span><span class="kd">val</span><span class="w"> </span><span class="nv">_uiState</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MutableStateFlow</span><span class="p">(</span><span class="n">UiState</span><span class="p">(</span><span class="n">ScreenData</span><span class="p">()))</span>
 </span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
 </span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="kd">fun</span><span class="w"> </span><span class="nf">updateEmail</span><span class="p">(</span><span class="n">email</span><span class="p">:</span><span class="w"> </span><span class="kt">String</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">    </span><span class="n">_uiState</span><span class="p">.</span><span class="na">updateState</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">        </span><span class="n">copy</span><span class="p">(</span>
-</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">            </span><span class="n">email</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">TextFiledData</span><span class="p">(</span>
+</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">            </span><span class="n">email</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">TextFieldData</span><span class="p">(</span>
 </span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="w">                </span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">email</span><span class="p">,</span>
 </span><span id="__span-8-9"><a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="w">                </span><span class="n">errorMessage</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">email</span><span class="p">.</span><span class="na">isEmailValid</span><span class="p">())</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s">&quot;Invalid email&quot;</span>
 </span><span id="__span-8-10"><a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="w">            </span><span class="p">)</span>
@@ -3414,7 +3414,7 @@ The recommended pattern uses <code>TextFiledData</code> from <code>core:ui</code
 </span><span id="__span-8-14"><a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>
 </span><span id="__span-8-15"><a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="c1">// Data class</span>
 </span><span id="__span-8-16"><a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="kd">data</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nc">ScreenData</span><span class="p">(</span>
-</span><span id="__span-8-17"><a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a><span class="w">    </span><span class="kd">val</span><span class="w"> </span><span class="nv">email</span><span class="p">:</span><span class="w"> </span><span class="n">TextFiledData</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">TextFiledData</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">)</span>
+</span><span id="__span-8-17"><a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a><span class="w">    </span><span class="kd">val</span><span class="w"> </span><span class="nv">email</span><span class="p">:</span><span class="w"> </span><span class="n">TextFieldData</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">TextFieldData</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">)</span>
 </span><span id="__span-8-18"><a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a><span class="p">)</span>
 </span></code></pre></div>
 <p><strong>Styling</strong>:</p>
@@ -3423,12 +3423,12 @@ The recommended pattern uses <code>TextFiledData</code> from <code>core:ui</code
 <li>Red border/color when error is present</li>
 <li>Animated error message appearance</li>
 </ul>
-<h4 id="jetpackpasswordfiled">JetpackPasswordFiled</h4>
+<h4 id="jetpackpasswordfield">JetpackPasswordField</h4>
 <p><strong>Purpose</strong>: Password input with visibility toggle</p>
 <p><strong>Usage</strong>:</p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="kd">var</span><span class="w"> </span><span class="nv">password</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="n">remember</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">mutableStateOf</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">}</span>
 </span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>
-</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="n">JetpackPasswordFiled</span><span class="p">(</span>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="n">JetpackPasswordField</span><span class="p">(</span>
 </span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">    </span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">password</span><span class="p">,</span>
 </span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="w">    </span><span class="n">onValueChange</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">password</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">it</span><span class="w"> </span><span class="p">},</span>
 </span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="w">    </span><span class="n">label</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">Text</span><span class="p">(</span><span class="s">&quot;Password&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">},</span>
@@ -3455,7 +3455,7 @@ The recommended pattern uses <code>TextFiledData</code> from <code>core:ui</code
 </span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">        </span><span class="p">.</span><span class="na">padding</span><span class="p">(</span><span class="m">16.</span><span class="n">dp</span><span class="p">),</span>
 </span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">    </span><span class="n">verticalArrangement</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Arrangement</span><span class="p">.</span><span class="na">spacedBy</span><span class="p">(</span><span class="m">16.</span><span class="n">dp</span><span class="p">)</span>
 </span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="w">    </span><span class="n">JetpackTextFiled</span><span class="p">(</span>
+</span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="w">    </span><span class="n">JetpackTextField</span><span class="p">(</span>
 </span><span id="__span-10-8"><a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="w">        </span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">email</span><span class="p">,</span>
 </span><span id="__span-10-9"><a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="w">        </span><span class="n">onValueChange</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">viewModel</span><span class="o">::</span><span class="n">updateEmail</span><span class="p">,</span>
 </span><span id="__span-10-10"><a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="w">        </span><span class="n">label</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">Text</span><span class="p">(</span><span class="s">&quot;Email&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">},</span>
@@ -3463,7 +3463,7 @@ The recommended pattern uses <code>TextFiledData</code> from <code>core:ui</code
 </span><span id="__span-10-12"><a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="w">        </span><span class="n">errorMessage</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">emailData</span><span class="p">.</span><span class="na">errorMessage</span>
 </span><span id="__span-10-13"><a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="w">    </span><span class="p">)</span>
 </span><span id="__span-10-14"><a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>
-</span><span id="__span-10-15"><a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a><span class="w">    </span><span class="n">JetpackPasswordFiled</span><span class="p">(</span>
+</span><span id="__span-10-15"><a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a><span class="w">    </span><span class="n">JetpackPasswordField</span><span class="p">(</span>
 </span><span id="__span-10-16"><a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a><span class="w">        </span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">password</span><span class="p">,</span>
 </span><span id="__span-10-17"><a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a><span class="w">        </span><span class="n">onValueChange</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">viewModel</span><span class="o">::</span><span class="n">updatePassword</span><span class="p">,</span>
 </span><span id="__span-10-18"><a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a><span class="w">        </span><span class="n">label</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">Text</span><span class="p">(</span><span class="s">&quot;Password&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">},</span>
@@ -3984,8 +3984,8 @@ The recommended pattern uses <code>TextFiledData</code> from <code>core:ui</code
 <p><strong>Usage</strong>:</p>
 <div class="language-kotlin highlight"><pre><span></span><code><span id="__span-28-1"><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a><span class="n">Column</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-28-2"><a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a><span class="w">    </span><span class="c1">// Email sign-in form</span>
-</span><span id="__span-28-3"><a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a><span class="w">    </span><span class="n">JetpackTextFiled</span><span class="p">(...)</span>
-</span><span id="__span-28-4"><a id="__codelineno-28-4" name="__codelineno-28-4" href="#__codelineno-28-4"></a><span class="w">    </span><span class="n">JetpackPasswordFiled</span><span class="p">(...)</span>
+</span><span id="__span-28-3"><a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a><span class="w">    </span><span class="n">JetpackTextField</span><span class="p">(...)</span>
+</span><span id="__span-28-4"><a id="__codelineno-28-4" name="__codelineno-28-4" href="#__codelineno-28-4"></a><span class="w">    </span><span class="n">JetpackPasswordField</span><span class="p">(...)</span>
 </span><span id="__span-28-5"><a id="__codelineno-28-5" name="__codelineno-28-5" href="#__codelineno-28-5"></a><span class="w">    </span><span class="n">JetpackButton</span><span class="p">(</span><span class="n">onClick</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="p">})</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">Text</span><span class="p">(</span><span class="s">&quot;Sign In&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">}</span>
 </span><span id="__span-28-6"><a id="__codelineno-28-6" name="__codelineno-28-6" href="#__codelineno-28-6"></a>
 </span><span id="__span-28-7"><a id="__codelineno-28-7" name="__codelineno-28-7" href="#__codelineno-28-7"></a><span class="w">    </span><span class="n">DividerWithText</span><span class="p">(</span><span class="n">text</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">R</span><span class="p">.</span><span class="na">string</span><span class="p">.</span><span class="na">or</span><span class="p">)</span>
@@ -4444,7 +4444,7 @@ AA standards:</p>
 </tr>
 <tr>
 <td><code>&lt;EditText&gt;</code></td>
-<td><code>JetpackTextFiled</code></td>
+<td><code>JetpackTextField</code></td>
 </tr>
 <tr>
 <td><code>&lt;Toolbar&gt;</code></td>

@@ -94,7 +94,7 @@
   <div class="breadcrumbs"><a href="../../index.html">:app</a><span class="delimiter">/</span><a href="../index.html">dev.atick.compose.navigation</a><span class="delimiter">/</span><span class="current">TopLevelDestination</span></div>
   <div class="cover ">
     <h1 class="cover"><span>Top</span><wbr><span>Level</span><wbr><span><span>Destination</span></span></h1>
-    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":app/release"><div class="symbol monospace"><span class="token keyword">enum </span><a href="index.html">TopLevelDestination</a> : <a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-enum/index.html">Enum</a><span class="token operator">&lt;</span><a href="index.html">TopLevelDestination</a><span class="token operator">&gt; </span></div><p class="paragraph">Enum class representing top-level destinations in a navigation system.</p></div></div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":app/release"><div class="symbol monospace"><span class="token keyword">enum </span><a href="index.html">TopLevelDestination</a> : <a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-enum/index.html">Enum</a><span class="token operator">&lt;</span><a href="index.html">TopLevelDestination</a><span class="token operator">&gt; </span></div><p class="paragraph">The destinations shown in the navigation bar or rail.</p><p class="paragraph">Each entry owns a back stack of its own, so switching between them preserves where the user was. The first entry is the start destination: the app exits from there, and back from any other top-level destination returns to it.</p></div></div>
   </div>
   <div class="tabbedcontent">
     <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button><button class="section-tab" data-togglable="ENTRY">Entries</button></div>
@@ -133,6 +133,25 @@
           </div>
         </div>
       </div>
+      <div data-togglable="TYPE">
+        <h2 class="tableheader">Types</h2>
+        <div class="table"><a data-name="-1997444982%2FClasslikes%2F-865142711" anchor-label="Companion" id="-1997444982%2FClasslikes%2F-865142711" data-filterable-set=":app/release"></a>
+          <div class="table-row table-row_content" data-filterable-current=":app/release" data-filterable-set=":app/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-companion/index.html"><span><span>Companion</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1997444982%2FClasslikes%2F-865142711"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":app/release"><div class="symbol monospace"><span class="token keyword">object </span><a href="-companion/index.html">Companion</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
       <div data-togglable="PROPERTY">
         <h2 class="tableheader">Properties</h2>
         <div class="table"><a data-name="1849720371%2FProperties%2F-865142711" anchor-label="entries" id="1849720371%2FProperties%2F-865142711" data-filterable-set=":app/release"></a>
@@ -160,7 +179,22 @@
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":app/release"><div class="symbol monospace"><span class="token keyword">val </span><a href="icon-text-id.html">iconTextId</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a></div><div class="brief "><p class="paragraph">The resource ID for the icon's content description text.</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":app/release"><div class="symbol monospace"><span class="token keyword">val </span><a href="icon-text-id.html">iconTextId</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a></div><div class="brief "><p class="paragraph">Label under the icon.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-871551420%2FProperties%2F-865142711" anchor-label="key" id="-871551420%2FProperties%2F-865142711" data-filterable-set=":app/release"></a>
+          <div class="table-row table-row_content" data-filterable-current=":app/release" data-filterable-set=":app/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="key.html"><span><span>key</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-871551420%2FProperties%2F-865142711"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":app/release"><div class="symbol monospace"><span class="token keyword">val </span><a href="key.html">key</a><span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/androidx/navigation3/runtime/NavKey.html">NavKey</a></div><div class="brief "><p class="paragraph">The navigation key this destination maps to.</p></div></div></div>
                 </div>
               </div>
             </div>
@@ -195,21 +229,6 @@
               </div>
             </div>
           </div>
-<a data-name="-1495167974%2FProperties%2F-865142711" anchor-label="route" id="-1495167974%2FProperties%2F-865142711" data-filterable-set=":app/release"></a>
-          <div class="table-row table-row_content" data-filterable-current=":app/release" data-filterable-set=":app/release">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="route.html"><span><span>route</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1495167974%2FProperties%2F-865142711"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":app/release"><div class="symbol monospace"><span class="token keyword">val </span><a href="route.html">route</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.reflect/-k-class/index.html">KClass</a><span class="token operator">&lt;</span><span class="token operator">*</span><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">The route associated with the destination.</p></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
 <a data-name="7860035%2FProperties%2F-865142711" anchor-label="selectedIcon" id="7860035%2FProperties%2F-865142711" data-filterable-set=":app/release"></a>
           <div class="table-row table-row_content" data-filterable-current=":app/release" data-filterable-set=":app/release">
             <div class="main-subrow keyValue ">
@@ -220,7 +239,7 @@
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":app/release"><div class="symbol monospace"><span class="token keyword">val </span><a href="selected-icon.html">selectedIcon</a><span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/androidx/compose/ui/graphics/vector/ImageVector.html">ImageVector</a></div><div class="brief "><p class="paragraph">The selected icon associated with the destination.</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":app/release"><div class="symbol monospace"><span class="token keyword">val </span><a href="selected-icon.html">selectedIcon</a><span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/androidx/compose/ui/graphics/vector/ImageVector.html">ImageVector</a></div><div class="brief "><p class="paragraph">Icon shown when this destination is current.</p></div></div></div>
                 </div>
               </div>
             </div>
@@ -235,7 +254,7 @@
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":app/release"><div class="symbol monospace"><span class="token keyword">val </span><a href="title-text-id.html">titleTextId</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a></div><div class="brief "><p class="paragraph">The resource ID for the title text.</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":app/release"><div class="symbol monospace"><span class="token keyword">val </span><a href="title-text-id.html">titleTextId</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a></div><div class="brief "><p class="paragraph">Title shown in the top app bar.</p></div></div></div>
                 </div>
               </div>
             </div>
@@ -250,7 +269,7 @@
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":app/release"><div class="symbol monospace"><span class="token keyword">val </span><a href="unselected-icon.html">unselectedIcon</a><span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/androidx/compose/ui/graphics/vector/ImageVector.html">ImageVector</a></div><div class="brief "><p class="paragraph">The unselected icon associated with the destination.</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":app/release"><div class="symbol monospace"><span class="token keyword">val </span><a href="unselected-icon.html">unselectedIcon</a><span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/androidx/compose/ui/graphics/vector/ImageVector.html">ImageVector</a></div><div class="brief "><p class="paragraph">Icon shown otherwise.</p></div></div></div>
                 </div>
               </div>
             </div>

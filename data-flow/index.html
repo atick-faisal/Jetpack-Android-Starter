@@ -958,17 +958,6 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#3-network-bound-resource-pattern" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        3. Network-Bound Resource Pattern
-      
-    </span>
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
   
@@ -2009,17 +1998,6 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#3-network-bound-resource-pattern" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        3. Network-Bound Resource Pattern
-      
-    </span>
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
   
@@ -2484,30 +2462,6 @@ the <a href="../firebase/firestore/README.md">Firebase Module README</a>.</p>
 <li>Complementary to time-based caching</li>
 <li>Provides user control</li>
 </ul>
-<h3 id="3-network-bound-resource-pattern">3. Network-Bound Resource Pattern</h3>
-<p>Utility for coordinating network + local data with automatic caching.</p>
-<p><strong>Flow:</strong></p>
-<pre class="mermaid"><code>graph TD
-    Start[Network-Bound Resource] --&gt; Loading1[1. Emit Loading state]
-    Loading1 --&gt; Query[2. Query local database]
-    Query --&gt; Loading2[3. Emit Loading with local data]
-    Loading2 --&gt; ShouldFetch{4. Should fetch&lt;br/&gt;from network?}
-    ShouldFetch --&gt;|YES| Fetch[Fetch from network]
-    Fetch --&gt; Save[Save to local database]
-    Save --&gt; Success[Emit Success with fresh data]
-    ShouldFetch --&gt;|NO| CachedSuccess[Emit Success with cached data]
-    Fetch -. Network Error .-&gt; Error[Emit Error&lt;br/&gt;with stale local data]</code></pre>
-<p><strong>Use When:</strong></p>
-<ul>
-<li>Want automatic cache-then-network pattern</li>
-<li>Need loading states with cached data</li>
-<li>Want to show stale data on network errors</li>
-</ul>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>For <code>networkBoundResource</code> implementation and usage examples, see
-the <a href="../data/README.md">Data Module README</a>.</p>
-</div>
 <hr />
 <h2 id="error-handling">Error Handling</h2>
 <p>All data layer operations use a <strong>layered error handling approach</strong> with <code>Result&lt;T&gt;</code> for error
