@@ -30,8 +30,8 @@ Do the deletions and the `mkdocs.yml` nav rewrite in **one commit** so the site 
 
 One item per target file. Each states its source material and its acceptance criterion.
 
-- [ ] **`navigation.md`** — from-scratch rewrite for Navigation 3 (A1). The single largest item; nothing in the current file is reusable. Cover `NavKey`, `Navigator`, `rememberNavigationState`, multi-back-stack `NavigationState`, `NavDisplay`, `ListDetailSceneStrategy`, and the assisted-inject pattern Nav3 forces for keyed args (`ItemViewModel`).
-      **Accept:** zero occurrences of `NavController`/`NavHost`; every API named appears in `core/navigation/` or `app/src/main/kotlin/dev/atick/compose/ui/`
+- [x] **`navigation.md`** — from-scratch rewrite for Navigation 3 (A1). The single largest item; nothing in the current file is reusable. Cover `NavKey`, `Navigator`, `rememberNavigationState`, multi-back-stack `NavigationState`, `NavDisplay`, `ListDetailSceneStrategy`, and the assisted-inject pattern Nav3 forces for keyed args (`ItemViewModel`).
+      **Accept:** zero occurrences of `NavController`/`NavHost`; every API named appears in `core/navigation/` or `app/src/main/kotlin/dev/atick/compose/ui/` — verified: 1,284 → 303 lines, 2 alerts, `mkdocs build --strict` warnings 50 → 46 (no regression; remaining warnings belong to unrewritten files)
 - [ ] **`architecture.md`** — absorb `philosophy.md` and `data-flow.md` diagrams; state the domain-layer rationale exactly once (B5); delete the false testing claim (A3)
       **Accept:** ≤ 400 lines; "domain layer" rationale appears once in `docs/`
 - [ ] **`state-management.md`** — `UiState`, `StatefulComposable`, the three update extensions, context parameters, `OneTimeEvent`; fix the "Kotlin 2.0" attribution (A10)
