@@ -1,430 +1,279 @@
-# Adding a New Feature
+# Adding a Feature
 
-This guide walks you through the complete process of adding a new feature to the app, following
-established patterns and best practices.
+This walks through adding a feature end to end, using the `home` feature (`Jetpack` library
+cards — a list screen plus a create/edit screen) as the running example, because it's the only
+feature in the repo that touches every layer: a Room-backed local store, an offline-first
+repository with two-way Firebase sync, two ViewModels, and two Navigation 3 destinations. Building
+a new feature means repeating this shape with your own model and screen names.
 
----
+## Overview
 
-## Summary
+1. [Data models](#1-data-models) — domain model + persistence model
+2. [Data source](#2-data-source) — Room-backed local access
+3. [Repository](#3-repository) — the offline-first contract the UI depends on
+4. [UI layer](#4-ui-layer) — ViewModel + screen
+5. [Navigation](#5-navigation) — `NavKey`s and entries
+6. [Dependency injection](#6-dependency-injection) — wiring it all together
 
-To add a new feature to this template, follow this workflow:
+## 1. Data models
 
-1. **Define data models** - Create network, database, and repository models
-2. **Create data sources** - Implement network and local data sources
-3. **Create repository** - Coordinate data sources and handle errors
-4. **Create UI layer** - Build ViewModel with Screen Data and composables
-5. **Set up navigation** - Define type-safe routes and navigation extensions
-6. **Configure DI** - Wire everything together with Hilt modules
-
-This guide provides complete code examples for each step, showing the exact patterns used in this
-template.
-
----
-
-## Overview of Steps
-
-1. [Define data models](#step-1-data-models)
-2. [Create/update data sources](#step-2-data-sources)
-3. [Create repository layer](#step-3-repository-layer)
-4. [Create UI layer](#step-4-ui-layer)
-5. [Set up navigation](#step-5-navigation)
-6. [Configure dependency injection](#step-6-dependency-injection)
-
----
-
-## Step 1: Data Models
-
----
-
-### 1.1 Data Source Models
-
-Create models in the appropriate core module (for example, `core:network` or `core:room`). Create
-new core modules if needed:
+Two models, not one: a Room `@Entity` for storage, and a plain domain model the rest of the app
+depends on. Extension functions map between them (and, for `home`, a third — `FirebaseJetpack` —
+for the Firestore side of the sync).
 
 ```kotlin
-// core/network/src/main/kotlin/dev/atick/core/network/model/NetworkFeature.kt
-@Serializable
-data class NetworkFeature(
-    val id: String,
+// core/room/src/main/kotlin/dev/atick/core/room/model/JetpackEntity.kt
+@Entity(tableName = "jetpacks")
+data class JetpackEntity(
+    @PrimaryKey val id: String = UUID.randomUUID().toString(),
     val name: String,
-    val createdAt: Long = System.currentTimeMillis()
-)
-
-// core/room/src/main/kotlin/dev/atick/core/room/model/FeatureEntity.kt
-@Entity(tableName = "features")
-data class FeatureEntity(
-    @PrimaryKey val id: String,
-    val name: String,
+    val price: Double,
+    val userId: String = String(),
+    val lastUpdated: Long = 0,
     val lastSynced: Long = 0,
-    val needsSync: Boolean = true
+    val needsSync: Boolean = false,
+    val deleted: Boolean = false,
+    val syncAction: SyncAction = SyncAction.NONE,
 )
 ```
 
----
-
-## Step 2: Data Sources
-
----
-
-### 2.1 Network Data Source
-
 ```kotlin
-// core/network/src/main/kotlin/dev/atick/core/network/data/
-interface NetworkDataSource {
-    suspend fun getFeatures(): List<NetworkFeature>
-    suspend fun createFeature(feature: NetworkFeature)
-}
+// data/src/main/kotlin/dev/atick/data/model/home/Jetpack.kt
+data class Jetpack(
+    val id: String = UUID.randomUUID().toString(),
+    val name: String = String(),
+    val price: Double = 0.0,
+    val lastUpdated: Long = System.currentTimeMillis(),
+    val lastSynced: Long = 0L,
+    val needsSync: Boolean = true,
+    val formattedDate: String = lastUpdated.asFormattedDateTime(),
+)
 
-class NetworkDataSourceImpl @Inject constructor(
-    private val api: FeatureApi,
-    @IoDispatcher private val ioDispatcher: CoroutineDispatcher
-) : NetworkDataSource {
-    override suspend fun getFeatures(): List<NetworkFeature> =
-        withContext(ioDispatcher) {
-            api.getFeatures()
-        }
-
-    override suspend fun createFeature(feature: NetworkFeature) =
-        withContext(ioDispatcher) {
-            api.createFeature(feature)
-        }
-}
+fun JetpackEntity.toJetpack(): Jetpack = Jetpack(id = id, name = name, price = price, /* ... */)
+fun Jetpack.toJetpackEntity(): JetpackEntity = JetpackEntity(id = id, name = name, price = price, /* ... */)
 ```
 
-### 2.2 Local Data Source
+> [!NOTE]
+> `lastUpdated`, `lastSynced`, `needsSync`, `syncAction` are sync bookkeeping, not part of the
+> feature's actual data. A feature with no remote counterpart doesn't need them.
+
+## 2. Data source
+
+`LocalDataSource` wraps the Room DAO and moves every call onto `IoDispatcher`:
 
 ```kotlin
-// core/room/src/main/kotlin/dev/atick/core/room/data/
-interface LocalDataSource {
-    fun observeFeatures(): Flow<List<FeatureEntity>>
-    suspend fun saveFeatures(features: List<FeatureEntity>)
-}
-
-class LocalDataSourceImpl @Inject constructor(
-    private val featureDao: FeatureDao,
-    @IoDispatcher private val ioDispatcher: CoroutineDispatcher
+// core/room/src/main/kotlin/dev/atick/core/room/data/LocalDataSourceImpl.kt
+internal class LocalDataSourceImpl @Inject constructor(
+    private val jetpackDao: JetpackDao,
+    @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 ) : LocalDataSource {
-    override fun observeFeatures(): Flow<List<FeatureEntity>> =
-        featureDao.observeFeatures()
-            .flowOn(ioDispatcher)
+    override fun getJetpacks(userId: String): Flow<List<JetpackEntity>> =
+        jetpackDao.getJetpacks(userId).flowOn(ioDispatcher)
 
-    override suspend fun saveFeatures(features: List<FeatureEntity>) =
-        withContext(ioDispatcher) {
-            featureDao.insertFeatures(features)
-        }
+    override suspend fun upsertJetpack(jetpackEntity: JetpackEntity) = withContext(ioDispatcher) {
+        jetpackDao.upsertJetpack(jetpackEntity)
+    }
+    // ...
 }
 ```
 
 > [!NOTE]
-> Always use `withContext(ioDispatcher)` in data sources to ensure operations run on the IO thread.
+> `home`'s remote counterpart is Firestore, reached through `FirebaseDataSource` — see
+> [`firebase/firestore`](../firebase/firestore/README.md). `core:network` also ships a
+> `NetworkDataSource`/`JetpackRestApi` pair, but `HomeRepositoryImpl` doesn't use it; it's there
+> for a feature that talks to a plain REST backend instead of Firestore. Use whichever remote your
+> feature actually needs — not both.
 
----
+## 3. Repository
 
-## Step 3: Repository Layer
-
----
-
-### 3.1 Feature Models
-
-```kotlin
-// data/src/main/kotlin/dev/atick/data/model/Feature.kt
-data class Feature(
-    val id: String,
-    val name: String,
-    val lastSynced: Long = 0
-)
-
-// Conversion Functions
-fun NetworkFeature.toFeature() = Feature(
-    id = id,
-    name = name
-)
-
-fun FeatureEntity.toFeature() = Feature(
-    id = id,
-    name = name,
-    lastSynced = lastSynced
-)
-
-fun Feature.toEntity() = FeatureEntity(
-    id = id,
-    name = name,
-    lastSynced = lastSynced
-)
-```
-
-### 3.2 Repository Implementation
+The repository is the only thing a ViewModel depends on. It returns `Flow` for observable reads
+and `Result<Unit>` for writes, via `suspendRunCatching`:
 
 ```kotlin
-// data/src/main/kotlin/dev/atick/data/repository/
-interface FeatureRepository {
-    fun observeFeatures(): Flow<List<Feature>>
-    suspend fun createFeature(feature: Feature): Result<Unit>
-    suspend fun syncFeatures(): Result<Unit>
-}
-
-class FeatureRepositoryImpl @Inject constructor(
-    private val localDataSource: LocalDataSource,
-    private val networkDataSource: NetworkDataSource
-) : FeatureRepository {
-    override fun observeFeatures(): Flow<List<Feature>> =
-        localDataSource.observeFeatures()
-            .map { entities -> entities.map { it.toFeature() } }
-
-    override suspend fun createFeature(feature: Feature): Result<Unit> =
-        suspendRunCatching {
-            networkDataSource.createFeature(feature.toNetworkFeature())
-            localDataSource.saveFeature(feature.toEntity())
-        }
-
-    override suspend fun syncFeatures(): Result<Unit> =
-        suspendRunCatching {
-            val networkFeatures = networkDataSource.getFeatures()
-            val entities = networkFeatures.map { it.toFeature().toEntity() }
-            localDataSource.saveFeatures(entities)
-        }
+// data/src/main/kotlin/dev/atick/data/repository/home/HomeRepository.kt
+interface HomeRepository : Syncable {
+    fun getJetpacks(): Flow<List<Jetpack>>
+    fun getJetpack(id: String): Flow<Jetpack>
+    suspend fun createOrUpdateJetpack(jetpack: Jetpack): Result<Unit>
+    suspend fun markJetpackAsDeleted(jetpack: Jetpack): Result<Unit>
 }
 ```
 
-> [!TIP]
-> Use `suspendRunCatching` in repositories to handle errors consistently.
-
-> [!NOTE]
-> This is a minimal repository example for the tutorial. For detailed repository patterns including
-> offline-first with sync metadata, network-only, local-only, error handling, and caching strategies,
-> see the [Data Module README](../data/README.md#repository-patterns).
-
----
-
-## Step 4: UI Layer
-
----
-
-### 4.1 Screen Data
-
 ```kotlin
-// feature/feature-name/src/main/kotlin/dev/atick/feature/model/
-data class FeatureScreenData(
-    val features: List<Feature> = emptyList(),
-    val newFeatureName: String = ""
-)
+// data/src/main/kotlin/dev/atick/data/repository/home/HomeRepositoryImpl.kt
+override fun getJetpacks(): Flow<List<Jetpack>> {
+    syncManager.requestSync()
+    return flow {
+        val userId = preferencesDataSource.getUserIdOrThrow()
+        emitAll(localDataSource.getJetpacks(userId).map { it.mapToJetpacks() })
+    }
+}
+
+override suspend fun createOrUpdateJetpack(jetpack: Jetpack): Result<Unit> = suspendRunCatching {
+    val userId = preferencesDataSource.getUserIdOrThrow()
+    localDataSource.upsertJetpack(
+        jetpack.toJetpackEntity().copy(
+            userId = userId,
+            lastUpdated = System.currentTimeMillis(),
+            needsSync = true,
+            syncAction = SyncAction.UPSERT,
+        ),
+    )
+    syncManager.requestSync()
+}
 ```
 
-### 4.2 ViewModel
+Local reads/writes are all this needs. `HomeRepositoryImpl` additionally implements `sync()`,
+which pushes unsynced entities to Firestore and pulls remote changes back — the full two-way
+algorithm is in the file itself and summarized in [`data/README.md`](../data/README.md#repository-patterns).
+A feature with no remote doesn't implement `Syncable` at all.
+
+## 4. UI layer
+
+One ViewModel per screen, each exposing a single `StateFlow<UiState<ScreenData>>`. The list
+ViewModel just observes and forwards:
 
 ```kotlin
-// feature/feature-name/src/main/kotlin/dev/atick/feature/ui/
+// feature/home/src/main/kotlin/dev/atick/feature/home/ui/home/HomeViewModel.kt
 @HiltViewModel
-class FeatureViewModel @Inject constructor(
-    private val featureRepository: FeatureRepository
+class HomeViewModel @Inject constructor(
+    private val homeRepository: HomeRepository,
 ) : ViewModel() {
-    private val _uiState = MutableStateFlow(UiState(FeatureScreenData()))
-    val uiState = _uiState.asStateFlow()
+    private val _homeUiState = MutableStateFlow(UiState(HomeScreenData()))
+    val homeUiState = _homeUiState
+        .onStart { getJetpacks() }
+        .stateInDelayed(UiState(HomeScreenData()), viewModelScope)
 
-    init {
-        observeFeatures()
+    fun deleteJetpack(jetpack: Jetpack) {
+        _homeUiState.updateWith { homeRepository.markJetpackAsDeleted(jetpack) }
+    }
+}
+```
+
+The detail ViewModel handles both create and edit, taking the optional existing ID by assisted
+injection from its `NavKey` rather than a `SavedStateHandle`:
+
+```kotlin
+// feature/home/src/main/kotlin/dev/atick/feature/home/ui/item/ItemViewModel.kt
+@HiltViewModel(assistedFactory = ItemViewModel.Factory::class)
+class ItemViewModel @AssistedInject constructor(
+    private val homeRepository: HomeRepository,
+    @Assisted private val existingJetpackId: String?,
+) : ViewModel() {
+
+    @AssistedFactory
+    interface Factory {
+        fun create(existingJetpackId: String?): ItemViewModel
     }
 
-    private fun observeFeatures() {
-        featureRepository.observeFeatures()
-            .onEach { features ->
-                _uiState.updateState {
-                    copy(features = features)
-                }
-            }
-            .launchIn(viewModelScope)
+    fun updateName(name: String) {
+        _itemUiState.updateState { copy(jetpackName = name) }
     }
 
-    fun updateFeatureName(name: String) {
-        _uiState.updateState {
-            copy(newFeatureName = name)
-        }
-    }
-
-    fun createFeature() {
-        _uiState.updateStateWith {
-            val feature = Feature(
-                id = UUID.randomUUID().toString(),
-                name = newFeatureName
-            )
-            featureRepository.createFeature(feature)
+    fun createOrUpdateJetpack() {
+        _itemUiState.updateStateWith {
+            val jetpack = Jetpack(id = jetpackId, name = jetpackName.trim(), price = jetpackPrice)
+            homeRepository.createOrUpdateJetpack(jetpack)
+            Result.success(copy(navigateBack = OneTimeEvent(true)))
         }
     }
 }
 ```
 
-### 4.3 UI Components
+The screen collects that state and hands it to `StatefulComposable`, which renders loading/error
+around your content:
 
 ```kotlin
-// feature/feature-name/src/main/kotlin/dev/atick/feature/ui/
+// feature/home/src/main/kotlin/dev/atick/feature/home/ui/home/HomeScreen.kt
 @Composable
-fun FeatureRoute(
+internal fun HomeScreen(
+    onJetpackClick: (String) -> Unit,
     onShowSnackbar: suspend (String, SnackbarAction, Throwable?) -> Boolean,
-    viewModel: FeatureViewModel = hiltViewModel()
+    homeViewModel: HomeViewModel = hiltViewModel(),
 ) {
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val homeState by homeViewModel.homeUiState.collectAsStateWithLifecycle()
 
-    StatefulComposable(
-        state = uiState,
-        onShowSnackbar = onShowSnackbar
-    ) { screenData ->
-        FeatureScreen(
-            screenData = screenData,
-            onNameChange = viewModel::updateFeatureName,
-            onCreateFeature = viewModel::createFeature
+    StatefulComposable(state = homeState, onShowSnackbar = onShowSnackbar) { homeScreenData ->
+        HomeScreen(
+            jetpacks = homeScreenData.jetpacks,
+            onJetpackCLick = onJetpackClick,
+            onDeleteJetpack = homeViewModel::deleteJetpack,
         )
     }
 }
-
-@Composable
-private fun FeatureScreen(
-    screenData: FeatureScreenData,
-    onNameChange: (String) -> Unit,
-    onCreateFeature: () -> Unit
-) {
-    Column(modifier = Modifier.fillMaxSize()) {
-        // UI Implementation
-    }
-}
 ```
 
----
+`UiState`, `updateState`, `updateStateWith`, `updateWith`, and `StatefulComposable` are covered in
+full in [State Management](state-management.md) — this is what wiring them into a real screen
+looks like, not a restatement of how they work.
 
-## Step 5: Navigation
+## 5. Navigation
 
-This section shows the minimal navigation code needed when adding a new feature. For comprehensive
-navigation patterns and best practices, see the [Navigation Deep Dive](navigation.md) guide.
-
----
+Each screen gets a `@Serializable NavKey`, a `Navigator` extension to reach it, and an entry
+registration:
 
 ```kotlin
-// feature/feature-name/src/main/kotlin/dev/atick/feature/navigation/
+// feature/home/src/main/kotlin/dev/atick/feature/home/navigation/HomeNavigation.kt
 @Serializable
-data object FeatureNavGraph
+data object HomeNavKey : NavKey
 
 @Serializable
-data object Feature
+data class ItemNavKey(val itemId: String?) : NavKey
 
-fun NavController.navigateToFeature(
-    navOptions: NavOptions? = null
-) {
-    navigate(Feature, navOptions)
-}
+fun Navigator.navigateToItem(itemId: String?) = navigate(ItemNavKey(itemId))
 
-fun NavGraphBuilder.featureScreen(
-    onShowSnackbar: suspend (String, SnackbarAction, Throwable?) -> Boolean
+fun EntryProviderScope<NavKey>.homeEntries(
+    navigator: Navigator,
+    onShowSnackbar: suspend (String, SnackbarAction, Throwable?) -> Boolean,
 ) {
-    composable<Feature> {
-        FeatureRoute(onShowSnackbar = onShowSnackbar)
+    entry<HomeNavKey>(metadata = ListDetailSceneStrategy.listPane()) {
+        HomeScreen(onJetpackClick = navigator::navigateToItem, onShowSnackbar = onShowSnackbar)
     }
-}
-
-fun NavGraphBuilder.featureNavGraph(
-    nestedGraphs: NavGraphBuilder.() -> Unit
-) {
-    navigation<FeatureNavGraph>(
-        startDestination = Feature
-    ) {
-        nestedGraphs()
+    entry<ItemNavKey>(metadata = ListDetailSceneStrategy.detailPane()) { key ->
+        ItemScreen(itemId = key.itemId, onBackClick = navigator::goBack, onShowSnackbar = onShowSnackbar)
     }
 }
 ```
 
----
+`homeEntries(navigator, onShowSnackbar)` is then called inside the app-level `entryProvider { }` in
+`app/src/main/kotlin/dev/atick/compose/ui/JetpackApp.kt`. How `NavKey`s carry arguments into a
+ViewModel by assisted injection, and how the scene strategies decide list/detail layout, are
+covered in [Navigation](navigation.md).
 
-## Step 6: Dependency Injection
+## 6. Dependency injection
 
----
-
-### 6.1 Data Source Module
-
-```kotlin
-@Module
-@InstallIn(SingletonComponent::class)
-abstract class DataSourceModule {
-    @Binds
-    @Singleton
-    abstract fun bindNetworkDataSource(
-        impl: NetworkDataSourceImpl
-    ): NetworkDataSource
-}
-```
-
-### 6.2 Repository Module
+Bind the repository interface to its implementation:
 
 ```kotlin
-@Module
-@InstallIn(SingletonComponent::class)
-abstract class RepositoryModule {
-    @Binds
-    @Singleton
-    abstract fun bindFeatureRepository(
-        impl: FeatureRepositoryImpl
-    ): FeatureRepository
-}
+// data/src/main/kotlin/dev/atick/data/di/RepositoryModule.kt
+@Binds
+@Singleton
+internal abstract fun bindHomeRepository(
+    homeRepositoryImpl: HomeRepositoryImpl,
+): HomeRepository
 ```
 
----
-
-## Best Practices Reminder
-
-**Data Sources:**
-
-- Use `withContext(ioDispatcher)` for IO operations
-- Handle raw data models
-- One responsibility per data source
-
-**Repositories:**
-
-- Use `suspendRunCatching` for error handling
-- Convert between data models
-- Coordinate between data sources
-
-**ViewModels:**
-
-- Use `updateState`, `updateStateWith`, and `updateWith` utilities
-- Handle UI logic and state management
-- Convert to Screen Data
-
-**UI Components:**
-
-- Use `StatefulComposable` for consistent loading/error handling
-- Keep composables pure and state-driven
-- Separate route from screen implementation
-
-> [!IMPORTANT]
-> Always follow the unidirectional data flow pattern: UI Events → ViewModel → Repository → Data
-> Sources → Back to UI through StateFlow.
-
----
+Data sources are bound the same way, one `@Binds` per interface, in `core/room/.../di/DataSourceModule.kt`
+and `core/network/.../di/DataSourceModule.kt`. ViewModels need no manual wiring — `@HiltViewModel`
+(or `@HiltViewModel(assistedFactory = ...)` for `ItemViewModel`) is enough.
 
 ## Testing
 
-> [!NOTE]
-> Testing infrastructure is upcoming. The template doesn't currently include test examples, but you
-> should add tests for production apps.
+- `core/room/src/test/kotlin/dev/atick/core/room/data/JetpackDaoTest.kt` — a Robolectric test
+  against a real in-memory database, pinning down the sync-metadata semantics (`deleted`,
+  `needsSync`) for this exact entity.
+- `core/testing/src/main/kotlin/dev/atick/core/testing/rule/MainDispatcherRule.kt` — swaps
+  `Dispatchers.Main` for a test dispatcher; required by any ViewModel test that touches
+  `updateStateWith`/`updateWith`.
+- `core/testing/src/main/kotlin/dev/atick/core/testing/data/` — fake data sources
+  (`FakeAuthDataSource`, `FakeUserPreferencesDataSource`) to inject in place of the real ones.
 
-Remember to add tests for your new feature:
+## Further reading
 
-**Data Source Tests** - Test IO operations
-
-**Repository Tests** - Test business logic
-
-**ViewModel Tests** - Test state management
-
-**UI Tests** - Test composables
-
-**Integration Tests** - Test full feature flow
-
----
-
-## Further Reading
-
-- [Architecture Overview](architecture.md) - Understand the app's architecture
-- [Design Philosophy](philosophy.md) - Learn about design principles
-- [State Management](state-management.md) - Deep dive into UiState patterns
-- [Data Flow](data-flow.md) - Understand data flow patterns
-- [Navigation](navigation.md) - Type-safe navigation guide
-- [Dependency Injection](dependency-injection.md) - Complete DI guide
-- [Firebase Setup Guide](firebase.md) - Add Firebase to your app
-- [Dependency Management](dependency.md) - Version catalogs and configurations
+- [Architecture](architecture.md) — where each of these layers sits in the module graph
+- [State Management](state-management.md) — how `UiState` and its update functions work
+- [Navigation](navigation.md) — the full Navigation 3 model, including assisted-injected ViewModels
+- [Components](components.md) — the `core:ui` building blocks used in `HomeScreen`/`ItemScreen`
+- [Dependency Injection](dependency-injection.md) — `@Binds` vs `@Provides`, module scoping
+- [Data Module](../data/README.md) — repository patterns beyond this walkthrough
+- [Firebase Setup](firebase.md) — configuring the Firestore backend this feature syncs with
