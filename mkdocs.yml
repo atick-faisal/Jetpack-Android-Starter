@@ -51,6 +51,7 @@ markdown_extensions:
   - pymdownx.superfences
   - pymdownx.details
   - admonition
+  - md_in_html
 
 nav:
   - Getting Started: getting-started.md

@@ -142,5 +142,5 @@ throw uncaught) from a debug build and check the Crashlytics console a few minut
 - **[Troubleshooting](troubleshooting.md)** — Firebase setup and runtime symptom → fix entries
 - **[Build & Tooling](build-and-tooling.md)** — `FirebaseConventionPlugin`, CI secrets
 - **[Data](data.md)** — the two-way sync pattern Firestore participates in
-- **[firebase:auth](../firebase/auth/README.md)**, **[firebase:firestore](../firebase/firestore/README.md)**,
-  **[firebase:analytics](../firebase/analytics/README.md)** — module references
+- **[firebase:auth](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/main/firebase/auth/README.md)**, **[firebase:firestore](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/main/firebase/firestore/README.md)**,
+  **[firebase:analytics](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/main/firebase/analytics/README.md)** — module references

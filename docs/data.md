@@ -283,4 +283,4 @@ sequenceDiagram
 - [Architecture](architecture.md) — the two-layer design this repository pattern fits into
 - [State Management](state-management.md) — how a repository's `Result<T>` becomes a `UiState`
 - [Guide](guide.md) — the full `home` feature walkthrough, repository included
-- [Sync module](../sync/README.md) — `SyncManager`, `SyncWorker`, and `WorkManager` constraints
+- [Sync module](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/main/sync/README.md) — `SyncManager`, `SyncWorker`, and `WorkManager` constraints

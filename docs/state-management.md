@@ -223,4 +223,4 @@ error-reset behavior described above — without needing a real `ViewModel` subc
 - [Navigation](navigation.md) — how `OneTimeEvent` carries navigation events like `ItemViewModel`'s
   `navigateBack`
 - [Guide](guide.md) — building a new feature's ViewModel and screen data from scratch
-- [Core UI Module](../core/ui/README.md) — the rest of `core/ui`'s components and utilities
+- [Core UI Module](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/main/core/ui/README.md) — the rest of `core/ui`'s components and utilities
