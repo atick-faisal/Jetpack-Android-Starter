@@ -73,12 +73,12 @@ Rewrites:
 
 New (A9):
 
-- [ ] `core/navigation/README.md` — highest value; the Nav3 model
-- [ ] `core/testing/README.md` — `MainDispatcherRule`, the fakes, and how `AndroidTest.kt` wires test deps into every module
-- [ ] `lint/README.md` — the two checks and how `lintPublish` ships them to consumers
-- [ ] `benchmarks/README.md` — baseline profile generation and startup benchmark
+- [x] `core/navigation/README.md` — highest value; the Nav3 model — verified: 35 lines; `Navigator`/`NavigationState`/`rememberDefaultEntryDecorators` spot-checked against source; links to `docs/navigation.md` rather than restating it
+- [x] `core/testing/README.md` — `MainDispatcherRule`, the fakes, and their real (opt-in, not automatic) wiring — verified: 37 lines; corrected the task brief's premise — `core:testing` is a manual `testImplementation` in exactly three modules (`data`, `core/ui`, `feature/settings`, confirmed by grep), not wired into every module; `AndroidTest.kt`'s generic Robolectric/Turbine/Truth stack is what's universal, and that distinction is already correctly stated in `docs/architecture.md#testing`
+- [x] `lint/README.md` — the two checks and how `lintPublish` ships them to consumers — verified: 30 lines; `TestMethodNameDetector` (WARNING, flags `test`-prefixed `@Test` methods) added alongside the already-documented `DesignSystemDetector` — this module doesn't apply the Dokka plugin, so its README isn't Dokka input, kept for the same four-section consistency anyway
+- [x] `benchmarks/README.md` — baseline profile generation and startup benchmark — verified: 35 lines; task names cross-checked against `docs/build-and-tooling.md`'s own dry-run-verified Gradle Managed Device findings (`:benchmarks:pixel6Api33BenchmarkReleaseAndroidTest`) rather than the slightly-wrong task name in `StartupBenchmark.kt`'s own KDoc comment
 
-**Accept:** `./gradlew dokkaGeneratePublicationHtml` passes; `grep -rn "networkBoundResource" .` returns nothing.
+**Accept:** `./gradlew dokkaGeneratePublicationHtml` passes — verified, BUILD SUCCESSFUL after all three Phase 3 commits; `grep -rn "networkBoundResource" .` returns nothing — verified across all 19 module READMEs.
 
 ## Phase 4 — Root files
 
