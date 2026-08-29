@@ -15,7 +15,10 @@
  */
 
 @file:Suppress("ktlint:compose:compositionlocal-allowlist")
-// TODO: Fix issues with composition local lint rules
+// io.nlopez.compose.rules' compositionlocal-allowlist check (gradle/init.gradle.kts) flags any
+// CompositionLocal not named in its allowlist, to keep ad-hoc CompositionLocals from
+// proliferating unchecked. The real fix is a one-line .editorconfig addition:
+// compose_allowed_composition_locals = LocalBackgroundTheme,LocalGradientTheme,LocalTintTheme
 
 package dev.atick.core.ui.theme
 

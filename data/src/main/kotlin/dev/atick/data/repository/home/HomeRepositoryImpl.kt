@@ -58,7 +58,10 @@ internal class HomeRepositoryImpl @Inject constructor(
      * @return A [Flow] of a list of [Jetpack].
      */
     override fun getJetpacks(): Flow<List<Jetpack>> {
-        // Request a sync when fetching jetpacks
+        // 💡 This call sits above the flow{} builder, so it fires every time getJetpacks() is
+        // invoked -- at flow-construction time, not once per collection. A cold Flow normally
+        // defers everything inside its builder until collection, but this call isn't inside it,
+        // so even building the flow without ever collecting it still triggers a sync.
         // TODO: This should be done in a more efficient way
         syncManager.requestSync()
 

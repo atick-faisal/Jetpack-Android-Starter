@@ -64,6 +64,10 @@ internal fun Project.configureAndroidCompose(
     }
 
     extensions.configure<ComposeCompilerGradlePluginExtension> {
+        // 💡 flatMap + a nested provider{} is what makes this return an absent Provider when the
+        // Gradle property is missing or false, rather than a Provider wrapping null -- Gradle
+        // providers can't hold null, so "not set" can only be represented by never populating
+        // the provider at all.
         fun Provider<String>.onlyIfTrue() = flatMap { provider { it.takeIf(String::toBoolean) } }
 
         // isolated.rootProject keeps this compatible with Gradle's Isolated Projects mode,

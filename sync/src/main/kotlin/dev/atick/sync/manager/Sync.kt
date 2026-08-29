@@ -52,10 +52,8 @@ import timber.log.Timber
  * 3. **Periodic**: Can be configured with WorkManager's PeriodicWorkRequest (not implemented by default)
  *
  * ## Work Policy
- * Uses `ExistingWorkPolicy.KEEP` which means:
- * - If sync is already running, new requests are ignored
- * - If sync is pending, it won't be replaced
- * - Only one sync runs at a time to prevent conflicts
+ * Uses `ExistingWorkPolicy.KEEP`, so only one sync runs at a time; see the comment above the
+ * `enqueueUniqueWork` call in [initialize] for why a request dropped by this policy is safe.
  *
  * ## Constraints
  * The sync worker only runs when:
@@ -100,7 +98,8 @@ object Sync {
      *
      * ## Behavior
      * - **First Call**: Enqueues the sync worker
-     * - **Subsequent Calls**: Ignored due to `ExistingWorkPolicy.KEEP`
+     * - **Subsequent Calls**: Ignored; see the comment above the `enqueueUniqueWork` call below
+     *   for why that's safe
      * - **Network Required**: Sync only runs when network is connected
      * - **Expedited**: Runs as expedited work when possible for faster initial sync
      *
@@ -117,7 +116,12 @@ object Sync {
      */
     fun initialize(context: Context) {
         WorkManager.getInstance(context).apply {
-            // Run sync on app startup and ensure only one sync worker runs at any time
+            // 💡 A request dropped by ExistingWorkPolicy.KEEP is safe because every write path
+            // that calls SyncManager.requestSync() (HomeRepositoryImpl.createOrUpdateJetpack /
+            // markJetpackAsDeleted) has already marked its row needsSync = true in local storage
+            // before requesting sync, so the next sync run -- whenever it happens -- still picks
+            // up the change that triggered the dropped request. No data is lost by a dropped
+            // request; only its immediacy is.
             Timber.d("Sync: initialize")
             enqueueUniqueWork(
                 SYNC_WORK_NAME,

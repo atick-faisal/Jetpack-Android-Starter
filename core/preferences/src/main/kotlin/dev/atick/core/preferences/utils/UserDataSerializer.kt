@@ -80,6 +80,11 @@ object UserDataSerializer : Serializer<UserDataPreferences> {
 /**
  * Custom serializer for serializing and deserializing [DarkThemeConfigPreferences] enums.
  */
+// ℹ️ This serializer is not referenced by any @Serializable(with = ...) site or called directly
+// anywhere in this codebase -- it's unused, likely left as a worked example for adopters who
+// want a custom enum KSerializer. If copied, note valueOf() in deserialize() below throws
+// IllegalArgumentException on an unrecognized string, not SerializationException, so it would
+// escape UserDataSerializer.readFrom's catch block above, which only catches the latter.
 object DarkThemeConfigSerializer : KSerializer<DarkThemeConfigPreferences> {
     /**
      * The descriptor for the serialized form of [DarkThemeConfigPreferences].

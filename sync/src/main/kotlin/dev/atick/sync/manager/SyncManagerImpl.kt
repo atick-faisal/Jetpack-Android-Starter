@@ -147,8 +147,8 @@ internal class SyncManagerImpl @Inject constructor(
      *
      * ## Behavior
      * - **If no sync is running**: Enqueues and starts a new sync
-     * - **If sync is already running**: Request is ignored (no duplicate sync)
-     * - **If sync is pending**: Existing pending sync is kept (no replacement)
+     * - **If sync is already running or pending**: Request is ignored; see the comment above
+     *   the `enqueueUniqueWork` call in [Sync.initialize] for why that's safe
      * - **Network Required**: Sync only runs when network is available
      *
      * ## Example

@@ -75,6 +75,12 @@ android {
         release {
             isMinifyEnabled = true
             isShrinkResources = true
+            // ☠️ Falling back to the debug key is what lets a release build succeed on a fresh
+            // clone with no keystore, which is the point of a template -- but a release artifact
+            // signed with the debug key can never be upgraded once a real key is used, and the
+            // Play Console rejects a debug-signed upload outright. The println below is the only
+            // warning; there's no build failure, so this is easy to ship by accident. Generate a
+            // real keystore and keystore.properties before any release upload.
             signingConfig = if (keystorePropertiesFile.exists()) {
                 signingConfigs.getByName("release")
             } else {

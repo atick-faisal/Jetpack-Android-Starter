@@ -86,6 +86,10 @@ class SettingsViewModel @Inject constructor(
         _settingsUiState.updateWith { settingsRepository.signOut() }
     }
 
+    // ⚠️ Every locale except Arabic falls through to English here regardless of what
+    // generateLocaleConfig = true (app/build.gradle.kts) actually offers the system. Adding a
+    // new values-<lang> resource directory makes Android offer that language in Settings, but
+    // this when won't route to it until a matching branch is added here too.
     private fun getPreferredLanguage(): Language {
         val preferredLanguage = getPreferredLocale().language
         return when (preferredLanguage) {

@@ -93,29 +93,44 @@ New (A9):
 
 Prose-why style. Most items carry **no** marker — the marker column is the exception, not the default.
 
-| # | File | Must explain | Marker |
-|---|---|---|---|
-| C1 | `firebase/auth/.../AuthDataSourceImpl.kt:50` | What `CredentialManagerMisuse` flags, why it is suppressed class-wide, when to remove it. Model it on `app/lint.xml:20-29`. | ⚠️ |
-| C2 | `core/ui/.../StatefulComposable.kt:260-292, 362-382` | Context parameters as the `viewModelScope` mechanism; `if (value.loading) return` as a re-entrancy lock that drops concurrent actions; the `data` snapshot taken before `launch`; the synthesized exception at :278 | ❗ |
-| C3 | `core/ui/.../StatefulComposable.kt:101-105` | `getContentIfNotHandled()` mutates during composition; the `LaunchedEffect` key is the callback, not the error | ⚠️ |
-| C4 | `feature/home/.../HomeViewModel.kt:56-59` | `onStart` + `WhileSubscribed(5000)` re-subscription starts a new permanent collector; note it is the template's most-copied idiom | ⚠️ |
-| C5 | `sync/.../Sync.kt:124` | Add the missing **safety argument**: dropped requests are harmless because the worker drains all pending local changes. Simultaneously **cut** the three verbose Style B blocks at `Sync.kt:55-58`, `Sync.kt:103`, `SyncManagerImpl.kt:140` down to one. | 💡 |
-| C6 | `data/.../HomeRepositoryImpl.kt:60-65` | `requestSync()` at :63 is outside the `flow {}` at :65, so it fires at construction, not collection | 💡 |
-| C7 | `gradle/init.gradle.kts` | Why Spotless is an init script and not a plugin; that this is why `./gradlew tasks` omits `spotlessApply`; what the header regexes do | 💡 |
-| C8 | `app/build.gradle.kts:78-85` | Release silently falls back to the debug key; output is un-shippable and un-upgradable; the fallback exists so the template builds on a fresh clone | ☠️ |
-| C9 | `app/proguard-rules.pro:3-4` | The `{ *; }` breadth is deliberate-and-blunt, wider than the linked bug requires; note the overlap with the two consumer-rules files | ⚠️ |
-| C10 | `firebase/auth/consumer-rules.pro:1-4` | The `playservices` provider loads via `ServiceLoader`; R8 full mode strips it; symptom is a provider-not-found at runtime. Match the per-line style of `core/network/consumer-rules.pro`. | — |
-| C11 | `firebase/auth/.../AuthDataSourceImpl.kt:175,190` | Why `setFilterByAuthorizedAccounts` differs between sign-in and register, and that `true` is what makes a separate register path necessary | 💡 |
-| C12 | `feature/settings/.../SettingsViewModel.kt:90-93` | Every non-Arabic locale silently becomes English; coupled to `generateLocaleConfig` at `app/build.gradle.kts:100`; adding `values-fr` will not update this `when` | ⚠️ |
-| C13 | `core/ui/theme/{Background,Gradient,Tint}.kt:18` | Replace the three content-free TODOs: name the `io.nlopez.compose.rules` ruleset and the one-line `.editorconfig` fix. Also give `StatefulComposable.kt:80` a rationale (it is a state wrapper, not a layout node). | — |
-| C14 | `core/preferences/.../UserDataSerializer.kt:83-108` | State that it is an unreferenced example for adopters, or delete it; note the `valueOf` exception type escapes the `readFrom` catch | ℹ️ |
-| C15 | `build-logic/.../AndroidCompose.kt:67` | The `flatMap` + `provider {}` idiom returns an *absent* provider, which is the whole point | 💡 |
+| # | File | Must explain | Marker | Done |
+|---|---|---|---|---|
+| C1 | `firebase/auth/.../AuthDataSourceImpl.kt:50` | What `CredentialManagerMisuse` flags, why it is suppressed class-wide, when to remove it. Model it on `app/lint.xml:20-29`. | ⚠️ | [x] |
+| C2 | `core/ui/.../StatefulComposable.kt:260-292, 362-382` | Context parameters as the `viewModelScope` mechanism; `if (value.loading) return` as a re-entrancy lock that drops concurrent actions; the `data` snapshot taken before `launch`; the synthesized exception at :278 | ❗ | [x] |
+| C3 | `core/ui/.../StatefulComposable.kt:101-105` | `getContentIfNotHandled()` mutates during composition; the `LaunchedEffect` key is the callback, not the error | ⚠️ | [x] |
+| C4 | `feature/home/.../HomeViewModel.kt:56-59` | `onStart` + `WhileSubscribed(5000)` re-subscription starts a new permanent collector; note it is the template's most-copied idiom | ⚠️ | [x] |
+| C5 | `sync/.../Sync.kt:124` | Add the missing **safety argument**: dropped requests are harmless because the worker drains all pending local changes. Simultaneously **cut** the three verbose Style B blocks at `Sync.kt:55-58`, `Sync.kt:103`, `SyncManagerImpl.kt:140` down to one. | 💡 | [x] |
+| C6 | `data/.../HomeRepositoryImpl.kt:60-65` | `requestSync()` at :63 is outside the `flow {}` at :65, so it fires at construction, not collection | 💡 | [x] |
+| C7 | `gradle/init.gradle.kts` | Why Spotless is an init script and not a plugin; that this is why `./gradlew tasks` omits `spotlessApply`; what the header regexes do | 💡 | [x] |
+| C8 | `app/build.gradle.kts:78-85` | Release silently falls back to the debug key; output is un-shippable and un-upgradable; the fallback exists so the template builds on a fresh clone | ☠️ | [x] |
+| C9 | `app/proguard-rules.pro:3-4` | The `{ *; }` breadth is deliberate-and-blunt, wider than the linked bug requires; note the overlap with the two consumer-rules files | ⚠️ | [x] |
+| C10 | `firebase/auth/consumer-rules.pro:1-4` | The `playservices` provider loads via `ServiceLoader`; R8 full mode strips it; symptom is a provider-not-found at runtime. Match the per-line style of `core/network/consumer-rules.pro`. | — | [x] |
+| C11 | `firebase/auth/.../AuthDataSourceImpl.kt:175,190` | Why `setFilterByAuthorizedAccounts` differs between sign-in and register, and that `true` is what makes a separate register path necessary | 💡 | [x] |
+| C12 | `feature/settings/.../SettingsViewModel.kt:90-93` | Every non-Arabic locale silently becomes English; coupled to `generateLocaleConfig` at `app/build.gradle.kts:100`; adding `values-fr` will not update this `when` | ⚠️ | [x] |
+| C13 | `core/ui/theme/{Background,Gradient,Tint}.kt:18` | Replace the three content-free TODOs: name the `io.nlopez.compose.rules` ruleset and the one-line `.editorconfig` fix. Also give `StatefulComposable.kt:80` a rationale (it is a state wrapper, not a layout node). | — | [x] |
+| C14 | `core/preferences/.../UserDataSerializer.kt:83-108` | State that it is an unreferenced example for adopters, or delete it; note the `valueOf` exception type escapes the `readFrom` catch | ℹ️ | [x] |
+| C15 | `build-logic/.../AndroidCompose.kt:67` | The `flatMap` + `provider {}` idiom returns an *absent* provider, which is the whole point | 💡 | [x] |
 
 Second tier, if time allows: `settings.gradle.kts:20-29`, `core/navigation/NavigationState.kt:78,89`,
 `core/network/.../NetworkUtilsImpl.kt:43-93`, `core/ui/.../ActivityExtensions.kt:337-349`,
-`sync/.../SyncWorker.kt:150-165, 202`.
+`sync/.../SyncWorker.kt:150-165, 202`. **Deferred** — not done in this pass, per this section's own
+"if time allows" scoping; left for a future task.
 
 **Accept:** marker count within budget; `./gradlew spotlessCheck --init-script gradle/init.gradle.kts --no-configuration-cache` passes.
+— verified: all 15 primary sites (C1-C15) done; line numbers had drifted slightly from this
+table's original citations (re-verified against the current tree before editing, e.g. C1's
+`setFilterByAuthorizedAccounts` calls are at :175/:190 exactly as cited, C2's functions span
+:268-300/:378-396 post-edit) — no site was missing or already-fixed. C5's three duplicate
+`ExistingWorkPolicy.KEEP` explanations were trimmed to one full comment (at the `enqueueUniqueWork`
+call in `Sync.kt`, now carrying the missing safety argument) plus two short KDoc pointers, rather
+than three restatements of the same mechanism. `grep -c` for the five emoji markers across
+`*.kt`+`*.kts` → 13 total (11 in `.kt`, 2 in `.kts`: `app/build.gradle.kts` ☠️, `gradle/init.gradle.kts`
+💡) — within the repo-wide 25-35 budget, using less of it than the ceiling since the second-tier
+sites are deferred. `./gradlew spotlessCheck --init-script gradle/init.gradle.kts
+--no-configuration-cache` passes (one round of `spotlessApply` was needed first: ktlint's
+standard rule requires a blank line before a comment block that follows a property declaration —
+applied automatically, comment text unaffected). `./gradlew build` and `./gradlew test` both pass
+— comment-only changes, no behavior touched.
 
 ## Phase 6 — Verify
 

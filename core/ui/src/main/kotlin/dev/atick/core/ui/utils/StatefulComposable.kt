@@ -77,6 +77,7 @@ import kotlinx.coroutines.launch
  * @see updateStateWith
  * @see updateWith
  */
+// This is a state/error wrapper, not a layout node, so it has nothing to apply a Modifier to.
 @Suppress("ktlint:compose:modifier-missing-check")
 @Composable
 fun <T : Any> StatefulComposable(
@@ -98,6 +99,13 @@ fun <T : Any> StatefulComposable(
         }
     }
 
+    // ⚠️ getContentIfNotHandled() flips OneTimeEvent's internal AtomicBoolean the instant it's
+    // called, during composition -- not inside a side-effect. If Compose invokes this composable
+    // body but discards that composition (which recomposition can do), the flag is already set
+    // and the real, committed composition reads null: the error is lost, not delayed. The
+    // LaunchedEffect key below is deliberately onShowSnackbar, not the error itself -- keying on
+    // the error object would risk re-triggering the effect if the same instance were ever read
+    // twice, whereas keying on the stable callback fires this exactly once per non-null read here.
     state.error.getContentIfNotHandled()?.let { error ->
         LaunchedEffect(onShowSnackbar) {
             onShowSnackbar(error.message.toString(), SnackbarAction.REPORT, error)
@@ -257,6 +265,12 @@ inline fun <T : Any> MutableStateFlow<UiState<T>>.updateState(update: T.() -> T)
  * @see updateWith for async operations that don't return new data
  * @see suspendRunCatching for wrapping repository operations in Result
  */
+// ❗ context(viewModel: ViewModel) is what supplies viewModelScope here with no constructor
+// parameter. The loading check below is a re-entrancy lock, not an optimization -- a second
+// call while one is already in flight is silently dropped, not queued. value.data (read a few
+// lines down, inside the launched coroutine) is captured once when the coroutine starts, so the
+// eventual copy(data = ...) on success is based on that snapshot, not a fresh read: a concurrent
+// synchronous change to data while this operation is in flight is overwritten once it completes.
 context(viewModel: ViewModel) inline fun <reified T : Any> MutableStateFlow<UiState<T>>.updateStateWith(
     crossinline operation: suspend T.() -> Result<T>,
 ) {
@@ -271,6 +285,8 @@ context(viewModel: ViewModel) inline fun <reified T : Any> MutableStateFlow<UiSt
             if (data != null) {
                 update { it.copy(data = data, loading = false) }
             } else {
+                // Result.success(null) has no sensible meaning for a non-null T, so it's
+                // promoted to a real, visible error instead of silently doing nothing.
                 update {
                     it.copy(
                         loading = false,
@@ -359,6 +375,8 @@ context(viewModel: ViewModel) inline fun <reified T : Any> MutableStateFlow<UiSt
  * @see updateStateWith for async operations that return new data
  * @see suspendRunCatching for wrapping repository operations in Result
  */
+// Same re-entrancy guard and context(viewModel) mechanism as updateStateWith above; there's no
+// data payload here, so no snapshot-before-launch subtlety applies.
 context(viewModel: ViewModel) inline fun <T : Any> MutableStateFlow<UiState<T>>.updateWith(
     crossinline operation: suspend T.() -> Result<Unit>,
 ) {
