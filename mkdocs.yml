@@ -59,7 +59,7 @@ nav:
   - State Management: state-management.md
   - Navigation: navigation.md
   - Components: components.md
-  - Dependency Injection: dependency-injection.md
+  - Data: data.md
   - Firebase: firebase.md
   - Troubleshooting: troubleshooting.md
   - 📚 API Reference: api/index.html

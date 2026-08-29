@@ -160,8 +160,8 @@ The project uses Hilt for dependency injection:
 - **Scoping**: Primarily uses singleton scope for repositories and data sources
 - **Testing**: Enables easy dependency replacement for testing
 
-See [Dependency Injection](dependency-injection.md) for module organization, scoping, and injection
-patterns.
+See [Data Layer](data.md) for the `@Binds`/`@IoDispatcher`/`@AssistedInject` patterns repositories
+and the sync worker use.
 
 ## Data Flow
 
@@ -255,7 +255,6 @@ The architecture is intentionally simple but allows for growth when needed.
 ## Further Reading
 
 - [State Management](state-management.md) — deep dive into the `UiState` pattern
-- [Dependency Injection](dependency-injection.md) — complete guide to Hilt setup and patterns
+- [Data Layer](data.md) — repository pattern, two-way sync, and the Hilt wiring behind them
 - [Adding Features](guide.md) — step-by-step guide to implementing new features
-- [Data Layer Module](../data/README.md) — repository patterns and implementations
 - [Core UI Module](../core/ui/README.md) — state management utilities and UI components
