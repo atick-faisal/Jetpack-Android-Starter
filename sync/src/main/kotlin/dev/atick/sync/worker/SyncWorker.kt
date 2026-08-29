@@ -176,9 +176,16 @@ class SyncWorker @AssistedInject constructor(
         /**
          * Maximum number of retry attempts for failed sync operations.
          *
-         * If sync fails (due to network issues, server errors, etc.), WorkManager
-         * will retry up to this many times before giving up. Retries use exponential
-         * backoff (default: 10s, 20s, 40s).
+         * If sync fails (due to network issues, server errors, etc.), WorkManager will retry up
+         * to this many times before [doWork] gives up and returns `Result.failure()`.
+         *
+         * [startUpSyncWork] never calls `setBackoffCriteria`, so the spacing between those
+         * retries is WorkManager's own default: `BackoffPolicy.EXPONENTIAL` over
+         * `WorkRequest.DEFAULT_BACKOFF_DELAY_MILLIS` (30 seconds), doubled per attempt and
+         * capped at `WorkRequest.MAX_BACKOFF_MILLIS`. That works out to roughly 30s, 60s and
+         * 120s here, not the 10s floor — `WorkRequest.MIN_BACKOFF_MILLIS` is the lower bound a
+         * custom delay is clamped to, not the value used when none is set. Add
+         * `setBackoffCriteria(...)` to [startUpSyncWork] to choose a different schedule.
          */
         const val TOTAL_SYNC_ATTEMPTS = 3
 
