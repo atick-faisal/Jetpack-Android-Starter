@@ -27,9 +27,9 @@ data class UserDataPreferences(
 
 - One DataStore, one data class — there's no per-key preference API here, every write goes through
   `updateData { userData -> userData.copy(...) }` on the whole object.
-- `UserDataSerializer.kt` also defines `DarkThemeConfigSerializer`, which nothing references — its
-  `readFrom` throws `IllegalArgumentException` from `valueOf()` on bad input, not the
-  `SerializationException` the `catch` block expects.
+- `UserDataSerializer.readFrom` only catches `SerializationException`. A custom serializer added
+  here must throw that, not something like `IllegalArgumentException` from `enumValueOf()`, or a
+  corrupt file will escape the `catch` and propagate instead of falling back to `defaultValue`.
 
 ## Related Documentation
 
