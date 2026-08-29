@@ -60,6 +60,7 @@ nav:
   - Navigation: navigation.md
   - Components: components.md
   - Data: data.md
+  - Build & Tooling: build-and-tooling.md
   - Firebase: firebase.md
   - Troubleshooting: troubleshooting.md
   - 📚 API Reference: api/index.html
