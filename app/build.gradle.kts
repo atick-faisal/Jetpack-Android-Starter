@@ -122,14 +122,10 @@ android {
 // - https://github.com/android/gradle-recipes (variantOutput recipe)
 // - https://developer.android.com/build/extend-agp
 // Tracking: GitHub Issue #579
-androidComponents {
-    onVariants { variant ->
-        // Placeholder for future custom filename logic
-        variant.outputs.forEach { output ->
-            output.versionName.set("${variant.outputs.first().versionName.getOrElse("1.0.0")}")
-        }
-    }
-}
+//
+// An androidComponents { onVariants { ... } } block belongs here when that lands. There was one,
+// but it only read each output's versionName and set the same value straight back, so it did
+// nothing except look like configuration that mattered. Removed rather than left as a placeholder.
 
 dependencies {
     // Applies the baseline profile at install so ART can compile the startup path ahead of time.
