@@ -83,6 +83,8 @@ class ItemViewModel @AssistedInject constructor(
     }
 
     private val _itemUiState = MutableStateFlow(UiState(ItemScreenData()))
+
+    // Same re-subscription behavior as HomeViewModel.homeUiState -- see the comment there.
     val itemUiState = _itemUiState
         .onStart { getJetpack() }
         .stateInDelayed(UiState(ItemScreenData()), viewModelScope)
