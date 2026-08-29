@@ -172,7 +172,11 @@ class ItemViewModel @AssistedInject constructor(
 
     fun createOrUpdateJetpack() {
         _itemUiState.updateStateWith {
-            val jetpack = Jetpack(id = jetpackId, name = jetpackName.trim(), price = jetpackPrice)
+            val jetpack = Jetpack(
+                id = jetpackId,
+                name = jetpackName.trim(),
+                price = jetpackPrice.trim().toDoubleOrNull() ?: 0.0,
+            )
             homeRepository.createOrUpdateJetpack(jetpack)
             Result.success(copy(navigateBack = OneTimeEvent(true)))
         }

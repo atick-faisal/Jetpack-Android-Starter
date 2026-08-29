@@ -93,9 +93,11 @@ class ItemViewModel @AssistedInject constructor(
         _itemUiState.updateState { copy(jetpackName = name) }
     }
 
+    // ⚠️ The field keeps what was typed, not a parsed number. Rejecting unparseable input here
+    // would drop the keystroke and leave the text field showing the last value that did parse,
+    // so clearing it or typing "1." would freeze it. Parsing belongs at submit, below.
     fun updatePrice(priceString: String) {
-        val price = priceString.trim().toDoubleOrNull() ?: return
-        _itemUiState.updateState { copy(jetpackPrice = price) }
+        _itemUiState.updateState { copy(jetpackPrice = priceString) }
     }
 
     fun createOrUpdateJetpack() {
@@ -103,7 +105,7 @@ class ItemViewModel @AssistedInject constructor(
             val jetpack = Jetpack(
                 id = jetpackId,
                 name = jetpackName.trim(),
-                price = jetpackPrice,
+                price = jetpackPrice.trim().toDoubleOrNull() ?: 0.0,
             )
             homeRepository.createOrUpdateJetpack(jetpack)
             Result.success(copy(navigateBack = OneTimeEvent(true)))
@@ -118,7 +120,7 @@ class ItemViewModel @AssistedInject constructor(
                         copy(
                             jetpackId = jetpack.id,
                             jetpackName = jetpack.name,
-                            jetpackPrice = jetpack.price,
+                            jetpackPrice = jetpack.price.toString(),
                         )
                     }
                 }
@@ -147,7 +149,8 @@ class ItemViewModel @AssistedInject constructor(
  *
  * @param jetpackId Unique identifier for the Jetpack item (UUID for new items).
  * @param jetpackName Display name of the Jetpack library (e.g., "Compose", "Room").
- * @param jetpackPrice Price value for the Jetpack library.
+ * @param jetpackPrice Price exactly as typed, kept as text so a partially entered or cleared
+ *                     value survives; parsed to a [Double] only when the item is saved.
  * @param navigateBack One-time event to trigger back navigation after successful save.
  *
  * @see ItemViewModel ViewModel that manages this screen data
@@ -159,6 +162,6 @@ class ItemViewModel @AssistedInject constructor(
 data class ItemScreenData(
     val jetpackId: String = UUID.randomUUID().toString(),
     val jetpackName: String = "",
-    val jetpackPrice: Double = 0.0,
+    val jetpackPrice: String = "",
     val navigateBack: OneTimeEvent<Boolean> = OneTimeEvent(false),
 )

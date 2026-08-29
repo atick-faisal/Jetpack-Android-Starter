@@ -101,7 +101,7 @@ internal fun ItemScreen(
 @Composable
 private fun ItemScreen(
     name: String,
-    price: Double,
+    price: String,
     onUpdateName: (String) -> Unit,
     onUpdatePrice: (String) -> Unit,
     onSaveClick: () -> Unit,
@@ -137,7 +137,7 @@ private fun ItemScreen(
 @Composable
 private fun EditItemForm(
     name: String,
-    price: Double,
+    price: String,
     onUpdateName: (String) -> Unit,
     onUpdatePrice: (String) -> Unit,
 ) {
@@ -160,7 +160,7 @@ private fun EditItemForm(
         )
         Spacer(modifier = Modifier.height(16.dp))
         JetpackTextField(
-            value = price.toString(),
+            value = price,
             onValueChange = onUpdatePrice,
             label = { Text(text = stringResource(id = R.string.feature_home_price)) },
             leadingIcon = {
@@ -180,7 +180,7 @@ private fun EditItemForm(
 private fun ItemScreenPreview() {
     ItemScreen(
         name = "Jetpack",
-        price = 100.0,
+        price = "100.0",
         onUpdateName = {},
         onUpdatePrice = {},
         onSaveClick = {},
