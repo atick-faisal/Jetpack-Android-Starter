@@ -90,10 +90,15 @@ fun updateName(name: String) {
 }
 
 fun updatePrice(priceString: String) {
-    val price = priceString.trim().toDoubleOrNull() ?: return
-    _itemUiState.updateState { copy(jetpackPrice = price) }
+    _itemUiState.updateState { copy(jetpackPrice = priceString) }
 }
 ```
+
+> [!IMPORTANT]
+> A text field's state holds what the user typed, not a parsed value. `jetpackPrice` is a `String`
+> and is parsed once, at save. Validating inside the update — `toDoubleOrNull() ?: return` — drops
+> the keystroke and leaves the field showing the last value that parsed, so clearing it or typing
+> `1.` freezes it.
 
 ### `updateStateWith`
 
@@ -101,7 +106,11 @@ fun updatePrice(priceString: String) {
 // feature/home/src/main/kotlin/dev/atick/feature/home/ui/item/ItemViewModel.kt
 fun createOrUpdateJetpack() {
     _itemUiState.updateStateWith {
-        val jetpack = Jetpack(id = jetpackId, name = jetpackName.trim(), price = jetpackPrice)
+        val jetpack = Jetpack(
+            id = jetpackId,
+            name = jetpackName.trim(),
+            price = jetpackPrice.trim().toDoubleOrNull() ?: 0.0,
+        )
         homeRepository.createOrUpdateJetpack(jetpack)
         Result.success(copy(navigateBack = OneTimeEvent(true)))
     }
