@@ -16,85 +16,28 @@
 
 package dev.atick.firebase.firestore.model
 
-import kotlinx.serialization.Serializable
+import com.google.firebase.Timestamp
+import com.google.firebase.firestore.ServerTimestamp
 import java.util.UUID
 
 /**
- * Represents a Jetpack item stored in Firebase Firestore with sync metadata.
+ * A Jetpack item as it is stored in Firestore, at
+ * `/dev.atick.jetpack/{userId}/jetpacks/{jetpackId}`.
  *
- * This model demonstrates the offline-first sync pattern used in this template. It includes
- * metadata fields ([lastUpdated], [lastSynced], [deleted]) that enable bidirectional
- * synchronization between local Room database and remote Firestore.
+ * Two clocks appear on this document and they are not interchangeable. [lastUpdated] and
+ * [lastSynced] are stamped by whichever device wrote the row, so they are only meaningful for
+ * display. [serverUpdatedAt] is assigned by Firestore itself and is the only field ordered
+ * consistently across devices, which is why it — and nothing else — drives the pull cursor.
  *
- * ## Sync Pattern
- * - **Pull**: Query Firestore for items where `lastUpdated > lastSyncTimestamp`
- * - **Push**: Upload local items to Firestore based on their [SyncAction]
- * - **Soft Delete**: Use [deleted] flag instead of hard deletion for sync safety
- *
- * ## Field Initialization
- * All properties must have default values to work with Firestore's automatic serialization.
- * This is a Firestore requirement for data classes used as document models.
- *
- * ## Usage Example
- * ```kotlin
- * // Create new item
- * val jetpack = FirebaseJetpack(
- *     name = "Lightning Bolt",
- *     price = 99.99,
- *     userId = currentUser.id,
- *     lastUpdated = System.currentTimeMillis()
- * )
- *
- * // Mark for deletion (soft delete)
- * val deletedJetpack = jetpack.copy(
- *     deleted = true,
- *     lastUpdated = System.currentTimeMillis()
- * )
- * ```
- *
- * ## Conversion to/from Room Entity
- * ```kotlin
- * // Extension in repository layer
- * fun FirebaseJetpack.toEntity() = JetpackEntity(
- *     id = id,
- *     name = name,
- *     price = price,
- *     userId = userId,
- *     lastUpdated = lastUpdated,
- *     lastSynced = lastSynced,
- *     deleted = deleted,
- *     syncAction = SyncAction.SYNCED
- * )
- *
- * fun JetpackEntity.toFirebase() = FirebaseJetpack(
- *     id = id,
- *     name = name,
- *     price = price,
- *     userId = userId,
- *     lastUpdated = lastUpdated,
- *     lastSynced = lastSynced,
- *     deleted = deleted
- * )
- * ```
- *
- * @property id Unique identifier of the Jetpack (UUID). This is the primary key used across
- *              both Firestore and Room databases.
- * @property name Jetpack's display name.
- * @property price Jetpack's price in the user's currency.
- * @property userId User's unique identifier (Firebase Auth UID). Used for user-specific queries
- *                  and Firestore security rules.
- * @property lastUpdated Timestamp in milliseconds (epoch time) of the last modification to this item.
- *                       Updated whenever the item is created, modified, or soft-deleted. Used for
- *                       incremental sync to pull only changed items.
- * @property lastSynced Timestamp in milliseconds (epoch time) of the last successful sync with Firestore.
- *                      Updated after successful push/pull operations.
- * @property deleted Soft delete flag. When true, the item is considered deleted but remains in
- *                   both Firestore and Room for sync purposes. Hard deletion happens after
- *                   confirming all clients have synchronized the deletion.
+ * @property id Unique identifier, shared with the Room entity and used as the document ID.
+ * @property name Display name.
+ * @property price Price in the user's currency.
+ * @property userId Firebase Auth UID of the owner. Also the parent document in the path above.
+ * @property lastUpdated Writing device's clock, in milliseconds, when the row was last edited.
+ * @property lastSynced Writing device's clock, in milliseconds, when it last pushed the row.
+ * @property deleted Soft delete flag.
  * @see dev.atick.core.room.model.JetpackEntity
- * @see dev.atick.core.room.model.SyncAction
  */
-@Serializable
 data class FirebaseJetpack(
     // Every property has to be initialized for Firestore serialization.
     // https://stackoverflow.com/a/67298049/12737399
@@ -105,4 +48,48 @@ data class FirebaseJetpack(
     val lastUpdated: Long = 0L,
     val lastSynced: Long = 0L,
     val deleted: Boolean = false,
-)
+) {
+    // The server's own write time, and deliberately not a constructor parameter. :data builds
+    // FirebaseJetpack with default arguments, and a Timestamp in the constructor would put
+    // com.google.firebase.Timestamp on :data's compile classpath -- which it does not have, because
+    // this module declares the SDK with implementation rather than api. Keeping the property in the
+    // body lets :data stay blind to the type and read the value through serverUpdatedAtNanos().
+    //
+    // Left null on every write: CustomClassMapper substitutes FieldValue.serverTimestamp() for a
+    // null @ServerTimestamp property, so the value below is only ever what the server assigned. The
+    // @get: use-site is the one the SDK documents for Kotlin; the annotation is read on write only
+    // and ignored when reading documents back.
+    @get:ServerTimestamp
+    var serverUpdatedAt: Timestamp? = null
+}
+
+/**
+ * [FirebaseJetpack.serverUpdatedAt] as nanoseconds since the epoch, or `0` for a document the server
+ * has not stamped yet.
+ *
+ * 💡 Nanoseconds rather than milliseconds because this value is stored and replayed as a sync
+ * cursor. Firestore timestamps carry nanosecond precision, so a cursor truncated to milliseconds
+ * sits *below* the timestamp of the newest document it just ingested, and that document is pulled
+ * again on every later sync, forever. A [Long] holds nanoseconds since the epoch until the year
+ * 2262.
+ *
+ * @return Nanoseconds since the epoch.
+ */
+fun FirebaseJetpack.serverUpdatedAtNanos(): Long {
+    val timestamp = serverUpdatedAt ?: return 0L
+    return timestamp.seconds * NANOS_PER_SECOND + timestamp.nanoseconds
+}
+
+/**
+ * Converts nanoseconds since the epoch back into the [Timestamp] a Firestore query expects.
+ *
+ * @return The equivalent [Timestamp].
+ */
+internal fun Long.asFirestoreTimestamp(): Timestamp {
+    return Timestamp(
+        floorDiv(NANOS_PER_SECOND),
+        mod(NANOS_PER_SECOND).toInt(),
+    )
+}
+
+private const val NANOS_PER_SECOND = 1_000_000_000L

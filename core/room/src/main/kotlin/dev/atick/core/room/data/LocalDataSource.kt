@@ -41,6 +41,7 @@ import kotlinx.coroutines.flow.Flow
  * The data source tracks sync state using:
  * - `lastUpdated`: When the entity was last modified locally
  * - `lastSynced`: When the entity was last synced with remote
+ * - `serverUpdatedAtNanos`: When the *remote server* wrote the entity; the pull cursor
  * - `needsSync`: Flag indicating sync is required
  * - `syncAction`: Action to perform during sync (UPSERT, DELETE, NONE)
  *
@@ -71,8 +72,8 @@ import kotlinx.coroutines.flow.Flow
  *
  *     // Sync remote changes to local
  *     suspend fun syncRemoteChanges(userId: String): Result<Unit> = suspendRunCatching {
- *         val lastUpdate = localDataSource.getLatestUpdateTimestamp(userId)
- *         val remoteChanges = networkDataSource.getChanges(since = lastUpdate)
+ *         val cursor = localDataSource.getSyncCursor(userId)
+ *         val remoteChanges = networkDataSource.getChanges(since = cursor)
  *         localDataSource.upsertJetpacks(remoteChanges.map { it.toEntity() })
  *     }
  * }
@@ -158,10 +159,10 @@ interface LocalDataSource {
     suspend fun markAsSynced(id: String, timestamp: Long = System.currentTimeMillis())
 
     /**
-     * Gets the most recent lastUpdated timestamp for a specific user's jetpacks.
+     * Gets the newest remote server timestamp this device has already stored, to resume a pull from.
      *
      * @param userId The ID of the user whose jetpacks to check.
-     * @return The most recent lastUpdated timestamp for that user's jetpacks.
+     * @return The newest server timestamp in nanoseconds, or 0 if the user has no jetpacks.
      */
-    suspend fun getLatestUpdateTimestamp(userId: String): Long
+    suspend fun getSyncCursor(userId: String): Long
 }

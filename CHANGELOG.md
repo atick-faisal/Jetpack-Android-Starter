@@ -25,6 +25,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Bump Android Gradle Plugin to 9.3.1
 
+### Fixed
+
+- Order sync pulls by a Firestore server timestamp instead of `System.currentTimeMillis()`.
+  The pull cursor was the largest local `lastUpdated`, a device clock, so a single device running
+  fast moved every other device's cursor into the future and records written by correctly-clocked
+  devices were dropped from every later pull, silently and permanently. `FirebaseJetpack` now
+  carries a server-assigned `serverUpdatedAt`, stored locally as `JetpackEntity.serverUpdatedAtNanos`
+  and read back by `JetpackDao.getSyncCursor`. Room schema 1 → 2, handled by the existing
+  destructive-migration fallback. The Firestore security rules in `docs/firebase.md` gained the
+  field, pinned to `request.time` so a client cannot forge the ordering.
+
 ## [1.3.0] - 2026-07-24
 
 ### Added

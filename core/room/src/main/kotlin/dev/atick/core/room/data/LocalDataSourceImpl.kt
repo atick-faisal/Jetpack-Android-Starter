@@ -130,13 +130,13 @@ internal class LocalDataSourceImpl @Inject constructor(
     }
 
     /**
-     * Gets the most recent lastUpdated timestamp for a specific user's jetpacks.
+     * Gets the newest remote server timestamp this device has already stored, to resume a pull from.
      *
      * @param userId The ID of the user whose jetpacks to check.
-     * @return The most recent lastUpdated timestamp for that user's jetpacks, or 0 if no jetpacks exist.
+     * @return The newest server timestamp in nanoseconds, or 0 if the user has no jetpacks.
      */
-    override suspend fun getLatestUpdateTimestamp(userId: String): Long =
+    override suspend fun getSyncCursor(userId: String): Long =
         withContext(ioDispatcher) {
-            jetpackDao.getLatestUpdateTimestamp(userId) ?: 0
+            jetpackDao.getSyncCursor(userId) ?: 0
         }
 }

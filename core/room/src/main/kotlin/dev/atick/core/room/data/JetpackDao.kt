@@ -125,12 +125,18 @@ interface JetpackDao {
     suspend fun markAsSynced(id: String, timestamp: Long = System.currentTimeMillis())
 
     /**
-     * Gets the most recent lastUpdated timestamp for a specific user's jetpacks.
-     * This can be used as a reference point for fetching only newer items from remote.
+     * Gets the newest remote server timestamp this device has already stored, which is the cursor
+     * the next pull resumes from.
+     *
+     * ⚠️ This reads `serverUpdatedAtNanos` and never `lastUpdated`. `lastUpdated` is stamped by
+     * whichever device edited the row, so using it here makes the cursor jump to the reading of the
+     * furthest-ahead clock in the fleet, and every record written by a device behind that clock is
+     * then skipped forever with no error. Soft-deleted rows count too: their server timestamp has
+     * still been consumed, and excluding them would rewind the cursor.
      *
      * @param userId The ID of the user whose jetpacks to check.
-     * @return The most recent lastUpdated timestamp for that user's jetpacks, or 0 if no jetpacks exist.
+     * @return The newest server timestamp in nanoseconds, or null if the user has no jetpacks.
      */
-    @Query("SELECT MAX(lastUpdated) FROM jetpacks WHERE userId = :userId AND deleted = 0")
-    suspend fun getLatestUpdateTimestamp(userId: String): Long?
+    @Query("SELECT MAX(serverUpdatedAtNanos) FROM jetpacks WHERE userId = :userId")
+    suspend fun getSyncCursor(userId: String): Long?
 }

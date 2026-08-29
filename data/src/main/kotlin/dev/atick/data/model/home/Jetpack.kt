@@ -19,6 +19,7 @@ package dev.atick.data.model.home
 import dev.atick.core.extensions.asFormattedDateTime
 import dev.atick.core.room.model.JetpackEntity
 import dev.atick.firebase.firestore.model.FirebaseJetpack
+import dev.atick.firebase.firestore.model.serverUpdatedAtNanos
 import java.util.UUID
 
 /**
@@ -127,6 +128,9 @@ fun Jetpack.toFirebaseJetpack(): FirebaseJetpack {
 /**
  * Extension function to map a [JetpackEntity] to a [FirebaseJetpack].
  *
+ * `serverUpdatedAt` is left unset on purpose: it is the server's field to write, and Firestore
+ * replaces the null with its own timestamp on every push.
+ *
  * @return The mapped [FirebaseJetpack].
  */
 fun JetpackEntity.toFirebaseJetpack(): FirebaseJetpack {
@@ -144,6 +148,11 @@ fun JetpackEntity.toFirebaseJetpack(): FirebaseJetpack {
 /**
  * Extension function to map a [FirebaseJetpack] to a [JetpackEntity].
  *
+ * Carries the server's own write timestamp across, which is what lets
+ * [dev.atick.core.room.data.JetpackDao.getSyncCursor] resume the next pull from a clock every
+ * device agrees on. The reverse mapper deliberately does not send it back — see
+ * [JetpackEntity.toFirebaseJetpack].
+ *
  * @return The mapped [JetpackEntity].
  */
 fun FirebaseJetpack.toJetpackEntity(): JetpackEntity {
@@ -154,6 +163,7 @@ fun FirebaseJetpack.toJetpackEntity(): JetpackEntity {
         userId = userId,
         lastUpdated = lastUpdated,
         lastSynced = lastSynced,
+        serverUpdatedAtNanos = serverUpdatedAtNanos(),
         deleted = deleted,
     )
 }

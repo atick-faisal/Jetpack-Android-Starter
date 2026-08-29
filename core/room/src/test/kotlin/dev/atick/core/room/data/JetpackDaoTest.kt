@@ -68,6 +68,7 @@ class JetpackDaoTest {
         user: String = userId,
         lastUpdated: Long = 0,
         lastSynced: Long = 0,
+        serverUpdatedAtNanos: Long = 0,
         needsSync: Boolean = false,
         deleted: Boolean = false,
         syncAction: SyncAction = SyncAction.NONE,
@@ -78,6 +79,7 @@ class JetpackDaoTest {
         userId = user,
         lastUpdated = lastUpdated,
         lastSynced = lastSynced,
+        serverUpdatedAtNanos = serverUpdatedAtNanos,
         needsSync = needsSync,
         deleted = deleted,
         syncAction = syncAction,
@@ -216,23 +218,45 @@ class JetpackDaoTest {
     }
 
     @Test
-    fun `getLatestUpdateTimestamp returns the newest visible row's timestamp`() = runTest {
-        dao.insertJetpack(jetpack("a", lastUpdated = 100))
-        dao.insertJetpack(jetpack("b", lastUpdated = 300))
+    fun `getSyncCursor returns the newest server timestamp`() = runTest {
+        dao.insertJetpack(jetpack("a", serverUpdatedAtNanos = 100))
+        dao.insertJetpack(jetpack("b", serverUpdatedAtNanos = 300))
 
-        assertThat(dao.getLatestUpdateTimestamp(userId)).isEqualTo(300)
+        assertThat(dao.getSyncCursor(userId)).isEqualTo(300)
     }
 
     @Test
-    fun `getLatestUpdateTimestamp ignores soft-deleted rows`() = runTest {
-        dao.insertJetpack(jetpack("a", lastUpdated = 100))
-        dao.insertJetpack(jetpack("b", lastUpdated = 300, deleted = true))
+    fun `getSyncCursor ignores local edit timestamps`() = runTest {
+        // A row this device edited but has not yet pushed: the server has never seen it, so it
+        // must not move the cursor no matter what the device clock says.
+        dao.insertJetpack(
+            jetpack("pending", lastUpdated = Long.MAX_VALUE, needsSync = true),
+        )
+        dao.insertJetpack(jetpack("pulled", lastUpdated = 1, serverUpdatedAtNanos = 300))
 
-        assertThat(dao.getLatestUpdateTimestamp(userId)).isEqualTo(100)
+        assertThat(dao.getSyncCursor(userId)).isEqualTo(300)
     }
 
     @Test
-    fun `getLatestUpdateTimestamp is null when the user has no rows`() = runTest {
-        assertThat(dao.getLatestUpdateTimestamp(userId)).isNull()
+    fun `getSyncCursor counts soft-deleted rows`() = runTest {
+        dao.insertJetpack(jetpack("a", serverUpdatedAtNanos = 100))
+        dao.insertJetpack(jetpack("b", serverUpdatedAtNanos = 300, deleted = true))
+
+        // The server timestamp on a deleted row has still been consumed. Skipping it would rewind
+        // the cursor and re-pull everything written between the two.
+        assertThat(dao.getSyncCursor(userId)).isEqualTo(300)
+    }
+
+    @Test
+    fun `getSyncCursor is scoped to the user`() = runTest {
+        dao.insertJetpack(jetpack("mine", serverUpdatedAtNanos = 100))
+        dao.insertJetpack(jetpack("theirs", user = otherUserId, serverUpdatedAtNanos = 300))
+
+        assertThat(dao.getSyncCursor(userId)).isEqualTo(100)
+    }
+
+    @Test
+    fun `getSyncCursor is null when the user has no rows`() = runTest {
+        assertThat(dao.getSyncCursor(userId)).isNull()
     }
 }

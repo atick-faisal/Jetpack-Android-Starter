@@ -31,6 +31,7 @@ data class JetpackEntity(
     val userId: String = String(),
     val lastUpdated: Long = 0,
     val lastSynced: Long = 0,
+    val serverUpdatedAtNanos: Long = 0,
     val needsSync: Boolean = false,
     val deleted: Boolean = false,
     val syncAction: SyncAction = SyncAction.NONE,
@@ -53,11 +54,11 @@ override fun getUserDataPreferences(): Flow<UserDataPreferences> =
 
 ```kotlin
 // firebase/firestore/src/main/kotlin/dev/atick/firebase/firestore/data/FirebaseDataSourceImpl.kt
-override suspend fun pullJetpacks(userId: String, lastSynced: Long): List<FirebaseJetpack> {
+override suspend fun pullJetpacks(userId: String, syncedAfterNanos: Long): List<FirebaseJetpack> {
     return withContext(ioDispatcher) {
         database.document(checkAuthentication(userId))
             .collection(FirebaseDataSource.JETPACK_COLLECTION_NAME)
-            .whereGreaterThan("lastUpdated", lastSynced)
+            .whereGreaterThan(SERVER_UPDATED_AT_FIELD, syncedAfterNanos.asFirestoreTimestamp())
             .get().await().toObjects(FirebaseJetpack::class.java)
     }
 }
@@ -238,9 +239,9 @@ override suspend fun sync(): Flow<SyncProgress> = flow {
         emit(SyncProgress(unsyncedJetpacks.size, index + 1, "Syncing jetpacks with the cloud"))
     }
 
-    // Pull: fetch anything Firestore has newer than our latest known update
-    val lastSynced = localDataSource.getLatestUpdateTimestamp(userId)
-    val remoteJetpacks = firebaseDataSource.pullJetpacks(userId, lastSynced)
+    // Pull: fetch anything the server has written since the newest timestamp we already hold
+    val syncedAfterNanos = localDataSource.getSyncCursor(userId)
+    val remoteJetpacks = firebaseDataSource.pullJetpacks(userId, syncedAfterNanos)
     remoteJetpacks.forEachIndexed { index, remoteJetpack ->
         localDataSource.upsertJetpack(remoteJetpack.toJetpackEntity())
         emit(SyncProgress(remoteJetpacks.size, index + 1, "Fetching jetpacks from the cloud"))
@@ -249,9 +250,33 @@ override suspend fun sync(): Flow<SyncProgress> = flow {
 ```
 
 `getUnsyncedJetpacks` queries `WHERE lastUpdated > lastSynced OR needsSync = 1`; a successful push
-resets both via `markAsSynced` (`needsSync = 0, syncAction = 'NONE', lastSynced = now`). The pull
-uses `getLatestUpdateTimestamp` (the max `lastUpdated` across everything already local) as the cursor
-into Firestore's `whereGreaterThan("lastUpdated", lastSynced)`.
+resets both via `markAsSynced` (`needsSync = 0, syncAction = 'NONE', lastSynced = now`).
+
+The pull is ordered by a different clock, and the distinction is the whole reason sync works:
+
+| Field | Clock | What it is for |
+|---|---|---|
+| `lastUpdated` | writing device | Local edit time. Display and `ORDER BY` only. |
+| `lastSynced` | this device | When this device last pushed the row. Local only. |
+| `needsSync` / `syncAction` | this device | Pending local change. Drives the **push**. |
+| `serverUpdatedAt` | **Firestore server** | Server write time. Drives the **pull**, and nothing else does. |
+
+`getSyncCursor` is `MAX(serverUpdatedAtNanos)`, the newest server timestamp this device has already
+stored, and it feeds `whereGreaterThan("serverUpdatedAt", …)`. A device clock cannot do that job. Two
+phones disagree by seconds or by hours, so a cursor taken from `lastUpdated` jumps to the reading of
+the furthest-ahead clock in the fleet as soon as that device's row is pulled — and every record
+written by a slower device is then filtered out of every future pull, silently and permanently.
+`FirebaseJetpack.serverUpdatedAt` is annotated `@get:ServerTimestamp` and always sent as `null`, so
+Firestore substitutes its own timestamp on write and no client can influence the ordering.
+
+The cursor is nanoseconds, not milliseconds: Firestore timestamps carry nanosecond precision, and a
+cursor rounded down to a millisecond sits just below the newest document it already has, which would
+re-fetch that document on every sync forever.
+
+Each pushed row does come back once on the pull that follows, because a write does not report the
+timestamp the server gave it. That echo carries exactly what was pushed, so it changes nothing — and
+it is what stores the row's `serverUpdatedAtNanos` locally and moves the cursor past this device's
+own writes.
 
 > [!TIP]
 > Push runs before pull, deliberately. Pushing local changes first means a subsequent pull can't
@@ -271,8 +296,8 @@ sequenceDiagram
         R->>F: createOrUpdateJetpack / deleteJetpack
         R->>L: markAsSynced(id)
     end
-    R->>L: getLatestUpdateTimestamp(userId)
-    R->>F: pullJetpacks(userId, lastSynced)
+    R->>L: getSyncCursor(userId)
+    R->>F: pullJetpacks(userId, syncedAfterNanos)
     loop each remote entity
         R->>L: upsertJetpack(remoteJetpack)
     end

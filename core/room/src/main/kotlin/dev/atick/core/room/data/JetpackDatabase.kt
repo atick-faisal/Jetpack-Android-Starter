@@ -24,7 +24,7 @@ import dev.atick.core.room.model.JetpackEntity
  * Room database for Jetpack.
  */
 @Database(
-    version = 1,
+    version = 2,
     exportSchema = false,
     entities = [
         JetpackEntity::class,

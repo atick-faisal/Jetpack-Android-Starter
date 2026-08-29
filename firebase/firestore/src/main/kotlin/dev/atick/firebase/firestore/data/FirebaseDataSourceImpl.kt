@@ -19,6 +19,7 @@ package dev.atick.firebase.firestore.data
 import com.google.firebase.firestore.FirebaseFirestore
 import dev.atick.core.di.IoDispatcher
 import dev.atick.firebase.firestore.model.FirebaseJetpack
+import dev.atick.firebase.firestore.model.asFirestoreTimestamp
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
@@ -41,18 +42,24 @@ internal class FirebaseDataSourceImpl @Inject constructor(
     private val database = firestore.collection(FirebaseDataSource.DATABASE_NAME)
 
     /**
-     * Pulls a list of [FirebaseJetpack] objects that have been updated since the last sync.
+     * Pulls a list of [FirebaseJetpack] objects the server has written since [syncedAfterNanos].
      *
      * @param userId The unique identifier of the user.
-     * @param lastSynced The timestamp of the last sync.
+     * @param syncedAfterNanos The newest server timestamp already ingested, in nanoseconds.
      * @return A list of [FirebaseJetpack] objects.
      */
-    override suspend fun pullJetpacks(userId: String, lastSynced: Long): List<FirebaseJetpack> {
+    override suspend fun pullJetpacks(
+        userId: String,
+        syncedAfterNanos: Long,
+    ): List<FirebaseJetpack> {
         return withContext(ioDispatcher) {
             database
                 .document(checkAuthentication(userId))
                 .collection(FirebaseDataSource.JETPACK_COLLECTION_NAME)
-                .whereGreaterThan("lastUpdated", lastSynced)
+                .whereGreaterThan(
+                    SERVER_UPDATED_AT_FIELD,
+                    syncedAfterNanos.asFirestoreTimestamp(),
+                )
                 .get()
                 .await()
                 .toObjects(FirebaseJetpack::class.java)
@@ -114,5 +121,9 @@ internal class FirebaseDataSourceImpl @Inject constructor(
      */
     private fun checkAuthentication(userId: String?): String {
         return userId ?: throw IllegalStateException("User not authenticated")
+    }
+
+    private companion object {
+        const val SERVER_UPDATED_AT_FIELD = "serverUpdatedAt"
     }
 }
