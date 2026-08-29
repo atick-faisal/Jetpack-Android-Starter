@@ -18,17 +18,10 @@ package dev.atick.core.preferences.utils
 
 import androidx.datastore.core.CorruptionException
 import androidx.datastore.core.Serializer
-import dev.atick.core.preferences.model.DarkThemeConfigPreferences
 import dev.atick.core.preferences.model.UserDataPreferences
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import kotlinx.serialization.KSerializer
 import kotlinx.serialization.SerializationException
-import kotlinx.serialization.descriptors.PrimitiveKind
-import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
-import kotlinx.serialization.descriptors.SerialDescriptor
-import kotlinx.serialization.encoding.Decoder
-import kotlinx.serialization.encoding.Encoder
 import kotlinx.serialization.json.Json
 import java.io.InputStream
 import java.io.OutputStream
@@ -74,41 +67,5 @@ object UserDataSerializer : Serializer<UserDataPreferences> {
                     .encodeToByteArray(),
             )
         }
-    }
-}
-
-/**
- * Custom serializer for serializing and deserializing [DarkThemeConfigPreferences] enums.
- */
-// ℹ️ This serializer is not referenced by any @Serializable(with = ...) site or called directly
-// anywhere in this codebase -- it's unused, likely left as a worked example for adopters who
-// want a custom enum KSerializer. If copied, note valueOf() in deserialize() below throws
-// IllegalArgumentException on an unrecognized string, not SerializationException, so it would
-// escape UserDataSerializer.readFrom's catch block above, which only catches the latter.
-object DarkThemeConfigSerializer : KSerializer<DarkThemeConfigPreferences> {
-    /**
-     * The descriptor for the serialized form of [DarkThemeConfigPreferences].
-     */
-    override val descriptor: SerialDescriptor =
-        PrimitiveSerialDescriptor("DarkThemeConfig", PrimitiveKind.STRING)
-
-    /**
-     * Serializes the provided [value] of [DarkThemeConfigPreferences] enum to a string representation.
-     *
-     * @param encoder The encoder to write the serialized data to.
-     * @param value The [DarkThemeConfigPreferences] value to be serialized.
-     */
-    override fun serialize(encoder: Encoder, value: DarkThemeConfigPreferences) {
-        encoder.encodeString(value.name)
-    }
-
-    /**
-     * Deserializes the string representation from the provided [decoder] and converts it to a [DarkThemeConfigPreferences] enum.
-     *
-     * @param decoder The decoder to read the serialized data from.
-     * @return The deserialized [DarkThemeConfigPreferences] enum value.
-     */
-    override fun deserialize(decoder: Decoder): DarkThemeConfigPreferences {
-        return DarkThemeConfigPreferences.valueOf(decoder.decodeString())
     }
 }
