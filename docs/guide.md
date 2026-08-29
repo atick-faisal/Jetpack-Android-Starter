@@ -125,8 +125,8 @@ override suspend fun createOrUpdateJetpack(jetpack: Jetpack): Result<Unit> = sus
 
 Local reads/writes are all this needs. `HomeRepositoryImpl` additionally implements `sync()`,
 which pushes unsynced entities to Firestore and pulls remote changes back — the full two-way
-algorithm is in the file itself and summarized in [`data/README.md`](../data/README.md#repository-patterns).
-A feature with no remote doesn't implement `Syncable` at all.
+algorithm is covered in [Data Layer](data.md#two-way-sync). A feature with no remote doesn't
+implement `Syncable` at all.
 
 ## 4. UI layer
 
@@ -274,6 +274,5 @@ and `core/network/.../di/DataSourceModule.kt`. ViewModels need no manual wiring 
 - [State Management](state-management.md) — how `UiState` and its update functions work
 - [Navigation](navigation.md) — the full Navigation 3 model, including assisted-injected ViewModels
 - [Components](components.md) — the `core:ui` building blocks used in `HomeScreen`/`ItemScreen`
-- [Dependency Injection](dependency-injection.md) — `@Binds` vs `@Provides`, module scoping
-- [Data Module](../data/README.md) — repository patterns beyond this walkthrough
+- [Data Layer](data.md) — the full sync algorithm and the `@Binds`/`@IoDispatcher` wiring behind it
 - [Firebase Setup](firebase.md) — configuring the Firestore backend this feature syncs with
