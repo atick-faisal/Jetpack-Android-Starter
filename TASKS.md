@@ -60,14 +60,14 @@ Four sections each — *Purpose* → *Key APIs* (table) → *Gotchas* (only if r
 
 Rewrites:
 
-- [ ] `data/README.md` (484 → ≤ 80) — remove `networkBoundResource` (A2), drop duplicated repository patterns (B7)
-- [ ] `sync/README.md` (331 → ≤ 80) — drop the 229-line troubleshooting section (B3)
-- [ ] `core/preferences/README.md` (291 → ≤ 80)
-- [ ] `core/room/README.md` (285 → ≤ 80)
-- [ ] `core/ui/README.md` (238 → ≤ 80) — drop the duplicated Philosophy section (B5)
-- [ ] `core/network/README.md` (205 → ≤ 80) — remove `networkBoundResource` (A2)
-- [ ] `core/android/README.md` (152 → ≤ 80) — remove `networkBoundResource` incl. the full fake snippet at :67 (A2)
-- [ ] `app/README.md` (150 → ≤ 80)
+- [x] `data/README.md` (484 → ≤ 80) — remove `networkBoundResource` (A2), drop duplicated repository patterns (B7) — verified: 36 lines; `SyncManager`/`Syncable` cross-module split (declared in `data`, implemented in `sync`) called out as a gotcha; `SyncAction.CREATE/UPDATE` fixed to real `NONE, UPSERT, DELETE`
+- [x] `sync/README.md` (331 → 115 → ≤ 80) — drop the 229-line troubleshooting section (B3, already done pre-Phase-3) — verified: 35 lines; removed the fabricated battery/storage/idle work constraints (real constraint is `NetworkType.CONNECTED` only, confirmed in `SyncWorker.kt`)
+- [x] `core/preferences/README.md` (291 → ≤ 80) — verified: 37 lines; every symbol (`UserPreferencesDataSource`, `UserDataPreferences`) spot-checked against real source; noted the dead `DarkThemeConfigSerializer` (C14) as a real gotcha
+- [x] `core/room/README.md` (285 → ≤ 80) — verified: 34 lines; invented `UserEntity`/`UserDao` replaced with real `JetpackEntity`/`JetpackDao`; `SyncAction.CREATE/UPDATE` fixed to `NONE, UPSERT, DELETE`
+- [x] `core/ui/README.md` (238 → ≤ 80) — drop the duplicated Philosophy section (B5) — verified: 28 lines; reduced to a thin index linking to `state-management.md`/`components.md` (already the canonical homes per Principle 1) rather than restating either
+- [x] `core/network/README.md` (205 → ≤ 80) — remove `networkBoundResource` (A2) — verified: 40 lines; invented `UserApi`/`UserNetworkDataSource` replaced with real `JetpackRestApi`/`NetworkDataSourceImpl`; fabricated `apiKey`/`apiEndpoint` secrets snippet replaced with the real `BACKEND_URL` (`secrets.defaults.properties` → `BuildConfig.BACKEND_URL`, spot-checked against `RetrofitModule.kt`); added the real `getCurrentState()` no-initial-emission gotcha (second-tier finding from PLAN.md)
+- [x] `core/android/README.md` (152 → ≤ 80) — remove `networkBoundResource` incl. the full fake snippet at :67 (A2) — verified: 32 lines; this was a second, previously-unlisted site of the same A2 fabrication (`Resource`/`networkBoundResource` don't exist in any `.kt`)
+- [x] `app/README.md` (150 → ≤ 80, real MainActivity walkthrough kept) — verified: 48 lines; fixed the stale version-scheme snippet (`minorUpdateVersion = 0` → real `3`, confirmed in `app/build.gradle.kts`); fixed dead `dependency-injection.md` link → `data.md`
 - [ ] `firebase/firestore/README.md`, `firebase/auth/README.md`, `firebase/analytics/README.md`
 - [ ] `feature/settings/README.md`, `feature/auth/README.md`, `feature/home/README.md`, `feature/profile/README.md`
 
