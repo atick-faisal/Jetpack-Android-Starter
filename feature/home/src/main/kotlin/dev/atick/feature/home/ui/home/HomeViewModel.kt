@@ -54,6 +54,12 @@ class HomeViewModel @Inject constructor(
     private val homeRepository: HomeRepository,
 ) : ViewModel() {
     private val _homeUiState = MutableStateFlow(UiState(HomeScreenData()))
+
+    // ⚠️ onStart runs once per collector, but stateInDelayed's WhileSubscribed(5000) means a >5s
+    // gap between collectors (e.g. the screen leaving and re-entering composition) tears down the
+    // shared upstream; the next collector starts a new upstream from scratch, so onStart fires
+    // again and getJetpacks() runs a second time -- not a resume of the first collector. This is
+    // the template's most-copied idiom (repeated in ItemViewModel.kt).
     val homeUiState = _homeUiState
         .onStart { getJetpacks() }
         .stateInDelayed(UiState(HomeScreenData()), viewModelScope)

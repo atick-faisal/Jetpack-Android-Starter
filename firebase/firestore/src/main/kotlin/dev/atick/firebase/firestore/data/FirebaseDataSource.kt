@@ -121,53 +121,25 @@ interface FirebaseDataSource {
     }
 
     /**
-     * Pulls (downloads) a list of Jetpack items that have been updated since the last sync.
+     * Pulls every Jetpack item the server has written since [syncedAfterNanos].
      *
-     * This method implements incremental sync by querying only items that changed after
-     * [lastSynced]. This minimizes network usage and improves sync performance.
+     * The cursor is compared against [FirebaseJetpack.serverUpdatedAt], which Firestore assigns
+     * itself. A client clock is never involved: a caller that passed its own `lastUpdated` here
+     * would skip, permanently and silently, every record written by a device whose clock runs
+     * slower than the fastest device that ever wrote to the collection.
      *
-     * ## Query Logic
-     * ```
-     * Firestore.collection("dev.atick.jetpack/jetpacks/{userId}")
-     *     .where("lastUpdated", ">", lastSynced)
-     *     .get()
-     * ```
-     *
-     * ## Soft Deletes
-     * Deleted items (where `deleted = true`) are included in the results. This allows
-     * the local database to properly handle deletions that occurred on other devices.
-     *
-     * ## Performance
-     * - Returns only changed items (not the entire dataset)
-     * - Firestore indexes should be configured for the `lastUpdated` field
-     * - Results are ordered by `lastUpdated` ascending
-     *
-     * ## Example
-     * ```kotlin
-     * suspend fun syncPull() {
-     *     val userId = getCurrentUserId()
-     *     val lastSync = preferences.getLastSyncTimestamp()
-     *     val updates = firebaseDataSource.pullJetpacks(userId, lastSync)
-     *
-     *     updates.forEach { remote ->
-     *         localDataSource.upsertJetpack(remote.toEntity())
-     *     }
-     *
-     *     preferences.setLastSyncTimestamp(System.currentTimeMillis())
-     * }
-     * ```
+     * Soft-deleted items (`deleted = true`) are included so a deletion made on another device can
+     * reach this one.
      *
      * @param userId The unique identifier of the user (Firebase Auth UID). Only items
      *               belonging to this user are returned.
-     * @param lastSynced The timestamp (milliseconds) of the last successful sync. Items
-     *                   with `lastUpdated > lastSynced` are returned. Use 0L for the
-     *                   initial sync to fetch all items.
-     * @return A list of [FirebaseJetpack] objects that have been updated since [lastSynced].
-     *         Returns an empty list if no updates are available.
+     * @param syncedAfterNanos The newest `serverUpdatedAtNanos` already ingested. Pass `0` on a
+     *                         first sync to fetch the whole collection.
+     * @return The matching [FirebaseJetpack] objects, empty if there is nothing new.
      * @throws FirebaseFirestoreException if the query fails
      * @throws FirebaseNetworkException if network is unavailable
      */
-    suspend fun pullJetpacks(userId: String, lastSynced: Long): List<FirebaseJetpack>
+    suspend fun pullJetpacks(userId: String, syncedAfterNanos: Long): List<FirebaseJetpack>
 
     /**
      * Creates a new Jetpack item in Firestore.

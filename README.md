@@ -20,16 +20,12 @@ a comprehensive starting point for both new and experienced Android developers.
   <p><i>"Android Development is Easy until You Rotate the Device"</i></p>
 </div>
 
-![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
-
 ## 📱 Apps Built With This Template
 
 ![Feature Graphic](https://github.com/user-attachments/assets/17e81025-2184-4a5a-8485-8b18de3cbabb)
 
 Check out apps built with this
 template [here](https://github.com/atick-faisal?tab=repositories&q=&type=source&language=kotlin&sort=).
-
-![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
 
 ## ☃️ Why This Template?
 
@@ -43,8 +39,6 @@ template [here](https://github.com/atick-faisal?tab=repositories&q=&type=source&
 - **Background Sync**: Data synchronization using WorkManager
 - **Multilingual Support**: Runtime localization update with support for RTL languages
 - **CI/CD**: Automated build, release, and deployment with GitHub Actions
-
-![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
 
 ## 📂 Technical Stack
 
@@ -66,9 +60,9 @@ template [here](https://github.com/atick-faisal?tab=repositories&q=&type=source&
 
 ### 🏗️ Build & Tools
 
-- [Kotlin 2.4](https://kotlinlang.org/)
-- [Gradle 9.6](https://docs.gradle.org/current/userguide/userguide.html)
-  with [Version Catalogs](https://docs.gradle.org/current/userguide/version_catalogs.html)
+- [Kotlin 2.4.10](https://kotlinlang.org/)
+- [AGP 9.3.1](https://developer.android.com/build/releases/gradle-plugin) with [Gradle 9.6.1](https://docs.gradle.org/current/userguide/userguide.html)
+  and [Version Catalogs](https://docs.gradle.org/current/userguide/version_catalogs.html)
 - [Java 21](https://openjdk.java.net/projects/jdk/21/)
 - Custom [Gradle Convention Plugins](https://docs.gradle.org/current/userguide/custom_plugins.html)
 - [Dokka](https://kotlinlang.org/docs/dokka-introduction.html)
@@ -86,25 +80,20 @@ template [here](https://github.com/atick-faisal?tab=repositories&q=&type=source&
 
 - [Quick Start Guide](docs/getting-started.md)
 - [Firebase Setup](docs/firebase.md)
-- [Dependency Management](docs/dependency.md)
 
 ### 🏛️ Architecture & Design
 
 - [Architecture Overview](docs/architecture.md)
-- [Design Philosophy](docs/philosophy.md)
 - [Adding New Features](docs/guide.md)
+- [State Management](docs/state-management.md)
+- [Navigation](docs/navigation.md)
+- [Components](docs/components.md)
+- [Data Layer](docs/data.md)
 
 ### 🚧 Development Tools
 
-- [Convention Plugins](docs/plugins.md)
-- [Code Style with Spotless](docs/spotless.md)
-- [Performance Optimization](docs/performance.md)
-- [Useful Tips & Tricks](docs/tips.md)
-
-### ⚡ Deployment
-
-- [GitHub CI/CD Setup](docs/github.md)
-- [Fastlane Configuration](docs/fastlane.md)
+- [Build & Tooling](docs/build-and-tooling.md)
+- [Troubleshooting](docs/troubleshooting.md)
 
 ### [📚 API Reference](https://atick.dev/Jetpack-Android-Starter/api/)
 

@@ -1,74 +1,31 @@
 # Module :firebase:auth
 
-This module handles user authentication using Firebase Authentication. It supports multiple sign-in
-methods and integrates with Google's Identity Services.
+**Purpose:** Email/password and Google sign-in via Android's Credential Manager API, backed by
+Firebase Authentication.
 
-## Features
+## Key APIs
 
-- Email/Password Authentication
-- Google Sign-In
-- Credential Management
-- Token Handling
-- Session Management
-- Identity Services Integration
-
-## Dependencies Graph
-
-```mermaid
-graph TD
-    A[firebase:auth] --> B[core:android]
-    A --> C[firebase.bom]
-    C --> D[firebase.auth]
-    A --> E[play.services.auth]
-    A --> F[credentials]
-    F --> G[credentials.play.services]
-    F --> H[identity.google.id]
-
-    subgraph "Authentication"
-        C
-        E
-        F
-    end
-```
-
-## Usage
+| API | What it does |
+|---|---|
+| `AuthDataSource` / `AuthDataSourceImpl` | `signInWithEmailAndPassword`, `registerWithEmailAndPassword`, `signInWithGoogle(activity)`, `registerWithGoogle(activity)`, `signOut()` |
+| `getSignInRequest()` / `registerWithGoogleRequest()` | Two separate `GetCredentialRequest` builders — see the Gotcha below |
 
 ```kotlin
-dependencies {
-    implementation(project(":firebase:auth"))
+// firebase/auth/src/main/kotlin/dev/atick/firebase/auth/data/AuthDataSourceImpl.kt
+private fun getSignInRequest(): GetCredentialRequest {
+    val getGoogleIdOption = GetGoogleIdOption.Builder().setFilterByAuthorizedAccounts(true)
+        .setServerClientId(Config.WEB_CLIENT_ID).setAutoSelectEnabled(false).build()
+    // ...
 }
 ```
 
-### Authentication Operations
+## Gotchas
 
-```kotlin
-class AuthDataSource @Inject constructor(
-    private val firebaseAuth: FirebaseAuth,
-    private val credentialManager: CredentialManager
-) {
-    suspend fun signInWithGoogle(activity: Activity): AuthUser {
-        // Google Sign-In implementation
-    }
-
-    suspend fun signInWithEmailPassword(
-        email: String,
-        password: String
-    ): AuthUser {
-        // Email/Password Sign-In implementation
-    }
-}
-```
-
-### Credential Management
-
-The module uses Android's Credential Manager API for secure credential storage and retrieval.
-
-## Setup
-
-> [!NOTE]
-> For Firebase Authentication setup instructions, including enabling Google Sign-In and Email/Password authentication in the Firebase Console, see the [Firebase Setup Guide](../../docs/firebase.md).
+- `setFilterByAuthorizedAccounts(true)` for sign-in vs. `false` for register is the entire
+  sign-in/register contract in one flag — `true` restricts the account picker to accounts already
+  linked to this app, so an unlinked account fails rather than silently registering.
 
 ## Related Documentation
 
-- **[Firebase Setup Guide](../../docs/firebase.md)** - Complete Firebase Console and local project setup
-- **[Troubleshooting Guide](../../docs/troubleshooting.md)** - Firebase authentication issues and solutions
+- [Firebase Setup § Credential Manager](../../docs/firebase.md#credential-manager-sign-in-vs-register) — the full sign-in-vs-register contract
+- [Data Layer](../../docs/data.md) — where `AuthRepositoryImpl`/`ProfileRepositoryImpl` call this module

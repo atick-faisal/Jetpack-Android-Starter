@@ -55,6 +55,10 @@ play-store.json
 docs/index.md
 docs/api/*
 
+# mkdocs virtualenv and build output
+.venv
+site/
+
 # Fastlane
 .bundle
 vendor/*

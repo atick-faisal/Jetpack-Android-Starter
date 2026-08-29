@@ -29,7 +29,9 @@ import androidx.compose.material3.SwipeToDismissBox
 import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -75,9 +77,20 @@ fun SwipeToDismiss(
 ) {
     val dismissState = rememberSwipeToDismissBoxState()
 
-    // Handle dismiss confirmation without deprecated confirmValueChange
-    if (dismissState.currentValue == SwipeToDismissBoxValue.EndToStart) {
-        onDelete()
+    // The effect below is remembered against currentValue alone, so a recomposition that only
+    // supplies a fresh onDelete does not replace the block it already holds. Callers in a list
+    // pass a new lambda closed over the row's item on every emission, so reading the newest one
+    // through rememberUpdatedState is what keeps a delete bound to the item actually swiped.
+    val currentOnDelete by rememberUpdatedState(onDelete)
+
+    // ⚠️ onDelete has to fire from an effect, not from the composition body. currentValue stays at
+    // EndToStart for as long as the item remains dismissed, so a bare call here would re-run on
+    // every recomposition of this composable and delete repeatedly. Keying the effect on
+    // currentValue makes it run once per transition into the dismissed state, the actual event.
+    LaunchedEffect(dismissState.currentValue) {
+        if (dismissState.currentValue == SwipeToDismissBoxValue.EndToStart) {
+            currentOnDelete()
+        }
     }
 
     SwipeToDismissBox(

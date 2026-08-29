@@ -47,6 +47,12 @@ import javax.inject.Inject
  * @param credentialManager The [CredentialManager] for handling credential operations.
  * @param ioDispatcher The [CoroutineDispatcher] for executing suspend functions in an IO context.
  */
+// ⚠️ This check requires that NoCredentialException, not just the broader GetCredentialException,
+// be handled somewhere near a getCredential call. None of the getCredential calls below have a
+// try/catch at all -- errors are caught generically further up the call stack via
+// suspendRunCatching/Result, which lint can't see statically, hence the class-wide suppression.
+// Revisit this if a NoCredentialException-specific UI path (e.g. a distinct "no saved account"
+// message) is ever added.
 @SuppressLint("CredentialManagerMisuse")
 internal class AuthDataSourceImpl @Inject constructor(
     private val firebaseAuth: FirebaseAuth,
@@ -172,6 +178,10 @@ internal class AuthDataSourceImpl @Inject constructor(
      */
     private fun getSignInRequest(): GetCredentialRequest {
         val getPasswordOption = GetPasswordOption()
+        // 💡 true restricts Google's account picker to accounts already linked to this app --
+        // exactly what sign-in should offer. registerWithGoogleRequest() below flips this to
+        // false because a brand-new user has no such account yet; swapping the two would show
+        // sign-in an empty picker and registration every previously-linked account.
         val getGoogleIdOption = GetGoogleIdOption.Builder().setFilterByAuthorizedAccounts(true)
             .setServerClientId(Config.WEB_CLIENT_ID).setAutoSelectEnabled(false).build()
         return GetCredentialRequest
@@ -187,6 +197,7 @@ internal class AuthDataSourceImpl @Inject constructor(
      * @return The [GetCredentialRequest] for Google registration.
      */
     private fun registerWithGoogleRequest(): GetCredentialRequest {
+        // false here, unlike getSignInRequest() above -- see that function for why.
         val signInRequestOptions = GetGoogleIdOption.Builder().setFilterByAuthorizedAccounts(false)
             .setServerClientId(Config.WEB_CLIENT_ID).setAutoSelectEnabled(false).build()
         return GetCredentialRequest.Builder().addCredentialOption(signInRequestOptions).build()

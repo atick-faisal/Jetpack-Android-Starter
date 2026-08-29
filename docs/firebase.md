@@ -1,202 +1,149 @@
 # Firebase Setup
 
-## Summary
-
-This guide walks you through setting up Firebase for this project, including Authentication (Google
-Sign-In and Email/Password), Firestore database, and Analytics. Learn how to configure the Firebase
-Console, download and protect `google-services.json`, set up security rules, and troubleshoot common
-Firebase issues.
-
----
-
-This project uses Firebase for authentication, Firestore database, and analytics. Follow this guide
-to set up Firebase for your project.
+This project uses three independent Firebase modules: `firebase:auth` (Credential Manager +
+Firebase Authentication), `firebase:firestore` (two-way data sync), and `firebase:analytics`
+(Crashlytics crash reporting — **not** Firebase Analytics event tracking, despite the module
+name). All three build and run out of the box against a template `google-services.json`; none of
+them are functional until you configure your own Firebase project.
 
 ## Prerequisites
 
-- A Google account
-- Access to [Firebase Console](https://console.firebase.google.com)
-- Android Studio
+- A Google account and access to the [Firebase Console](https://console.firebase.google.com)
+- Android Studio, with this project already cloned (see [Getting Started](getting-started.md))
 
 ## Firebase Console Setup
 
-1. Create a new project in Firebase Console:
-    - Go to [Firebase Console](https://console.firebase.google.com)
-    - Click "Add project"
-    - Enter your project name
-    - Follow the setup wizard
-
-2. Add Android app to your Firebase project:
-    - Click on Android icon in project overview
-    - Register app using your package name (`dev.your.package.name`)
-    - Get the SHA-1 using the provided Signing Report configuration:
-        - Open Android Studio
-        - Run the "Signing Report" configuration from the run configurations dropdown
-        - Copy the SHA-1 hash
-    - Enter the SHA-1 in Firebase console
-
-3. Enable Required Services:
-
-   a. **Authentication**:
-    - Go to "Authentication" in Firebase Console
-    - Click "Get Started"
-    - Enable "Google" sign-in method
-    - Enable "Email/Password" sign-in method
-    - Add your support email
-
-   b. **Firestore**:
-    - Go to "Firestore Database"
-    - Click "Create Database"
-    - Choose your location
-    - Start in production mode
+1. Create a project in the [Firebase Console](https://console.firebase.google.com).
+2. Add an Android app registered under this project's `applicationId`,
+   `dev.atick.compose` (`app/build.gradle.kts:54`).
+3. Get the debug SHA-1 by running the "Signing Report" configuration from Android Studio's run
+   configurations dropdown, then add it to **Project Settings → Your apps → SHA certificate
+   fingerprints**.
+4. Under **Authentication**, enable the **Google** and **Email/Password** sign-in methods.
+5. Under **Firestore Database**, create a database (production mode).
 
 ## Local Project Setup
 
-1. Download Configuration File:
-    - Download `google-services.json` from Firebase Console
-    - Before replacing the template file, stop Git from tracking it:
-      ```bash
-      git update-index --skip-worktree app/google-services.json
-      ```
-    - Replace the template `google-services.json` in the `app` directory with your downloaded file
+Download `google-services.json` from the console and replace the template copy in `app/`. Stop
+Git from tracking your real file first:
 
-2. Verify Firebase Setup:
-    - Build and run the app
-    - Try signing in with Google
-    - Check Firebase Console to verify authentication is working
+```bash
+git update-index --skip-worktree app/google-services.json
+```
 
 > [!WARNING]
-> Never commit your actual `google-services.json` to version control. The template file is provided
-> only to ensure successful builds.
+> Never commit your real `google-services.json`. The template file exists only so a fresh clone
+> builds; it does not enable any Firebase service.
 
-## Troubleshooting
+Build and run, then try signing in with Google to confirm the console is wired up correctly.
 
-Common issues and solutions:
+## Credential Manager: Sign-In vs. Register
 
-1. **Google Sign-In Not Working**:
-    - Verify SHA-1 is correctly added in Firebase Console
-    - Check if `google-services.json` is up to date
-    - Ensure the OAuth consent screen is configured
+Google auth goes through Android's Credential Manager API
+(`firebase/auth/.../AuthDataSourceImpl.kt`), which builds two different requests depending on
+whether the user is signing in or registering:
 
-2. **Firestore Access Issues**:
-    - Check your Firestore rules
-    - Verify your device has internet connection
-    - Check if the user is properly authenticated
+```kotlin
+private fun getSignInRequest(): GetCredentialRequest {
+    val getPasswordOption = GetPasswordOption()
+    val getGoogleIdOption = GetGoogleIdOption.Builder().setFilterByAuthorizedAccounts(true)
+        .setServerClientId(Config.WEB_CLIENT_ID).setAutoSelectEnabled(false).build()
+    return GetCredentialRequest
+        .Builder()
+        .addCredentialOption(getPasswordOption)
+        .addCredentialOption(getGoogleIdOption)
+        .build()
+}
 
-3. **Build Issues**:
-    - Clean and rebuild the project
-    - Verify `google-services.json` is in the correct location
-    - Check if all Firebase dependencies are resolved
+private fun registerWithGoogleRequest(): GetCredentialRequest {
+    val signInRequestOptions = GetGoogleIdOption.Builder().setFilterByAuthorizedAccounts(false)
+        .setServerClientId(Config.WEB_CLIENT_ID).setAutoSelectEnabled(false).build()
+    return GetCredentialRequest.Builder().addCredentialOption(signInRequestOptions).build()
+}
+```
 
 > [!TIP]
-> If you need to get the SHA-1 hash again later, you can always run the "Signing Report"
-> configuration from Android Studio.
+> `setFilterByAuthorizedAccounts` is the entire sign-in/register contract in one flag. `true`
+> restricts the account picker to Google accounts already linked to this app — used for sign-in,
+> where an unlinked account should fail rather than silently register. `false` offers every Google
+> account on the device — used for register, where any account is a valid choice. This is why the
+> two flows need separate request builders instead of one shared function.
 
-## Firebase Configuration Files
-
-The project handles Firebase configuration files in several ways:
-
-1. **Development**:
-    - Use your local `google-services.json`
-    - Keep it private using `git update-index --skip-worktree`
-
-2. **CI/CD**:
-    - GitHub Actions workflow uses encoded secrets
-    - See [GitHub CI/CD Setup](github.md) for details
-
-> [!NOTE]
-> The template `google-services.json` allows the project to build but won't enable Firebase
-> services. You must replace it with your own configuration file.
+`Config.WEB_CLIENT_ID` (`firebase/auth/.../config/Config.kt`) reads `BuildConfig.GOOGLE_WEB_CLIENT_ID`,
+which is sourced from the OAuth 2.0 web client ID Firebase generates alongside your
+`google-services.json` — see [Build & Tooling](build-and-tooling.md) for how build-time secrets
+are wired in.
 
 ## Firestore Security Rules
 
-Set up security rules in Firebase Console to protect your data:
+Sync (`firebase/firestore/.../FirebaseDataSourceImpl.kt`) writes to
+`/dev.atick.jetpack/{userId}/jetpacks/{jetpackId}`, one document per `FirebaseJetpack`
+(`id`, `name`, `price`, `userId`, `lastUpdated`, `lastSynced`, `serverUpdatedAt`, `deleted` —
+8 fields, see [Data](data.md) for the sync pattern these fields support). Set these rules under
+Firestore Database → Rules:
 
-1. Go to Firestore Database
-2. Click on "Rules" tab
-3. Replace the default rules with the following structure:
+```javascript
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isUserOwner(userId) {
+      return request.auth != null && request.auth.uid == userId;
+    }
 
-   ```javascript
-   rules_version = '2';
-   service cloud.firestore {
-     match /databases/{database}/documents {
-       // Helper function to check if user is authenticated
-       function isAuthenticated() {
-         return request.auth != null;
-       }
-   
-       // Helper function to check if the user is accessing their own data
-       function isUserOwner(userId) {
-         return isAuthenticated() && request.auth.uid == userId;
-       }
-   
-       // Helper function to validate Jetpack data structure
-       function isValidJetpack(jetpack) {
-         return jetpack.size() == 7
-           && 'id' in jetpack && jetpack.id is string
-           // ... other validations
-       }
-   
-       // Match the specific path structure: dev.atick.jetpack/{userId}/jetpacks/{jetpackId}
-       match /dev.atick.jetpack/{userId}/jetpacks/{jetpackId} {
-         allow read: if isUserOwner(userId);
-         
-         allow create: if isUserOwner(userId) 
-           && isValidJetpack(request.resource.data);
-         
-         allow update: if isUserOwner(userId) 
-           && isValidJetpack(request.resource.data)
-           && request.resource.data.id == resource.data.id;
-         
-         allow delete: if isUserOwner(userId);
-       }
-       
-       // Deny access to all other documents by default
-       match /{document=**} {
-         allow read, write: if false;
-       }
-     }
-   }
-   ```
+    function isValidJetpack(jetpack) {
+      return jetpack.size() == 8
+        && jetpack.id is string
+        && jetpack.name is string
+        && jetpack.price is number
+        && jetpack.userId is string
+        && jetpack.lastUpdated is number
+        && jetpack.lastSynced is number
+        && jetpack.deleted is bool
+        // The sync cursor. Pinning it to request.time is what makes it trustworthy: a client
+        // cannot write a timestamp of its own choosing and reorder everyone else's pulls.
+        && jetpack.serverUpdatedAt == request.time;
+    }
 
-These rules implement several security features:
+    match /dev.atick.jetpack/{userId}/jetpacks/{jetpackId} {
+      allow read: if isUserOwner(userId);
+      allow create: if isUserOwner(userId) && isValidJetpack(request.resource.data);
+      allow update: if isUserOwner(userId) && isValidJetpack(request.resource.data)
+        && request.resource.data.id == resource.data.id;
+      allow delete: if isUserOwner(userId);
+    }
 
-- User authentication check
-- Data ownership validation
-- Document structure validation
-- Explicit deny-by-default for unmatched paths
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
+```
 
-> [!IMPORTANT]
-> Always test your security rules thoroughly using the Firebase Console Rules Playground before
-> deploying to production.
+Test rule changes in the Firebase Console's Rules Playground before deploying — a bad rule fails
+silently as a permission-denied error at sync time, not at deploy time.
 
-## Additional Setup
+## Crashlytics
 
-1. **Test Your Configuration**:
+`firebase:analytics` is Crashlytics-only: no Firebase Analytics events are logged anywhere in this
+template. Reporting goes through one abstraction
+(`firebase/analytics/.../CrashReporter.kt`, implemented by `FirebaseCrashReporter.kt`):
 
-   ```kotlin
-   // Add this in an activity or fragment
-   FirebaseAuth.getInstance().currentUser?.let {
-     Timber.d("Firebase Auth is working: ${it.email}")
-   }
-   ```
+```kotlin
+override fun reportException(throwable: Throwable) {
+    crashlytics.recordException(throwable)
+}
+```
 
-2. **Reset Git Tracking** (if needed):
-
-   ```bash
-   git update-index --no-skip-worktree app/google-services.json
-   ```
-
-3. **Multiple Environments**:
-    - Create separate Firebase projects for development and production
-    - Manage different `google-services.json` files for each build variant
-
-> [!IMPORTANT]
-> Remember to add your `google-services.json` to `.gitignore` if you're setting up the project from
-> scratch.
+Crashlytics is enabled automatically once `google-services.json` is in place; no extra console
+step is needed beyond the project setup above. For release builds, `FirebaseConventionPlugin`
+(see [Build & Tooling](build-and-tooling.md)) uploads ProGuard/R8 mapping files so stack traces
+de-obfuscate in the console. To confirm reporting works end-to-end, call `reportException` (or
+throw uncaught) from a debug build and check the Crashlytics console a few minutes later.
 
 ## Further Reading
 
-- **[Troubleshooting](troubleshooting.md)** - Solutions for common Firebase setup and runtime issues
-- **[GitHub CI/CD Setup](github.md)** - CI/CD workflow that uses Firebase secrets
-- **[FAQ](faq.md)** - Firebase setup questions and Google Sign-In troubleshooting
+- **[Troubleshooting](troubleshooting.md)** — Firebase setup and runtime symptom → fix entries
+- **[Build & Tooling](build-and-tooling.md)** — `FirebaseConventionPlugin`, CI secrets
+- **[Data](data.md)** — the two-way sync pattern Firestore participates in
+- **[firebase:auth](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/main/firebase/auth/README.md)**, **[firebase:firestore](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/main/firebase/firestore/README.md)**,
+  **[firebase:analytics](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/main/firebase/analytics/README.md)** — module references

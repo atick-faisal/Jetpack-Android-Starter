@@ -1,44 +1,26 @@
 # Module :feature:profile
 
-User profile management module with account details and preferences.
+**Purpose:** Read-only profile display and sign-out, backed by `:data`'s local-only
+`ProfileRepositoryImpl` (DataStore + Firebase Auth, no Room).
 
-## Features
+## Key APIs
 
-- Profile Information Display
-- Avatar Management
-- Account Settings
-- User Stats
-- Sign Out Flow
+| API | What it does |
+|---|---|
+| `ProfileScreen` / `ProfileViewModel` | Displays profile info; `signOut()` clears preferences and Firebase Auth session |
 
-## Dependencies Graph
-
-```mermaid
-graph TD
-    A[feature:profile] --> B[core:ui]
-    A --> C[data]
-    B --> D[core:android]
-
-    subgraph "Core Dependencies"
-        B
-        C
-        D
-    end
+```kotlin
+// feature/profile/src/main/kotlin/dev/atick/feature/profile/ui/ProfileScreen.kt
+@Composable
+internal fun ProfileScreen(
+    onShowSnackbar: suspend (String, SnackbarAction, Throwable?) -> Boolean,
+    profileViewModel: ProfileViewModel = hiltViewModel(),
+)
 ```
-
-## Key Components
-
-1. **Profile Screen**: Shows the user profile information
-
-	```kotlin
-	@Composable
-	fun ProfileRoute(
-	  onShowSnackbar: suspend (String, SnackbarAction, Throwable?) -> Boolean
-	)
-	```
 
 ## Related Documentation
 
-- **[Adding a Feature Guide](../../docs/guide.md)** - Step-by-step template for creating new features
-- **[State Management](../../docs/state-management.md)** - UiState pattern and ViewModel best practices
-- **[Navigation Deep Dive](../../docs/navigation.md)** - Type-safe navigation implementation
-- **[Firebase Authentication](../../firebase/auth/README.md)** - Authentication integration for sign-out flow
+- [Guide](../../docs/guide.md) — the canonical feature walkthrough to follow when adding a new screen
+- [State Management](../../docs/state-management.md) — `UiState`/`StatefulComposable` pattern used here
+- [Navigation](../../docs/navigation.md) — how this module's entry is registered with `Navigator`
+- [firebase:auth](../../firebase/auth/README.md) — the sign-out flow this feature calls

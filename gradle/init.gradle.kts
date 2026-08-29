@@ -14,6 +14,10 @@
  *   limitations under the License.
  */
 
+// 💡 Spotless is applied here as an init script (-I gradle/init.gradle.kts, wired via
+// --init-script in every Gradle invocation in this repo) rather than a convention plugin,
+// because it needs to format every subproject uniformly, including build-logic itself -- a
+// convention plugin can't apply itself to the build that defines it.
 // TODO: Verify Spotless task discoverability in Gradle 9.4.0 (Issue #580)
 // Note: Spotless tasks may not appear in standard task listings but still execute correctly
 initscript {

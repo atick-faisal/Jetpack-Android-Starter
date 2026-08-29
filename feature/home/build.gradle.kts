@@ -28,4 +28,6 @@ dependencies {
     // ... Modules
     implementation(projects.core.ui)
     implementation(projects.data)
+
+    testImplementation(projects.core.testing)
 }

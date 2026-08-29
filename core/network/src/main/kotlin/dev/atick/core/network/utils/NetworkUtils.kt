@@ -65,16 +65,19 @@ interface NetworkUtils {
     /**
      * Observes the current network connectivity state.
      *
-     * This function returns a cold [Flow] that emits [NetworkState] changes in real-time.
-     * The flow registers a [ConnectivityManager.NetworkCallback] when collected and
-     * unregisters it when the collector is cancelled, ensuring proper resource cleanup.
+     * This function returns a cold [Flow] that emits connectivity as it stands the moment it is
+     * collected, then every change after that. The flow registers a
+     * [ConnectivityManager.NetworkCallback] when collected and unregisters it when the collector
+     * is cancelled, ensuring proper resource cleanup.
      *
      * ## Emitted States
      *
      * - [NetworkState.CONNECTED] - Network is available and connected
-     * - [NetworkState.LOSING] - Network connection is degrading
      * - [NetworkState.LOST] - Network connection was lost
      * - [NetworkState.UNAVAILABLE] - No network is available
+     *
+     * [NetworkState.LOSING] is declared but never emitted: the implementation logs the callback
+     * and leaves the last state standing, because a network that is losing is still usable.
      *
      * ## Lifecycle
      *
@@ -90,11 +93,13 @@ interface NetworkUtils {
      * ## Best Practices
      *
      * - Convert to [StateFlow] in ViewModels for UI consumption
-     * - Use [Flow.distinctUntilChanged] to avoid redundant state updates
      * - Handle all network states, not just CONNECTED/LOST
      *
-     * @return A cold [Flow] that emits [NetworkState] changes. The flow never completes
-     *         unless the collector is cancelled.
+     * Consecutive duplicates are already collapsed by the implementation, so collectors do not
+     * need their own [Flow.distinctUntilChanged].
+     *
+     * @return A cold [Flow] that emits the current [NetworkState] on collection and then each
+     *         change. The flow never completes unless the collector is cancelled.
      *
      * @see NetworkState
      */

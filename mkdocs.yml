@@ -51,35 +51,21 @@ markdown_extensions:
   - pymdownx.superfences
   - pymdownx.details
   - admonition
+  - md_in_html
 
 nav:
   - Getting Started: getting-started.md
-  - Core Concepts:
-      - Architecture: architecture.md
-      - Philosophy: philosophy.md
-      - State Management: state-management.md
-  - Development Guide:
-      - Adding Features: guide.md
-      - Components: components.md
-      - Data Flow: data-flow.md
-      - Navigation: navigation.md
-      - Dependency Injection: dependency-injection.md
-      - Dependencies: dependency.md
-      - Quick Reference: quick-reference.md
-  - Tools & Configuration:
-      - Spotless: spotless.md
-      - Fastlane: fastlane.md
-      - Firebase: firebase.md
-      - GitHub: github.md
-      - Plugins: plugins.md
-  - Best Practices:
-      - Performance: performance.md
-      - Tips: tips.md
-  - Troubleshooting:
-      - Common Issues: troubleshooting.md
-      - FAQ: faq.md
+  - Architecture: architecture.md
+  - Guide: guide.md
+  - State Management: state-management.md
+  - Navigation: navigation.md
+  - Components: components.md
+  - Data: data.md
+  - Build & Tooling: build-and-tooling.md
+  - Firebase: firebase.md
+  - Troubleshooting: troubleshooting.md
   - 📚 API Reference: api/index.html
-  - ⚖️ License: license.md
+  - ⚖️ License: https://github.com/atick-faisal/Jetpack-Android-Starter/blob/main/LICENSE
 
 extra:
   consent:
