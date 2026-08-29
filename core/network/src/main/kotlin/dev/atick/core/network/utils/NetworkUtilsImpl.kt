@@ -23,6 +23,7 @@ import android.net.NetworkCapabilities
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -41,6 +42,13 @@ internal class NetworkUtilsImpl @Inject constructor(
      * @return [Flow] of [NetworkState].
      */
     override fun getCurrentState(): Flow<NetworkState> = callbackFlow {
+        // ⚠️ A NetworkCallback only reports transitions, so without this seed a collector that
+        // starts while the device is already offline receives nothing at all -- and a UI deriving
+        // an offline flag from this flow keeps whatever it defaulted to. JetpackAppState defaults
+        // isOffline to false, so the app would report itself online for as long as connectivity
+        // never changed. Emit the state that is true right now, then report transitions.
+        trySend(currentNetworkState())
+
         val callback = object : ConnectivityManager.NetworkCallback() {
             override fun onAvailable(network: Network) {
                 super.onAvailable(network)
@@ -90,5 +98,24 @@ internal class NetworkUtilsImpl @Inject constructor(
         awaitClose {
             connectivityManager.unregisterNetworkCallback(callback)
         }
+    }
+        // registerDefaultNetworkCallback usually replays onAvailable for the network that is
+        // already up, which would repeat the seed above. Collapsing duplicates keeps that an
+        // implementation detail of the platform rather than something collectors have to handle.
+        .distinctUntilChanged()
+
+    /**
+     * Reads connectivity as it stands right now, for the initial emission.
+     *
+     * @return [NetworkState.CONNECTED] if the active network reports internet capability,
+     *         [NetworkState.UNAVAILABLE] otherwise.
+     */
+    private fun currentNetworkState(): NetworkState {
+        val capabilities = connectivityManager.activeNetwork
+            ?.let(connectivityManager::getNetworkCapabilities)
+        val hasInternet = capabilities
+            ?.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) == true
+
+        return if (hasInternet) NetworkState.CONNECTED else NetworkState.UNAVAILABLE
     }
 }
