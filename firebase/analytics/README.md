@@ -1,58 +1,25 @@
 # Module :firebase:analytics
 
-This module handles crash reporting through Firebase Crashlytics. It provides a centralized way
-to track app crashes and report exceptions.
+**Purpose:** Crash reporting via Firebase Crashlytics, behind one small abstraction.
 
 > [!NOTE]
-> Despite the module name `firebase:analytics`, this module provides **Crashlytics** (crash reporting),
-> not Firebase Analytics (event tracking). Firebase Analytics is not included in this template.
+> Despite the module name, this is **Crashlytics** (crash reporting), not Firebase Analytics (event
+> tracking) — no analytics events are logged anywhere in this template.
 
-## Features
+## Key APIs
 
-- Crash Reporting
-- Error Tracking
-- Exception Handling
-- Custom Error Reports
-
-## Dependencies Graph
-
-```mermaid
-graph TD
-    A[firebase:analytics] --> B[core:android]
-    A --> C[firebase.bom]
-    C --> D[firebase.crashlytics]
-```
-
-## Usage
+| API | What it does |
+|---|---|
+| `CrashReporter` / `FirebaseCrashReporter` | `reportException(throwable)` → `crashlytics.recordException(throwable)` |
 
 ```kotlin
-dependencies {
-    implementation(project(":firebase:analytics"))
+// firebase/analytics/src/main/kotlin/dev/atick/firebase/analytics/utils/FirebaseCrashReporter.kt
+override fun reportException(throwable: Throwable) {
+    crashlytics.recordException(throwable)
 }
 ```
-
-### Error Reporting
-
-```kotlin
-class YourClass @Inject constructor(
-    private val crashReporter: CrashReporter
-) {
-    fun handleError(error: Throwable) {
-        crashReporter.reportException(error)
-    }
-}
-```
-
-The module integrates with the app's error handling system to automatically report uncaught
-exceptions to Firebase Crashlytics.
-
-## Setup
-
-> [!NOTE]
-> For Firebase setup instructions, including enabling Crashlytics in the Firebase Console, see the [Firebase Setup Guide](../../docs/firebase.md).
 
 ## Related Documentation
 
-- **[Firebase Setup Guide](../../docs/firebase.md)** - Complete Firebase Console and local project setup
-- **[Troubleshooting Guide](../../docs/troubleshooting.md)** - Firebase Crashlytics issues and solutions
-- **[Firebase Crashlytics Docs](https://firebase.google.com/docs/crashlytics)** - Official Firebase Crashlytics documentation
+- [Firebase Setup § Crashlytics](../../docs/firebase.md#crashlytics) — mapping-file upload, how to confirm reporting end-to-end
+- [Build & Tooling](../../docs/build-and-tooling.md) — `FirebaseConventionPlugin`

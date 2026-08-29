@@ -1,79 +1,31 @@
 # Module :feature:settings
 
-This module handles user preferences and app settings. It provides a UI for configuring app behavior
-and managing user preferences.
+**Purpose:** Theme (light/dark/system + dynamic color), language, and sign-out, shown as a dialog
+rather than a full screen.
 
-## Features
+## Key APIs
 
-- Theme Configuration (Light/Dark)
-- Dynamic Color Toggle
-- Open Source Licenses
-- User Profile Settings
-- Sign Out Option
-- Preferences Persistence
-
-## Dependencies Graph
-
-```mermaid
-graph TD
-    A[feature:settings] --> B[core:ui]
-    A --> C[data]
-    A --> D[google.oss.licenses]
-    B --> E[core:android]
-
-    subgraph "Core Dependencies"
-        B
-        C
-        E
-    end
-```
-
-## Usage
+| API | What it does |
+|---|---|
+| `SettingsDialog` / `SettingsViewModel` | Theme + dynamic-color toggles, language selection, sign-out, open-source licenses |
 
 ```kotlin
-dependencies {
-    implementation(project(":feature:settings"))
-}
-```
-
-### Settings Dialog
-
-```kotlin
+// feature/settings/src/main/kotlin/dev/atick/feature/settings/ui/SettingsDialog.kt
 @Composable
 fun SettingsDialog(
     onDismiss: () -> Unit,
-    onShowSnackbar: suspend (String, SnackbarAction, Throwable?) -> Boolean
+    onShowSnackbar: suspend (String, SnackbarAction, Throwable?) -> Boolean,
+    settingsViewModel: SettingsViewModel = hiltViewModel(),
 )
 ```
 
-### Key Features
+## Gotchas
 
-1. **Theme Settings**:
-
-	```kotlin
-	@Composable
-	fun ThemeSettings(
-	   darkThemeConfig: DarkThemeConfig,
-	   useDynamicColor: Boolean,
-	   onDarkThemeConfigChange: (DarkThemeConfig) -> Unit,
-	   onUseDynamicColorChange: (Boolean) -> Unit
-	)
-	```
-
-2. **Profile Settings**:
-
-	```kotlin
-	@Composable
-	fun ProfileSettings(
-	   onSignOut: () -> Unit,
-	   onShowLicenses: () -> Unit
-	)
-	```
-
-The module uses DataStore Preferences for persistent storage of user settings.
+- The language picker's `when` maps every non-Arabic locale to English — adding a new
+  `values-<lang>/` resource directory changes what `generateLocaleConfig` offers the system without
+  updating this mapping.
 
 ## Related Documentation
 
-- **[Adding a Feature Guide](../../docs/guide.md)** - Step-by-step template for creating new features
-- **[State Management](../../docs/state-management.md)** - UiState pattern and ViewModel best practices
-- **[Core Preferences](../../core/preferences/README.md)** - DataStore implementation for settings persistence
+- [State Management](../../docs/state-management.md) — `UiState`/`StatefulComposable` pattern used here
+- [Core Preferences](../../core/preferences/README.md) — the DataStore preferences this dialog reads/writes
