@@ -1,56 +1,33 @@
 # Module :feature:home
 
-Main feature module implementing the home screen with item list and CRUD operations.
+**Purpose:** The template's reference feature — a Jetpack list with create/edit/delete, offline
+support, and background sync. The one feature the [Guide](../../docs/guide.md) walks through end to end.
 
-## Features
+## Key APIs
 
-- Item List Display
-- Create/Edit Items
-- Delete with Undo
-- Offline Support
-- Pull to Refresh
-- Background Sync
+| API | What it does |
+|---|---|
+| `HomeScreen` / `HomeViewModel` | Jetpack list, swipe-to-delete with undo |
+| `ItemScreen` / `ItemViewModel` | Create/edit a single jetpack; assisted-injected with the Nav3 `itemId` argument |
 
-## Dependencies Graph
-
-```mermaid
-graph TD
-    A[feature:home] --> B[core:ui]
-    A --> C[data]
-    B --> D[core:android]
-
-    subgraph "Core Dependencies"
-        B
-        C
-        D
-    end
+```kotlin
+// feature/home/src/main/kotlin/dev/atick/feature/home/ui/item/ItemScreen.kt
+@Composable
+internal fun ItemScreen(
+    itemId: String?,
+    onBackClick: () -> Unit,
+    onShowSnackbar: suspend (String, SnackbarAction, Throwable?) -> Boolean,
+    // Navigation 3 passes destination arguments through the NavKey rather than a
+    // SavedStateHandle, so the id is handed to the ViewModel by assisted injection.
+    itemViewModel: ItemViewModel = hiltViewModel<ItemViewModel, ItemViewModel.Factory>(
+        creationCallback = { factory -> factory.create(itemId) },
+    ),
+)
 ```
-
-## Key Components
-
-1. **Home Screen**: Shows the list of items
-
-	```kotlin
-	@Composable
-	fun HomeRoute(
-	    onItemClick: (String) -> Unit,
-	    onShowSnackbar: suspend (String, SnackbarAction, Throwable?) -> Boolean
-	)
-	```
-
-2. **Item Screen**: Create/Edit item screen
-
-	```kotlin
-	@Composable
-	fun ItemRoute(
-	   onBackClick: () -> Unit,
-	   onShowSnackbar: suspend (String, SnackbarAction, Throwable?) -> Boolean
-	)
-	```
 
 ## Related Documentation
 
-- **[Adding a Feature Guide](../../docs/guide.md)** - Step-by-step template for creating new features
-- **[State Management](../../docs/state-management.md)** - UiState pattern and ViewModel best practices
-- **[Navigation Deep Dive](../../docs/navigation.md)** - Type-safe navigation implementation
-- **[Data Layer](../../data/README.md)** - Repository patterns used in this feature
+- [Guide](../../docs/guide.md) — full walkthrough of this feature's ViewModel, screen, and navigation entries
+- [State Management](../../docs/state-management.md) — `UiState`/`StatefulComposable` pattern used here
+- [Navigation](../../docs/navigation.md) — assisted-inject ViewModels for keyed Nav3 arguments
+- [Data Layer](../../data/README.md) — the `HomeRepository` this feature reads/writes through

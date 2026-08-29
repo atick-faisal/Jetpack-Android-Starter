@@ -1,85 +1,35 @@
 # Module :firebase:firestore
 
-This module provides cloud data storage using Firebase Firestore. It handles data synchronization,
-real-time updates, and offline persistence.
+**Purpose:** The remote sync target for `:data`'s offline-first `home` feature — read/write access
+to a per-user Firestore collection, nothing more.
 
-## Features
+## Key APIs
 
-- Cloud Data Storage
-- Real-time Updates
-- Offline Persistence
-- Batch Operations
-- Security Rules Integration
-- Data Serialization
-
-## Dependencies Graph
-
-```mermaid
-graph TD
-    A[firebase:firestore] --> B[core:android]
-    A --> C[firebase.bom]
-    C --> D[firebase.firestore]
-```
-
-## Usage
+| API | What it does |
+|---|---|
+| `FirebaseDataSource` / `FirebaseDataSourceImpl` | `pullJetpacks(userId, lastSynced)`, `createOrUpdateJetpack`, `deleteJetpack` against `/dev.atick.jetpack/{userId}/jetpacks/{jetpackId}` |
+| `FirebaseJetpack` | 7-field remote model (`id`, `name`, `price`, `userId`, `lastUpdated`, `lastSynced`, `deleted`) enforced by the security rules below |
 
 ```kotlin
-dependencies {
-    implementation(project(":firebase:firestore"))
-}
-```
-
-### Data Operations
-
-```kotlin
-class FirestoreDataSource @Inject constructor(
-    firestore: FirebaseFirestore
-) {
-    private val collection = firestore
-        .collection("your_collection")
-
-    suspend fun getData(userId: String): List<Data> =
-        collection
-            .whereEqualTo("userId", userId)
-            .get()
-            .await()
-            .toObjects()
-
-    suspend fun createData(data: Data) =
-        collection
-            .document(data.id)
-            .set(data)
-            .await()
-}
-```
-
-### Security Rules
-
-The module expects proper Firestore security rules to be set up. Here's a basic example:
-
-```javascript
-rules_version = '2';
-service cloud.firestore {
-  match /databases/{database}/documents {
-    match /{document=**} {
-      allow read, write: if request.auth != null;
+// firebase/firestore/src/main/kotlin/dev/atick/firebase/firestore/data/FirebaseDataSourceImpl.kt
+override suspend fun pullJetpacks(userId: String, lastSynced: Long): List<FirebaseJetpack> {
+    return withContext(ioDispatcher) {
+        database.document(checkAuthentication(userId))
+            .collection(FirebaseDataSource.JETPACK_COLLECTION_NAME)
+            .whereGreaterThan("lastUpdated", lastSynced)
+            .get().await().toObjects(FirebaseJetpack::class.java)
     }
-  }
 }
 ```
 
-> [!NOTE]
-> For complete Firestore setup and production-ready security rules examples, see the [Firebase Setup Guide](../../docs/firebase.md#firestore-security-rules).
+## Gotchas
 
-All operations are performed with proper security context and error handling.
-
-## Setup
-
-> [!NOTE]
-> For Firebase Firestore setup instructions, including enabling Firestore in the Firebase Console and configuring security rules, see the [Firebase Setup Guide](../../docs/firebase.md).
+- This module is only ever read through `:data`'s `HomeRepositoryImpl` — no screen queries Firestore
+  directly.
+- A rule change that rejects a write fails silently as a permission-denied error at sync time, not at
+  deploy time — test in the Rules Playground first.
 
 ## Related Documentation
 
-- **[Firebase Setup Guide](../../docs/firebase.md)** - Complete Firebase Console and Firestore setup
-- **[Troubleshooting Guide](../../docs/troubleshooting.md)** - Firebase Firestore issues and solutions
-- **[Firestore Security Rules](https://firebase.google.com/docs/firestore/security/get-started)** - Official Firebase security rules documentation
+- [Firebase Setup § Firestore Security Rules](../../docs/firebase.md#firestore-security-rules) — the full rule set and field validation
+- [Data Layer](../../docs/data.md) — the two-way sync algorithm this module participates in

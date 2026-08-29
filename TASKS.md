@@ -68,8 +68,8 @@ Rewrites:
 - [x] `core/network/README.md` (205 → ≤ 80) — remove `networkBoundResource` (A2) — verified: 40 lines; invented `UserApi`/`UserNetworkDataSource` replaced with real `JetpackRestApi`/`NetworkDataSourceImpl`; fabricated `apiKey`/`apiEndpoint` secrets snippet replaced with the real `BACKEND_URL` (`secrets.defaults.properties` → `BuildConfig.BACKEND_URL`, spot-checked against `RetrofitModule.kt`); added the real `getCurrentState()` no-initial-emission gotcha (second-tier finding from PLAN.md)
 - [x] `core/android/README.md` (152 → ≤ 80) — remove `networkBoundResource` incl. the full fake snippet at :67 (A2) — verified: 32 lines; this was a second, previously-unlisted site of the same A2 fabrication (`Resource`/`networkBoundResource` don't exist in any `.kt`)
 - [x] `app/README.md` (150 → ≤ 80, real MainActivity walkthrough kept) — verified: 48 lines; fixed the stale version-scheme snippet (`minorUpdateVersion = 0` → real `3`, confirmed in `app/build.gradle.kts`); fixed dead `dependency-injection.md` link → `data.md`
-- [ ] `firebase/firestore/README.md`, `firebase/auth/README.md`, `firebase/analytics/README.md`
-- [ ] `feature/settings/README.md`, `feature/auth/README.md`, `feature/home/README.md`, `feature/profile/README.md`
+- [x] `firebase/firestore/README.md`, `firebase/auth/README.md`, `firebase/analytics/README.md` — verified: 35/31/25 lines; already-current links carried forward unchanged
+- [x] `feature/settings/README.md`, `feature/auth/README.md`, `feature/home/README.md`, `feature/profile/README.md` — verified: 31/28/33/26 lines; found and fixed a real drift missed by PLAN.md's audit — all four READMEs named `SignInRoute`/`SignUpRoute`/`HomeRoute`/`ItemRoute`/`ProfileRoute` composables, but the Nav3 migration dropped the `Route` wrapper entirely (confirmed zero `Route(` matches under `feature/*/ui/`, and `docs/guide.md`/`docs/navigation.md` already call these `HomeScreen`/`ItemScreen` directly from `entries`); every signature replaced with the real `internal fun XxxScreen(...)`
 
 New (A9):
 
