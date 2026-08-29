@@ -1,6 +1,6 @@
 # Jetpack Android Starter - AI Agent Instructions
 
-This file provides AI coding agents with project-specific instructions, conventions, and boundaries for working with this Android codebase.
+This file provides AI coding agents with project-specific instructions, conventions, and boundaries for working with this Android codebase. It is deliberately short — the full rationale for every pattern below lives in `docs/`, linked inline. Read the linked page before touching that part of the codebase; do not treat the snippets here as the complete picture.
 
 ## Essential Commands
 
@@ -21,11 +21,12 @@ This file provides AI coding agents with project-specific instructions, conventi
 
 ### Code Quality (ALWAYS RUN BEFORE COMMITTING)
 ```bash
-# Auto-format all code with ktlint
-./gradlew spotlessApply
+# Auto-format all code with ktlint (Spotless is an init script, not a plugin — the
+# --init-script flag is required or the task will not be found; see docs/build-and-tooling.md)
+./gradlew spotlessApply --init-script gradle/init.gradle.kts --no-configuration-cache
 
 # Check formatting
-./gradlew spotlessCheck
+./gradlew spotlessCheck --init-script gradle/init.gradle.kts --no-configuration-cache
 
 # Run all checks
 ./gradlew check
@@ -46,8 +47,8 @@ This file provides AI coding agents with project-specific instructions, conventi
 ### Documentation
 ```bash
 # Generate API documentation with Dokka
-./gradlew dokkaHtmlMultiModule
-# Output: build/dokka/htmlMultiModule/
+./gradlew dokkaGeneratePublicationHtml
+# Output: build/dokka/html/
 ```
 
 ### Firebase Setup
@@ -56,17 +57,27 @@ This file provides AI coding agents with project-specific instructions, conventi
 ./gradlew signingReport
 ```
 
+### Build guardrails
+```bash
+# Regenerate the Dependency Guard baseline after an intentional dependency change
+./gradlew :app:dependencyGuardBaseline
+
+# Regenerate the APK badging golden file after an intentional manifest/permission change
+./gradlew :app:updateReleaseBadging
+```
+
 ## Project Context
 
 ### Tech Stack Overview
 - **Language**: Kotlin 2.4.10 with coroutines & Flow
-- **UI**: Jetpack Compose with Material3 (declarative UI)
+- **UI**: Jetpack Compose with Material3 Expressive (declarative UI)
 - **Architecture**: Two-layer MVVM (UI + Data, intentionally no Domain layer)
 - **DI**: Dagger Hilt (compile-time injection)
 - **Local Storage**: Room (SQL) + DataStore (key-value)
 - **Networking**: Retrofit + OkHttp + Kotlinx Serialization
-- **Backend**: Firebase (Auth, Firestore, Crashlytics, Performance)
-- **Background Work**: WorkManager with sync constraints
+- **Backend**: Firebase (Auth, Firestore, Crashlytics, Analytics)
+- **Background Work**: WorkManager, network-constrained two-way sync
+- **Navigation**: Jetpack Navigation 3 (`NavKey`, `Navigator`, multi-back-stack) — see [Navigation](docs/navigation.md)
 - **Build**: Gradle 9.6.1, AGP 9.3.1, Java 21
 
 ### Architecture Pattern
@@ -74,155 +85,54 @@ This file provides AI coding agents with project-specific instructions, conventi
 1. **UI Layer**: `feature/*` modules with Composables + ViewModels (MVVM)
 2. **Data Layer**: `data/` module with Repositories + Data Sources
 
-**Why no Domain layer?** Intentionally omitted to reduce complexity. Add it only when you have complex business logic or need to share logic between multiple ViewModels.
+**Why no Domain layer?** Intentionally omitted to reduce complexity. Add it only when you have complex business logic or need to share logic between multiple ViewModels. Full rationale: [Architecture](docs/architecture.md).
 
 ### State Management Pattern
-All screens follow a consistent state pattern using `UiState<T>` wrapper (defined in `core:ui`):
+Every screen follows the `UiState<T>` pattern defined in `core:ui`:
+
+- `UiState<T>`: wraps `data`, `loading`, `error: OneTimeEvent<Throwable?>`
+- `updateState {}`: synchronous state updates
+- `updateStateWith {}` / `updateWith {}`: async operations with automatic loading/error handling, reentrancy-guarded (a call while already loading is dropped)
+- `StatefulComposable`: renders the loading/error/content UI for a `UiState`
 
 ```kotlin
-// 1. Define screen data (immutable state)
-data class HomeScreenData(
-    val items: List<Item> = emptyList()
-)
+// feature/home/.../HomeViewModel.kt
+private val _homeUiState = MutableStateFlow(UiState(HomeScreenData()))
+val homeUiState = _homeUiState
+    .onStart { getJetpacks() }
+    .stateInDelayed(UiState(HomeScreenData()), viewModelScope)
 
-// 2. ViewModel with UiState
-@HiltViewModel
-class HomeViewModel @Inject constructor(
-    private val repository: HomeRepository
-) : ViewModel() {
-    private val _uiState = MutableStateFlow(UiState(HomeScreenData()))
-    val uiState = _uiState.asStateFlow()
-
-    // Sync state update
-    fun updateItems(items: List<Item>) {
-        _uiState.updateState { copy(items = items) }
-    }
-
-    // Async state update (auto handles loading/error)
-    fun fetchItems() {
-        _uiState.updateStateWith {
-            repository.fetchItems()
-        }
-    }
-}
-
-// 3. Composable with StatefulComposable wrapper
-@Composable
-fun HomeRoute(
-    viewModel: HomeViewModel = hiltViewModel()
-) {
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-
-    StatefulComposable(
-        state = uiState,
-        onRetry = { viewModel.fetchItems() }
-    ) { data ->
-        HomeScreen(data = data)
-    }
+fun deleteJetpack(jetpack: Jetpack) {
+    _homeUiState.updateWith { homeRepository.markJetpackAsDeleted(jetpack) }
 }
 ```
 
-**Key utilities** (in `core:ui/utils/`):
-- `UiState<T>`: Wrapper with data, loading, error
-- `updateState {}`: Synchronous state updates
-- `updateStateWith {}`: Async operations with automatic loading/error handling
-- `StatefulComposable`: Consistent loading/error UI
-- `OneTimeEvent<T>`: Thread-safe one-time event consumption (navigation, snackbars)
+Full pattern, including context parameters and `OneTimeEvent`: [State Management](docs/state-management.md).
 
 ### Navigation Pattern
-Type-safe navigation using Kotlin serialization (no string-based routes):
+Jetpack Navigation 3 — type-safe `NavKey`s, no string routes, no `NavController`/`NavHost`:
 
 ```kotlin
-// 1. Define route with @Serializable
+// feature/home/.../HomeNavigation.kt
 @Serializable
-data class ProfileRoute(val userId: String)
+data class ItemNavKey(val itemId: String?) : NavKey
 
-// 2. NavController extension for navigation
-fun NavController.navigateToProfile(userId: String) {
-    navigate(ProfileRoute(userId = userId))
-}
+fun Navigator.navigateToItem(itemId: String?) = navigate(ItemNavKey(itemId))
 
-// 3. NavGraph extension for screen registration
-fun NavGraphBuilder.profileScreen(
-    onShowSnackbar: suspend (String, SnackbarAction, Throwable?) -> Boolean
-) {
-    composable<ProfileRoute> {
-        ProfileRoute(onShowSnackbar = onShowSnackbar)
-    }
-}
-
-// 4. Extract params in ViewModel via SavedStateHandle
-@HiltViewModel
-class ProfileViewModel @Inject constructor(
-    savedStateHandle: SavedStateHandle
-) : ViewModel() {
-    private val userId: String = savedStateHandle.toRoute<ProfileRoute>().userId
+fun EntryProviderScope<NavKey>.homeEntries(navigator: Navigator, ...) {
+    entry<ItemNavKey> { key -> ItemScreen(itemId = key.itemId, ...) }
 }
 ```
 
-### Data Flow Pattern (Offline-First)
-1. **UI observes repository Flow** (local database is single source of truth)
-2. **Repository returns Flow from Room database**
-3. **WorkManager syncs in background** (network, battery, storage constraints)
-4. **Sync updates local database**
-5. **UI automatically updates via Flow observation**
+Multi-back-stack state, `ListDetailSceneStrategy`, and assisted-inject ViewModels for keyed
+arguments: [Navigation](docs/navigation.md).
 
-```kotlin
-// Repository pattern example
-class HomeRepositoryImpl @Inject constructor(
-    private val localDataSource: LocalDataSource,
-    private val networkDataSource: NetworkDataSource,
-    @IoDispatcher private val ioDispatcher: CoroutineDispatcher
-) : HomeRepository {
-
-    // UI observes this Flow
-    override fun observeData(): Flow<List<Data>> =
-        localDataSource.observeData()
-            .map { entities -> entities.map { it.toDomain() } }
-
-    // Background sync calls this
-    override suspend fun sync(): Result<Unit> = withContext(ioDispatcher) {
-        suspendRunCatching {
-            val remoteData = networkDataSource.fetchData()
-            localDataSource.saveData(remoteData.map { it.toEntity() })
-        }
-    }
-}
-```
-
-### Dependency Injection Pattern
-All modules use Hilt with clear scoping:
-
-```kotlin
-// Data sources in SingletonComponent
-@Module
-@InstallIn(SingletonComponent::class)
-object NetworkModule {
-    @Provides
-    @Singleton
-    fun provideApiService(retrofit: Retrofit): ApiService =
-        retrofit.create(ApiService::class.java)
-}
-
-// Repositories use @Binds for interface binding
-@Module
-@InstallIn(SingletonComponent::class)
-abstract class RepositoryModule {
-    @Binds
-    @Singleton
-    abstract fun bindRepository(impl: RepoImpl): Repository
-}
-
-// ViewModels use @HiltViewModel
-@HiltViewModel
-class HomeViewModel @Inject constructor(
-    private val repository: Repository
-) : ViewModel()
-
-// Composables use hiltViewModel()
-@Composable
-fun HomeRoute(viewModel: HomeViewModel = hiltViewModel()) { }
-```
+### Data Flow & Dependency Injection
+Offline-first: the UI observes a Room `Flow`, a `SyncManager`/WorkManager worker pushes local
+changes and pulls remote ones in the background, and the local database is the single source of
+truth. Repositories are bound with Hilt `@Binds`; data sources use `@IoDispatcher` and
+`suspendRunCatching` to convert exceptions to `Result`. Full pattern, including the sync
+contract and `@Binds` vs `@Provides`: [Data](docs/data.md).
 
 ### Module Dependencies (Respect These Boundaries)
 ```
@@ -240,19 +150,18 @@ feature/* → data → core:* → firebase:*
 ## Conventions & Patterns
 
 ### File Naming
-- **ViewModels**: `{Feature}ViewModel.kt` (e.g., `HomeViewModel.kt`)
+- **ViewModels**: `{Feature}ViewModel.kt`, co-located with its screen (e.g. `ui/home/HomeViewModel.kt`)
 - **Repositories**: `{Feature}Repository.kt` + `{Feature}RepositoryImpl.kt`
 - **Data Sources**: `{Type}DataSource.kt` (e.g., `NetworkDataSource.kt`, `LocalDataSource.kt`)
-- **Screen Data**: `{Feature}ScreenData.kt` (immutable state)
-- **Routes**: `{Feature}Route` (e.g., `@Serializable data class HomeRoute`)
-- **Composables**: Separate `*Route` (stateful) from `*Screen` (stateless)
+- **Screen Data**: `{Feature}ScreenData.kt` (immutable state, `@Immutable`)
+- **Nav keys**: `{Feature}NavKey` (e.g., `@Serializable data class ItemNavKey(...)  : NavKey`)
+- **Composables**: One `internal fun {Name}Screen(...)` per destination — no separate stateful/stateless `Route` wrapper
 
 ### Code Organization
-- **Screen composables**: `feature/{name}/ui/{Name}Screen.kt`
-- **ViewModels**: `feature/{name}/viewmodel/{Name}ViewModel.kt`
+- **Screen + ViewModel**: `feature/{name}/ui/{screen}/{Name}Screen.kt` + `{Name}ViewModel.kt`
 - **Navigation**: `feature/{name}/navigation/{Name}Navigation.kt`
-- **Repositories**: `data/repository/{name}/{Name}Repository.kt`
-- **Models**: Network models in `core:network/model/`, Domain models in `data/model/`, Entities in `core:room/entity/`
+- **Repositories**: `data/repository/{name}/{Name}Repository(Impl).kt`
+- **Models**: Network DTOs in `core:network/model/`, domain models in `data/model/{name}/`, Room entities in `core:room/model/`
 
 ### Threading & Coroutines
 - Use `@IoDispatcher` for IO operations (network, database, file I/O)
@@ -268,22 +177,18 @@ feature/* → data → core:* → firebase:*
 - UI layer handles errors via `UiState.error: OneTimeEvent<Throwable?>`
 
 ### Kotlin Compiler Features
-- **Context parameters enabled** (`-Xcontext-parameters`): `updateStateWith` and `updateWith` automatically access ViewModel scope
-- **Material3 experimental APIs** opted-in globally
+- **Context parameters** — on by default since Kotlin 2.4, no compiler flag needed: `updateStateWith` and `updateWith` use them to access `viewModelScope` without it being passed explicitly
+- **Material3 Expressive** theming (`MaterialExpressiveTheme`), experimental APIs opted-in globally
 - **RequiresOptIn** enabled
 
 ## Known Gotchas & Special Notes
 
-### AGP 9 Migration (Completed March 2026)
-⚠️ Project migrated to Android Gradle Plugin 9.x (currently 9.3.1). Known issues:
-- **Dokka warnings**: `AndroidExtensionWrapper could not get Android Extension` (harmless)
-- **Spotless task discovery**: Tasks not visible in `./gradlew tasks` but still execute
-- **Custom APK naming**: Temporarily disabled due to API changes
-
-### Gradle Configuration
-- **Configuration cache enabled**: May be discarded by OssLicensesTask (harmless)
+### Build
+- **Spotless task discovery**: applied via an init script, not a plugin — tasks are invisible in `./gradlew tasks` but still exist and run; always pass `--init-script gradle/init.gradle.kts`
+- **Custom APK output filename**: not implemented on AGP 9 — `androidComponents.onVariants` in `app/build.gradle.kts` is currently a no-op placeholder (tracked as GitHub Issue #579); this is unrelated to APK badging, which does work (see below)
+- **Dependency Guard** (`:app:dependencyGuard`) and **APK badging** (`:app:checkReleaseBadging`) run in CI on every PR — a dependency or manifest/permission change that isn't accompanied by a baseline/golden-file update will fail the build
+- **Configuration cache**: enabled; may be discarded by `OssLicensesTask` (harmless)
 - **JVM heap**: 8GB configured in `gradle.properties`
-- **Parallel builds**: Enabled for performance
 
 ### Isolated Projects
 Not enabled by default yet, but the build is verified against it:
@@ -306,53 +211,46 @@ Every library module sets `resourcePrefix` derived from its Gradle path, so a re
 merging, so without the prefix two modules can define the same name and the winner depends on
 merge order. Lint reports any resource that does not match.
 
-### Spotless & Code Formatting
-- **CRITICAL**: Always run `./gradlew spotlessApply` before committing
-- CI will fail if code is not formatted
-- Configuration in `gradle/init.gradle.kts`
-- Uses ktlint + custom Compose rules
-
 ### Convention Plugins
-Located in `build-logic/convention/`. Do NOT modify these unless you understand the full impact:
-- `dev.atick.application`: App module setup
-- `dev.atick.library`: Base library setup
-- `dev.atick.ui.library`: UI library with Compose
-- `dev.atick.dagger.hilt`: Hilt DI setup
-- `dev.atick.firebase`: Firebase services
+Located in `build-logic/convention/`. Do NOT modify these unless you understand the full impact —
+seven plugins (`dev.atick.application`, `dev.atick.library`, `dev.atick.ui.library`, `dev.atick.test`,
+`dev.atick.dagger.hilt`, `dev.atick.firebase`, `dev.atick.dokka`), documented in
+[Build & Tooling](docs/build-and-tooling.md).
 
 ### Version Management
-- All dependencies in `gradle/libs.versions.toml` (Gradle Version Catalog)
-- Use `libs.{name}` in build files
-- Renovate & Dependabot configured for auto-updates
+All dependencies in `gradle/libs.versions.toml` (Gradle Version Catalog). Use `libs.{name}` in build
+files; never a hardcoded version string.
 
 ### Release Builds
 - Requires `keystore.properties` in project root (NOT committed to git)
 - Keystore file should be in `app/` directory
+- Without `keystore.properties`, a release build silently falls back to the **debug signing key** —
+  the output is un-shippable and un-upgradable; see the `☠️ CAUTION` in
+  [Getting Started](docs/getting-started.md#release-build-setup)
 - Never commit keystore files or credentials
 
 ### Firebase
 - Debug build has template `google-services.json` (features won't work until configured)
 - Requires Firebase project setup with package name `dev.atick.compose`
-- See `docs/firebase.md` for detailed setup
+- See [Firebase](docs/firebase.md) for detailed setup
 
 ### LeakCanary
 - Enabled in debug builds by default
-- Comment out in `app/build.gradle.kts` to disable: `debugImplementation(libs.leakcanary)`
+- Comment out in `app/build.gradle.kts` to disable: `debugImplementation(libs.leakcanary.android)`
 
 ## Boundaries & Guidelines
 
 ### ALWAYS DO
-✅ Run `./gradlew spotlessApply` before any commit
+✅ Run `./gradlew spotlessApply --init-script gradle/init.gradle.kts` before any commit
 ✅ Use existing state management patterns (`UiState<T>`, `updateStateWith`)
-✅ Use type-safe navigation with `@Serializable` routes
-✅ Separate stateful Route from stateless Screen composables
+✅ Use type-safe Navigation 3 `NavKey`s
 ✅ Use Hilt for dependency injection (`@HiltViewModel`, `@Inject`)
 ✅ Use `suspendRunCatching` for error handling in repositories
 ✅ Use dispatcher qualifiers (`@IoDispatcher`, `@MainDispatcher`)
 ✅ Return `Flow` for observable data, `Result<T>` for one-time operations
 ✅ Follow offline-first pattern (local database as source of truth)
 ✅ Respect module boundaries (features → data → core)
-✅ Add integration tests for new features when test infrastructure exists
+✅ Add unit tests for new ViewModels/repositories using `core:testing`'s `MainDispatcherRule` and fakes
 
 ### ASK FIRST
 ⚠️ Adding new Gradle dependencies
@@ -366,10 +264,10 @@ Located in `build-logic/convention/`. Do NOT modify these unless you understand 
 ⚠️ Changing min/target SDK versions
 
 ### NEVER DO
-❌ Commit without running `./gradlew spotlessApply`
+❌ Commit without running `spotlessApply`
 ❌ Commit keystore files or `keystore.properties`
-❌ Use string-based navigation (always use `@Serializable` routes)
-❌ Directly access `viewModelScope` in state updates (use `updateStateWith` which handles it via context parameters)
+❌ Use string-based navigation (always use `NavKey`)
+❌ Directly access `viewModelScope` in state updates (use `updateStateWith`, which reaches it via context parameters)
 ❌ Make blocking IO calls on main thread
 ❌ Use `GlobalScope` or unstructured concurrency
 ❌ Bypass Hilt and manually create ViewModels or repositories
@@ -379,63 +277,24 @@ Located in `build-logic/convention/`. Do NOT modify these unless you understand 
 ❌ Force push to main/master branch
 ❌ Modify existing database entities without migration strategy
 
-## Example: Adding a New Feature
+## Adding a New Feature
 
-When implementing a new feature, follow this workflow:
-
-1. **Define models** in appropriate layers:
-   - Network DTOs in `core:network/model/` (with `@Serializable`)
-   - Database entities in `core:room/entity/` (with `@Entity`)
-   - Domain models in `data/model/`
-
-2. **Create data sources** (if needed):
-   - Network: interface in `core:network/datasource/`
-   - Local: interface in `core:room/datasource/`, DAOs in `core:room/dao/`
-
-3. **Create repository**:
-   - Interface in `data/repository/{feature}/`
-   - Implementation with `suspendRunCatching` error handling
-   - Return `Flow` for observable data, `Result<T>` for one-shot operations
-
-4. **Create UI layer in `feature/{name}/`**:
-   - `ui/{Name}Screen.kt`: Screen data class + Route + Screen composables
-   - `viewmodel/{Name}ViewModel.kt`: `@HiltViewModel` with `UiState<ScreenData>`
-   - `navigation/{Name}Navigation.kt`: NavController extension + NavGraphBuilder extension
-
-5. **Set up navigation**:
-   - Define `@Serializable` route object
-   - Create `NavController.navigateTo{Name}()` extension
-   - Create `NavGraphBuilder.{name}Screen()` extension
-   - Add to main NavHost in `app/navigation/NavHost.kt`
-
-6. **Configure DI**:
-   - Bind data sources in appropriate modules
-   - Bind repository interface to implementation
-   - ViewModels auto-discovered via `@HiltViewModel`
-
-7. **Run quality checks**:
-   ```bash
-   ./gradlew spotlessApply
-   ./gradlew check
-   ```
+The canonical walkthrough — real code, every step — is [Guide](docs/guide.md), built around the
+`home`/`Jetpack` feature (the only one touching every layer). Follow it rather than improvising the
+module/file layout; it stays current where a second copy here would drift.
 
 ## Additional Resources
 
-- **Comprehensive documentation**: `docs/` directory
-  - `architecture.md`: Architecture deep dive
-  - `state-management.md`: State patterns & utilities
-  - `navigation.md`: Navigation patterns
-  - `dependency-injection.md`: Complete DI guide
-  - `data-flow.md`: Offline-first, caching, sync patterns
-  - `firebase.md`: Firebase setup & troubleshooting
-  - `plugins.md`: Convention plugins guide
+- **Comprehensive documentation**: `docs/` directory — [Architecture](docs/architecture.md),
+  [State Management](docs/state-management.md), [Navigation](docs/navigation.md),
+  [Components](docs/components.md), [Data](docs/data.md), [Build & Tooling](docs/build-and-tooling.md),
+  [Firebase](docs/firebase.md), [Troubleshooting](docs/troubleshooting.md)
 - **Live documentation**: https://atick.dev/Jetpack-Android-Starter
-- **CI/CD workflows**: `.github/workflows/` (ci.yml, cd.yml, docs.yml)
+- **CI/CD workflows**: `.github/workflows/` (`ci.yml`, `cd.yml`, `docs.yml`)
 
 ## Questions or Issues?
 
 If you encounter issues or have questions:
-1. Check `docs/troubleshooting.md` for common problems
+1. Check [Troubleshooting](docs/troubleshooting.md) for common problems
 2. Review relevant documentation in `docs/`
 3. Check GitHub issues for known problems
-4. Refer to the comprehensive inline documentation in the codebase

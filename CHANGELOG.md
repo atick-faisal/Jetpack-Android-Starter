@@ -7,6 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Migrate navigation to Jetpack Navigation 3 (`NavKey`, `Navigator`, `NavDisplay`,
+  multi-back-stack `NavigationState`, `ListDetailSceneStrategy`)
+- Add `:lint` module with custom lint checks (`DesignSystemDetector`, `TestMethodNameDetector`),
+  shipped to consumers via `lintPublish`
+- Add baseline profile generation and startup benchmarking (`:benchmarks`,
+  `BaselineProfileGenerator`, `StartupBenchmark`)
+- Add a Robolectric + Compose test harness (`:core:testing`, `MainDispatcherRule`, fakes) and
+  ~110 reference tests across the repository, ViewModel, and DAO layers
+- Add Dependency Guard, pinning the release runtime classpath to a committed baseline
+- Add APK badging, diffing `aapt2 dump badging` output against a committed golden file to catch
+  manifest/permission drift
+
+### Changed
+
+- Bump Android Gradle Plugin to 9.3.1
+
 ## [1.3.0] - 2026-07-24
 
 ### Added
