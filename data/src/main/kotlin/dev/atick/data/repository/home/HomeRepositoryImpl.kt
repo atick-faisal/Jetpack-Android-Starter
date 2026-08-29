@@ -172,14 +172,22 @@ internal class HomeRepositoryImpl @Inject constructor(
             }
 
             // Remote jetpacks
-            val lastSynced = localDataSource.getLatestUpdateTimestamp(userId)
-            val remoteJetpacks = firebaseDataSource.pullJetpacks(userId, lastSynced)
+            // ⚠️ The cursor is the newest timestamp the *server* assigned, never a local edit time.
+            // lastUpdated comes from whichever device wrote the row, so a fleet where one clock runs
+            // fast would push the cursor into the future and every record from a slower device would
+            // be skipped from then on, silently and permanently.
+            val syncedAfterNanos = localDataSource.getSyncCursor(userId)
+            val remoteJetpacks = firebaseDataSource.pullJetpacks(userId, syncedAfterNanos)
             val totalRemoteJetpacks = remoteJetpacks.size
             Timber.d("Syncing $totalRemoteJetpacks remote jetpacks")
 
             // Pull updates from remote
             // We pull after pushing local changes to save the local changes to the cloud first
-            // and avoid accidentally overwriting them with stale data
+            // and avoid accidentally overwriting them with stale data.
+            // Each row just pushed comes back here once, because a write does not report the
+            // timestamp the server gave it. That echo carries exactly what was pushed, so applying
+            // it changes no content -- and it is what records the row's serverUpdatedAtNanos
+            // locally, moving the cursor past this device's own writes.
             remoteJetpacks.forEachIndexed { index, remoteJetpack ->
                 localDataSource.upsertJetpack(remoteJetpack.toJetpackEntity())
                 emit(

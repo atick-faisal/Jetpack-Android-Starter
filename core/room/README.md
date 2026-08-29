@@ -7,9 +7,9 @@ metadata on every entity so `:sync` knows what still needs to reach Firestore.
 
 | API | What it does |
 |---|---|
-| `JetpackEntity` | `id`, `name`, `price`, `userId`, `lastUpdated`, `lastSynced`, `needsSync`, `deleted`, `syncAction` |
+| `JetpackEntity` | `id`, `name`, `price`, `userId`, `lastUpdated`, `lastSynced`, `serverUpdatedAtNanos`, `needsSync`, `deleted`, `syncAction` |
 | `SyncAction` | `NONE`, `UPSERT`, `DELETE` |
-| `JetpackDao` | `getJetpacks(userId)`, `getUnsyncedJetpacks(userId)`, `upsertJetpack`, `markJetpackAsDeleted` (soft delete), `markAsSynced`, `getLatestUpdateTimestamp` |
+| `JetpackDao` | `getJetpacks(userId)`, `getUnsyncedJetpacks(userId)`, `upsertJetpack`, `markJetpackAsDeleted` (soft delete), `markAsSynced`, `getSyncCursor` |
 | `LocalDataSource` / `LocalDataSourceImpl` | Wraps `JetpackDao` behind an interface consumed by `:data` |
 
 ```kotlin
@@ -25,8 +25,13 @@ suspend fun markJetpackAsDeleted(id: String)
 
 - `deleted` is a **soft delete** — a row marked deleted is hidden from `getJetpacks()` but kept until
   it's pushed to Firestore, so a deletion made offline isn't lost.
-- `getLatestUpdateTimestamp` (max `lastUpdated`) is used as the pull cursor into Firestore's
-  `whereGreaterThan("lastUpdated", ...)` — it depends on device clock, not a server timestamp.
+- Three timestamps, two clocks. `lastUpdated` and `lastSynced` come from whichever device wrote the
+  row and are for display only; `serverUpdatedAtNanos` is the remote server's own write time and is
+  the only one that orders records consistently across devices, which is why `getSyncCursor` reads
+  it and nothing else. A cursor taken from `lastUpdated` follows the fleet's fastest clock and drops
+  every record written by a slower device.
+- `getSyncCursor` counts soft-deleted rows on purpose — their server timestamp has still been
+  consumed, and skipping them would rewind the cursor.
 
 ## Related Documentation
 

@@ -32,6 +32,7 @@ import java.util.UUID
  * The entity uses several fields to track synchronization state:
  * - **lastUpdated**: Timestamp of the last local modification (set on every update)
  * - **lastSynced**: Timestamp of the last successful sync with remote
+ * - **serverUpdatedAtNanos**: The *remote server's* write timestamp, and the sync cursor
  * - **needsSync**: Flag indicating this entity has pending changes to sync
  * - **deleted**: Soft delete flag (entity is hidden from UI but kept for sync)
  * - **syncAction**: The type of sync operation to perform ([SyncAction])
@@ -94,6 +95,11 @@ import java.util.UUID
  *                       Updated on every create/update operation. Used to determine if entity needs sync.
  * @property lastSynced Timestamp (milliseconds since epoch) when this entity was last successfully synced
  *                      with the remote data source. Updated after successful sync operations.
+ * @property serverUpdatedAtNanos Nanoseconds since epoch, taken from the timestamp the *remote server*
+ *                                assigned when it wrote this record. `0` until the record has been
+ *                                pulled back from remote. Unlike [lastUpdated] and [lastSynced] it does
+ *                                not come from a device clock, which is what makes it the only field
+ *                                that can order records across devices — see `JetpackDao.getSyncCursor`.
  * @property needsSync Flag indicating this entity has pending local changes that need to be synced to remote.
  *                     Set to `true` on create/update/delete, reset to `false` after successful sync.
  * @property deleted Soft delete flag. When `true`, the entity is hidden from normal queries but kept in
@@ -118,6 +124,7 @@ data class JetpackEntity(
     // Sync metadata
     val lastUpdated: Long = 0,
     val lastSynced: Long = 0,
+    val serverUpdatedAtNanos: Long = 0,
     val needsSync: Boolean = false,
     val deleted: Boolean = false,
     val syncAction: SyncAction = SyncAction.NONE,

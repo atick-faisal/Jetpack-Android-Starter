@@ -78,9 +78,9 @@ are wired in.
 
 Sync (`firebase/firestore/.../FirebaseDataSourceImpl.kt`) writes to
 `/dev.atick.jetpack/{userId}/jetpacks/{jetpackId}`, one document per `FirebaseJetpack`
-(`id`, `name`, `price`, `userId`, `lastUpdated`, `lastSynced`, `deleted` — 7 fields, see
-[Data](data.md) for the sync pattern these fields support). Set these rules under Firestore
-Database → Rules:
+(`id`, `name`, `price`, `userId`, `lastUpdated`, `lastSynced`, `serverUpdatedAt`, `deleted` —
+8 fields, see [Data](data.md) for the sync pattern these fields support). Set these rules under
+Firestore Database → Rules:
 
 ```javascript
 rules_version = '2';
@@ -91,14 +91,17 @@ service cloud.firestore {
     }
 
     function isValidJetpack(jetpack) {
-      return jetpack.size() == 7
+      return jetpack.size() == 8
         && jetpack.id is string
         && jetpack.name is string
         && jetpack.price is number
         && jetpack.userId is string
         && jetpack.lastUpdated is number
         && jetpack.lastSynced is number
-        && jetpack.deleted is bool;
+        && jetpack.deleted is bool
+        // The sync cursor. Pinning it to request.time is what makes it trustworthy: a client
+        // cannot write a timestamp of its own choosing and reorder everyone else's pulls.
+        && jetpack.serverUpdatedAt == request.time;
     }
 
     match /dev.atick.jetpack/{userId}/jetpacks/{jetpackId} {

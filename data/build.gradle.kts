@@ -36,4 +36,10 @@ dependencies {
     implementation(projects.firebase.firestore)
 
     testImplementation(projects.core.testing)
+
+    // The Firestore SDK is an implementation detail of :firebase:firestore, so `Timestamp` is not
+    // on this module's compile classpath -- deliberately. Tests still need it to build the remote
+    // fixtures a fake FirebaseDataSource returns.
+    testImplementation(platform(libs.firebase.bom))
+    testImplementation(libs.firebase.firestore)
 }
