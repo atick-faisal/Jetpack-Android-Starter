@@ -79,7 +79,7 @@ internal class LocalDataSourceImpl @Inject constructor(
 
 > [!NOTE]
 > `home`'s remote counterpart is Firestore, reached through `FirebaseDataSource` — see
-> [`firebase/firestore`](../firebase/firestore/README.md). `core:network` also ships a
+> [`firebase/firestore`](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/main/firebase/firestore/README.md). `core:network` also ships a
 > `NetworkDataSource`/`JetpackRestApi` pair, but `HomeRepositoryImpl` doesn't use it; it's there
 > for a feature that talks to a plain REST backend instead of Firestore. Use whichever remote your
 > feature actually needs — not both.

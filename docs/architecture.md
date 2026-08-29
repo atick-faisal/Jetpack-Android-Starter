@@ -257,4 +257,4 @@ The architecture is intentionally simple but allows for growth when needed.
 - [State Management](state-management.md) — deep dive into the `UiState` pattern
 - [Data Layer](data.md) — repository pattern, two-way sync, and the Hilt wiring behind them
 - [Adding Features](guide.md) — step-by-step guide to implementing new features
-- [Core UI Module](../core/ui/README.md) — state management utilities and UI components
+- [Core UI Module](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/main/core/ui/README.md) — state management utilities and UI components

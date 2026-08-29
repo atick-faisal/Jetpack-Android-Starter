@@ -241,4 +241,4 @@ call the Material composables they wrap.
 - [State Management](state-management.md) — `StatefulComposable`, the loading/error UI that wraps every screen's content
 - [Architecture](architecture.md) — where `core/ui` sits relative to `feature`/`data`
 - [Guide](guide.md) — building a screen from these components end to end
-- [Core UI Module](../core/ui/README.md) — the rest of `core/ui`: utilities, previews, testing helpers
+- [Core UI Module](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/main/core/ui/README.md) — the rest of `core/ui`: utilities, previews, testing helpers

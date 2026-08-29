@@ -115,7 +115,7 @@ Fails the build when the release runtime classpath drifts from a committed basel
 transitive dependency has to be reviewed rather than arriving unnoticed:
 
 ```kotlin
-// app/build.gradle.kts:171-174
+// app/build.gradle.kts:177-179
 // Regenerate with: ./gradlew :app:dependencyGuardBaseline
 dependencyGuard {
     configuration("releaseRuntimeClasspath")
@@ -213,10 +213,10 @@ set, so local builds never prompt for scan publication.
 
 A tag push (`v*.*.*`) drives the release end to end through `cd.yml`'s `play-store-release` job.
 Fastlane's own setup and lane options are documented in the tool-generated
-[`fastlane/README.md`](../fastlane/README.md) — not duplicated here.
+[`fastlane/README.md`](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/main/fastlane/README.md) — not duplicated here.
 
 ## Further reading
 
 - [Architecture](architecture.md) — the module graph these plugins build
 - [Getting Started](getting-started.md) — first build on a fresh clone
-- [Contributing](../CONTRIBUTING.md) — the comment and alert conventions this repo follows
+- [Contributing](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/main/CONTRIBUTING.md) — the comment and alert conventions this repo follows

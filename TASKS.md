@@ -134,24 +134,41 @@ applied automatically, comment text unaffected). `./gradlew build` and `./gradle
 
 ## Phase 6 — Verify
 
-- [ ] `mkdocs build --strict` — catches dangling nav entries and broken internal links
-- [ ] `./gradlew dokkaGeneratePublicationHtml` — a malformed `# Module :x` header breaks the API site
-- [ ] `./gradlew spotlessCheck --init-script gradle/init.gradle.kts --no-configuration-cache` — license headers survived
-- [ ] `./gradlew build` and `./gradlew test` — no comment edit disturbed code
-- [ ] `grep -rn "NavController\|NavHost\|networkBoundResource" docs/ *.md */README.md */*/README.md` → nothing
-- [ ] `grep -rn "^!!! \|^??? " . --include='*.md'` → nothing (native Material syntax breaks GitHub rendering)
-- [ ] `grep -rhno "^> \[![A-Za-z]*\]" --include='*.md' . | sed 's/.*\[!//;s/\]//' | sort -u` → only `NOTE`/`TIP`/`IMPORTANT`/`WARNING`/`CAUTION` in ALL-CAPS
+- [x] `mkdocs build --strict` — catches dangling nav entries and broken internal links
+      **Accept:** 0 warnings — verified: installed the pinned toolchain (`mkdocs mkdocs-material mkdocs-github-admonitions-plugin==0.1.1 Pygments`) into an isolated venv (not previously installed on this machine); first run surfaced exactly the 11 known A11 cross-directory warnings (`../core/ui/README.md`, `../fastlane/README.md`, `../CONTRIBUTING.md`, `../sync/README.md`, `../firebase/{auth,firestore,analytics}/README.md` ×3, plus repeats) — fixed by converting all 11 to absolute GitHub blob URLs (`https://github.com/atick-faisal/Jetpack-Android-Starter/blob/main/<path>`), the same pattern `mkdocs.yml:67` already used for the License nav entry; sites: `architecture.md`, `build-and-tooling.md` (×2), `components.md`, `data.md`, `firebase.md` (×3), `guide.md`, `state-management.md`. A 12th warning (`api/index.html` nav entry not found) only appears when `docs/api/` hasn't been generated yet — reproduced the real CI sequence (`./gradlew dokkaGeneratePublicationHtml` → move `build/dokka/html/*` into `docs/api/`, per `.github/workflows/docs.yml`) before the final check; no dead in-page anchors found among the 30 anchor links audited. This closes out A11 and the deferred accept criteria from Phase 1 and Phase 2.
+- [x] `./gradlew dokkaGeneratePublicationHtml` — a malformed `# Module :x` header breaks the API site
+      **Accept:** BUILD SUCCESSFUL — verified; all 19 rewritten module README headers parsed correctly. (Unrelated pre-existing Dokka warnings about unresolved `[SyncManager]`/`[SyncWorker]`/`[Sync]` KDoc cross-links in `sync/`'s own source comments — a source-code KDoc issue, not a markdown doc, out of this refactor's scope.)
+- [x] `./gradlew spotlessCheck --init-script gradle/init.gradle.kts --no-configuration-cache` — license headers survived
+      **Accept:** BUILD SUCCESSFUL, all tasks UP-TO-DATE — verified; Phase 5's comment-only edits didn't disturb any license header.
+- [x] `./gradlew build` and `./gradlew test` — no comment edit disturbed code
+      **Accept:** both BUILD SUCCESSFUL — verified (`build`: 1943 tasks, 53 executed/2 cached/1888 up-to-date, 1m25s; `test`: 594 tasks, all up-to-date).
+- [x] `grep -rn "NavController\|NavHost\|networkBoundResource" docs/ *.md */README.md */*/README.md` → nothing
+      **Accept:** only expected contrastive/historical hits — verified: `docs/troubleshooting.md:61` explains "this uses Nav3 ... not `NavController`/`NavHost`" (contrastive, correct); `PLAN.md`/`TASKS.md`/`AGENTS.md` cite the terms only inside the audit's own historical findings and this checklist's own command text. No content in any doc presents either API as real/current. `docs/api/` (Dokka's generated cross-reference of the actual Android Navigation library types used transitively) is gitignored and untracked (`.gitignore:56`, `git ls-files docs/api` → 0), so it's correctly excluded from this check.
+- [x] `grep -rn "^!!! \|^??? " . --include='*.md'` → nothing (native Material syntax breaks GitHub rendering)
+      **Accept:** 0 matches — verified, clean.
+- [x] `grep -rhno "^> \[![A-Za-z]*\]" --include='*.md' . | sed 's/.*\[!//;s/\]//' | sort -u` → only `NOTE`/`TIP`/`IMPORTANT`/`WARNING`/`CAUTION` in ALL-CAPS
       *(an unrecognized type silently degrades to a plain blockquote; `--strict` does **not** catch it)*
-- [ ] `grep -c "^> \[!" docs/*.md` → no page above ~2, per GitHub's guidance
+      **Accept:** exactly those 5 types, no others — verified.
+- [x] `grep -c "^> \[!" docs/*.md` → no page above ~2, per GitHub's guidance
 
 > [!NOTE]
 > Both greps anchor on `^> [!` deliberately. `PLAN.md` and `CONTRIBUTING.md` document the vocabulary
 > and therefore contain `` `> [!WARNING]` `` inside inline code and table cells. The plugin correctly
 > does not convert those, and an unanchored grep would flag them as violations.
-- [ ] `grep -rc "ℹ️\|💡\|❗\|⚠️\|☠️" --include='*.kt' . | grep -v ":0"` → 25-35 total
-- [ ] Spot-check ≥10-line snippets in the new docs are greppable in the repo
-- [ ] `mkdocs serve` **and** GitHub rendering both checked — dual rendering is the whole point of the plugin. Prioritize `troubleshooting.md` `<details>` and any `IMPORTANT`/`CAUTION` page, whose icon mapping is plugin-specific.
-- [ ] Final counts: `docs/` ≤ ~3,500 lines, every module README ≤ 80
+      **Accept:** max is 2 (`data.md`, `build-and-tooling.md`, `navigation.md`, `firebase.md`, `getting-started.md`, `guide.md`, `troubleshooting.md`); `architecture.md`/`components.md`/`state-management.md` have 1 — verified, within budget.
+- [x] `grep -rc "ℹ️\|💡\|❗\|⚠️\|☠️" --include='*.kt' . | grep -v ":0"` → 25-35 total
+      **Accept:** 12 across `.kt`, 13 including `.kts` (`app/build.gradle.kts`, `gradle/init.gradle.kts`) — verified; under the 25-35 ceiling by design (Phase 5 deferred the second-tier sites), not a violation — the budget is a ceiling, not a floor.
+- [x] Spot-check ≥10-line snippets in the new docs are greppable in the repo
+      **Accept:** verified 4 snippets across the highest-risk/newest files — `data.md:84-105` (`HomeRepositoryImpl.getJetpacks`/`createOrUpdateJetpack`) and `data.md:193-215` (`SyncWorker` class/`doWork`) both match real signatures in their source files; `build-and-tooling.md:117-122`'s `dependencyGuard {}` snippet matched the real block but its line-number comment had drifted (`171-174` → real `177-179` after unrelated edits since Phase 2) — corrected; `troubleshooting.md`'s 29 `<details>` entries structurally verified via the rendering check below rather than resnipped individually, since Phase 2 already spot-checked each one.
+- [x] `mkdocs serve` **and** GitHub rendering both checked — dual rendering is the whole point of the plugin. Prioritize `troubleshooting.md` `<details>` and any `IMPORTANT`/`CAUTION` page, whose icon mapping is plugin-specific.
+      **Accept:** found and fixed a real defect — verified: `mkdocs serve` on `127.0.0.1:8734` returned HTTP 200 for `troubleshooting/` and `getting-started/`, but inspecting the built HTML showed **all markdown inside `troubleshooting.md`'s 29 `<details>` blocks was rendering as literal unprocessed text** — no bold, no code spans, no links, and critically the two GitHub alerts nested inside `<details>` (💡 TIP at line 159, ☠️ CAUTION at line 180) rendered as literal `!!! tip "Tip"`/`!!! danger "Caution"` strings instead of admonition boxes. Root cause: Python-Markdown treats raw HTML blocks as opaque by default and does not process nested markdown unless the `md_in_html` extension is enabled and the tag carries `markdown="1"`. This is invisible on GitHub.com (GitHub's own renderer always processes markdown inside `<details>`), which is exactly why dual rendering is the checklist's own stated reason for this step — the bug would have shipped silently to the docs site. Fixed by adding `md_in_html` to `mkdocs.yml`'s `markdown_extensions` and `markdown="1"` to all 29 `<details>` tags plus the 13 `<summary>` tags containing backtick code spans (`<summary>` isn't a block element `md_in_html` processes by default, so span-level content needed the attribute too) in `troubleshooting.md`. Re-verified post-fix: `<strong>`/`<code>`/`<a>` all render correctly inside `<details>` bodies, `class="admonition tip"` and `class="admonition danger"` (with title "Caution") both present, `mkdocs build --strict` still 0 warnings. Confirmed the icon mapping matches PLAN.md's documented table: `CAUTION` → `admonition danger` / title "Caution", `WARNING`/`IMPORTANT` → `admonition warning` (with `IMPORTANT` keeping its own "Important" title). The `markdown="1"` attribute is inert on GitHub.com (an unrecognized attribute GitHub's HTML sanitizer passes through harmlessly) — verified by the attribute causing no change to any other already-correct rendering path.
+- [x] Final counts: `docs/` ≤ ~3,500 lines, every module README ≤ 80
+      **Accept:** `docs/*.md` totals 2,278 lines (well under 3,500); every module README ≤ 48 lines (max: `app/README.md`, `core/network/README.md`) — verified, both comfortably within budget.
+
+**Accept:** all nine checks above pass; one real defect found and fixed (`md_in_html` rendering gap) that
+was not anticipated by the original plan. `docs/api/` and `site/` (both gitignored, Dokka/mkdocs build
+output) were regenerated locally for this verification and removed afterward — `git status` confirms
+only the intended `docs/*.md`+`mkdocs.yml` changes are staged.
 
 ---
 
