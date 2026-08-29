@@ -1,7 +1,13 @@
 # Documentation & Comment Refactor — Task Checklist
 
 Execution checklist for [PLAN.md](PLAN.md). Phases are ordered so the repo is consistent after each one.
-Findings referenced as A1-A10 (stale), B1-B10 (duplication), C1-C15 (comments) are defined in PLAN.md.
+Findings referenced as A1-A11 (stale), B1-B10 (duplication), C1-C15 (comments) are defined in PLAN.md.
+
+> [!NOTE]
+> **Complete.** All seven phases and all seven follow-up fixes are done. Nothing below is
+> outstanding; the file is kept as the record of what was changed and why, including the places
+> where the plan turned out to be wrong. Deferred by explicit choice, not forgotten: the
+> second-tier comment sites in Phase 5, listed there under "if time allows".
 
 ---
 
@@ -9,7 +15,7 @@ Findings referenced as A1-A10 (stale), B1-B10 (duplication), C1-C15 (comments) a
 
 - [x] Record starting counts: `wc -l docs/*.md */README.md */*/README.md *.md` — **13,490 lines / 22 files** in `docs/`, **2,753 lines / 17 files** in module READMEs
 - [x] `./gradlew dokkaGeneratePublicationHtml` passes **before** any change — BUILD SUCCESSFUL
-- [ ] `pip install mkdocs mkdocs-material mkdocs-github-admonitions-plugin Pygments && mkdocs build --strict` passes before any change — **does not pass**: 54 pre-existing warnings, almost all cross-directory links (e.g. `docs/architecture.md` → `../data/README.md`) that mkdocs' strict validator won't resolve outside `docs_dir`, plus a handful of dead anchors. Tracked as finding A11 in PLAN.md; fix belongs to Phase 1/2, not this baseline commit.
+- [x] `pip install mkdocs mkdocs-material mkdocs-github-admonitions-plugin Pygments && mkdocs build --strict` passes before any change — measured, and the answer was **no**: 54 pre-existing warnings, almost all cross-directory links (e.g. `docs/architecture.md` → `../data/README.md`) that mkdocs' strict validator won't resolve outside `docs_dir`, plus a handful of dead anchors. That became finding A11 in PLAN.md rather than a fix in this baseline commit. Closed in Phase 6, which converted the 11 surviving cross-directory links to absolute GitHub blob URLs and reached 0 warnings.
 - [x] Note current alert count per file: `grep -rc "> \[!" docs/*.md` (baseline was guessed at ~45 across 13 files; **actual measured baseline is 88 across 18 files**)
 
 ## Phase 1 — Delete and re-nav
@@ -20,7 +26,7 @@ Do the deletions and the `mkdocs.yml` nav rewrite in **one commit** so the site 
 - [x] Delete: `faq.md`, `tips.md`, `quick-reference.md`, `philosophy.md`, `data-flow.md`, `plugins.md`, `spotless.md`, `github.md`, `fastlane.md`, `dependency.md`, `performance.md`, `license.md`
 - [x] Rewrite `mkdocs.yml` nav — 8 of the 10 target files exist today and are in nav (plus the still-live `dependency-injection.md`, absorbed into `data.md` in Phase 2); `data.md` and `build-and-tooling.md` get nav entries in Phase 2 when those files are created, per principle 5 ("no aspirational content" — no nav entry should point at a file that doesn't exist yet). Kept the API Reference entry; License now points at the GitHub blob URL (`https://github.com/atick-faisal/Jetpack-Android-Starter/blob/main/LICENSE`), same pattern already used in `README.md:113`.
 - [x] Pin the plugin version in `.github/workflows/docs.yml` (currently installs unpinned; Beta-stage 0.1.1) — pinned to `==0.1.1`
-- [ ] **Accept:** `mkdocs build --strict` passes — **does not fully pass yet**: 55 → 50 warnings after this phase's deletions. Remaining 50 are (a) dangling links *inside* surviving files (`guide.md`, `getting-started.md`, `troubleshooting.md`, `firebase.md`, `architecture.md`, `components.md`, `state-management.md`, `navigation.md`) that still reference now-deleted docs by name — fixed as each file is rewritten in Phase 2, not by deletion alone; (b) the cross-directory README link limitation from A11 (`../data/README.md` etc., unresolved by mkdocs' strict validator outside `docs_dir`); (c) a handful of dead in-page anchors, also A11. None of these are introduced by this phase's changes — full pass is a Phase 2/Phase 6 outcome.
+- [x] **Accept:** `mkdocs build --strict` passes — **not at this phase**, deferred to Phase 6 where it reached 0: 55 → 50 warnings after this phase's deletions. Remaining 50 are (a) dangling links *inside* surviving files (`guide.md`, `getting-started.md`, `troubleshooting.md`, `firebase.md`, `architecture.md`, `components.md`, `state-management.md`, `navigation.md`) that still reference now-deleted docs by name — fixed as each file is rewritten in Phase 2, not by deletion alone; (b) the cross-directory README link limitation from A11 (`../data/README.md` etc., unresolved by mkdocs' strict validator outside `docs_dir`); (c) a handful of dead in-page anchors, also A11. None of these are introduced by this phase's changes — full pass is a Phase 2/Phase 6 outcome.
 
 > [!TIP]
 > Salvage before deleting. Each deleted file has unique content that must land somewhere — work through
