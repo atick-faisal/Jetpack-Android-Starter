@@ -24,9 +24,11 @@ interface JetpackRestApi {
 
 ## Gotchas
 
-- `getCurrentState()` never emits an initial value — a fresh collector sees nothing until the first
-  connectivity change, so an `isOffline` banner derived from it won't show on launch even if the
-  device is actually offline.
+- `getCurrentState()` emits connectivity as it stands the moment it is collected, then every change
+  after that, and collapses consecutive duplicates — collectors don't need their own
+  `distinctUntilChanged`.
+- `NetworkState.LOSING` is declared but never emitted; a losing network is still usable, so the
+  callback is only logged.
 - Reach for this module only if a feature talks to a plain REST backend instead of Firebase; don't
   mix it with Firestore sync for the same feature.
 - The base URL is a build secret, not a constant: the Gradle Secrets plugin reads `BACKEND_URL` from
