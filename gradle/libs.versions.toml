@@ -3,7 +3,7 @@
 # ... PROJECT ...
 java = "21"
 kotlin = "2.4.10"
-androidGradlePlugin = "9.3.1"
+androidGradlePlugin = "9.4.0"
 gmsPlugin = "4.5.0"
 ksp = "2.3.11"
 dokka = "2.2.0"
@@ -11,11 +11,11 @@ dokkaMermaid = "0.6.0"
 secrets = "2.0.1"
 dependencyGuard = "0.5.0"
 # Lint tooling version tracks AGP: AGP 9.x maps to android tools 32.x
-androidTools = "32.3.1"
+androidTools = "32.4.0"
 # Macrobenchmark and the baseline profile plugin share a version; 1.5.x is the AGP 9 line.
-androidxMacroBenchmark = "1.5.0-alpha07"
+androidxMacroBenchmark = "1.5.0-rc02"
 androidxProfileInstaller = "1.4.1"
-androidxUiAutomator = "2.3.0"
+androidxUiAutomator = "2.4.0"
 
 # ... CORE:ANDROID ...
 androidxCore = "1.19.0"
@@ -25,22 +25,22 @@ kotlinxSerializationJson = "1.11.0"
 timber = "5.0.1"
 
 # ... CORE:UI ...
-androidxNavigation3 = "1.1.4"
+androidxNavigation3 = "1.1.7"
 androidxSavedState = "1.5.0"
-androidxComposeMaterial3AdaptiveNav3 = "1.3.0-rc01"
-androidxFragment = "1.8.9"
-androidxAppCompat = "1.7.1"
+androidxComposeMaterial3AdaptiveNav3 = "1.3.0"
+androidxFragment = "1.9.0"
+androidxAppCompat = "1.8.0"
 androidxActivity = "1.13.0"
 androidxLifecycle = "2.11.0"
-androidxComposeBom = "2026.06.01"
+androidxComposeBom = "2026.08.00"
 androidxCoreSplashscreen = "1.2.0"
 androidxHiltNavigationCompose = "1.4.0"
 lottieCompose = "6.7.1"
 # FIXME: Remove this once stable
-materialExpressive = "1.5.0-alpha25"
+materialExpressive = "1.5.0-alpha27"
 
 # ... NETWORK ...
-okhttp = "5.4.0"
+okhttp = "5.5.0"
 retrofit = "3.0.0"
 coil = "2.7.0"
 
@@ -51,13 +51,13 @@ androidxDataStore = "1.2.1"
 room = "2.8.4"
 
 # ... AUTH ...
-playServicesAuth = "21.6.0"
+playServicesAuth = "22.0.0"
 androidxCredentials = "1.6.0"
 identityGoogleId = "1.2.0"
 
 # ... FIREBASE ...
-firebaseBom = "34.17.0"
-firebaseCrashlyticsPlugin = "3.0.7"
+firebaseBom = "34.18.0"
+firebaseCrashlyticsPlugin = "3.0.8"
 firebasePerfPlugin = "2.0.2"
 
 # ... DAGGER-HILT ...
@@ -80,7 +80,7 @@ junit = "4.13.2"
 androidxTestCore = "1.7.0"
 androidxTestExt = "1.3.0"
 androidxTestRunner = "1.7.0"
-robolectric = "4.16"
+robolectric = "4.16.1"
 turbine = "1.2.1"
 truth = "1.4.5"
 
