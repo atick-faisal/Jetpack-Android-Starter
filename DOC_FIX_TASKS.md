@@ -2,7 +2,7 @@
 
 Companion goals, findings, and recovery map: [DOC_FIX_PLAN.md](DOC_FIX_PLAN.md).
 
-Status: DF-00–DF-01 complete; DF-02–DF-15 pending. Checked items identify completed work in the records below. Reviewed base: `1c2103890d16f81f6c6ae4c2d8626281b841e417`.
+Status: DF-00–DF-02 complete; DF-03–DF-15 pending. Checked items identify completed work in the records below. Reviewed base: `1c2103890d16f81f6c6ae4c2d8626281b841e417`.
 Reviewed head: `0fb7882982cfefd55df300e06549731c6fbb33bb` ([PR #647](https://github.com/atick-faisal/Jetpack-Android-Starter/pull/647)).
 
 Complete each task by recording the changed paths, verification result, and any unresolved follow-up
@@ -623,32 +623,32 @@ Completed 2026-10-16 from clean working-tree revision `df5af917d`.
 
 Depends on: DF-00. Scope: targeted inspection/tests and a local behavior-follow-up record.
 
-- [ ] Classify the PR's executable changes separately: swipe effect, initial connectivity emission,
+- [x] Classify the PR's executable changes separately: swipe effect, initial connectivity emission,
   raw price state, unused serializer removal, no-op variant-block removal, and server-clock sync
   with Room schema/model/query changes. Classify the backoff correction as documentation-only.
-- [ ] For `HomeRepositoryImpl.sync()`, examine edits after the pending-row snapshot, edits to a row
+- [x] For `HomeRepositoryImpl.sync()`, examine edits after the pending-row snapshot, edits to a row
   while its push is in flight, `markAsSynced(id)` clearing a newer edit, and a pull overwriting that
   edit. Examine whether a request dropped by `KEEP` is ever guaranteed another run. Do not call
   these paths safe merely because the first write was stored locally.
-- [ ] Review partial pull/retry behavior: rows are individually upserted while the cursor is their
+- [x] Review partial pull/retry behavior: rows are individually upserted while the cursor is their
   maximum server timestamp. Determine what happens if collection fails after storing only some
   returned documents. Check query ordering, equal timestamps, and any SDK cache assumptions before
   claiming complete incremental delivery.
-- [ ] Check the lifecycle of collectors launched from `onStart` in Home, Item, and Settings
+- [x] Check the lifecycle of collectors launched from `onStart` in Home, Item, and Settings
   ViewModels. `launchIn(viewModelScope)` outlives the shared upstream; document or test repeated
   subscribe/unsubscribe cycles beyond the five-second timeout.
-- [ ] Review `StatefulComposable` event consumption during composition and effect cancellation/key
+- [x] Review `StatefulComposable` event consumption during composition and effect cancellation/key
   behavior. Verify at-most-once consumption separately from successful snackbar delivery.
-- [ ] Review update-helper behavior for returned failures, thrown exceptions, cancellation,
+- [x] Review update-helper behavior for returned failures, thrown exceptions, cancellation,
   overlapping calls, and synchronous edits during a suspended update. The loading flag is checked
   before launch and set inside it; avoid describing it as a general concurrency lock.
-- [ ] Trace Item save/load failures: save discards the repository `Result`; load `catch` constructs
+- [x] Trace Item save/load failures: save discards the repository `Result`; load `catch` constructs
   an unused `UiState`. Record that the guide copies these paths, so code agreement alone does not
   make the example a sound error-handling tutorial.
-- [ ] Assess schema 1 → 2 for existing installs and pending offline changes. Assess Firestore
+- [x] Assess schema 1 → 2 for existing installs and pending offline changes. Assess Firestore
   documents without `serverUpdatedAt`, clients writing the old field set, and the updated rule
   requirements. The old task log's assumption that no adopter has old data is not evidence.
-- [ ] Record each issue as confirmed from source, reproduced by a targeted test, or still unverified.
+- [x] Record each issue as confirmed from source, reproduced by a targeted test, or still unverified.
   Give it a bounded outcome: separately scoped fix, accurate documented limitation with follow-up,
   or disproved concern with evidence. Do not silently expand the documentation repair into runtime
   or backend changes. New external issues/comments need user authorization.
@@ -656,11 +656,119 @@ Depends on: DF-00. Scope: targeted inspection/tests and a local behavior-follow-
 Accept: DF-06–08 and DF-12 have clear contracts to document. No uncertainty has been converted into
 a claim of safety. The PR's existing tests are distinguished from missing concurrency/upgrade tests.
 
-Behavior ledger (fill during implementation):
+### DF-02 completion record
+
+Completed 2026-10-16 from clean working-tree revision `13031839ddb0b36eefbe068a5e44ccbce7749a28`.
+The executable-change classification compares the pinned audit base `1c2103890` with audited head
+`0fb788298`; the two subsequent commits changed documentation policy and recovery records only.
+No production code, build configuration, backend rules, or public interface was changed by this task.
+
+**Evidence levels:** “reproduced” means a passing characterization test demonstrates current
+behavior, including bugs. “Source-confirmed” is a trace through the implementation and, where
+needed, the SDK contract; it does not claim device/emulator execution. “Unverified” identifies the
+remaining integration question. Existing tests and newly added tests are listed separately below.
+
+### Executable changes already in the audited PR
+
+| Change | Classification and evidence | Compatibility / disposition |
+|---|---|---|
+| Swipe dismissal | Runtime fix: moves `onDelete` from composition into `LaunchedEffect(currentValue)` and reads the latest callback through `rememberUpdatedState`. Existing `SwipeToDismissTest` covers a completed swipe, recomposition after dismissal, and no swipe. | One invocation for the tested dismissal while that composition survives; not a durable or global exactly-once guarantee. Preserve the fix; DF-09/12 explain the effect. |
+| Initial connectivity | Runtime fix: seeds `currentNetworkState()` before registering callbacks and adds `distinctUntilChanged()`. Existing `NetworkUtilsImplTest` covers initial states and duplicate suppression. | Checks `NET_CAPABILITY_INTERNET`, not validation or backend reachability. Registration and the seed are not an atomic snapshot. Keep claims limited to the observed capability/callback state; DF-10/12. |
+| Price editing | Runtime fix: raw `String` state and text-field value, parsing at submit with invalid/empty input becoming `0.0`. Seven pre-existing Item tests cover text preservation, parsing and loading. | No non-negative-price validation is implemented. Preserve text behavior; DF-07/08 must distinguish parsing from validation and successful persistence. |
+| Unused serializer | Removal of public `DarkThemeConfigSerializer`; no in-repo references or registration. The active `UserDataSerializer` remains JSON and throws `CorruptionException` on serialization failure; DI installs no corruption handler (E12). | No current in-repo serialization path changes, but adopters directly using the removed symbol need to replace that reference. Removal does not add corruption recovery; DF-06/11/13. |
+| Variant block | Build configuration removal: the old block copied the first output's version name to each output. Current single-version configuration has no custom filename behavior. | Does not implement APK renaming. Do not generalize to an adopter's customized per-output versions; DF-04/13. |
+| Server-clock sync | Runtime/model/schema change: timestamp query replaces the device-clock query; Room version 1 → 2 adds the stored server timestamp; mappings and model change with it (E05/E11). `FirebaseJetpack` also loses Kotlin serialization's `@Serializable`; no in-repo generated-serializer consumer was found. | Backend/document compatibility and destructive upgrade are assessed below. Adopters using the generated Kotlin serializer also need an explicit replacement; DF-06/13. |
+| Backoff correction | Documentation-only: the worker diff changes comments, not scheduling. No `setBackoffCriteria` is configured. [WorkManager defaults](https://developer.android.com/develop/background-work/background-tasks/persistent/getting-started/define-work) are exponential with a 30-second base. | `runAttemptCount < 3` permits three retries after the initial attempt, not three total attempts. Delays are minimum scheduling intervals, not exact execution times; DF-06/12. |
+
+Other Kotlin/build diff hunks were inspected: theme/auth comments, helper/ViewModel comments,
+Compose-provider and Spotless explanations are editorial. Test additions and their test-only
+classpath declarations support the executable fixes; they are not application runtime dependencies.
+The Firestore rules example changes deployment guidance only: editing Markdown deploys nothing.
+
+### Behavior ledger
 
 | Concern | Evidence/reproduction | Decision and follow-up | Documentation affected |
 |---|---|---|---|
-| Pending DF-02 review | Initial source findings are in the plan | — | — |
+| Writes after the pending snapshot; dropped requests | **Reproduced:** `a row added after the push snapshot waits for another sync` leaves that row pending after a successful pass. Source: E05/E13 take one snapshot, enqueue one-time work with `KEEP`, and configure no periodic drain. [KEEP](https://developer.android.com/reference/androidx/work/ExistingWorkPolicy) does nothing when matching unfinished work exists. | Document that a later trigger is required and not guaranteed by the dropped request. Follow-up **Sync consistency** must cover scheduling a subsequent pass. The fake records requests; it does not test WorkManager scheduling. | DF-06, DF-08, DF-11, DF-12 |
+| Acknowledging a newer edit | **Reproduced:** suspending an upload, editing the same row, then finishing upload clears the newer edit's pending flag/action. `markAsSynced(id)` has no version predicate and stamps a later local time. | Document possible loss of pending status, not guaranteed eventual upload. Follow-up **Sync consistency** must acknowledge only the version actually uploaded. | DF-06, DF-12 |
+| Pull overwrites newer local content | **Reproduced:** the old upload echo overwrites the edit made while upload was suspended. Pull uses unconditional per-row upserts; the same risk applies to edits made during pull. | Remove protection claims based solely on push-before-pull. Follow-up **Sync consistency** must protect pending edits during both phases and test delete/edit races. | DF-06–08, DF-11, DF-12 |
+| Partial pull, distinct timestamps | **Reproduced:** fail the second local upsert; the first stays committed and advances MAX(timestamp). With ascending distinct timestamps, retry resumes the remaining row. SDK inequality queries imply ordering by that field ([query ordering](https://firebase.google.com/docs/firestore/query-data/order-limit-data#orderby_and_existence)); ties use document path ([index ordering](https://firebase.google.com/docs/firestore/query-data/index-overview#default_ordering_and_the_name_field)). | The broad concern that an ordinary ordered prefix necessarily skips all later distinct timestamps is disproved under a complete server result. This is not atomic batch application. Keep the narrower tie/cache limitations below. | DF-06, DF-12 |
+| Partial pull, equal timestamps | **Reproduced:** after storing one of two equal-timestamp documents and failing the next upsert, retry's strict `>` excludes the unapplied document. A stable SDK tie order does not help a timestamp-only cursor. | Document incomplete delivery after interruption within a tie group. Follow-up **Pull checkpoints** must make checkpoint advancement cover all records at its boundary, with failure/cancellation tests. | DF-06, DF-12 |
+| SDK cache completeness | **Source-confirmed:** `.get()` uses the SDK default source, which can return cached data when the server is unreachable ([Android Query contract](https://firebase.google.com/docs/reference/android/com/google/firebase/firestore/Query#get())). Mapping to a list discards snapshot metadata. A network constraint does not guarantee server access. **Unverified:** exact cache-gap/eviction sequences with the project's resolved SDK. | No guarantee that every successful pull is a complete server snapshot. Follow-up **Pull checkpoints** must include cached partial results and an emulator/device reproduction before claiming complete delivery. | DF-06, DF-10, DF-12 |
+| Delete propagation | **Source-confirmed:** local soft-delete becomes remote `.delete()`, then local acknowledgement. No remote tombstone or deletion feed is pulled; another device's existing row is not removed by an absent document. | Document that hard deletes are not delivered to other replicas through this incremental query. Follow-up **Sync consistency** must define and test cross-device deletion delivery separately from local hiding. | DF-06, DF-11, DF-12 |
+| Local/remote metadata | **Source-confirmed:** DAO pending query uses `lastUpdated > lastSynced OR needsSync`; mappings carry `lastSynced` to/from Firestore. Pulled entities default to `needsSync=false`, action `NONE`. | Neither timestamp is merely display-only, and `lastSynced` is not local-only. Do not promise a pushed row echoes exactly once or always has unchanged content. DF-06 owns the field table and algorithm; no metadata changes here. | DF-06, DF-11, DF-12 |
+| Collector lifetimes | **Reproduced:** Home and Item retain a repository collector after a gap exceeding 5 seconds, then add another on resubscription. Settings does the same after its zero timeout. All return to zero when the ViewModel scope is cancelled. `onStart` launches a separate `viewModelScope` job; stopping the shared upstream does not stop it. | Document accumulating collectors while that ViewModel remains alive. Follow-up **Observation lifetime** must keep one repository subscription per ViewModel/shared upstream and retain correct locale refresh. Profile has the same source pattern and belongs in that follow-up's audit. | DF-07/08, DF-11, DF-12 |
+| Returned failures and synchronous updates | Existing helper tests plus source E06: `updateState` replaces data while preserving loading/error; async helpers inspect returned `Result`, clear the old error on start, and clear loading on returned success/failure. | Correct the table saying synchronous updates do not replace data. These are Result-handling helpers, not exception-catching wrappers. DF-07 documents the contract; no runtime fix needed for these branches. | DF-07, DF-12 |
+| Exceptions/cancellation | **Reproduced for both helpers:** thrown exception escapes to a supervised scope's handler with no error event, leaving loading true; thrown `CancellationException` likewise leaves loading true and is not reported to the exception handler. No `try/finally` exists. E13 also catches `Exception` in `SyncWorker`, including cancellation. | Document the actual cleanup boundary. Follow-up **Async state lifecycle** must define exception and cancellation cleanup without swallowing cancellation; include worker cancellation review. Passing Result tests do not cover these paths. | DF-06/07, DF-12 |
+| Overlap before loading | **Reproduced for both helpers:** a queued dispatcher permits two calls before either coroutine sets loading; both operations start. Existing eager-dispatcher tests only prove a second call is dropped once loading is already true. | No general concurrency-lock claim. Follow-up **Async state lifecycle** must test queued launch, overlap, and loading while another operation is still active. | DF-07, DF-12 |
+| Edits during suspended state update | **Reproduced:** `updateStateWith` returns a copy of its receiver snapshot and overwrites a synchronous edit made during suspension. `updateWith` preserves that edit because it replaces no data. | Document snapshot replacement. Follow-up **Async state lifecycle** must decide and test form-edit behavior during save; do not silently choose a merge policy here. | DF-07/08, DF-12 |
+| Snackbar event consumption/delivery | **Reproduced with Compose/Robolectric:** recomposition reading an already-consumed error removes the effect and cancels its suspended callback. Replacing it with a new error under the same stable callback key consumes the new event without starting a new callback. Source CAS in `OneTimeEvent` allows at-most-once consumption, not delivery acknowledgement. Discarded-composition loss is source-reviewed, not reproduced. | Remove exactly-once snackbar delivery and defensive keying claims. Follow-up **Event delivery** must consume in an appropriate effect and test event identity, cancellation, repeated errors, and composition disposal. | DF-07, DF-11, DF-12 |
+| Item save/load failure | **Reproduced:** failed repository save still creates `navigateBack=true`, exposes no error, and clears loading. Failed load leaves default form data and no error after a confirmed repository subscription. E06: save ignores Result; load catch constructs an unused state. Settings load catch has the same source defect. | Follow-up **Item failure handling** must map save Result before navigation and store load errors; include Settings load error handling. DF-07/08 must not recommend the copied tutorial snippets as correct failure handling. | DF-07/08, DF-11, DF-12 |
+| Existing Room installs | **Source-confirmed:** version 2, no registered 1 → 2 migration, `fallbackToDestructiveMigration(true)`, schemas not exported (E05/E04). [Room fallback](https://developer.android.com/reference/androidx/room/RoomDatabase.Builder) recreates tables when an upgrade path is missing. No file-backed upgrade test was added. | Existing local rows, including unpushed edits/deletes, can be lost. Remote re-fetch cannot recover unsent data. Follow-up **Upgrade compatibility** requires a data-preserving migration and a file-backed test with pending changes before claiming upgrade safety. Fresh installs are a different case. | DF-03/06, DF-11–13 |
+| Legacy Firestore documents and writers | **Source/SDK-confirmed:** the range query excludes documents missing `serverUpdatedAt`, even with cursor 0. Legacy `.set()` writers omit the new field: updated rules reject them; permissive old rules can let them replace a stamped document with an unstamped one. The new model's default null does not backfill server data. | No automatic backward compatibility. Follow-up **Upgrade compatibility** must define legacy backfill and a staged writer/rules rollout, then test mixed client versions. No assumed absence of adopter data and no reset recommendation. | DF-03/06, DF-11–13 |
+| Rule timestamp requirement | Source: new writers map a null `@get:ServerTimestamp` property; the documented eight-field rule requires `serverUpdatedAt == request.time`. SDK docs support null substitution ([ServerTimestamp](https://firebase.google.com/docs/reference/android/com/google/firebase/firestore/ServerTimestamp)); rules define [request.time](https://firebase.google.com/docs/reference/rules/rules.firestore.Request#time) as the server timestamp for such writes. **Unverified:** deployed rules and end-to-end authorization; no credentials were read and no backend was contacted. | The intended new write shape agrees with the documented rule; this is not proof of deployment or legacy acceptance. Keep manual deployment explicit. Follow-up **Upgrade compatibility** includes emulator allow/deny tests; DF-03 repairs setup prose. | DF-03/06, DF-11–13 |
+
+### Bounded runtime follow-ups
+
+These are **local follow-up specifications**, not completed fixes or newly opened external issues.
+Each concern above has an immediate documentation disposition; the repair can proceed with explicit
+limitations. Runtime designs and compatibility policy require their own scoped work and existing
+approval boundaries.
+
+- **Sync consistency:** pending-write acknowledgement, another pass after concurrent writes,
+  pending-edit protection during pull, and cross-device deletes. Acceptance requires controlled
+  concurrent write/edit/delete tests and WorkManager scheduling coverage.
+- **Pull checkpoints:** interruption within equal timestamps and incomplete cache results.
+  Acceptance requires no skipped records on retry, plus SDK integration coverage of cache gaps.
+- **Observation lifetime:** Home/Item/Settings and matching Profile observation jobs. Acceptance
+  requires one intended repository collector across unsubscribe/restart cycles and correct locale
+  refresh, with all collectors ending when the ViewModel is cleared.
+- **Async state lifecycle:** exception/cancellation cleanup, launch-time overlap, and edits during
+  suspension; review worker cancellation too. Preserve returned Result behavior and explicitly
+  choose editing/concurrency semantics before changing shared helpers.
+- **Event delivery:** effect lifecycle and event identity, with successful callback completion
+  distinguished from event consumption. Reuse the two reproductions below as regression inputs.
+- **Item failure handling:** navigate only on successful persistence, expose load/save failures,
+  preserve entered form data, and cover Settings' unused load-error state.
+- **Upgrade compatibility:** preserve pending Room data and define legacy Firestore backfill and
+  mixed-client rollout. Acceptance includes migration and security-rule allow/deny tests; no
+  migration, remote data rewrite, or deployment is authorized by this review.
+
+### Tests and verification
+
+New characterization coverage (17 tests):
+
+- [Repository tests](data/src/test/kotlin/dev/atick/data/repository/home/HomeRepositoryImplTest.kt):
+  five new controlled snapshot/upload/pull/retry tests. The fake sorts timestamp results to model
+  the SDK's implied ordering; it is not an SDK cache, rules, or WorkManager emulator.
+- [Item/Home tests](feature/home/src/test/kotlin/dev/atick/feature/home/ui/item/ItemViewModelTest.kt):
+  four new tests for save/load failures and Home/Item subscription accumulation, with active UI
+  collectors and scope cleanup.
+- [Settings tests](feature/settings/src/test/kotlin/dev/atick/feature/settings/ui/SettingsViewModelTest.kt):
+  one new zero-timeout subscription test using the existing Robolectric setup.
+- [Queued helper tests](core/ui/src/test/kotlin/dev/atick/core/ui/utils/UiStateContractTest.kt):
+  five new tests covering both helpers' overlap, exceptions, cancellation and suspended edits.
+- [Compose event tests](core/ui/src/test/kotlin/dev/atick/core/ui/utils/StatefulComposableEventTest.kt):
+  two new tests separating consumption from callback cancellation/replacement.
+
+The existing repository cursor/order/echo tests, seven Item input tests, six Settings tests, helper
+Result tests, swipe tests, network tests, serializer tests, and DAO tests predate this review.
+Their presence is not evidence of concurrency, migration, cache completeness, or deployed-rule
+coverage. The four affected debug module suites passed: **64 tests, zero failures/errors/skips**.
+
+Validation used the working-tree changes on the baseline revision above, not a new commit:
+`./gradlew :data:testDebugUnitTest :feature:home:testDebugUnitTest
+:feature:settings:testDebugUnitTest :core:ui:testDebugUnitTest` passed, followed by a successful
+format-and-test run with `spotlessApply --init-script gradle/init.gradle.kts
+--no-configuration-cache` and the same four suites. A Compose test-rule deprecation warning follows
+the existing test API; no dependency or convention-plugin change was needed.
+
+Final verification: `./gradlew spotlessCheck --init-script gradle/init.gradle.kts
+--no-configuration-cache :core:network:testDebugUnitTest :core:preferences:testDebugUnitTest
+:core:room:testDebugUnitTest` passed (the three unchanged module test tasks were up-to-date).
+`git diff --check` passed; the new local evidence links resolve. No documentation site build,
+release APK, device test, live Firebase request, or external issue/comment is claimed for this task.
+Published-guide edits and source-comment rewrites remain with their queued owners.
 
 ## DF-03 — Make first-run and Firebase setup complete
 
