@@ -2,7 +2,7 @@
 
 Companion goals, findings, and recovery map: [DOC_FIX_PLAN.md](DOC_FIX_PLAN.md).
 
-Status: DF-00–DF-02 complete; DF-03–DF-15 pending. Checked items identify completed work in the records below. Reviewed base: `1c2103890d16f81f6c6ae4c2d8626281b841e417`.
+Status: DF-00–DF-03 complete; DF-04–DF-15 pending. Checked items identify completed work in the records below. Reviewed base: `1c2103890d16f81f6c6ae4c2d8626281b841e417`.
 Reviewed head: `0fb7882982cfefd55df300e06549731c6fbb33bb` ([PR #647](https://github.com/atick-faisal/Jetpack-Android-Starter/pull/647)).
 
 Complete each task by recording the changed paths, verification result, and any unresolved follow-up
@@ -774,28 +774,83 @@ Published-guide edits and source-comment rewrites remain with their queued owner
 
 Depends on: DF-00; DF-02 for compatibility statements. Scope: `docs/getting-started.md`, `docs/firebase.md`.
 
-- [ ] Walk clone → change into the checkout → select JDK/SDK → build → install/run. State expected
+- [x] Walk clone → change into the checkout → select JDK/SDK → build → install/run. State expected
   behavior with the template Firebase config and with a configured Firebase project.
-- [ ] Verify the Android Studio/AGP compatibility requirement from official documentation; replace
+- [x] Verify the Android Studio/AGP compatibility requirement from official documentation; replace
   “Hedgehog or newer” if incompatible with the pinned AGP. Recheck IDE preview instructions too.
-- [ ] Document the actual local configuration path: `GOOGLE_WEB_CLIENT_ID=<web OAuth client ID>` in
+- [x] Document the actual local configuration path: `GOOGLE_WEB_CLIENT_ID=<web OAuth client ID>` in
   ignored `local.properties`, defaults in `secrets.defaults.properties`, and how to obtain the
   correct client type. Distinguish this from downloading `app/google-services.json`.
-- [ ] Explain package/application ID matching, enabled auth providers, certificate fingerprints for
+- [x] Explain package/application ID matching, enabled auth providers, certificate fingerprints for
   the build being tested, and the steps needed after replacing template identifiers in an adopter app.
-- [ ] Verify Credential Manager's authorized-account filter and Firebase account creation semantics
+- [x] Verify Credential Manager's authorized-account filter and Firebase account creation semantics
   from the pinned SDK or official docs. Remove “entire sign-in/register contract in one flag.”
-- [ ] Describe handling of the tracked template config accurately. `--skip-worktree` is a local index
+- [x] Describe handling of the tracked template config accurately. `--skip-worktree` is a local index
   flag, not a security control or true untracking; include how to inspect/undo it if retaining advice.
-- [ ] Keep Firestore rules, model fields, path, and soft-delete behavior consistent. Explain that
+- [x] Keep Firestore rules, model fields, path, and soft-delete behavior consistent. Explain that
   editing a Markdown rules example does not deploy it; include the compatibility outcome from DF-02.
-- [ ] Verify Crashlytics setup/report collection and mapping-upload claims against build config and
+- [x] Verify Crashlytics setup/report collection and mapping-upload claims against build config and
   official guidance. Remove “almost always timing” diagnoses without evidence.
-- [ ] Keep signing guidance precise: a debug-signed release can be installed, but switching signing
+- [x] Keep signing guidance precise: a debug-signed release can be installed, but switching signing
   certificates affects upgrades. Avoid the unqualified “cannot be upgraded” statement.
 
 Accept: someone following only the linked setup path knows every local setting required to build
 and try auth/sync. No real credentials, console changes, or deployment are needed for doc validation.
+
+### DF-03 completion record
+
+Completed 2026-10-16 against working-tree base `bf6ea884cd4bf76e6625bd0bbc988db33dd1a53c`.
+The tree was clean before implementation. Changed `docs/getting-started.md`, `docs/firebase.md`,
+and this execution record only; no runtime, build configuration, dependency, or rules-policy changes.
+
+- Restored clone/cd, JDK/SDK selection, build output, install and launcher steps. Replaced obsolete
+  Studio and preview guidance. The official [Studio/AGP table](https://developer.android.com/build/releases/about-agp)
+  supports Quail 2 (2026.1.2) with AGP 9.3; the catalog pins AGP 9.3.1, JDK 21, compileSdk 37,
+  and minSdk 24. Checked the launcher name against app resources and the APK output on disk.
+- Documented the separate JSON and web OAuth client inputs, local.properties/defaults/BuildConfig
+  wiring, providers, signing fingerprints, changed application IDs, and index-hint inspection/undo.
+  Inspected build scripts, Config and request builders without reading protected configuration.
+  [Firebase Google auth](https://firebase.google.com/docs/auth/android/google-signin) and
+  [Credential Manager](https://developer.android.com/identity/sign-in/credential-manager-siwg-implementation)
+  support the web-client type, account-filter and first-Firebase-user creation explanation.
+- Checked the Firestore path and eight-field model against the implementation. Preserved the
+  executable rules example byte-for-byte except its explanatory comment (verified by comparison
+  with HEAD). Made publication explicit and carried forward the completed compatibility review:
+  destructive local upgrade, missing-field exclusion, legacy-writer rejection and hard-delete
+  propagation limits. Added adopter auth/write/edit/delete checks without claiming they were run.
+- Corrected the telemetry scope after inspecting FirebaseConventionPlugin: the wrapper reports
+  Crashlytics exceptions, while the app also includes Analytics and Performance SDKs. No custom
+  event/trace instrumentation or applied Performance plugin was found. Linked official SDK setup.
+  Checked report restart/debug-log steps and mapping-upload defaults against official
+  [test instructions](https://firebase.google.com/docs/crashlytics/android/test-implementation) and
+  [mapping guidance](https://firebase.google.com/docs/crashlytics/android/get-deobfuscated-reports).
+- Clarified app-relative keystore paths, installable debug-signed release APKs and certificate
+  continuity for updates. No signing configuration was changed or release upload attempted.
+
+Verification:
+
+- `./gradlew assembleDebug dokkaGeneratePublicationHtml` — BUILD SUCCESSFUL, 861 actionable tasks
+  (6 executed, 855 up-to-date). This verifies the current checkout, not a newly cloned machine or
+  a live Firebase setup.
+- Assembled a temporary site using the existing workflow: generated Dokka HTML copied into
+  `docs/api/`, root README copied into `docs/index.md` with `docs/` link prefixes removed, and the
+  existing MkDocs config. Repository-generated site inputs were not modified.
+- `mkdocs build --strict` — passed with no documentation warnings. Material printed its upstream
+  MkDocs 2.0 notice; MkDocs reported the existing homepage-not-in-nav informational message.
+  Validation used MkDocs 1.6.1, Material 9.7.7 and the workflow's admonitions plugin 0.1.1 in a
+  temporary virtual environment.
+- Inspected generated HTML for both edited pages: five code blocks each, four properly numbered
+  quick-start steps, rendered note/caution/warning boxes, and all local links/fragments resolving.
+  Fixed list continuation rendering and retained the existing `#crashlytics` anchor so the
+  troubleshooting link continues to work. GitHub-compatible fences, lists and alerts remain in
+  source; no live GitHub rendering or IDE Preview execution is claimed.
+- `git diff --check` — passed. No new unit tests were needed for documentation-only edits.
+
+Not run: device install/launch, Firebase console changes, live authentication/sync, deployed-rule
+allow/deny tests, intentional crash reporting, release mapping upload, or upgrade migration tests.
+Those require adopter configuration or separately scoped runtime work. The compatibility concerns
+remain open under DF-02's bounded follow-ups; later data/reference tasks still own their broader
+explanations. No commit, push, deployment, or external issue/comment was made.
 
 ## DF-04 — Restore build, release, and local docs instructions
 
