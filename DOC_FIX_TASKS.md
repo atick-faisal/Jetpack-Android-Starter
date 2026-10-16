@@ -2,7 +2,7 @@
 
 Companion goals, findings, and recovery map: [DOC_FIX_PLAN.md](DOC_FIX_PLAN.md).
 
-Status: DF-00–DF-04 complete; DF-05–DF-15 pending. Checked items identify completed work in the records below. Reviewed base: `1c2103890d16f81f6c6ae4c2d8626281b841e417`.
+Status: DF-00–DF-05 complete; DF-06–DF-15 pending. Checked items identify completed work in the records below. Reviewed base: `1c2103890d16f81f6c6ae4c2d8626281b841e417`.
 Reviewed head: `0fb7882982cfefd55df300e06549731c6fbb33bb` ([PR #647](https://github.com/atick-faisal/Jetpack-Android-Starter/pull/647)).
 
 Complete each task by recording the changed paths, verification result, and any unresolved follow-up
@@ -956,22 +956,71 @@ introduced by this documentation change.
 
 Depends on: DF-00–02. Scope: `docs/architecture.md` and architecture links.
 
-- [ ] Replace generic fictional `HomeAction`, `Data`, `Repository`, and `Params` examples with actual
+- [x] Replace generic fictional `HomeAction`, `Data`, `Repository`, and `Params` examples with actual
   types, or label a small conceptual example honestly. Remove repeated principles and summaries.
-- [ ] Add a current module dependency diagram/table from Gradle declarations. Distinguish build
+- [x] Add a current module dependency diagram/table from Gradle declarations. Distinguish build
   dependencies from runtime calls: `sync → data`, Firebase modules depend on `core:android`,
   `core:ui` exposes `core:navigation`, and `core:testing` has test-helper dependencies.
-- [ ] Explain the `SyncManager` interface in `data` and its Hilt binding/implementation in `sync`
+- [x] Explain the `SyncManager` interface in `data` and its Hilt binding/implementation in `sync`
   without drawing a Gradle dependency cycle. Include app assembly, lint, and benchmarks appropriately.
-- [ ] Correct “periodic” sync in prose and the sequence diagram; show actual trigger, pending local
+- [x] Correct “periodic” sync in prose and the sequence diagram; show actual trigger, pending local
   write, push, pull, Room emission, and lifecycle-aware UI collection.
-- [ ] Describe the two-layer design and useful extension criteria once. Avoid blanket prohibitions
+- [x] Describe the two-layer design and useful extension criteria once. Avoid blanket prohibitions
   on combining REST/Firestore or adding a domain layer when an adopter's requirements call for it.
-- [ ] Link to a real test walkthrough and avoid hardcoded test counts or “full harness” claims that
+- [x] Link to a real test walkthrough and avoid hardcoded test counts or “full harness” claims that
   imply coverage of behavior the tests do not exercise.
 
 Accept: each architecture arrow and example is supported by source; module-map links lead to a real
 map; an adopter can understand where a change belongs.
+
+### DF-05 completion record
+
+Completed 2026-10-16 against clean starting revision `3ad166b84` on `fix/docs-v3`.
+Changed `docs/architecture.md` and this task record. No executable code, public interface,
+dependency, build configuration, or backend rule changed.
+
+- Replaced fictional UI/repository/use-case examples with labeled HomeViewModel excerpts using
+  `HomeScreenData`, `Jetpack`, `UiState`, and the actual delete method. Removed repeated principles,
+  summaries, test counts, and unsupported coverage claims.
+- Rebuilt the module graph/table from `settings.gradle.kts` and all module project-dependency
+  declarations. Checked `implementation`, `api`, test-helper dependencies, `lintPublish`, baseline
+  profile consumption, and benchmark targeting separately. The diagram covers application edges;
+  the table includes all declared modules and tooling relationships.
+- Traced `SyncManager` through its data-owned interface, `SyncManagerImpl`, `SyncModule` binding,
+  app dependency, and the worker's call into HomeRepository. There is no `data → sync` build edge.
+- Replaced periodic fetch with the actual request, local pending write, one-time constrained work,
+  snapshot/push/acknowledgement/pull, Room observation, and lifecycle-aware screen collection.
+  Documented dropped-request and concurrent-edit limitations from the existing behavior ledger.
+- Checked Home, Profile, Settings and Auth repositories to distinguish Room, DataStore, and explicit
+  auth-profile writes. Kept domain-layer extension criteria and REST/Firestore choices concise.
+- Preserved the `testing` anchor consumed by `core/testing/README.md`. Added a walkthrough and exact
+  command for the existing SettingsRepositoryImplTest, plus a ViewModel test link. Existing generic
+  architecture links still resolve to the repaired page; no caller edits were needed.
+
+Verification against the documentation working tree above starting revision `3ad166b84`:
+
+- `./gradlew :data:testDebugUnitTest --tests
+  'dev.atick.data.repository.settings.SettingsRepositoryImplTest' check spotlessCheck
+  --init-script gradle/init.gradle.kts --no-configuration-cache` — BUILD SUCCESSFUL,
+  1,141 actionable tasks (19 executed, 1,122 up-to-date). The selected debug repository suite's XML
+  reports seven tests with no failures, errors, or skips. Other project checks reused outputs where
+  Gradle considered them current; this is not a claim of a fresh-device run. Root Spotless success
+  does not cover the separately recorded included-build formatter limitation.
+- `./gradlew dokkaGeneratePublicationHtml` — BUILD SUCCESSFUL, 280 actionable tasks
+  (6 executed, 274 up-to-date). Used the real HTML output and the exact documented Python
+  homepage/API assembly procedure before rebuilding MkDocs.
+- `.venv/bin/python -m mkdocs build --strict` — passed. The upstream Material notice and existing
+  homepage-not-in-nav informational message remain; navigation changes are separately queued.
+- Inspected generated architecture HTML with Python's HTML parser: two tables, two Mermaid blocks,
+  preserved `testing` anchor, new `module-dependencies` anchor, and all 56 local links/fragments
+  resolve. Mermaid source was checked against the operations and Gradle declarations above.
+- `git diff --check` — passed; final diff is limited to the two authored Markdown files.
+
+Visual browser inspection was attempted but blocked: browser inventory had no connected browser,
+then native Chrome access reported pending macOS Accessibility/Screen Recording permissions.
+Generated HTML checks do not establish visual Mermaid layout or GitHub rendering. No device tests,
+release, deployment, commit, push, or external update was performed. Spotless apply remains required
+before a later commit; no formatter rewrite was needed for this Markdown-only change.
 
 ## DF-06 — Repair data, DI, persistence, and sync guidance
 
