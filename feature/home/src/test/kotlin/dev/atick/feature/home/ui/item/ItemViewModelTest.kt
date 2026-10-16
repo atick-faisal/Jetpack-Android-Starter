@@ -16,15 +16,22 @@
 
 package dev.atick.feature.home.ui.item
 
+import androidx.lifecycle.viewModelScope
 import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
 import dev.atick.core.testing.rule.MainDispatcherRule
 import dev.atick.data.model.home.Jetpack
 import dev.atick.data.repository.home.HomeRepository
 import dev.atick.data.utils.SyncProgress
+import dev.atick.feature.home.ui.home.HomeViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.awaitCancellation
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
-import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.test.advanceTimeBy
+import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
 import org.junit.Rule
 import org.junit.Test
@@ -38,6 +45,7 @@ import org.junit.Test
  * `stateInDelayed`, so with no collector it just replays its initial value and an assertion
  * against it would pass no matter what the ViewModel did.
  */
+@OptIn(ExperimentalCoroutinesApi::class)
 class ItemViewModelTest {
 
     @get:Rule
@@ -126,6 +134,90 @@ class ItemViewModelTest {
     }
 
     @Test
+    fun `failed save currently requests navigation without exposing the failure`() = runTest {
+        repository.saveResult = Result.failure(IllegalStateException("write failed"))
+        val viewModel = ItemViewModel(repository, existingJetpackId = null)
+        viewModel.itemUiState.test {
+            awaitItem()
+            viewModel.createOrUpdateJetpack()
+            val state = expectMostRecentItem()
+            // Characterizes a bug: a failed write must not be taught as a successful save.
+            assertThat(state.data.navigateBack.getContentIfNotHandled()).isTrue()
+            assertThat(state.error.peekContent()).isNull()
+            assertThat(state.loading).isFalse()
+            cancelAndIgnoreRemainingEvents()
+        }
+        viewModel.viewModelScope.cancel()
+    }
+
+    @Test
+    fun `failed load currently leaves default form data without an error`() = runTest {
+        repository.loadFailure = IllegalStateException("read failed")
+        val viewModel = ItemViewModel(repository, existingJetpackId = "missing")
+        viewModel.itemUiState.test {
+            awaitItem()
+            runCurrent()
+            assertThat(repository.itemSubscriptions).isEqualTo(1)
+            assertThat(viewModel.itemUiState.value.data.jetpackName).isEmpty()
+            assertThat(viewModel.itemUiState.value.error.peekContent()).isNull()
+            expectNoEvents()
+            cancelAndIgnoreRemainingEvents()
+        }
+        viewModel.viewModelScope.cancel()
+    }
+
+    @Test
+    fun `item resubscription after timeout leaves two repository collectors active`() = runTest {
+        val viewModel = ItemViewModel(repository, existingJetpackId = "existing")
+        try {
+            viewModel.itemUiState.test {
+                awaitItem()
+                runCurrent()
+                assertThat(repository.activeItemCollectors).isEqualTo(1)
+                cancelAndIgnoreRemainingEvents()
+            }
+            advanceTimeBy(5_001)
+            runCurrent()
+            assertThat(repository.activeItemCollectors).isEqualTo(1)
+            viewModel.itemUiState.test {
+                awaitItem()
+                runCurrent()
+                assertThat(repository.itemSubscriptions).isEqualTo(2)
+                assertThat(repository.activeItemCollectors).isEqualTo(2)
+                cancelAndIgnoreRemainingEvents()
+            }
+        } finally {
+            viewModel.viewModelScope.cancel()
+        }
+        assertThat(repository.activeItemCollectors).isEqualTo(0)
+    }
+
+    @Test
+    fun `home resubscription after timeout leaves two repository collectors active`() = runTest {
+        val viewModel = HomeViewModel(repository)
+        try {
+            viewModel.homeUiState.test {
+                awaitItem()
+                runCurrent()
+                assertThat(repository.activeHomeCollectors).isEqualTo(1)
+                cancelAndIgnoreRemainingEvents()
+            }
+            advanceTimeBy(5_001)
+            runCurrent()
+            assertThat(repository.activeHomeCollectors).isEqualTo(1)
+            viewModel.homeUiState.test {
+                awaitItem()
+                runCurrent()
+                assertThat(repository.activeHomeCollectors).isEqualTo(2)
+                cancelAndIgnoreRemainingEvents()
+            }
+        } finally {
+            viewModel.viewModelScope.cancel()
+        }
+        assertThat(repository.activeHomeCollectors).isEqualTo(0)
+    }
+
+    @Test
     fun `an existing item loads its price as text`() = runTest {
         val existing = Jetpack(id = "jetpack-1", name = "Room", price = 12.5)
         val viewModel = ItemViewModel(
@@ -153,15 +245,40 @@ private class FakeHomeRepository(
 
     var saved: Jetpack? = null
         private set
+    var saveResult: Result<Unit> = Result.success(Unit)
+    var loadFailure: Throwable? = null
+    var itemSubscriptions = 0
+        private set
+    var activeItemCollectors = 0
+        private set
+    var activeHomeCollectors = 0
+        private set
 
-    override fun getJetpacks(): Flow<List<Jetpack>> = flowOf(listOfNotNull(existing))
+    override fun getJetpacks(): Flow<List<Jetpack>> = flow {
+        activeHomeCollectors++
+        try {
+            emit(listOfNotNull(existing))
+            awaitCancellation()
+        } finally {
+            activeHomeCollectors--
+        }
+    }
 
-    override fun getJetpack(id: String): Flow<Jetpack> =
-        existing?.let { flowOf(it) } ?: emptyFlow()
+    override fun getJetpack(id: String): Flow<Jetpack> = flow {
+        itemSubscriptions++
+        activeItemCollectors++
+        try {
+            loadFailure?.let { throw it }
+            existing?.let { emit(it) }
+            awaitCancellation()
+        } finally {
+            activeItemCollectors--
+        }
+    }
 
     override suspend fun createOrUpdateJetpack(jetpack: Jetpack): Result<Unit> {
         saved = jetpack
-        return Result.success(Unit)
+        return saveResult
     }
 
     override suspend fun markJetpackAsDeleted(jetpack: Jetpack): Result<Unit> =

@@ -28,10 +28,13 @@ import dev.atick.data.utils.SyncManager
 import dev.atick.firebase.firestore.data.FirebaseDataSource
 import dev.atick.firebase.firestore.model.FirebaseJetpack
 import dev.atick.firebase.firestore.model.serverUpdatedAtNanos
+import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
 
@@ -44,6 +47,7 @@ import org.junit.Test
  * `serverUpdatedAtNanos`, assigned by Firestore itself. The tests below fail if it goes back to a
  * device clock.
  */
+@OptIn(ExperimentalCoroutinesApi::class)
 class HomeRepositoryImplTest {
 
     private val userId = "user-1"
@@ -110,8 +114,7 @@ class HomeRepositoryImplTest {
 
         repository.sync().toList()
 
-        // Pushing first is what stops the pull overwriting an unsynced local edit with older
-        // remote data.
+        // This checks phase order, not protection against edits made during either phase.
         assertThat(remote.calls).containsExactly("upsert:pending", "pull").inOrder()
     }
 
@@ -140,6 +143,102 @@ class HomeRepositoryImplTest {
         // Untouched by a local write: only the server sets it.
         assertThat(saved.serverUpdatedAtNanos).isEqualTo(0)
         assertThat(syncManager.requests).isGreaterThan(0)
+    }
+
+    @Test
+    fun `a row added after the push snapshot waits for another sync`() = runTest {
+        val pushing = CompletableDeferred<Unit>()
+        val resume = CompletableDeferred<Unit>()
+        local.put(entity("first", needsSync = true, syncAction = SyncAction.UPSERT))
+        remote.onUpsert = {
+            pushing.complete(Unit)
+            resume.await()
+        }
+        val sync = launch { repository.sync().toList() }
+        pushing.await()
+
+        repository.createOrUpdateJetpack(Jetpack(id = "later", name = "Later"))
+        resume.complete(Unit)
+        sync.join()
+
+        assertThat(remote.calls).containsExactly("upsert:first", "pull").inOrder()
+        assertThat(local.jetpacks.getValue("later").needsSync).isTrue()
+        assertThat(syncManager.requests).isEqualTo(1)
+        // The recording manager does not simulate WorkManager KEEP or schedule another run.
+    }
+
+    @Test
+    fun `upload acknowledgement clears the pending flag of an edit made during upload`() = runTest {
+        val pushing = CompletableDeferred<Unit>()
+        val resume = CompletableDeferred<Unit>()
+        local.put(entity("same", needsSync = true, syncAction = SyncAction.UPSERT))
+        remote.onUpsert = {
+            pushing.complete(Unit)
+            resume.await()
+        }
+        val sync = launch { repository.sync().toList() }
+        pushing.await()
+
+        repository.createOrUpdateJetpack(Jetpack(id = "same", name = "Newer edit"))
+        resume.complete(Unit)
+        sync.join()
+
+        val row = local.jetpacks.getValue("same")
+        assertThat(row.name).isEqualTo("Newer edit")
+        assertThat(row.needsSync).isFalse()
+        assertThat(row.syncAction).isEqualTo(SyncAction.NONE)
+        assertThat(local.getUnsyncedJetpacks(userId)).isEmpty()
+    }
+
+    @Test
+    fun `pull echo overwrites an edit made while its older value is uploading`() = runTest {
+        val pushing = CompletableDeferred<Unit>()
+        val resume = CompletableDeferred<Unit>()
+        local.put(entity("same", needsSync = true, syncAction = SyncAction.UPSERT))
+        remote.documents += document("same", serverUpdatedAtNanos = 200)
+        remote.onUpsert = {
+            pushing.complete(Unit)
+            resume.await()
+        }
+        val sync = launch { repository.sync().toList() }
+        pushing.await()
+
+        repository.createOrUpdateJetpack(Jetpack(id = "same", name = "Newer edit"))
+        resume.complete(Unit)
+        sync.join()
+
+        assertThat(local.jetpacks.getValue("same").name).isEqualTo("Jetpack same")
+        assertThat(local.getUnsyncedJetpacks(userId)).isEmpty()
+    }
+
+    @Test
+    fun `retry skips an unapplied document sharing the last stored timestamp`() = runTest {
+        remote.documents += document("a", serverUpdatedAtNanos = 200)
+        remote.documents += document("b", serverUpdatedAtNanos = 200)
+        local.beforeUpsert = { if (it.id == "b") error("disk write failed") }
+
+        val failure = runCatching { repository.sync().toList() }
+        assertThat(failure.exceptionOrNull()).hasMessageThat().isEqualTo("disk write failed")
+        assertThat(local.jetpacks.keys).containsExactly("a")
+
+        local.beforeUpsert = {}
+        repository.sync().toList()
+
+        assertThat(remote.pullCursors).containsExactly(0L, 200L).inOrder()
+        assertThat(local.jetpacks.keys).containsExactly("a")
+    }
+
+    @Test
+    fun `retry resumes unapplied documents with strictly later timestamps`() = runTest {
+        remote.documents += document("a", serverUpdatedAtNanos = 200)
+        remote.documents += document("b", serverUpdatedAtNanos = 300)
+        local.beforeUpsert = { if (it.id == "b") error("disk write failed") }
+
+        assertThat(runCatching { repository.sync().toList() }.isFailure).isTrue()
+        local.beforeUpsert = {}
+        repository.sync().toList()
+
+        assertThat(local.jetpacks.keys).containsExactly("a", "b")
     }
 
     private fun entity(
@@ -190,6 +289,7 @@ private class FakeLocalDataSource : LocalDataSource {
     private val state = MutableStateFlow(emptyMap<String, JetpackEntity>())
 
     val jetpacks: Map<String, JetpackEntity> get() = state.value
+    var beforeUpsert: suspend (JetpackEntity) -> Unit = {}
 
     fun put(jetpack: JetpackEntity) {
         state.value = state.value + (jetpack.id to jetpack)
@@ -208,7 +308,10 @@ private class FakeLocalDataSource : LocalDataSource {
 
     override suspend fun insertJetpack(jetpackEntity: JetpackEntity) = put(jetpackEntity)
 
-    override suspend fun upsertJetpack(jetpackEntity: JetpackEntity) = put(jetpackEntity)
+    override suspend fun upsertJetpack(jetpackEntity: JetpackEntity) {
+        beforeUpsert(jetpackEntity)
+        put(jetpackEntity)
+    }
 
     override suspend fun upsertJetpacks(remoteJetpacks: List<JetpackEntity>) =
         remoteJetpacks.forEach(::put)
@@ -248,6 +351,7 @@ private class FakeFirebaseDataSource : FirebaseDataSource {
     val documents = mutableListOf<FirebaseJetpack>()
     val pullCursors = mutableListOf<Long>()
     val calls = mutableListOf<String>()
+    var onUpsert: suspend () -> Unit = {}
 
     override suspend fun pullJetpacks(
         userId: String,
@@ -257,7 +361,7 @@ private class FakeFirebaseDataSource : FirebaseDataSource {
         calls += "pull"
         return documents.filter {
             it.userId == userId && it.serverUpdatedAtNanos() > syncedAfterNanos
-        }
+        }.sortedBy { it.serverUpdatedAtNanos() }
     }
 
     override suspend fun createJetpack(firebaseJetpack: FirebaseJetpack) {
@@ -266,6 +370,7 @@ private class FakeFirebaseDataSource : FirebaseDataSource {
 
     override suspend fun createOrUpdateJetpack(firebaseJetpack: FirebaseJetpack) {
         calls += "upsert:${firebaseJetpack.id}"
+        onUpsert()
     }
 
     override suspend fun deleteJetpack(firebaseJetpack: FirebaseJetpack) {
