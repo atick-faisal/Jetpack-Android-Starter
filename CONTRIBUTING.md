@@ -21,31 +21,47 @@ If you want to discuss on something then feel free to present your opinions, vie
 
 ### Comments and docs
 
-Code comments explain *why*, not *what* — the signature already says what. Match the plain-paragraph,
-no-headings, no-bullets style used in `build-logic/` and `core/navigation/`, e.g.
-`core/navigation/NavigationState.kt:48-50`. Links are bare URLs inline, not markdown syntax. Issue
-tracking uses `// Tracking: GitHub Issue #NNN`.
+Write comments and documentation that help the reader understand behavior or finish a task.
+Comments can explain behavior, contracts, units, lifetime, ordering, constraints, or a reason
+supported by evidence. Use the shortest explanation that preserves the useful fact; move longer
+background into a guide and link to it. Lists, Markdown links, and KDoc tags such as `@param`,
+`@return`, and `@throws` are welcome where they improve readability.
 
-A small, fixed vocabulary marks rationale and traps, expressed two ways — an emoji marker as the
-first line of a code comment, or a GitHub alert blockquote in markdown. Learning one teaches the
-other, since they mean the same thing everywhere:
+For example, this comment explains a filter that a function name alone does not convey:
 
-| Alert | Emoji | Severity | Use when |
-|---|---|---|---|
-| `> [!NOTE]` | ℹ️ | Context | Background the reader needs, implying no action |
-| `> [!TIP]` | 💡 | Rationale | The code looks wrong or arbitrary until you know why |
-| `> [!IMPORTANT]` | ❗ | Contract | A contract the caller must uphold, easy to violate silently |
-| `> [!WARNING]` | ⚠️ | Trap | Changing this without knowing will introduce a bug |
-| `> [!CAUTION]` | ☠️ | Severe | Leaks credentials, corrupts data, or ships an unsigned build |
+```kotlin
+// Returns this user's jetpacks, excluding rows marked as deleted.
+```
 
-In code: one marker per comment block, first line only, never inside a KDoc `@param`/`@return`/
-`@throws`. Most rationale comments carry no marker at all — reserve one for the cases above.
+That describes the current `JetpackDao.getJetpacks()` query. Explain limitations directly, and
+check claims against the implementation. Avoid invented motives, blame, self-congratulation,
+unsupported guarantees, blanket bans on reasonable alternatives, and repeated accounts of fixed bugs.
 
-In markdown: use ALL-CAPS qualifiers exactly as shown (`NOTE`, `TIP`, `IMPORTANT`, `WARNING`,
-`CAUTION` — no other type is recognized) and keep pages to one or two alerts, per GitHub's own
-guidance.
+Tutorials should give the steps, expected results, and relevant failure cases. Use current code
+when teaching an existing pattern. For example, this excerpt from
+[LocalDataSourceImpl](core/room/src/main/kotlin/dev/atick/core/room/data/LocalDataSourceImpl.kt)
+shows how the list flow is delegated to Room and its upstream work moved to the IO dispatcher:
+
+```kotlin
+override fun getJetpacks(userId: String): Flow<List<JetpackEntity>> =
+    jetpackDao.getJetpacks(userId).flowOn(ioDispatcher)
+```
+
+This is a method excerpt; its containing class, imports, constructor, and other methods are omitted.
+Label shortened excerpts and explain their omissions. Label hypothetical additions as proposed
+extensions and describe what the reader must add; do not present them as existing APIs.
+
+Choose document length and structure for the reader's task. There are no numeric line or alert
+budgets, required emoji markers, or required mappings between code comments and Markdown alerts.
+Keep warnings that help readers avoid concrete mistakes, such as signing a release with the debug
+key or losing local data during a destructive migration.
+
+For Markdown alerts, use GitHub-compatible blockquotes with `NOTE`, `TIP`, `IMPORTANT`, `WARNING`,
+or `CAUTION`, for example:
 
 > [!WARNING]
-> Never write native `!!! type` or `??? type` admonition syntax — it renders as literal broken text
-> on GitHub. Every markdown file in this repo is read on GitHub as well as through MkDocs, so `> [!TYPE]`
-> blockquotes are the only form that works in both places.
+> A release built without `keystore.properties` falls back to the debug signing key. Configure
+> release signing before distributing the app; see [Release build setup](docs/getting-started.md#release-build-setup).
+
+Use this blockquote syntax for alerts read on GitHub and MkDocs. Native `!!! type` and `??? type`
+admonitions render as literal text on GitHub.

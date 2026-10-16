@@ -1,5 +1,12 @@
 # Documentation & Comment Refactor — Plan
 
+> [!NOTE]
+> **Historical record.** The original findings, targets, completion claims, and verification results
+> below describe the earlier refactor. They do not govern current work or establish that the repair
+> is complete. Use [DOC_FIX_PLAN.md](DOC_FIX_PLAN.md) and [DOC_FIX_TASKS.md](DOC_FIX_TASKS.md) for the
+> active repair plan and queue, and [CONTRIBUTING.md](CONTRIBUTING.md#comments-and-docs) for writing
+> guidance. The old line/alert budgets and comment policies are superseded.
+
 Companion checklist: [TASKS.md](TASKS.md).
 
 ## Status — complete

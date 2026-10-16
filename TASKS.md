@@ -1,5 +1,12 @@
 # Documentation & Comment Refactor — Task Checklist
 
+> [!NOTE]
+> **Historical record.** The original findings, targets, completion claims, and verification results
+> below describe the earlier refactor. They do not govern current work or establish that the repair
+> is complete. Use [DOC_FIX_PLAN.md](DOC_FIX_PLAN.md) and [DOC_FIX_TASKS.md](DOC_FIX_TASKS.md) for the
+> active repair plan and queue, and [CONTRIBUTING.md](CONTRIBUTING.md#comments-and-docs) for writing
+> guidance. The old line/alert budgets and comment policies are superseded.
+
 Execution checklist for [PLAN.md](PLAN.md). Phases are ordered so the repo is consistent after each one.
 Findings referenced as A1-A11 (stale), B1-B10 (duplication), C1-C15 (comments) are defined in PLAN.md.
 
