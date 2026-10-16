@@ -119,9 +119,13 @@ internal class HomeRepositoryImpl @Inject constructor(
     }
 
     /**
-     * Sync jetpacks with the remote data source.
+     * Pushes one pending-row snapshot, then pulls and individually upserts remote records.
      *
-     * @return A [Flow] of [SyncProgress].
+     * Acknowledgements are by ID, not uploaded version; concurrent edits can lose pending status
+     * or be overwritten by pull. A later pass is needed for rows added after the snapshot.
+     * The timestamp-only cursor can skip unapplied records after interruption within a tie group.
+     *
+     * @return A cold [Flow] of per-phase [SyncProgress]; collection performs the I/O and may throw.
      */
     override suspend fun sync(): Flow<SyncProgress> {
         return flow {
@@ -181,13 +185,8 @@ internal class HomeRepositoryImpl @Inject constructor(
             val totalRemoteJetpacks = remoteJetpacks.size
             Timber.d("Syncing $totalRemoteJetpacks remote jetpacks")
 
-            // Pull updates from remote
-            // We pull after pushing local changes to save the local changes to the cloud first
-            // and avoid accidentally overwriting them with stale data.
-            // Each row just pushed comes back here once, because a write does not report the
-            // timestamp the server gave it. That echo carries exactly what was pushed, so applying
-            // it changes no content -- and it is what records the row's serverUpdatedAtNanos
-            // locally, moving the cursor past this device's own writes.
+            // Pull upserts are unconditional and can overwrite edits made during this pass.
+            // Pulled mappings also store the server timestamp used by the next cursor.
             remoteJetpacks.forEachIndexed { index, remoteJetpack ->
                 localDataSource.upsertJetpack(remoteJetpack.toJetpackEntity())
                 emit(

@@ -26,8 +26,11 @@ interface HomeRepository : Syncable {
 - `SyncManager`/`Syncable` are declared here but implemented in `:sync` — reading this module's
   source alone won't show you how a sync request actually runs.
 - `SyncAction` (`core/room`) is `NONE, UPSERT, DELETE`. There is no `CREATE`/`UPDATE`.
-- Writes are local-first: Room is updated and flagged `needsSync = true` *before* `requestSync()`
-  runs, so a write always succeeds even if the sync itself is delayed or fails.
+- Home writes update Room before requesting work. Local persistence/requesting work can fail;
+  a successful Result does not acknowledge remote delivery. A failed enqueue can leave a local
+  change committed. See [repository behavior](../docs/data.md#repository-pattern).
+- Sync takes one pending snapshot, then pushes and pulls. It does not protect concurrent edits or
+  guarantee a follow-up pass after a dropped request. See [delivery limitations](../docs/data.md#delivery-and-conflict-limitations).
 
 ## Related Documentation
 

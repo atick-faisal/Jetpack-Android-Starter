@@ -2,7 +2,7 @@
 
 Companion goals, findings, and recovery map: [DOC_FIX_PLAN.md](DOC_FIX_PLAN.md).
 
-Status: DF-00–DF-05 complete; DF-06–DF-15 pending. Checked items identify completed work in the records below. Reviewed base: `1c2103890d16f81f6c6ae4c2d8626281b841e417`.
+Status: DF-00–DF-06 complete; DF-07–DF-15 pending. Checked items identify completed work in the records below. Reviewed base: `1c2103890d16f81f6c6ae4c2d8626281b841e417`.
 Reviewed head: `0fb7882982cfefd55df300e06549731c6fbb33bb` ([PR #647](https://github.com/atick-faisal/Jetpack-Android-Starter/pull/647)).
 
 Complete each task by recording the changed paths, verification result, and any unresolved follow-up
@@ -1026,32 +1026,105 @@ before a later commit; no formatter rewrite was needed for this Markdown-only ch
 
 Depends on: DF-02, DF-05. Scope: `docs/data.md`, related module READMEs/KDoc, Firebase cross-links.
 
-- [ ] Restore real DI examples: repository `@Binds`, Room/Retrofit/DataStore `@Provides`, qualifiers,
+- [x] Restore real DI examples: repository `@Binds`, Room/Retrofit/DataStore `@Provides`, qualifiers,
   `@ApplicationContext`, scope/install location, and fake injection in tests. Avoid calling `@Binds`
   merely a cast or inventing scopes used by this project.
-- [ ] Describe JSON-backed typed DataStore and the actual corruption exception path. Explain
+- [x] Describe JSON-backed typed DataStore and the actual corruption exception path. Explain
   defaults, adding a preference, serializer compatibility, and reset/sign-out behavior without
   claiming automatic corruption recovery.
-- [ ] Restore Room entity/DAO/database registration and version/migration guidance. Explicitly
+- [x] Restore Room entity/DAO/database registration and version/migration guidance. Explicitly
   describe destructive fallback and loss of unsynced data; distinguish version upgrades from
   same-version schema-integrity failures. Use the compatibility decision from DF-02.
-- [ ] Correct the timestamp table using DAO queries and both mapping directions: milliseconds versus
+- [x] Correct the timestamp table using DAO queries and both mapping directions: milliseconds versus
   nanoseconds, local pending-change checks, server pull cursor, and transmitted `lastSynced`.
-- [ ] State what the sync code does in order. Correct “every read requests sync” (`getJetpack(id)`
+- [x] State what the sync code does in order. Correct “every read requests sync” (`getJetpack(id)`
   does not), “drain everything,” guaranteed follow-up runs, and conflict-free push/pull claims.
-- [ ] Explain soft-delete/tombstone retention accurately. Rows remain after successful push; no
+- [x] Explain soft-delete/tombstone retention accurately. Rows remain after successful push; no
   automatic tombstone cleanup is implemented. Keep server-cursor inclusion of deleted rows clear.
-- [ ] Replace “writes always succeed” with the actual boundary: local persistence and enqueueing
+- [x] Replace “writes always succeed” with the actual boundary: local persistence and enqueueing
   can fail; a successful local operation does not mean remote sync succeeded.
-- [ ] State cancellation behavior and error boundaries accurately. `suspendRunCatching` rethrows
+- [x] State cancellation behavior and error boundaries accurately. `suspendRunCatching` rethrows
   cancellation; data sources may throw; Flow failures need handling; update helpers consume Results.
-- [ ] Document DF-02 sync limitations and upgrade requirements near the algorithm, without a
+- [x] Document DF-02 sync limitations and upgrade requirements near the algorithm, without a
   blanket safety assertion. Explain the server timestamp mechanism once, with short local reminders.
-- [ ] Restore how to observe sync progress and locate scheduling/retry constraints. Keep the worker
+- [x] Restore how to observe sync progress and locate scheduling/retry constraints. Keep the worker
   and repository roles distinct; verify retries versus total attempts and the existing backoff.
 
 Accept: documented persistence/error/sync guarantees do not exceed implementation; an adopter can
 extend storage and understand the consequences for existing data.
+
+### DF-06 completion record
+
+Completed 2026-10-16 against clean starting revision `5b16904eabb578a0afbe10034c74b7e8866089c4`
+on `fix/docs-v3`. No executable behavior, API, dependency, schema, configuration, or rules changed.
+
+Changed paths:
+
+- Main guide: `docs/data.md`.
+- Related references: `core/preferences/README.md`, `core/room/README.md`, `data/README.md`,
+  `sync/README.md`, `firebase/firestore/README.md`.
+- Preferences KDoc: `core/preferences/src/main/kotlin/dev/atick/core/preferences/model/UserDataPreferences.kt`
+  and `core/preferences/src/main/kotlin/dev/atick/core/preferences/utils/UserDataSerializer.kt`.
+- Room KDoc: `core/room/src/main/kotlin/dev/atick/core/room/data/JetpackDao.kt`,
+  `core/room/src/main/kotlin/dev/atick/core/room/di/DatabaseModule.kt`,
+  `core/room/src/main/kotlin/dev/atick/core/room/model/JetpackEntity.kt`.
+- Data KDoc/comments: `data/src/main/kotlin/dev/atick/data/model/home/Jetpack.kt`,
+  `data/src/main/kotlin/dev/atick/data/repository/home/HomeRepositoryImpl.kt`,
+  `data/src/main/kotlin/dev/atick/data/utils/SyncUtils.kt`.
+- Scheduling/worker KDoc/comments: `sync/src/main/kotlin/dev/atick/sync/manager/Sync.kt`,
+  `sync/src/main/kotlin/dev/atick/sync/manager/SyncManagerImpl.kt`,
+  `sync/src/main/kotlin/dev/atick/sync/worker/SyncWorker.kt`.
+- This execution record. Generated site/API output remains ignored.
+
+Coverage and decisions:
+
+- Restored storage selection and actual REST access, Result/Flow/cancellation boundaries, DI
+  bindings/providers/qualifiers/lifetimes, constructor-supplied fakes, and Android field/worker
+  injection context. Included current Room, Retrofit, DataStore, preference-write, and remote-mapping
+  excerpts; labeled omissions and hypothetical extensions. Linked keyed ViewModel guidance and
+  maintained Hilt documentation rather than restoring unused advanced DI examples.
+- Restored preference evolution/reset and Room entity/DAO/provider/migration steps. Documented
+  JSON corruption propagation without a handler, strict serializer compatibility, destructive
+  version-upgrade loss (including unsent changes), and the separate same-version integrity case.
+- Replaced the sync explanation and sequence diagram with the pending snapshot/push/ack/pull
+  sequence. Corrected device-millisecond versus server-nanosecond metadata, both mapping directions,
+  retained local deleted rows, cursor inclusion, and absent cross-device hard-delete delivery.
+- Documented local persistence/request failure boundaries, concurrent edits, dropped requests,
+  equal-timestamp interruptions, SDK cache completeness limits, legacy documents/writers, progress
+  phases, RUNNING-only status, and connected/expedited scheduling. Corrected retry count to three
+  retries after the initial attempt; default backoff remains nominally 30/60/120 seconds.
+- The DF-00 recovery rows owned here are covered in the corresponding guide sections. Explicit
+  mapping and storage extension steps replace fictional helpers; listener/cache/manual-refresh
+  ideas remain labeled extensions. Broad README reconciliation and unrelated source comments
+  remain with their later owners.
+
+Verification:
+
+- `./gradlew :data:testDebugUnitTest :core:preferences:testDebugUnitTest
+  :core:room:testDebugUnitTest :core:android:testDebugUnitTest check spotlessCheck
+  --init-script gradle/init.gradle.kts --no-configuration-cache` — BUILD SUCCESSFUL;
+  1,141 actionable tasks, 183 executed and 958 up-to-date. Debug XML reports: data 19,
+  preferences 10, Room 18, Android utilities 38 tests; all 85 have zero failures/errors/skips.
+  These include the existing race, interrupted-pull, serializer, DAO, and Result/cancellation tests;
+  no new tests were added for prose. This is not fresh-device or SDK-cache integration coverage.
+- `./gradlew dokkaGeneratePublicationHtml spotlessCheck --init-script gradle/init.gradle.kts
+  --no-configuration-cache` — BUILD SUCCESSFUL; 456 actionable tasks, 61 executed, 5 from cache,
+  390 up-to-date. No unresolved-link/warning/error diagnostics in the captured log. Root Spotless
+  does not resolve the previously recorded included-build formatter limitation.
+- Assembled the real Dokka HTML and README homepage with the procedure in the build guide, then
+  `.venv/bin/python -m mkdocs build --strict` — passed. Existing Material notice and
+  homepage-not-in-nav informational message remain; site configuration work is separately queued.
+- Parsed generated data HTML: three tables, one Mermaid block, all five original section anchors
+  preserved, and all 144 local link/fragment references resolve.
+- Inspected the local site in Chrome: metadata table wraps within the content column, and the
+  push/pull Mermaid sequence renders with participants, loops, acknowledgements, and progress.
+- Compared executable token streams against the starting revision, preserving string literals:
+  all eleven changed Kotlin files differ only in comments/KDoc. `git diff --check` passed.
+
+Unresolved runtime work remains in the [bounded follow-ups](#bounded-runtime-follow-ups): sync
+consistency, pull checkpoints/cache verification, cancellation lifecycle, and upgrade compatibility.
+No emulator/backend authorization test, migration, runtime fix, deployment, commit, push, or external
+update was performed. Spotless apply remains required before a later commit.
 
 ## DF-07 — Make state and event documentation trustworthy
 

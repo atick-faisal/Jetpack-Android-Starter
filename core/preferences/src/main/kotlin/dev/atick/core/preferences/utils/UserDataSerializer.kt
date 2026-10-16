@@ -32,7 +32,8 @@ import java.io.OutputStream
 object UserDataSerializer : Serializer<UserDataPreferences> {
 
     /**
-     * The default value of [UserDataPreferences] to be used when deserialization fails.
+     * Initial value for a new store. Deserialization failures throw [CorruptionException];
+     * the configured DataStore has no corruption handler.
      */
     override val defaultValue: UserDataPreferences = UserDataPreferences()
 

@@ -1,76 +1,46 @@
 # Data Layer
 
-The data layer is repositories plus data sources — see [Architecture](architecture.md) for where it
-sits in the module graph. This page covers the four data sources, the repository pattern that
-combines them, how `Result<T>` is produced, and the two-way sync algorithm that keeps a local Room
-database and Firestore in agreement.
+Repositories combine data sources and expose data to ViewModels. This guide explains how to choose
+storage, wire dependencies, extend persistence, and follow the Home feature's current sync behavior.
+See [Architecture](architecture.md#module-dependencies) for the module graph.
 
 ## Data sources
 
-| Source | Module | Purpose | Key file |
-|---|---|---|---|
-| Room | `core/room` | Local persistence, single source of truth for the UI | `JetpackDao.kt`, `JetpackEntity.kt` |
-| DataStore | `core/preferences` | User profile and app settings (proto-style) | `UserPreferencesDataSourceImpl.kt` |
-| Retrofit | `core/network` | Plain REST client | `JetpackRestApi.kt`, `NetworkDataSourceImpl.kt` |
-| Firestore | `firebase/firestore` | Remote sync target for the `home` feature | `FirebaseDataSourceImpl.kt` |
+Choose the pattern for the feature rather than adding every source to every repository:
 
-`core:network`/`JetpackRestApi` exist as an independent REST option, but `HomeRepositoryImpl`
-doesn't use them — it syncs through Firestore only (see the note in [Guide](guide.md#2-data-source)).
-Reach for `core:network` if your feature talks to a plain backend instead of Firebase; don't use both
-for the same feature.
+| Reader need | Source and existing example | Behavior |
+|---|---|---|
+| Small local settings/profile | Typed JSON DataStore; `SettingsRepositoryImpl`, `ProfileRepositoryImpl` | Observe preferences as a `Flow`; update the serialized object locally. Auth sign-out is a separate operation. |
+| Relational local data with background remote access | Room and Firestore; `HomeRepositoryImpl` | Screens observe Room; local writes request background sync. See the limitations below. |
+| Explicit REST request | Retrofit; `NetworkDataSource.getPosts()` / `getPost(id)` | Suspend calls return DTOs or throw. No supplied repository connects these posts to a screen or persists them. |
+| Authentication | Firebase Auth; `AuthRepositoryImpl` | Sign in/register through the auth source, then store profile fields in preferences. |
 
-Room entities that participate in sync carry metadata fields beyond their domain data:
+For a REST-only extension, add a repository interface and constructor-injected implementation in
+`:data`, bind it in `RepositoryModule`, and map `NetworkPost` into your feature's data model. Wrap
+one-time requests in `suspendRunCatching`. Add observable local storage only if the feature needs it;
+a successful request alone does not supply an offline cache or a freshness policy.
 
-```kotlin
-// core/room/src/main/kotlin/dev/atick/core/room/model/JetpackEntity.kt
-@Entity(tableName = "jetpacks")
-data class JetpackEntity(
-    @PrimaryKey val id: String = UUID.randomUUID().toString(),
-    val name: String,
-    val price: Double,
-    val userId: String = String(),
-    val lastUpdated: Long = 0,
-    val lastSynced: Long = 0,
-    val serverUpdatedAtNanos: Long = 0,
-    val needsSync: Boolean = false,
-    val deleted: Boolean = false,
-    val syncAction: SyncAction = SyncAction.NONE,
-)
-
-enum class SyncAction { NONE, UPSERT, DELETE }
-```
-
-`deleted` is a **soft delete** — a row marked deleted is hidden from `getJetpacks()` but kept locally
-until it's pushed to Firestore, so the remote deletion isn't lost if the app closes mid-sync.
-
-DataStore and Firestore reads/writes follow the same shape — a `Flow` for observation, a
-`CoroutineDispatcher` qualified with `@IoDispatcher` for the actual I/O:
+The existing REST implementation moves the request to its injected dispatcher:
 
 ```kotlin
-// core/preferences/src/main/kotlin/dev/atick/core/preferences/data/UserPreferencesDataSourceImpl.kt
-override fun getUserDataPreferences(): Flow<UserDataPreferences> =
-    datastore.data.flowOn(ioDispatcher)
-```
-
-```kotlin
-// firebase/firestore/src/main/kotlin/dev/atick/firebase/firestore/data/FirebaseDataSourceImpl.kt
-override suspend fun pullJetpacks(userId: String, syncedAfterNanos: Long): List<FirebaseJetpack> {
+// NetworkDataSourceImpl method excerpt; constructor/imports omitted.
+override suspend fun getPosts(): List<NetworkPost> {
     return withContext(ioDispatcher) {
-        database.document(checkAuthentication(userId))
-            .collection(FirebaseDataSource.JETPACK_COLLECTION_NAME)
-            .whereGreaterThan(SERVER_UPDATED_AT_FIELD, syncedAfterNanos.asFirestoreTimestamp())
-            .get().await().toObjects(FirebaseJetpack::class.java)
+        jetpackRestApi.getPosts()
     }
 }
 ```
 
+Firestore snapshot listeners, TTL caching, and a manual refresh UI are possible extensions, not
+current Home behavior. A listener needs its own subscription cleanup and local merge policy; a cache
+needs an explicit expiry/refresh policy. The existing Firestore pull uses `get()`, not a listener.
+
 ## Repository pattern
 
-A repository is the only thing a ViewModel depends on. Reads return `Flow`, writes return
-`Result<Unit>`:
+Home exposes observable Room data and one-time local operations:
 
 ```kotlin
-// data/src/main/kotlin/dev/atick/data/repository/home/HomeRepository.kt
+// HomeRepository interface excerpt; package/imports omitted.
 interface HomeRepository : Syncable {
     fun getJetpacks(): Flow<List<Jetpack>>
     fun getJetpack(id: String): Flow<Jetpack>
@@ -79,80 +49,25 @@ interface HomeRepository : Syncable {
 }
 ```
 
-`HomeRepositoryImpl` is the offline-first example — Room is the only thing read for the UI, Firestore
-is a sync target that's never read directly by a screen:
+`HomeRepositoryImpl.getJetpacks()` calls `requestSync()` when the method constructs the Flow,
+including when nobody collects it. Collection then reads the user ID from preferences and observes
+that user's non-deleted Room rows. `getJetpack(id)` observes the DAO by ID and does not request sync.
 
-```kotlin
-// data/src/main/kotlin/dev/atick/data/repository/home/HomeRepositoryImpl.kt
-override fun getJetpacks(): Flow<List<Jetpack>> {
-    syncManager.requestSync()
-    return flow {
-        val userId = preferencesDataSource.getUserIdOrThrow()
-        emitAll(localDataSource.getJetpacks(userId).map { it.mapToJetpacks() })
-    }
-}
+Creation/update stamps `lastUpdated`, sets `needsSync=true` and action `UPSERT`, writes Room, then
+requests sync. Deletion flags the existing row `deleted=true`, `needsSync=true`, action `DELETE`,
+then requests sync. This hides it from the list without immediately removing the local row.
 
-override suspend fun createOrUpdateJetpack(jetpack: Jetpack): Result<Unit> = suspendRunCatching {
-    val userId = preferencesDataSource.getUserIdOrThrow()
-    localDataSource.upsertJetpack(
-        jetpack.toJetpackEntity().copy(
-            userId = userId,
-            lastUpdated = System.currentTimeMillis(),
-            needsSync = true,
-            syncAction = SyncAction.UPSERT,
-        ),
-    )
-    syncManager.requestSync()
-}
-```
-
-Writes are local-first: Room is updated and flagged `needsSync = true` before `requestSync()` ever
-runs, so a write always succeeds even if the sync itself fails or is delayed.
-
-Not every repository syncs. `ProfileRepositoryImpl` and `SettingsRepositoryImpl` are real local-only
-examples — DataStore plus Firebase Auth, no Room, no `Syncable`:
-
-```kotlin
-// data/src/main/kotlin/dev/atick/data/repository/profile/ProfileRepositoryImpl.kt
-override fun getProfile(): Flow<Profile> =
-    userPreferencesDataSource.getUserDataPreferences().map { it.toProfile() }
-
-override suspend fun signOut(): Result<Unit> = suspendRunCatching {
-    authDataSource.signOut()
-    userPreferencesDataSource.resetUserPreferences()
-}
-```
-
-Every repository is bound to its interface with `@Binds`, one function per repository, in a single
-Hilt module:
-
-```kotlin
-// data/src/main/kotlin/dev/atick/data/di/RepositoryModule.kt
-@Module
-@InstallIn(SingletonComponent::class)
-abstract class RepositoryModule {
-    @Binds
-    @Singleton
-    internal abstract fun bindHomeRepository(
-        homeRepositoryImpl: HomeRepositoryImpl,
-    ): HomeRepository
-
-    // ...one @Binds per repository
-}
-```
-
-`@Binds` over `@Provides` here is just a compile-time cast, not a factory function — appropriate
-since every implementation already has an `@Inject constructor` and needs no custom construction
-logic.
+A successful local operation does not acknowledge a remote upload. Authentication lookup, database
+access, and requesting work can fail. If requesting work throws after Room commits, the repository
+returns failure even though the local change remains. WorkManager's eventual outcome is not awaited
+by `requestSync()`, which returns `Unit`.
 
 ## Result via `suspendRunCatching`
 
-Repositories never let an exception escape a `suspend` call — every write goes through
-`suspendRunCatching`, which behaves like `runCatching` except it re-throws `CancellationException`
-instead of swallowing it, so cancelling a coroutine still cancels it:
+One-time repository operations use this helper from `core/android`:
 
 ```kotlin
-// core/android/src/main/kotlin/dev/atick/core/utils/CoroutineUtils.kt
+// CoroutineUtils.kt function excerpt; imports omitted.
 suspend inline fun <T> suspendRunCatching(crossinline block: suspend () -> T): Result<T> {
     return try {
         Result.success(block())
@@ -164,124 +79,271 @@ suspend inline fun <T> suspendRunCatching(crossinline block: suspend () -> T): R
 }
 ```
 
-Used at the repository boundary only — `HomeRepositoryImpl.createOrUpdateJetpack`,
-`ProfileRepositoryImpl.signOut`, and every `AuthRepositoryImpl` sign-in method wrap their body in it.
-The resulting `Result<T>` is what a ViewModel passes to `updateStateWith`/`updateWith` — see
-[State Management](state-management.md) for how that becomes a `UiState`.
+It converts ordinary `Exception`s to failed Results and rethrows cancellation. It does not wrap
+later emissions from a returned Flow. Data-source suspend calls may throw; observation failures
+must be handled in the collecting pipeline. `flowOn(ioDispatcher)` moves upstream work but does not
+catch errors. The state update helpers inspect returned Results; they do not catch arbitrary thrown
+exceptions or guarantee cleanup on cancellation. See [State Management](state-management.md).
+
+REST transport failures can surface as `IOException`, unsuccessful HTTP responses as Retrofit
+`HttpException`, and response decoding failures as serialization exceptions. A repository's failed
+Result lets the caller choose a response; no generic automatic retry or sign-out policy is supplied
+for these errors. A 401 response, for example, needs the API's authentication policy rather than an
+unconditional reset of local user data.
+
+## Dependency injection
+
+Use constructor injection for implementations whose dependencies are supplied by the graph.
+`RepositoryModule` in `:data` binds their interfaces:
+
+```kotlin
+// RepositoryModule class excerpt; other bindings and imports omitted.
+@Module
+@InstallIn(SingletonComponent::class)
+abstract class RepositoryModule {
+    @Binds
+    @Singleton
+    internal abstract fun bindHomeRepository(
+        homeRepositoryImpl: HomeRepositoryImpl,
+    ): HomeRepository
+}
+```
+
+`@Binds` tells Hilt which implementation supplies an interface. Its `@Inject constructor` describes
+construction. `@Provides` supplies types requiring a builder, factory, or other construction logic:
+
+| Provider | Construction | Graph location |
+|---|---|---|
+| `DatabaseModule.provideRoomDatabase` | `Room.databaseBuilder(...)` | `core/room/di` |
+| `DaoModule.provideJetpackDao` | `jetpackDatabase.getJetpackDao()` | `core/room/di` |
+| `RetrofitModule.provideRetrofitClient` | Retrofit builder, converter, OkHttp client, `BuildConfig.BACKEND_URL` | `core/network/di/retrofit` |
+| `RestApiModule.provideApiService` | `retrofit.create(JetpackRestApi::class.java)` | `core/network/di` |
+| `DatastoreModule.providePreferencesDataStore` | `DataStoreFactory.create(...)` | `core/preferences/di` |
+| `CredentialManagerModule.provideCredentialManager` | `CredentialManager.create(context)` | `firebase/auth/di` |
+
+For example, these provider excerpts show Room and Retrofit construction. Containing modules,
+imports, and private constants are omitted; these are existing providers, not additional bindings:
+
+```kotlin
+// DatabaseModule
+@Singleton
+@Provides
+fun provideRoomDatabase(@ApplicationContext appContext: Context): JetpackDatabase {
+    return Room.databaseBuilder(
+        appContext,
+        JetpackDatabase::class.java,
+        ROOM_DATABASE_NAME,
+    ).fallbackToDestructiveMigration(true).build()
+}
+
+// RestApiModule
+@Singleton
+@Provides
+fun provideApiService(retrofit: Retrofit): JetpackRestApi {
+    return retrofit.create(JetpackRestApi::class.java)
+}
+```
+
+The Room fallback is current configuration with data-loss consequences, explained below; do not
+copy it as a data-preserving upgrade policy. The DataStore provider appears in its storage section.
+
+These providers and the repository bindings use `SingletonComponent`; `@Singleton` shares a scoped
+binding within that component. Installation and scope are separate: installing a module does not
+scope every binding in it. `@Module(includes=[...])` includes bindings, not a processing order.
+`@ViewModelScoped` and `@ActivityScoped` are alternative lifetimes when extending the graph, not the
+storage/repository scopes shown here. For custom components, entry points, or multibindings, consult
+the maintained [Hilt documentation](https://dagger.dev/hilt/) before extending this setup.
+
+Qualifiers distinguish values with the same Kotlin type. `DispatcherModule` in `core/android/di`
+provides `@IoDispatcher` for I/O, `@DefaultDispatcher` for CPU work, and `@MainDispatcher` for work
+requiring the main thread. Data sources inject `@IoDispatcher` and use `withContext` for suspend
+work or `flowOn` for upstream Flow work. Android factories inject `@ApplicationContext Context`;
+for example, the DataStore provider below uses the app's private file location.
+
+Android-created entry points use field injection where appropriate: `App` is `@HiltAndroidApp`,
+and `MainActivity` is `@AndroidEntryPoint` with injected fields. Keep repository/data-source
+construction in Hilt. Runtime arguments for keyed ViewModels follow the
+[Navigation](navigation.md) assisted-injection walkthrough; workers use the delegation path below.
+
+Unit tests can supply fakes directly to constructors without starting Hilt:
+
+```kotlin
+// Setup excerpt from SettingsRepositoryImplTest; test methods/imports omitted.
+private val preferences = FakeUserPreferencesDataSource()
+private val auth = FakeAuthDataSource()
+private val repository = SettingsRepositoryImpl(
+    authDataSource = auth,
+    userPreferencesDataSource = preferences,
+)
+```
+
+That test collects settings through Turbine, checks writes, and checks failed sign-out Results.
+See [Architecture testing](architecture.md#testing) for its runnable command and
+[Guide](guide.md) for feature integration. Hilt instrumentation replacement is a separate test
+setup; constructor-supplied fakes do not require it.
+
+## Typed JSON DataStore
+
+`UserDataPreferences` is a Kotlin serialization data class stored in `user_preferences.json`.
+It is neither SharedPreferences nor a Protocol Buffers schema. The singleton provider is:
+
+```kotlin
+// DatastoreModule provider excerpt; containing module and imports omitted.
+@Singleton
+@Provides
+fun providePreferencesDataStore(
+    @ApplicationContext appContext: Context,
+    @IoDispatcher ioDispatcher: CoroutineDispatcher,
+): DataStore<UserDataPreferences> {
+    return DataStoreFactory.create(
+        serializer = UserDataSerializer,
+        produceFile = { appContext.dataStoreFile(DATA_STORE_FILE_NAME) },
+        scope = CoroutineScope(ioDispatcher + SupervisorJob()),
+    )
+}
+```
+
+`DATA_STORE_FILE_NAME` is the module's private constant, `"user_preferences.json"`. Reads expose
+`datastore.data.flowOn(ioDispatcher)`; writes use `updateData { old -> old.copy(...) }` on the whole
+object. Keep one DataStore instance per file.
+
+For example, an existing single-setting write preserves the other fields:
+
+```kotlin
+// UserPreferencesDataSourceImpl method excerpt; constructor/imports omitted.
+override suspend fun setDynamicColorPreference(useDynamicColor: Boolean) {
+    withContext(ioDispatcher) {
+        datastore.updateData { userData ->
+            userData.copy(useDynamicColor = useDynamicColor)
+        }
+    }
+}
+```
+
+### Defaults, evolution, and reset
+
+- `UserDataSerializer.defaultValue` is `UserDataPreferences()`: empty ID, nullable name/picture,
+  follow-system theme, and dynamic color enabled. It supplies a new store's initial value.
+- Missing JSON fields with declared defaults decode to those defaults. The serializer uses the
+  default `Json` configuration: unknown keys and invalid enum values are not ignored. Renames,
+  removals, and mixed app versions therefore need compatibility review rather than an assumed
+  transparent upgrade.
+- `readFrom()` translates `SerializationException` into `CorruptionException`. No corruption handler
+  is configured in `DatastoreModule`; malformed/truncated JSON does not automatically reset to
+  defaults. Other I/O failures can also propagate to readers.
+- `resetUserPreferences()` writes a new default object, including resetting theme/color choices.
+  Profile and Settings sign-out call auth sign-out first, then reset preferences; a failed auth
+  sign-out leaves preferences untouched. Resetting preferences does not clear Room or Firestore.
+
+To add a preference, add a serializable property with an intentional default to `UserDataPreferences`,
+add a method to `UserPreferencesDataSource` and its implementation using `updateData`, then expose
+it through the relevant repository model/mapping and operation. Bind the UI to that repository.
+Test old JSON missing the property, round trips, invalid values, reset behavior, and repository
+mapping. Preserve existing fields in each `copy`; do not replace the whole object for a single
+setting. Check serializer compatibility before changing field names or types.
+
+## Room persistence and schema changes
+
+For a new stored type, follow the existing `Jetpack` wiring:
+
+1. Add a Room `@Entity` with a primary key and a DAO with the required observations/mutations.
+2. Register the entity in `JetpackDatabase.entities` and expose its DAO from the database.
+3. Provide the DAO through `DaoModule`; expose it through a data-source interface/implementation and
+   bind that implementation in `DataSourceModule`.
+4. Add repository model mappings and operations, including user filtering and pending metadata if
+   the new type participates in sync. Adding a Room entity alone does not add a Firestore protocol.
+5. Increase the database version for schema changes and register a data-preserving migration in
+   `DatabaseModule`. Test a file-backed upgrade with existing and pending rows, then test DAO behavior.
+   Schema export and migration-test configuration need to be established; the current database has
+   `exportSchema=false`, and the existing in-memory DAO tests do not validate upgrades.
+
+The current database is version 2. Its provider calls
+`Room.databaseBuilder(appContext, JetpackDatabase::class.java, ROOM_DATABASE_NAME)` followed by
+`fallbackToDestructiveMigration(true).build()`, with no registered 1 → 2 migration.
+
+> [!WARNING]
+> An existing version 1 install can lose its local data, including unsent edits/deletes, when Room
+> recreates tables because no migration path exists. Re-fetching Firestore cannot restore changes
+> that were never uploaded. A same-version schema-integrity failure is a different case; destructive
+> migration is not a general recovery mechanism for editing entities without a version bump.
+
+Plan a preservation strategy before shipping an upgrade; the current configuration does not supply
+a data-preserving migration. See
+[existing installs and documents](firebase.md#existing-installs-and-documents) for the related
+Firestore compatibility requirements.
+
+### Mapping stored and remote models
+
+Keep screen-facing `Jetpack` values, `JetpackEntity`, and `FirebaseJetpack` mappings in `:data`.
+For example, the existing pull mapper carries remote metadata and uses entity defaults for local
+pending flags:
+
+```kotlin
+// Jetpack.kt mapping excerpt; package/imports omitted.
+fun FirebaseJetpack.toJetpackEntity(): JetpackEntity {
+    return JetpackEntity(
+        id = id,
+        name = name,
+        price = price,
+        userId = userId,
+        lastUpdated = lastUpdated,
+        lastSynced = lastSynced,
+        serverUpdatedAtNanos = serverUpdatedAtNanos(),
+        deleted = deleted,
+    )
+}
+```
+
+Local create/update separately applies user ID, edit time, and pending metadata in the repository;
+do not assume the screen model's mapper sets all sync fields. The reverse remote mapper carries
+content and device timestamps but leaves the server timestamp null for Firestore to assign.
 
 ## Two-way sync
 
-`HomeRepositoryImpl` is `Syncable`; its writes and reads both call `syncManager.requestSync()`, which
-enqueues a `WorkManager` job:
+The `SyncManager` contract lives in `:data`; `:sync` binds `SyncManagerImpl`, which requests unique
+one-time WorkManager work through `Sync.initialize()`. There is no periodic sync configured.
+`ExistingWorkPolicy.KEEP` ignores a request while matching unfinished work exists; it does not queue
+a second pass behind the active one.
 
-```kotlin
-// sync/src/main/kotlin/dev/atick/sync/manager/Sync.kt
-fun initialize(context: Context) {
-    WorkManager.getInstance(context).apply {
-        enqueueUniqueWork(SYNC_WORK_NAME, ExistingWorkPolicy.KEEP, SyncWorker.startUpSyncWork())
-    }
-}
-```
+`SyncWorker.startUpSyncWork()` constructs a `DelegatingWorker` request carrying the target worker
+class. The delegating factory path uses Hilt to construct `SyncWorker`; `@Assisted` `Context` and
+`WorkerParameters` come from WorkManager, while the repository and dispatcher come from Hilt.
+The only explicit constraint is `NetworkType.CONNECTED`. The request is expedited, with
+`RUN_AS_NON_EXPEDITED_WORK_REQUEST` when quota is unavailable. Connectivity does not prove Firebase
+is reachable, and requesting expedited work does not guarantee an immediate start.
 
-> [!WARNING]
-> `ExistingWorkPolicy.KEEP` silently drops the new request if a sync is already enqueued or running.
-> That's what makes calling `requestSync()` from every read and write cheap — it's not naively
-> re-triggering a sync each time, and a burst of writes collapses into one sync run.
+### Algorithm and metadata
 
-`SyncWorker` runs the job on `@IoDispatcher`, promoted to a foreground service, and retries up to
-`TOTAL_SYNC_ATTEMPTS = 3` times via `Result.retry()`:
+Collecting `HomeRepositoryImpl.sync()` performs these steps:
 
-```kotlin
-// sync/src/main/kotlin/dev/atick/sync/worker/SyncWorker.kt
-@HiltWorker
-class SyncWorker @AssistedInject constructor(
-    @Assisted private val context: Context,
-    @Assisted workerParameters: WorkerParameters,
-    @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
-    private val homeRepository: HomeRepository,
-) : CoroutineWorker(context, workerParameters) {
+1. Read the authenticated user ID from DataStore.
+2. Read one snapshot of rows matching `lastUpdated > lastSynced OR needsSync = 1` for that user.
+3. For each row, upload `UPSERT`, hard-delete the remote document for `DELETE`, or perform no remote
+   operation for `NONE`. After that branch succeeds, call `markAsSynced(id)` and emit push progress.
+   Acknowledgement clears `needsSync`/action and stamps a local millisecond `lastSynced`.
+4. Read `MAX(serverUpdatedAtNanos)` for the user, including soft-deleted rows (use zero if absent).
+5. Query Firestore with strict `serverUpdatedAt > cursor`, then individually upsert each returned
+   mapped entity into Room and emit pull progress. This is not a single transactional batch.
 
-    override suspend fun doWork(): Result = withContext(ioDispatcher) {
-        try {
-            setForeground(getForegroundInfo())
-            homeRepository.sync().flowOn(ioDispatcher).collect { progress ->
-                setForeground(getForegroundInfo(progress.total, progress.current))
-            }
-            Result.success()
-        } catch (e: Exception) {
-            if (runAttemptCount < TOTAL_SYNC_ATTEMPTS) Result.retry() else Result.failure()
-        }
-    }
-}
-```
-
-`SyncWorker` needs `@AssistedInject`/`@Assisted` because WorkManager supplies `Context` and
-`WorkerParameters` at runtime, not through the graph — everything else (`homeRepository`,
-`ioDispatcher`) is injected normally. It's enqueued through a `DelegatingWorker` so Hilt can construct
-it at all (`SyncWorker.startUpSyncWork()`).
-
-The actual algorithm is `HomeRepositoryImpl.sync()` — push local changes, then pull remote ones:
-
-```kotlin
-// data/src/main/kotlin/dev/atick/data/repository/home/HomeRepositoryImpl.kt
-override suspend fun sync(): Flow<SyncProgress> = flow {
-    val userId = preferencesDataSource.getUserIdOrThrow()
-
-    // Push: drain everything Room has flagged as unsynced
-    val unsyncedJetpacks = localDataSource.getUnsyncedJetpacks(userId)
-    unsyncedJetpacks.forEachIndexed { index, unsyncedJetpack ->
-        when (unsyncedJetpack.syncAction) {
-            SyncAction.UPSERT -> firebaseDataSource.createOrUpdateJetpack(unsyncedJetpack.toFirebaseJetpack())
-            SyncAction.DELETE -> firebaseDataSource.deleteJetpack(unsyncedJetpack.toFirebaseJetpack())
-            SyncAction.NONE -> {}
-        }
-        localDataSource.markAsSynced(unsyncedJetpack.id)
-        emit(SyncProgress(unsyncedJetpacks.size, index + 1, "Syncing jetpacks with the cloud"))
-    }
-
-    // Pull: fetch anything the server has written since the newest timestamp we already hold
-    val syncedAfterNanos = localDataSource.getSyncCursor(userId)
-    val remoteJetpacks = firebaseDataSource.pullJetpacks(userId, syncedAfterNanos)
-    remoteJetpacks.forEachIndexed { index, remoteJetpack ->
-        localDataSource.upsertJetpack(remoteJetpack.toJetpackEntity())
-        emit(SyncProgress(remoteJetpacks.size, index + 1, "Fetching jetpacks from the cloud"))
-    }
-}
-```
-
-`getUnsyncedJetpacks` queries `WHERE lastUpdated > lastSynced OR needsSync = 1`; a successful push
-resets both via `markAsSynced` (`needsSync = 0, syncAction = 'NONE', lastSynced = now`).
-
-The pull is ordered by a different clock, and the distinction is the whole reason sync works:
-
-| Field | Clock | What it is for |
+| Field | Units/source | Used by the current implementation |
 |---|---|---|
-| `lastUpdated` | writing device | Local edit time. Display and `ORDER BY` only. |
-| `lastSynced` | this device | When this device last pushed the row. Local only. |
-| `needsSync` / `syncAction` | this device | Pending local change. Drives the **push**. |
-| `serverUpdatedAt` | **Firestore server** | Server write time. Drives the **pull**, and nothing else does. |
+| `lastUpdated` | Epoch milliseconds, editing device | Set on create/update; list ordering/display and pending query comparison with `lastSynced`. Carried to/from Firestore. |
+| `lastSynced` | Epoch milliseconds, uploading device | Set in the uploaded model and separately on local acknowledgement; pending query input. Carried back from Firestore, not local-only. |
+| `needsSync` / `syncAction` | Local boolean/action | Explicit pending flag and push operation; pulled mappings use defaults `false` / `NONE`. |
+| `deleted` | Boolean carried to/from Firestore | Local soft-delete marker; list query excludes it. The normal delete push hard-deletes the remote document. |
+| `serverUpdatedAt` / `serverUpdatedAtNanos` | Firestore timestamp / epoch nanoseconds in Room | Server write time used for the strict pull cursor. Includes timestamps on locally deleted rows. |
 
-`getSyncCursor` is `MAX(serverUpdatedAtNanos)`, the newest server timestamp this device has already
-stored, and it feeds `whereGreaterThan("serverUpdatedAt", …)`. A device clock cannot do that job. Two
-phones disagree by seconds or by hours, so a cursor taken from `lastUpdated` jumps to the reading of
-the furthest-ahead clock in the fleet as soon as that device's row is pulled — and every record
-written by a slower device is then filtered out of every future pull, silently and permanently.
-`FirebaseJetpack.serverUpdatedAt` is annotated `@get:ServerTimestamp` and always sent as `null`, so
-Firestore substitutes its own timestamp on write and no client can influence the ordering.
+`JetpackEntity.toFirebaseJetpack()` leaves `@get:ServerTimestamp serverUpdatedAt` null, so Firestore
+fills it on write. The pull mapping copies that value into `serverUpdatedAtNanos`, retaining
+nanosecond precision. A write does not directly store its assigned server timestamp in Room; a
+later pull can do that. This is not an exactly-once echo guarantee. The
+[example security rules](firebase.md#firestore-security-rules) require `serverUpdatedAt == request.time`;
+the annotation alone does not enforce what other clients may write.
 
-The cursor is nanoseconds, not milliseconds: Firestore timestamps carry nanosecond precision, and a
-cursor rounded down to a millisecond sits just below the newest document it already has, which would
-re-fetch that document on every sync forever.
-
-Each pushed row does come back once on the pull that follows, because a write does not report the
-timestamp the server gave it. That echo carries exactly what was pushed, so it changes nothing — and
-it is what stores the row's `serverUpdatedAtNanos` locally and moves the cursor past this device's
-own writes.
-
-> [!TIP]
-> Push runs before pull, deliberately. Pushing local changes first means a subsequent pull can't
-> overwrite them with stale remote data — if pull ran first, a local edit made between the two phases
-> would be silently clobbered by whatever the pull just wrote.
+Soft-deleted rows are retained locally after successful remote deletion. There is no scheduled
+cleanup. Their stored server timestamps remain part of the cursor. A remote hard delete supplies
+no document or tombstone to the incremental pull, so it does not remove another device's existing
+local copy.
 
 ```mermaid
 sequenceDiagram
@@ -290,22 +352,71 @@ sequenceDiagram
     participant L as Room (local)
     participant F as Firestore (remote)
 
-    W->>R: sync()
-    R->>L: getUnsyncedJetpacks(userId)
-    loop each unsynced entity
-        R->>F: createOrUpdateJetpack / deleteJetpack
+    W->>R: collect sync()
+    R->>L: getUnsyncedJetpacks(userId), one snapshot
+    loop each pending entity
+        R->>F: upsert or hard delete (NONE skips remote)
         R->>L: markAsSynced(id)
+        R-->>W: push progress
     end
-    R->>L: getSyncCursor(userId)
+    R->>L: getSyncCursor(userId), includes deleted rows
     R->>F: pullJetpacks(userId, syncedAfterNanos)
-    loop each remote entity
+    loop each returned entity
         R->>L: upsertJetpack(remoteJetpack)
+        R-->>W: pull progress
     end
 ```
 
+### Delivery and conflict limitations
+
+Push-before-pull describes ordering, not conflict protection:
+
+- A row written after the pending snapshot waits for another pass. A request dropped by `KEEP`
+  does not guarantee that pass; there is no automatic drain loop.
+- Acknowledgement is by ID, not uploaded version. An edit made during upload can lose its pending
+  status. The subsequent unconditional pull upsert can overwrite newer local content.
+- A failed pull can leave a committed prefix. A strict timestamp-only cursor can skip an unapplied
+  document sharing the last stored timestamp. Retrying later distinct timestamps does not resolve
+  that equal-timestamp boundary.
+- Firestore `get()` uses the SDK's default source, which can return cached data when the server is
+  unavailable. The mapping discards snapshot metadata, so successful completion does not establish
+  that the result was a complete server snapshot. Cache-gap behavior still needs SDK integration
+  verification.
+
+These limitations are recorded for separate sync-consistency and pull-checkpoint work. Do not infer
+eventual delivery, conflict resolution, or multi-device deletion propagation from a successful pass.
+Legacy documents missing `serverUpdatedAt` are excluded even with cursor zero; legacy writers and
+new rules also need a staged compatibility plan. Follow the
+[upgrade guidance](firebase.md#existing-installs-and-documents) before updating an existing project.
+
+### Progress, retries, and errors
+
+`SyncWorker` collects the repository's cold progress Flow on `@IoDispatcher`, calls `setForeground`
+before collection, and updates notification counts after each emitted item. `SyncProgress` carries
+`total`, `current`, and a message; totals restart between push and pull. An empty phase emits no
+item progress. The current notification uses the counts, not the progress message.
+
+For a running indicator, observe `SyncManager.isSyncing` in a ViewModel and expose it as state for
+lifecycle-aware UI collection. It is `true` only for `RUNNING` work, not work waiting on constraints,
+retry delay, or completion. It is not an upload acknowledgement or detailed progress API. A manual
+refresh button would be an extension; the Home UI does not currently provide one.
+
+The worker returns success if collection finishes. Its `catch (Exception)` requests retry while
+`runAttemptCount < TOTAL_SYNC_ATTEMPTS` (`3`): up to four attempts in total, with retry returned on failure at counts 0, 1, and 2 and failure
+returned on an exception at count 3. No custom backoff is set; WorkManager's default is
+exponential starting at 30 seconds (nominally 30, 60, 120 seconds for these retries). Constraints and
+system scheduling can delay execution further.
+
+The catch also includes `CancellationException`; it does not explicitly preserve cancellation as
+`suspendRunCatching` does. This is a recorded lifecycle follow-up, not a guarantee that cancelled
+work will retry. Earlier local acknowledgements/upserts are not rolled back when a later operation
+fails. Inspect WorkManager state and worker logs when diagnosing sync; see
+[Sync troubleshooting](troubleshooting.md#sync).
+
 ## Further reading
 
-- [Architecture](architecture.md) — the two-layer design this repository pattern fits into
-- [State Management](state-management.md) — how a repository's `Result<T>` becomes a `UiState`
-- [Guide](guide.md) — the full `home` feature walkthrough, repository included
-- [Sync module](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/main/sync/README.md) — `SyncManager`, `SyncWorker`, and `WorkManager` constraints
+- [Architecture](architecture.md) — module boundaries and repository tests
+- [State Management](state-management.md) — state helpers and collecting repository data
+- [Guide](guide.md) — feature integration
+- [Firebase](firebase.md) — setup, example rules, and upgrade compatibility
+- [Sync module](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/main/sync/README.md) — scheduling entry points

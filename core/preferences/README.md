@@ -1,7 +1,7 @@
 # Module :core:preferences
 
 **Purpose:** Type-safe local storage for the user's profile and app settings, backed by a single
-Proto-style DataStore file, exposed as `Flow` for reads and suspend functions for writes.
+JSON DataStore file, exposed as `Flow` for reads and suspend functions for writes.
 
 ## Key APIs
 
@@ -27,9 +27,13 @@ data class UserDataPreferences(
 
 - One DataStore, one data class — there's no per-key preference API here, every write goes through
   `updateData { userData -> userData.copy(...) }` on the whole object.
-- `UserDataSerializer.readFrom` only catches `SerializationException`. A custom serializer added
-  here must throw that, not something like `IllegalArgumentException` from `enumValueOf()`, or a
-  corrupt file will escape the `catch` and propagate instead of falling back to `defaultValue`.
+- `UserDataSerializer.readFrom` converts `SerializationException` to `CorruptionException`. No
+  corruption handler is installed, so malformed JSON propagates as an error rather than resetting
+  to defaults. Other exceptions are not converted by this catch.
+- Missing fields with defaults are supported; unknown keys and invalid enum values are not ignored.
+  Review serializer compatibility when evolving the model.
+- `resetUserPreferences()` replaces the entire object with defaults, including theme/color settings.
+  Sign-out resets it after auth sign-out succeeds; this does not clear Room or Firestore.
 
 ## Related Documentation
 

@@ -23,105 +23,27 @@ import dev.atick.sync.worker.SyncWorker
 import timber.log.Timber
 
 /**
- * Entry point for initializing background data synchronization using WorkManager.
+ * Enqueues unique one-time background sync work through WorkManager.
  *
- * This object provides a simple API to start the background sync process that keeps
- * local data synchronized with remote Firebase Firestore. The sync runs automatically
- * when the app starts and can be triggered on-demand through [SyncManager].
+ * [SyncWorker] collects the repository's push-then-pull Flow. Requests use
+ * [ExistingWorkPolicy.KEEP]; a request ignored while unfinished work exists does not schedule
+ * another pass. No periodic work is configured.
  *
- * ## Sync Architecture
- * - **WorkManager**: Handles background execution with constraints (network connectivity)
- * - **SyncWorker**: Performs the actual sync logic (pull from Firestore, push to Firestore)
- * - **Foreground Service**: Shows sync progress notification to the user
- * - **Exponential Backoff**: Retries failed syncs up to 3 times with increasing delays
- *
- * ## Initialization
- * Call [initialize] once from your Application's `onCreate()`:
- * ```kotlin
- * class MyApplication : Application() {
- *     override fun onCreate() {
- *         super.onCreate()
- *         Sync.initialize(this)
- *     }
- * }
- * ```
- *
- * ## Sync Triggers
- * 1. **App Startup**: Automatically when [initialize] is called
- * 2. **On-Demand**: Via [SyncManager.requestSync]
- * 3. **Periodic**: Can be configured with WorkManager's PeriodicWorkRequest (not implemented by default)
- *
- * ## Work Policy
- * Uses `ExistingWorkPolicy.KEEP`, so only one sync runs at a time; see the comment above the
- * `enqueueUniqueWork` call in [initialize] for why a request dropped by this policy is safe.
- *
- * ## Constraints
- * The sync worker only runs when:
- * - Network is available (CONNECTED)
- * - Battery is not critically low (handled by WorkManager)
- *
- * ## Observing Sync State
- * Use [SyncManager] to observe when sync is running:
- * ```kotlin
- * @HiltViewModel
- * class HomeViewModel @Inject constructor(
- *     private val syncManager: SyncManager
- * ) : ViewModel() {
- *     val isSyncing: StateFlow<Boolean> = syncManager.isSyncing
- *         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
- * }
- * ```
- *
- * @see SyncWorker
- * @see SyncManager
+ * The request requires a connected network and asks for expedited execution, with fallback
+ * to ordinary work when quota is unavailable. Execution timing is controlled by WorkManager.
  */
 object Sync {
     /**
-     * Initializes the sync process that keeps the app's data synchronized with Firestore.
+     * Requests sync without awaiting enqueue completion or remote persistence.
      *
-     * This method enqueues a unique WorkManager work request that:
-     * 1. Runs immediately on app startup (if network is available)
-     * 2. Ensures only one sync worker runs at any time
-     * 3. Retries up to 3 times on failure with exponential backoff
+     * Matching unfinished work is kept; otherwise a new request is enqueued. New writes made
+     * after the active pass's pending snapshot need a later trigger, which is not guaranteed here.
      *
-     * ## When to Call
-     * Call this method **once** from your Application's `onCreate()` method:
-     * ```kotlin
-     * class MyApplication : Application() {
-     *     override fun onCreate() {
-     *         super.onCreate()
-     *         Hilt.createAndroidLogger(this)
-     *         Sync.initialize(this) // Initialize sync
-     *     }
-     * }
-     * ```
-     *
-     * ## Behavior
-     * - **First Call**: Enqueues the sync worker
-     * - **Subsequent Calls**: Ignored; see the comment above the `enqueueUniqueWork` call below
-     *   for why that's safe
-     * - **Network Required**: Sync only runs when network is connected
-     * - **Expedited**: Runs as expedited work when possible for faster initial sync
-     *
-     * ## Thread Safety
-     * This method is thread-safe and can be called from any thread. WorkManager
-     * handles internal synchronization.
-     *
-     * ## Error Handling
-     * - WorkManager automatically retries failed sync operations
-     * - Errors are logged via Timber
-     * - Failed syncs don't crash the app; they'll be retried later
-     *
-     * @param context The application context. Use `applicationContext` to avoid memory leaks.
+     * @param context Context used to obtain WorkManager.
      */
     fun initialize(context: Context) {
         WorkManager.getInstance(context).apply {
-            // 💡 A request dropped by ExistingWorkPolicy.KEEP is safe because every write path
-            // that calls SyncManager.requestSync() (HomeRepositoryImpl.createOrUpdateJetpack /
-            // markJetpackAsDeleted) has already marked its row needsSync = true in local storage
-            // before requesting sync, so the next sync run -- whenever it happens -- still picks
-            // up the change that triggered the dropped request. No data is lost by a dropped
-            // request; only its immediacy is.
+            // KEEP does not queue a follow-up pass behind unfinished work.
             Timber.d("Sync: initialize")
             enqueueUniqueWork(
                 SYNC_WORK_NAME,
