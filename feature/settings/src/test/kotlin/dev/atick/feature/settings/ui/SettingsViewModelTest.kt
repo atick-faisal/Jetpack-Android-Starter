@@ -16,16 +16,22 @@
 
 package dev.atick.feature.settings.ui
 
+import androidx.lifecycle.viewModelScope
 import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
 import dev.atick.core.testing.rule.MainDispatcherRule
 import dev.atick.data.model.settings.DarkThemeConfig
 import dev.atick.data.model.settings.Settings
 import dev.atick.data.repository.settings.SettingsRepository
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.onCompletion
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
 import org.junit.Rule
 import org.junit.Test
@@ -43,6 +49,7 @@ import org.robolectric.RobolectricTestRunner
  * Settings was chosen because it survives an adopter deleting the demo feature.
  */
 @RunWith(RobolectricTestRunner::class)
+@OptIn(ExperimentalCoroutinesApi::class)
 class SettingsViewModelTest {
 
     @get:Rule
@@ -127,6 +134,30 @@ class SettingsViewModelTest {
         }
     }
 
+    @Test
+    fun `settings resubscription immediately adds another repository collector`() = runTest {
+        try {
+            viewModel.settingsUiState.test {
+                awaitItem()
+                runCurrent()
+                assertThat(repository.activeCollectors).isEqualTo(1)
+                cancelAndIgnoreRemainingEvents()
+            }
+            // Settings uses WhileSubscribed() with a zero stop timeout.
+            runCurrent()
+            assertThat(repository.activeCollectors).isEqualTo(1)
+            viewModel.settingsUiState.test {
+                awaitItem()
+                runCurrent()
+                assertThat(repository.activeCollectors).isEqualTo(2)
+                cancelAndIgnoreRemainingEvents()
+            }
+        } finally {
+            viewModel.viewModelScope.cancel()
+        }
+        assertThat(repository.activeCollectors).isEqualTo(0)
+    }
+
     private class FakeSettingsRepository : SettingsRepository {
         private val settings = MutableStateFlow(Settings())
 
@@ -139,10 +170,14 @@ class SettingsViewModelTest {
 
         /** Set to have every write fail, for exercising the error path. */
         var failWith: Throwable? = null
+        var activeCollectors = 0
+            private set
 
         fun emit(value: Settings) = settings.update { value }
 
         override fun getSettings(): Flow<Settings> = settings.asStateFlow()
+            .onStart { activeCollectors++ }
+            .onCompletion { activeCollectors-- }
 
         override suspend fun setDarkThemeConfig(
             darkThemeConfig: DarkThemeConfig,
