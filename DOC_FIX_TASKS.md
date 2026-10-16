@@ -2,7 +2,7 @@
 
 Companion goals, findings, and recovery map: [DOC_FIX_PLAN.md](DOC_FIX_PLAN.md).
 
-Status: DF-00 complete; DF-01–DF-14 pending. Checked items identify completed audit work only. Reviewed base: `1c2103890d16f81f6c6ae4c2d8626281b841e417`.
+Status: DF-00–DF-01 complete; DF-02–DF-15 pending. Checked items identify completed work in the records below. Reviewed base: `1c2103890d16f81f6c6ae4c2d8626281b841e417`.
 Reviewed head: `0fb7882982cfefd55df300e06549731c6fbb33bb` ([PR #647](https://github.com/atick-faisal/Jetpack-Android-Starter/pull/647)).
 
 Complete each task by recording the changed paths, verification result, and any unresolved follow-up
@@ -586,19 +586,38 @@ No documentation page was rewritten during DF-00. DF-02 must settle the listed r
 
 Depends on: DF-00 scope captured. Scope: `CONTRIBUTING.md`; active guidance in root planning files.
 
-- [ ] Replace “comments explain why, not what” with the plan's guidance on behavior, constraints,
+- [x] Replace “comments explain why, not what” with the plan's guidance on behavior, constraints,
   contracts, and supported rationale. Allow lists and KDoc links where they improve readability.
-- [ ] Remove mandatory code-emoji/Markdown-alert parity and numeric alert/line budgets. Preserve
+- [x] Remove mandatory code-emoji/Markdown-alert parity and numeric alert/line budgets. Preserve
   GitHub-compatible alert syntax and concrete signing/data-loss notices where useful.
-- [ ] Add a short example of a helpful comment and a useful tutorial excerpt. Explain how to label
+- [x] Add a short example of a helpful comment and a useful tutorial excerpt. Explain how to label
   omissions and hypothetical additions without pretending they are existing code.
-- [ ] Mark the old `PLAN.md` and `TASKS.md` as historical and point to these repair files. Preserve
+- [x] Mark the old `PLAN.md` and `TASKS.md` as historical and point to these repair files. Preserve
   evidence in the old logs; remove their authority over new editorial work.
-- [ ] Apply the new standard to subsequent tasks: no invented motives, blame, self-congratulation,
+- [x] Apply the new standard to subsequent tasks: no invented motives, blame, self-congratulation,
   blanket bans on reasonable alternatives, or repeated historical explanations of fixed bugs.
 
 Accept: contributor guidance evaluates usefulness and accuracy; it no longer rewards deleting
 content to meet a quota or adding a justification to every unusual line.
+
+### DF-01 completion record
+
+Completed 2026-10-16 from clean working-tree revision `df5af917d`.
+
+- Replaced `CONTRIBUTING.md`'s rationale-only comment policy, emoji/alert mapping, and alert limits
+  with guidance on useful behavior, contracts, constraints, supported rationale, and task-oriented
+  tutorials. Added a query-filter comment example and a source-checked `getJetpacks()` method
+  excerpt with explicit omissions. Preserved GitHub alert syntax and a concrete signing warning.
+- Added historical notices to `PLAN.md` and `TASKS.md`, pointing to the active repair records and
+  contributor guidance. Their original findings, targets, and verification logs remain intact.
+- Verified changed policy links and anchors, checked the tutorial excerpt against its source,
+  and reviewed the Markdown and diff. `git diff --check` passed.
+- `./gradlew spotlessCheck --init-script gradle/init.gradle.kts --no-configuration-cache` passed
+  (180 tasks up-to-date). The first sandboxed attempt could not open Gradle's cache lock; the
+  approved rerun passed. Spotless does not target Markdown, so editorial checks were separate.
+- No runtime or public API changes. No commit was created; Spotless apply and `./gradlew check`
+  remain required before committing. Runtime contract review remains DF-02; source comment
+  rewrites and broader root-guidance reconciliation remain with their existing later owners.
 
 ## DF-02 — Settle contracts and separate runtime work
 
