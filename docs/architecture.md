@@ -1,260 +1,228 @@
 # Architecture Overview
 
-This project follows the
-official [Android Architecture Guidelines](https://developer.android.com/topic/architecture) with
-some pragmatic adaptations to keep the codebase simple and maintainable.
+The app has two layers: feature modules own screens and ViewModels, and `:data` owns repository
+interfaces, implementations, and the models they expose. Data sources in core and Firebase modules
+handle storage and external services. There is no separate domain module.
 
-## Architectural Principles
+Start with the responsibility you need to change:
 
-The architecture is built on several key principles:
+| Change | Main home |
+|---|---|
+| Screen layout, user interactions, screen state | `feature/*` Composables, ViewModels, and screen-data classes |
+| Reusable UI, state helpers, navigation infrastructure | `core/ui`, `core/navigation` |
+| Data operations and coordination between sources | `data` repositories |
+| Local SQL storage, preferences, REST, authentication, Firestore | `core/room`, `core/preferences`, `core/network`, `firebase/auth`, `firebase/firestore` |
+| Background execution and sync scheduling | `sync` |
+| Application assembly, theme, feature entry registration | `app` |
 
-1. **Separation of Concerns**: Each component has its own responsibility
-2. **Single Source of Truth**: Data is managed in a single place
-3. **Unidirectional Data Flow**: Data flows in one direction, events flow in the opposite
-4. **State-Based UI**: UI is a reflection of the state
-5. **Pragmatic Simplicity**: Complex patterns are only added when necessary
+## Module Dependencies
 
-## Core Layers
-
-The app uses a two-layer architecture:
+Arrows below mean **declared project dependencies**, pointing from consumer to dependency. They do
+not represent the order of runtime calls. The table supplies the individual modules behind grouped
+nodes and separates development tooling from application dependencies.
 
 ```mermaid
-graph TB
-    subgraph UI["UI Layer"]
-        direction TB
-        Composable["Composables<br/>(Pure UI)"]
-        ViewModel["ViewModels<br/>(State Management)"]
-        ScreenData["Screen Data<br/>(Immutable State)"]
-        UiState["UiState&lt;T&gt;<br/>(Wrapper)"]
-        Composable -. observes .-> UiState
-        ViewModel -->|manages| UiState
-        UiState -->|wraps| ScreenData
-    end
-
-    subgraph Data["Data Layer"]
-        direction TB
-        Repository["Repositories<br/>(Single Source of Truth)"]
-        LocalDS["Local Data Sources<br/>(Room, DataStore)"]
-        NetworkDS["Network Data Sources<br/>(Retrofit, Firebase)"]
-        Repository -->|reads/writes| LocalDS
-        Repository -->|fetches| NetworkDS
-        NetworkDS -. syncs .-> LocalDS
-    end
-
-    subgraph DI["Dependency Injection"]
-        Hilt["Hilt<br/>(Provides Dependencies)"]
-    end
-
-    ViewModel -->|calls| Repository
-    Hilt -. injects .-> ViewModel
-    Hilt -. injects .-> Repository
+graph TD
+    App[":app"] --> Features["four :feature modules"]
+    App --> UI[":core:ui"]
+    App --> Network[":core:network"]
+    App --> Preferences[":core:preferences"]
+    App --> Analytics[":firebase:analytics"]
+    App --> Sync[":sync"]
+    Features --> UI
+    Features --> Data[":data"]
+    UI -->|api| Android[":core:android"]
+    UI -->|api| Navigation[":core:navigation"]
+    Data --> Android
+    Data --> Network
+    Data --> Preferences
+    Data --> Room[":core:room"]
+    Data --> Auth[":firebase:auth"]
+    Data --> Firestore[":firebase:firestore"]
+    Sync --> Android
+    Sync --> Data
+    Network --> Android
+    Preferences --> Android
+    Room --> Android
+    Analytics --> Android
+    Auth --> Android
+    Firestore --> Android
 ```
 
-### UI Layer
+| Module | Direct project dependencies and special relationships |
+|---|---|
+| `:app` | `implementation`: `core:ui`, `core:network`, `core:preferences`, all four features, `firebase:analytics`, `sync`; `baselineProfile`: `benchmarks` |
+| `:feature:auth`, `:feature:home`, `:feature:profile`, `:feature:settings` | Each uses `implementation` for `core:ui` and `data`; Home and Settings also use `testImplementation(core:testing)` |
+| `:data` | `implementation`: `core:android`, `core:network`, `core:preferences`, `core:room`, `firebase:auth`, `firebase:firestore`; `testImplementation`: `core:testing` |
+| `:sync` | `implementation`: `core:android`, `data` |
+| `:core:ui` | `api`: `core:android`, `core:navigation`; `lintPublish`: `lint`; `testImplementation`: `core:testing` |
+| `:core:network`, `:core:preferences`, `:core:room` | Each uses `implementation(core:android)` |
+| `:firebase:auth`, `:firebase:firestore`, `:firebase:analytics` | Each uses `implementation(core:android)` |
+| `:core:android`, `:core:navigation` | No direct project dependencies |
+| `:core:testing` | `implementation(core:android)`; `api(core:preferences)` and `api(firebase:auth)` expose the types used by shared fakes |
+| `:benchmarks` | Targets `:app` through `targetProjectPath`; generates baseline profiles and runs benchmarks |
+| `:lint` | Standalone JVM lint checks, published with `core:ui` for consumers' lint runs |
 
-The UI layer follows MVVM pattern and consists of:
+`api` makes dependency types available to consumers: a feature gets navigation types through
+`core:ui`. `implementation` does not expose those dependencies on the consumer's compile classpath.
+Test helpers, lint checks, and profile generation have different roles from application code;
+including them as ordinary runtime arrows would obscure those boundaries. External libraries and
+the included `build-logic` build are omitted; see [Build & Tooling](build-and-tooling.md) for
+convention plugins and their shared configuration.
 
-1. **Composables**: Pure UI components built with Jetpack Compose
-2. **ViewModels**: Manage UI state and business logic
-3. **Screen Data**: Immutable data classes representing screen state
+## UI and State Management
 
-Example UI Layer structure:
+A destination's `Screen` obtains its ViewModel through Hilt and collects state with
+`collectAsStateWithLifecycle()`. Screen callbacks invoke ViewModel methods. The ViewModel calls
+repositories and updates a `UiState<T>` containing screen data, a loading flag, and a one-time error
+event. `StatefulComposable` renders that wrapper.
+
+These are shortened excerpts from `HomeViewModel`; imports, annotations, and other members are
+omitted. The actual screen-data property is `jetpacks`:
 
 ```kotlin
 data class HomeScreenData(
-    val items: List<Item> = emptyList(),
-    // other UI state properties
+    val jetpacks: List<Jetpack> = emptyList(),
 )
 
-@HiltViewModel
-class HomeViewModel @Inject constructor(
-    private val repository: HomeRepository
-) : ViewModel() {
-    private val _uiState = MutableStateFlow(UiState(HomeScreenData()))
-    val uiState = _uiState.asStateFlow()
-}
+private val _homeUiState = MutableStateFlow(UiState(HomeScreenData()))
 
-@Composable
-fun HomeScreen(
-    screenData: HomeScreenData,
-    onAction: (HomeAction) -> Unit
-) {
-}
-```
+val homeUiState = _homeUiState
+    .onStart { getJetpacks() }
+    .stateInDelayed(UiState(HomeScreenData()), viewModelScope)
 
-### Data Layer
-
-The data layer handles data operations and consists of:
-
-1. **Repositories**: Single source of truth for data
-2. **Data Sources**: Interface with external systems (API, database, etc.)
-3. **Models**: Data representation classes
-
-Example Data Layer structure:
-
-```kotlin
-class HomeRepositoryImpl @Inject constructor(
-    private val localDataSource: LocalDataSource,
-    private val syncManager: SyncManager,
-) : HomeRepository {
-    // Room is the single source of truth. The remote source never feeds the UI
-    // directly — it writes to Room, and Room emits.
-    override fun getData(): Flow<List<Data>> {
-        syncManager.requestSync()
-        return localDataSource.getData().map { it.mapToData() }
-    }
-
-    // Writes return Result<T> via suspendRunCatching, never throw into the UI.
-    override suspend fun saveData(data: Data): Result<Unit> = suspendRunCatching {
-        localDataSource.saveData(data.mapToEntity())
+fun deleteJetpack(jetpack: Jetpack) {
+    _homeUiState.updateWith {
+        homeRepository.markJetpackAsDeleted(jetpack)
     }
 }
 ```
 
-## Domain Layer
+`getJetpacks()` collects the repository Flow into screen state. Its collector is launched in
+`viewModelScope`; lifecycle-aware screen collection does not itself stop that repository collector.
+Restarting the shared state upstream can launch another collector. See
+[State Management](state-management.md) for the helpers and the behavior review in
+[the repair record](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/fix/docs-v3/DOC_FIX_TASKS.md#behavior-ledger)
+for the known collector and error-delivery limitations.
 
-> [!NOTE]
-> Unlike the official guidelines, this project has **no domain layer** by design. ViewModels call
-> repositories directly, and repositories return simple data classes. This reduces boilerplate and
-> indirection — for most features in this template, two layers are sufficient.
+## Data and Dependency Injection
 
-If your app grows in complexity, add one with a use-case class per operation:
+Repositories provide the interface used by ViewModels. Observable reads return `Flow`, while
+one-time operations such as saving return `Result`. Data sources perform the underlying IO.
 
-```kotlin
-class GetDataUseCase @Inject constructor(
-    private val repository: Repository
-) {
-    suspend operator fun invoke(params: Params): Result<Data> =
-        repository.getData(params)
-}
-```
+The source of observed data depends on the repository:
 
-Consider adding a domain layer when:
+- Home reads Jetpack rows from Room. Firestore updates reach the screen through writes to Room.
+- Settings and Profile read user preferences from DataStore.
+- Authentication operations call `AuthDataSource`. After a successful sign-in or registration,
+  `AuthRepositoryImpl` stores the returned user profile through `UserPreferencesDataSource`.
+  Home then uses the stored user ID for its list and sync operations. This is an explicit write
+  after an auth operation, not an authentication-listener pipeline.
+- `core:network` provides Retrofit REST access. An adopter can use REST, Firestore, or coordinate
+  both in a repository according to the feature's needs; Home's sync path currently uses Firestore.
 
-- Multiple ViewModels share business logic
-- Business rules become complex
-- You need to transform data between layers
-- Multiple UI representations of the same underlying data exist
+Hilt constructs ViewModels, repositories, and data sources. Repository modules bind implementations
+to interfaces; data-source modules bind implementations or construct dependencies with `@Provides`.
+See [Data Layer](data.md) for construction, dispatchers, and persistence details.
 
-## State Management
+### The SyncManager Boundary
 
-The project uses a consistent state management pattern built around a `UiState<T>` wrapper that
-combines data, loading, and a one-time error event:
+`SyncManager` is declared in `:data`. `HomeRepositoryImpl` calls that interface to request work.
+`:sync` depends on `:data` and supplies `SyncManagerImpl`; its `SyncModule` binds the implementation
+with `@Binds` in `SingletonComponent`. The app includes `:sync`, allowing Hilt to assemble the graph.
 
-```kotlin
-data class UiState<T : Any>(
-    val data: T,
-    val loading: Boolean = false,
-    val error: OneTimeEvent<Throwable?> = OneTimeEvent(null)
-)
-```
-
-`updateState`, `updateStateWith`, `StatefulComposable`, and Kotlin context parameters are covered in
-full in [State Management](state-management.md) — that's the canonical reference for this pattern.
-
-## Dependency Injection
-
-The project uses Hilt for dependency injection:
-
-- **Modules**: Organized by feature and core functionality
-- **Scoping**: Primarily uses singleton scope for repositories and data sources
-- **Testing**: Enables easy dependency replacement for testing
-
-See [Data Layer](data.md) for the `@Binds`/`@IoDispatcher`/`@AssistedInject` patterns repositories
-and the sync worker use.
-
-## Data Flow
-
-1. **User Interaction** → UI Events
-2. **ViewModel** → Business Logic
-3. **Repository** → Data Operations
-4. **DataSource** → External Systems
-5. **Back to UI** through StateFlow
-
-```mermaid
-graph LR
-    A[User Action] --> B[ViewModel]
-    B --> C[Repository]
-    C --> D[Data Sources]
-    D --> C
-    C --> B
-    B --> E[UI State]
-    E --> F[UI]
-```
-
-## Testing
-
-The template ships a full test harness, not a placeholder: a `:core:testing` module provides shared
-fakes and a `MainDispatcherRule`, and `AndroidTest.kt` wires a Robolectric + Compose testing setup into
-every module's `build.gradle.kts`. Across the codebase this backs roughly 110 test methods spanning
-ViewModels, repositories, and Composables.
-
-## Best Practices
-
-1. **Keep Screen Data Simple**: Only include what's needed for the UI
-2. **Single Responsibility**: Each class should have one clear purpose
-3. **Error Handling**: Use `Result` type for operations that can fail
-4. **Coroutines**: Use structured concurrency with proper scoping
-5. **Immutable Data**: Use data classes for state and models
-
----
+At runtime, a repository can therefore call into the sync implementation without a Gradle
+`data → sync` dependency. The worker calls back into `HomeRepository.sync()`. These runtime calls
+do not create a module dependency cycle.
 
 ## How It Fits Together
 
-Here's how the layers cooperate when a user opens a feature screen, including background sync:
+This sequence follows Home's existing operations. The worker portion illustrates a pass scheduled
+after a local edit; WorkManager controls when it actually starts.
 
 ```mermaid
 sequenceDiagram
-    participant UI as Composable
-    participant VM as ViewModel
-    participant Repo as Repository
-    participant Local as Local DB
-    participant Remote as Remote API
-    participant Sync as SyncWorker
-    Note over UI, Sync: User Opens Screen
-    UI ->> VM: hiltViewModel() injection
-    VM ->> Repo: observeData()
-    Repo ->> Local: observeDataEntities()
-    Local -->> Repo: Flow<List<Entity>>
-    Repo -->> VM: Flow<List<Domain>>
-    VM -->> UI: StateFlow<UiState<Data>>
-    Note over UI, Sync: Background Sync (Periodic)
-    Sync ->> Repo: sync()
-    Repo ->> Remote: fetchData()
-    Remote -->> Repo: List<DTO>
-    Repo ->> Local: saveData(entities)
-    Note over Local, UI: Flow emits new data
-    Local -->> Repo: Updated Flow
-    Repo -->> VM: Updated Flow
-    VM -->> UI: Updated State
-    UI ->> UI: Recomposition
+    participant UI as Home / Item screens
+    participant VM as Home / Item ViewModels
+    participant Repo as HomeRepositoryImpl
+    participant Local as Room via LocalDataSource
+    participant Manager as SyncManagerImpl / WorkManager
+    participant Worker as SyncWorker
+    participant Remote as FirebaseDataSource
+    UI->>VM: Collect homeUiState with lifecycle
+    VM->>Repo: getJetpacks()
+    Repo->>Manager: requestSync()
+    Note over Repo,Manager: Request happens when getJetpacks() is invoked
+    Repo->>Local: Collect getJetpacks(userId)
+    Local-->>Repo: Stored rows
+    Repo-->>VM: Flow of Jetpack lists
+    VM-->>UI: UiState with HomeScreenData
+    Note over UI,Local: Item save or Home delete
+    UI->>VM: Save / delete callback
+    VM->>Repo: createOrUpdateJetpack() / markJetpackAsDeleted()
+    Repo->>Local: Store pending change
+    Repo->>Manager: requestSync()
+    Note over Manager,Worker: Unique one-time work, KEEP policy, connected network constraint
+    Manager->>Worker: Run when scheduled
+    Worker->>Repo: Collect sync() progress Flow
+    Repo->>Local: Snapshot pending rows for user
+    loop Pending rows
+        Repo->>Remote: Create/update or delete
+        Repo->>Local: markAsSynced(id)
+    end
+    Repo->>Remote: pullJetpacks(userId, cursor)
+    Remote-->>Repo: Remote rows
+    Repo->>Local: Upsert pulled rows
+    Local-->>Repo: Observed row changes
+    Repo-->>VM: Updated Jetpack list
+    VM-->>UI: Updated screen state
 ```
 
-1. **Screen opens** — Hilt injects the ViewModel with its repository, which starts observing local
-   data (the single source of truth).
-2. **Initial display** — the UI renders immediately from cached data (offline-first).
-3. **Background sync** — WorkManager periodically triggers `SyncWorker`, which calls `sync()` on
-   repositories to pull from remote and write into the local database.
-4. **Automatic update** — the local database write triggers a new Flow emission, which propagates
-   through the ViewModel to a UI recomposition with no manual refresh involved.
+Home starts with its initial empty screen data, then displays Room emissions; it does not wait for
+a remote response to display stored rows. Sync is request-triggered one-time work, with no periodic
+schedule configured. `getJetpacks()` requests work even if its returned Flow is never collected.
+Save/delete operations request work after recording the local change.
 
----
+A request made while matching unfinished work exists is ignored by `KEEP`; that request does not
+guarantee a later pass. Sync snapshots pending rows once, and push-before-pull does not protect edits
+made during the pass: acknowledgement can clear a newer edit's pending status, and a pull can
+overwrite local content. The diagram describes operation order, not a conflict-resolution guarantee.
+The [behavior ledger](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/fix/docs-v3/DOC_FIX_TASKS.md#behavior-ledger)
+records these limitations and follow-ups. See [Data Layer](data.md) for the detailed sync path.
 
-## Summary
+## Domain Layer
 
-This template uses a **two-layer architecture** (UI + Data) for simplicity:
+ViewModels currently call repositories directly. Add a use-case boundary when complex business
+rules need independent testing or several ViewModels need the same orchestration. A model mapping
+or a second screen alone does not require a new layer. Keep simple source coordination in a
+repository and screen-specific state in its ViewModel.
 
-- **UI Layer**: Composables + ViewModels with UiState wrapper
-- **Data Layer**: Repositories + Data Sources (Network, Local, Firebase)
-- **State Management**: Centralized with `updateState` and `updateStateWith` functions
-- **Dependency Injection**: Hilt with feature-based modules
-- **Unidirectional Data Flow**: User actions → ViewModel → Repository → Data Sources → UI
+## Testing
 
-The architecture is intentionally simple but allows for growth when needed.
+Android convention plugins configure JUnit, coroutines testing, Turbine, Truth, and Robolectric for
+Android application/library unit tests. Compose test support comes from the Compose configuration.
+`:core:testing` supplies shared fakes and `MainDispatcherRule` to modules that explicitly declare it
+as a test dependency; it is not automatically added to every module.
+
+For a concrete repository test, read
+[`SettingsRepositoryImplTest`](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/fix/docs-v3/data/src/test/kotlin/dev/atick/data/repository/settings/SettingsRepositoryImplTest.kt).
+It constructs the repository with fake auth and preferences sources, collects `getSettings()` with
+Turbine, changes a preference through the repository, and checks the next Flow emission. Other cases
+verify writes and failed `Result` values. Run it with:
+
+```bash
+./gradlew :data:testDebugUnitTest --tests 'dev.atick.data.repository.settings.SettingsRepositoryImplTest'
+```
+
+Use `MainDispatcherRule` for ViewModel tests that use `Dispatchers.Main`; see
+[`ItemViewModelTest`](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/fix/docs-v3/feature/home/src/test/kotlin/dev/atick/feature/home/ui/item/ItemViewModelTest.kt).
+These examples demonstrate specific behavior; they do not establish sync concurrency, upgrade, or
+complete application coverage. [Adding Features](guide.md#testing) links to further test support.
 
 ## Further Reading
 
-- [State Management](state-management.md) — deep dive into the `UiState` pattern
-- [Data Layer](data.md) — repository pattern, two-way sync, and the Hilt wiring behind them
-- [Adding Features](guide.md) — step-by-step guide to implementing new features
-- [Core UI Module](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/main/core/ui/README.md) — state management utilities and UI components
+- [State Management](state-management.md) — state updates, loading, and errors
+- [Data Layer](data.md) — repository operations, persistence, and sync
+- [Navigation](navigation.md) — destination keys, ViewModel arguments, and back stacks
+- [Adding Features](guide.md) — changes across the layers
+- [Build & Tooling](build-and-tooling.md) — convention plugins and validation commands
