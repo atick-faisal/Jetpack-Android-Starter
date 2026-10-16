@@ -1,20 +1,23 @@
 # State Management
 
-Every screen exposes one `StateFlow<UiState<ScreenData>>` from its ViewModel. `UiState<T>` wraps the
-screen's data with a loading flag and a one-time error event, three extension functions cover every
-kind of update, and `StatefulComposable` turns that single stream into loading indicator, error
-snackbar, and content — automatically, with no per-screen boilerplate.
+Screens expose `StateFlow<UiState<ScreenData>>` from their ViewModels and collect it with
+`collectAsStateWithLifecycle()` inside the destination's `Screen` composable. `UiState` keeps data,
+loading, and an error event together. The helpers handle common Result-returning operations, with
+important boundaries around exceptions, concurrent calls, and event delivery described below.
 
 ## Concepts
 
-| Type | What it does | Where |
-|---|---|---|
-| `UiState<T>` | Wraps screen data with a `loading` flag and a one-time `error` event | `core/ui/src/main/kotlin/dev/atick/core/ui/utils/StatefulComposable.kt` |
-| `StatefulComposable` | Renders `content`, overlays a loading indicator, surfaces the error as a snackbar | same file |
-| `updateState` | Synchronous state update, no coroutine | same file |
-| `updateStateWith` | Async update that replaces `data` with a new value | same file |
-| `updateWith` | Async update that performs a side effect without returning new data | same file |
-| `OneTimeEvent<T>` | Delivers its content exactly once, even if observed multiple times | `core/android/src/main/kotlin/dev/atick/core/utils/OneTimeEvent.kt` |
+| API | Purpose |
+|---|---|
+| `UiState<T>` | Current data, a loading flag, and `OneTimeEvent<Throwable?>` for an error |
+| `StatefulComposable` | Renders data, a loading indicator, and an error callback |
+| `updateState` | Synchronously replaces data while preserving loading and error |
+| `updateStateWith` | Launches an operation returning `Result<T>` and replaces data on success |
+| `updateWith` | Launches an operation returning `Result<Unit>` without replacing data |
+| `OneTimeEvent<T>` | Allows at-most-once consumption per wrapper instance |
+
+The state helpers and wrapper live in `core/ui/.../utils/StatefulComposable.kt`; the event wrapper
+lives in `core/android/.../utils/OneTimeEvent.kt`.
 
 ## The `UiState<T>` wrapper
 
@@ -26,65 +29,37 @@ data class UiState<T : Any>(
 )
 ```
 
-`data` is always present, even mid-request or after a failed one — screens never null-check their way
-through a loading state. Without this wrapper, every ViewModel re-invents the same three flows:
+Data remains present during loading and after a returned failure. Start with values the screen can
+render: `HomeScreenData` uses an empty list, while `ItemScreenData` uses empty name/price strings and
+a generated ID for a new item. A non-null data container does not prohibit nullable fields. Use null
+when absence is meaningful, and make the UI handle that case.
 
-```kotlin
-// ❌ One flow per concern - the three states can drift out of sync
-private val _posts = MutableStateFlow<List<Post>>(emptyList())
-private val _isLoading = MutableStateFlow(false)
-private val _error = MutableStateFlow<String?>(null)
-```
+The wrapper's properties are read-only, but an event's consumed flag is mutable. Copying a `UiState`
+without replacing `error` retains the same event and its consumption state. Separate flows or custom
+state types can be appropriate for independently observed concerns; this wrapper is a shared default.
 
-```kotlin
-// ✅ One flow, one source of truth
-private val _uiState = MutableStateFlow(UiState(PostsScreenData()))
-val uiState = _uiState.asStateFlow()
-```
-
-`StatefulComposable` is the other half — it reads that single stream and renders all three states:
-
-```kotlin
-// core/ui/src/main/kotlin/dev/atick/core/ui/utils/StatefulComposable.kt
-@Composable
-fun <T : Any> StatefulComposable(
-    state: UiState<T>,
-    onShowSnackbar: suspend (String, SnackbarAction, Throwable?) -> Boolean,
-    content: @Composable (T) -> Unit,
-) {
-    content(state.data)
-
-    if (state.loading) {
-        Box(modifier = Modifier.fillMaxSize()) {
-            ContainedLoadingIndicator(modifier = Modifier.size(56.dp).align(Alignment.Center))
-        }
-    }
-
-    state.error.getContentIfNotHandled()?.let { error ->
-        LaunchedEffect(onShowSnackbar) {
-            onShowSnackbar(error.message.toString(), SnackbarAction.REPORT, error)
-        }
-    }
-}
-```
+`StatefulComposable` renders content even while loading and adds a centered loading indicator. It
+consumes an error and attempts to call `onShowSnackbar(message, SnackbarAction.REPORT, error)`;
+the callback's Boolean return is ignored. It does not implement retry or guarantee that the snackbar
+is displayed. See [event delivery](#onetimeeventt) before relying on it for critical acknowledgement.
 
 ## Update functions
 
 | Function | Use when | Replaces `data`? | Async? |
 |---|---|---|---|
-| `updateState` | Reacting to current state, no I/O (form input, toggles) | No | No |
-| `updateStateWith` | An operation returns new screen data (load, search, save-and-return) | Yes | Yes |
-| `updateWith` | An operation has no new data to show (delete, save settings) | No | Yes |
+| `updateState` | Form edits and toggles | Yes | No |
+| `updateStateWith` | An operation returns new screen data | On returned success | Yes |
+| `updateWith` | An action returns no new data | No | Yes |
 
-> [!TIP]
-> `updateStateWith` and `updateWith` both guard against duplicate requests — `if (value.loading) return`
-> at the top of each — and clear any pending error event before starting. A second tap while a request
-> is in flight is a no-op, not a duplicate network call.
+The async helpers return `Unit`, not the operation's `Result` or a `Job`. Map the result inside the
+operation when success must change screen data. They use the context ViewModel's scope; they do not
+choose an IO dispatcher. Repository/data-source code owns the relevant dispatcher boundary.
 
 ### `updateState`
 
+These are actual Item form methods:
+
 ```kotlin
-// feature/home/src/main/kotlin/dev/atick/feature/home/ui/item/ItemViewModel.kt
 fun updateName(name: String) {
     _itemUiState.updateState { copy(jetpackName = name) }
 }
@@ -94,16 +69,34 @@ fun updatePrice(priceString: String) {
 }
 ```
 
-> [!IMPORTANT]
-> A text field's state holds what the user typed, not a parsed value. `jetpackPrice` is a `String`
-> and is parsed once, at save. Validating inside the update — `toDoubleOrNull() ?: return` — drops
-> the keystroke and leaves the field showing the last value that parsed, so clearing it or typing
-> `1.` freezes it.
+The lambda returns replacement data. Loading and the existing error event remain unchanged. Because
+it uses `MutableStateFlow.update`, the transform can be evaluated again under contention: keep side
+effects out of it. Thrown exceptions propagate to the caller.
+
+Keep the price as raw text so clearing it, entering `12e`, or typing `1.` preserves the exact input.
+`"1.".toDoubleOrNull()` accepts the trailing decimal point, but converting the result back to text
+would normalize it to `"1.0"`. Preserving input and accepting a parsed number are different concerns.
+At save, Item trims the text and calls `toDoubleOrNull() ?: 0.0`. Empty or unparseable text becomes
+zero; this is fallback behavior, not price validation. No non-negative-price validation is present.
 
 ### `updateStateWith`
 
+Starting the coroutine sets loading and replaces the old error with `OneTimeEvent(null)`. A returned
+success replaces data and clears loading. A returned failure stores its throwable in a new event,
+preserves the current data, and clears loading. The implementation also rejects a successful null
+payload, although `T : Any` excludes null in ordinary typed calls.
+
+**Current Item limitation:** `createOrUpdateJetpack()` ignores the repository's Result and returns
+success with `navigateBack = OneTimeEvent(true)`. A failed repository save therefore still requests
+navigation and exposes no error. Its load `catch` also constructs a state without storing it, leaving
+the default form without a load error. These behaviors are covered by characterization tests and
+tracked under [Item failure handling](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/fix/docs-v3/DOC_FIX_TASKS.md#bounded-runtime-follow-ups).
+
+The following is a **proposed replacement** for the save method inside `ItemViewModel`, not the
+current implementation. It uses existing imports and APIs and maps a returned repository failure
+through to the helper:
+
 ```kotlin
-// feature/home/src/main/kotlin/dev/atick/feature/home/ui/item/ItemViewModel.kt
 fun createOrUpdateJetpack() {
     _itemUiState.updateStateWith {
         val jetpack = Jetpack(
@@ -111,19 +104,22 @@ fun createOrUpdateJetpack() {
             name = jetpackName.trim(),
             price = jetpackPrice.trim().toDoubleOrNull() ?: 0.0,
         )
-        homeRepository.createOrUpdateJetpack(jetpack)
-        Result.success(copy(navigateBack = OneTimeEvent(true)))
+        homeRepository.createOrUpdateJetpack(jetpack).map {
+            copy(navigateBack = OneTimeEvent(true))
+        }
     }
 }
 ```
 
-Sets `loading = true`, runs the block, then either replaces `data` on success or sets `error` and
-keeps the old `data` on failure — `loading` returns to `false` either way.
+This addresses returned save failures only. It does not fix load errors, thrown exceptions, event
+delivery, or edits made during suspension. Repository success concerns local persistence and the
+sync-request boundary, not confirmed remote synchronization; see [Data](data.md).
 
 ### `updateWith`
 
+Home deletes an item through a Result-returning repository operation:
+
 ```kotlin
-// feature/home/src/main/kotlin/dev/atick/feature/home/ui/home/HomeViewModel.kt
 fun deleteJetpack(jetpack: Jetpack) {
     _homeUiState.updateWith {
         homeRepository.markJetpackAsDeleted(jetpack)
@@ -131,51 +127,81 @@ fun deleteJetpack(jetpack: Jetpack) {
 }
 ```
 
-Same lifecycle as `updateStateWith`, but `data` is left untouched on success — only `loading` and
-`error` change.
+This helper has the same loading/error setup and returned-failure handling as `updateStateWith`,
+but does not replace data on completion. Data changes instead arrive through the repository Flow.
+
+### Exceptions, cancellation, and concurrent calls
+
+Neither async helper catches thrown exceptions or uses `finally` to reset loading. If the operation
+throws, including `CancellationException`, execution exits without recording a returned failure and
+can leave loading true. Return a `Result` for expected operation failures; keep cancellation
+propagating. The repository's `suspendRunCatching` boundary is described in [Data](data.md).
+Calling `getOrThrow()` inside a helper is not equivalent to returning the repository Result.
+
+A call that sees `loading = true` is dropped, rather than queued. The check occurs before launching,
+but loading is set inside the coroutine. Calls queued before that coroutine runs can both start.
+This is not a concurrency lock; overlapping completions can clear loading while another operation
+is still running. The [Async state lifecycle follow-up](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/fix/docs-v3/DOC_FIX_TASKS.md#bounded-runtime-follow-ups)
+tracks exception cleanup and overlap behavior.
+
+The operation receives a snapshot of data read inside the coroutine. If `updateStateWith` suspends
+and later returns a copy of that snapshot, it overwrites synchronous edits made in the meantime.
+`updateWith` also receives a snapshot, but does not write it back on completion.
+
+For independent operations, use separate operation state when their loading/error lifetimes need
+to differ. A single loading flag cannot represent independent progress. As an **extension**, choose
+whether to disable edits during save, merge selected result fields into current data, or serialize
+operations. Those policies require implementation and tests; the helpers do not supply them.
+
+### Resetting and optimistic updates
+
+An illustrative Item data reset is `_itemUiState.updateState { ItemScreenData() }`. This resets the
+form, creates a new ID, and preserves loading/error. Replacing the whole wrapper with
+`_itemUiState.value = UiState(ItemScreenData())` also resets loading/error, but does not cancel an
+in-flight job; its eventual completion can still write state. Decide how to end or coordinate that
+job before resetting an active form. Resetting an edited item to a new UUID changes its identity.
+
+The template persists local writes before background synchronization; that does not confirm remote
+success. An **optimistic UI extension** that updates display state before local persistence needs
+explicit failure handling and rollback. Restoring an old snapshot can erase newer edits, so define
+how concurrent edits are preserved before adding rollback.
 
 ## Context parameters
 
-`updateStateWith` and `updateWith` are declared `context(viewModel: ViewModel)`, so they can reach
-`viewModelScope` without every call site passing it in:
+The async helpers declare `context(viewModel: ViewModel)` and launch into that ViewModel's
+`viewModelScope`. Inside a ViewModel member, Kotlin can supply the enclosing ViewModel context:
 
 ```kotlin
-// core/ui/src/main/kotlin/dev/atick/core/ui/utils/StatefulComposable.kt
+// Declaration excerpt; the body is omitted.
 context(viewModel: ViewModel) inline fun <reified T : Any> MutableStateFlow<UiState<T>>.updateStateWith(
     crossinline operation: suspend T.() -> Result<T>,
-) {
-    if (value.loading) return
-    viewModel.viewModelScope.launch {
-        // ...
-    }
-}
-```
-
-Kotlin resolves the `ViewModel` context automatically at any call site that is itself inside a
-`ViewModel`, which is why `_uiState.updateStateWith { ... }` never mentions `viewModelScope`.
-
-Context parameters have been stable, default compiler behavior since Kotlin 2.4 — this template is on
-2.4.10, and no `-Xcontext-parameters` flag is needed. An earlier version of the build set that flag
-explicitly; `build-logic/convention/src/main/kotlin/dev/atick/KotlinAndroid.kt` documents why it was
-dropped once the compiler started flagging it as redundant.
-
-## `OneTimeEvent<T>`
-
-`getContentIfNotHandled()` returns its content on the first call and `null` on every call after —
-thread-safe via `AtomicBoolean.compareAndSet`, so it can't double-fire even if two collectors observe
-the same emission. `UiState.error` is one use; a screen event like "navigate back after save" is
-another:
-
-```kotlin
-// feature/home/src/main/kotlin/dev/atick/feature/home/ui/item/ItemViewModel.kt
-data class ItemScreenData(
-    // ...
-    val navigateBack: OneTimeEvent<Boolean> = OneTimeEvent(false),
 )
 ```
 
+The project uses Kotlin 2.4.10 without an explicit `-Xcontext-parameters` flag. Follow the existing
+build configuration; no additional flag or dependency is needed to call these helpers.
+
+## `OneTimeEvent<T>`
+
+`getContentIfNotHandled()` atomically marks the wrapper consumed, then returns its content. Later
+calls return null. A null payload is indistinguishable from an already-consumed event through this
+method. `peekContent()` reads without consuming. Competing consumers share one flag; creating a new
+wrapper creates a new flag, even for equal content.
+
+Consumption does not confirm delivery or completion of navigation/snackbar work, retry cancellation,
+or persist across process death. The current `StatefulComposable` consumes during composition and
+keys its effect on the callback. Existing Compose tests demonstrate two limitations:
+
+- Recomposition after consumption can remove the effect and cancel an unfinished callback.
+- A new error under the same callback key can be consumed without launching a new callback.
+
+A discarded composition can also consume before committing; this is a source-reviewed risk rather
+than a reproduced test case. The [Event delivery follow-up](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/fix/docs-v3/DOC_FIX_TASKS.md#bounded-runtime-follow-ups)
+tracks changing consumption and effect lifetime together.
+
+ItemScreen consumes its navigation event inside an effect instead:
+
 ```kotlin
-// feature/home/src/main/kotlin/dev/atick/feature/home/ui/item/ItemScreen.kt
 LaunchedEffect(screenData.navigateBack, onBackClick) {
     if (screenData.navigateBack.getContentIfNotHandled() == true) {
         onBackClick()
@@ -183,53 +209,97 @@ LaunchedEffect(screenData.navigateBack, onBackClick) {
 }
 ```
 
-Without `OneTimeEvent`, a plain `Boolean` flag would re-fire the navigation on every recomposition
-that re-reads the same state — a config change would pop the screen a second time.
+This avoids consuming during the composition body, but still does not acknowledge completed
+navigation. Do not infer that a plain Boolean necessarily repeats on every recomposition: effect
+keys and effect lifetime also determine execution. For the current Item save failure behavior, see
+[updateStateWith](#updatestatewith).
 
-## Anti-patterns to avoid
+## Subscription lifetimes
 
-**Manual loading management** — `updateStateWith`/`updateWith` already handle the try/set-loading/
-catch/reset-loading cycle; writing it by hand is what those functions exist to prevent:
+`stateInDelayed(initialValue, viewModelScope)` shares the upstream with
+`SharingStarted.WhileSubscribed(5000L)`. It starts when collected, stops the upstream five seconds
+after the last subscriber leaves, retains its latest value, and restarts upstream for a later
+subscriber. Reading `.value` alone does not start collection.
 
-```kotlin
-// ❌ DON'T: reimplement the loading/error lifecycle by hand
-viewModelScope.launch {
-    _uiState.update { it.copy(loading = true) }
-    try {
-        val posts = repository.getPosts().getOrThrow()
-        _uiState.update { it.copy(data = it.data.copy(posts = posts), loading = false) }
-    } catch (e: Exception) {
-        _uiState.update { it.copy(loading = false, error = OneTimeEvent(e)) }
-    }
-}
-
-// ✅ DO: let updateStateWith handle it
-_uiState.updateStateWith {
-    repository.getPosts().map { posts -> copy(posts = posts) }
-}
-```
-
-**Nullable fields in screen data** — a nullable property forces every consumer to null-check; a
-default value keeps `data` always renderable:
-
-```kotlin
-// ❌ DON'T
-data class BadScreenData(val user: User? = null)
-
-// ✅ DO
-data class GoodScreenData(val user: User = User.EMPTY)
-```
+Home and Item place `onStart { getJetpacks() }` / `onStart { getJetpack() }` before this sharing
+operator. Those methods launch repository collection separately in `viewModelScope`. When the shared
+upstream stops, those separate collectors remain active. Restarting it launches another collector;
+they accumulate until the ViewModel is cleared. Settings uses the same separate-job pattern with a
+zero sharing timeout. Screen lifecycle collection alone does not fix that lifetime mismatch.
+The [Observation lifetime follow-up](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/fix/docs-v3/DOC_FIX_TASKS.md#bounded-runtime-follow-ups) includes Profile
+and preserving locale refresh behavior.
 
 ## Testing
 
-`StatefulComposableTest` (`core/ui/src/test/kotlin/dev/atick/core/ui/utils/`) exercises `updateState`,
-`updateStateWith`, and `updateWith` directly — including the loading re-entrancy guard and the
-error-reset behavior described above — without needing a real `ViewModel` subclass.
+Place the following complete example alongside Item's existing unit tests in `feature:home`.
+The module already has the test dependencies. The fake is supplied explicitly; no Hilt test graph
+or database is needed. Turbine starts collection before editing, so the exposed shared state actually
+observes the change. This example checks input preservation, not repository persistence.
+
+```kotlin
+package dev.atick.feature.home.ui.item
+
+import app.cash.turbine.test
+import com.google.common.truth.Truth.assertThat
+import dev.atick.core.testing.rule.MainDispatcherRule
+import dev.atick.data.model.home.Jetpack
+import dev.atick.data.repository.home.HomeRepository
+import dev.atick.data.utils.SyncProgress
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.test.runTest
+import org.junit.Rule
+import org.junit.Test
+
+class ItemInputExampleTest {
+    @get:Rule
+    val mainDispatcherRule = MainDispatcherRule()
+
+    @Test
+    fun `keeps a trailing decimal point`() = runTest {
+        val viewModel = ItemViewModel(InputRepository(), existingJetpackId = null)
+        viewModel.itemUiState.test {
+            assertThat(awaitItem().data.jetpackPrice).isEmpty()
+            viewModel.updatePrice("1.")
+            assertThat(awaitItem().data.jetpackPrice).isEqualTo("1.")
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+}
+
+private class InputRepository : HomeRepository {
+    override fun getJetpacks(): Flow<List<Jetpack>> = emptyFlow()
+    override fun getJetpack(id: String): Flow<Jetpack> = emptyFlow()
+    override suspend fun createOrUpdateJetpack(jetpack: Jetpack): Result<Unit> =
+        Result.success(Unit)
+    override suspend fun markJetpackAsDeleted(jetpack: Jetpack): Result<Unit> =
+        Result.success(Unit)
+    override suspend fun sync(): Flow<SyncProgress> = emptyFlow()
+}
+```
+
+Run `./gradlew :feature:home:testDebugUnitTest`. `MainDispatcherRule` uses an eager test dispatcher
+by default. That is useful here, but does not exercise calls queued before loading becomes true.
+Use a controlled dispatcher and suspended operations when testing overlap or edits during save.
+
+The existing suites provide complementary coverage:
+
+| Suite | Coverage |
+|---|---|
+| `StatefulComposableTest` | Synchronous transforms, returned success/failure, loading, error reset |
+| `UiStateContractTest` | Queued overlap, thrown exceptions, cancellation, suspended edits |
+| `StatefulComposableEventTest` | Actual Compose effect cancellation and replacement-error behavior |
+| `OneTimeEventTest` | Consumption and peeking, including concurrent access |
+| `ItemViewModelTest` | Raw input/parsing, current failed save/load behavior, Home/Item collector accumulation |
+
+Tests documenting current defects are characterization tests, not evidence that those behaviors are
+desirable. Inspect error content with `peekContent()` when the assertion must not consume it. Clear
+ViewModel scopes in lifetime tests so their separately launched collectors are cancelled.
 
 ## Further reading
 
-- [Architecture](architecture.md) — where `UiState` and `StatefulComposable` fit in the UI layer
-- [Navigation](navigation.md) — how `OneTimeEvent` carries navigation events like `ItemViewModel`'s
-  `navigateBack`
-- [Guide](guide.md) — building a new feature's ViewModel and screen data from scratch
-- [Core UI Module](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/main/core/ui/README.md) — the rest of `core/ui`'s components and utilities
+- [Architecture](architecture.md) — UI and data boundaries
+- [Data](data.md) — repository Result/Flow contracts and local-first persistence
+- [Navigation](navigation.md) — destination arguments and event integration
+- [Guide](guide.md) — current feature integration; its walkthrough repair is queued separately
+- [Core UI Module](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/main/core/ui/README.md)

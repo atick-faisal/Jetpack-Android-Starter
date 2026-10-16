@@ -48,7 +48,7 @@ import java.util.UUID
  * The ViewModel demonstrates:
  * - Navigation argument handling by assisted injection from a Navigation 3 key
  * - Form state management with [updateState] for field updates
- * - Navigation events using [OneTimeEvent] to trigger back navigation after save
+ * - Navigation events using [OneTimeEvent]; save currently ignores the repository Result
  * - Async operations with [updateStateWith] for create/update operations
  *
  * @param homeRepository Repository providing Jetpack data operations.
@@ -84,7 +84,7 @@ class ItemViewModel @AssistedInject constructor(
 
     private val _itemUiState = MutableStateFlow(UiState(ItemScreenData()))
 
-    // Same re-subscription behavior as HomeViewModel.homeUiState -- see the comment there.
+    // As in HomeViewModel, upstream restarts add collectors that live until the ViewModel is cleared.
     val itemUiState = _itemUiState
         .onStart { getJetpack() }
         .stateInDelayed(UiState(ItemScreenData()), viewModelScope)
@@ -93,13 +93,15 @@ class ItemViewModel @AssistedInject constructor(
         _itemUiState.updateState { copy(jetpackName = name) }
     }
 
-    // ⚠️ The field keeps what was typed, not a parsed number. Rejecting unparseable input here
-    // would drop the keystroke and leave the text field showing the last value that did parse,
-    // so clearing it or typing "1." would freeze it. Parsing belongs at submit, below.
+    // Keep raw text, including empty or incomplete input; parse only when saving.
     fun updatePrice(priceString: String) {
         _itemUiState.updateState { copy(jetpackPrice = priceString) }
     }
 
+    /**
+     * Saves the form and requests back navigation even when the repository returns failure.
+     * The repository Result is currently ignored; this event does not confirm persistence.
+     */
     fun createOrUpdateJetpack() {
         _itemUiState.updateStateWith {
             val jetpack = Jetpack(
@@ -112,6 +114,7 @@ class ItemViewModel @AssistedInject constructor(
         }
     }
 
+    // The catch below constructs a state without storing it, so load errors are not exposed.
     private fun getJetpack() {
         existingJetpackId?.let {
             homeRepository.getJetpack(existingJetpackId)
@@ -135,23 +138,17 @@ class ItemViewModel @AssistedInject constructor(
  *
  * This class manages form state for both creating new Jetpack items and editing existing ones.
  * When creating a new item, [jetpackId] is pre-populated with a random UUID. When editing,
- * the ID and other fields are loaded from the repository via [ItemViewModel.getJetpack].
+ * the ID and other fields are loaded from the repository via `getJetpack()`.
  *
- * The [navigateBack] event is triggered after a successful create/update operation and is
- * consumed by the Route composable to navigate back to the home screen. Being wrapped in
- * [OneTimeEvent] ensures the navigation only happens once, even if the state is re-emitted.
- *
- * Usage context:
- * - Route composable observes [ItemViewModel.itemUiState] which wraps this data class
- * - Form fields bind to [jetpackName] and [jetpackPrice] with two-way data flow
- * - Save button triggers [ItemViewModel.createOrUpdateJetpack] which sets [navigateBack]
- * - Navigation observer consumes [navigateBack] event to pop the back stack
+ * The [navigateBack] event is set after the save call returns, including a returned failure.
+ * ItemScreen consumes it inside an effect. Consumption is at most once per event instance and
+ * does not acknowledge completed navigation.
  *
  * @param jetpackId Unique identifier for the Jetpack item (UUID for new items).
  * @param jetpackName Display name of the Jetpack library (e.g., "Compose", "Room").
  * @param jetpackPrice Price exactly as typed, kept as text so a partially entered or cleared
  *                     value survives; parsed to a [Double] only when the item is saved.
- * @param navigateBack One-time event to trigger back navigation after successful save.
+ * @param navigateBack Consumable request to navigate back after the save call returns.
  *
  * @see ItemViewModel ViewModel that manages this screen data
  * @see UiState Wrapper providing loading and error state
