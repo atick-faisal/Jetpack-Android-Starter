@@ -37,48 +37,18 @@ import kotlinx.coroutines.withContext
 import timber.log.Timber
 
 /**
- * WorkManager worker that synchronizes local data with Firebase Firestore in the background.
+ * Collects the repository's push-then-pull sync Flow and updates foreground notification counts.
  *
- * This worker handles bidirectional data synchronization between the local Room database
- * and remote Firestore. It runs as a foreground service with a notification, showing
- * sync progress to the user.
+ * The repository owns persistence and conflict behavior. Completion does not establish that
+ * concurrent edits or every remote record were delivered. Exceptions request retry while
+ * [runAttemptCount] is below [TOTAL_SYNC_ATTEMPTS]; the broad catch includes cancellation.
  *
- * ## Sync Process
- * 1. **Pull Phase**: Download changes from Firestore since last sync
- * 2. **Push Phase**: Upload local changes (CREATE, UPDATE, DELETE) to Firestore
- * 3. **Progress Updates**: Update foreground notification with current progress
- * 4. **Result**: Mark sync as complete or retry on failure
+ * WorkManager supplies assisted parameters; Hilt supplies the dispatcher and repository.
  *
- * ## Foreground Service
- * The worker runs as an expedited foreground service to:
- * - Show sync progress in a notification
- * - Prevent the system from killing the process during sync
- * - Comply with Android 12+ background execution limits
- *
- * ## Retry Logic
- * - Automatic retry up to [TOTAL_SYNC_ATTEMPTS] (3) times
- * - Exponential backoff between retries (handled by WorkManager)
- * - Logs retry attempts for debugging
- * - Returns `Result.failure()` after exhausting all retries
- *
- * ## Dependency Injection
- * This class uses Hilt's `@AssistedInject` to inject dependencies into the Worker.
- * WorkManager parameters (`Context`, `WorkerParameters`) are provided by the `@Assisted`
- * annotation, while app dependencies are injected normally.
- *
- * ## Thread Safety
- * All work is executed on the [ioDispatcher] to ensure proper threading and avoid
- * blocking the main thread. The repository's sync method returns a Flow that emits
- * progress updates.
- *
- * @param context The application context provided by WorkManager
- * @param workerParameters Worker parameters provided by WorkManager
- * @param ioDispatcher The IO coroutine dispatcher for performing sync operations
- * @param homeRepository The repository that performs the actual sync logic
- *
- * @see Sync
- * @see SyncManager
- * @see dev.atick.data.repository.home.HomeRepository.sync
+ * @param context Application context provided by WorkManager.
+ * @param workerParameters Runtime parameters provided by WorkManager.
+ * @param ioDispatcher Dispatcher for sync work.
+ * @param homeRepository Repository implementing the sync algorithm.
  */
 @HiltWorker
 class SyncWorker @AssistedInject constructor(
@@ -115,34 +85,12 @@ class SyncWorker @AssistedInject constructor(
     }
 
     /**
-     * Performs the background data synchronization work.
+     * Collects sync progress on [ioDispatcher] and updates foreground counts.
      *
-     * This method:
-     * 1. Promotes the worker to a foreground service with a progress notification
-     * 2. Calls the repository's sync method which returns a Flow of progress updates
-     * 3. Updates the notification as sync progresses
-     * 4. Returns success/retry/failure based on the outcome
+     * Earlier acknowledgements and upserts remain committed if a later operation fails.
+     * The catch includes cancellation and does not explicitly rethrow it.
      *
-     * ## Sync Flow
-     * ```kotlin
-     * homeRepository.sync() // Returns Flow<SyncProgress>
-     *     .collect { progress ->
-     *         // Update notification with current progress
-     *         setForeground(getForegroundInfo(progress.total, progress.current))
-     *     }
-     * ```
-     *
-     * ## Error Handling
-     * - **Retry**: If [runAttemptCount] < [TOTAL_SYNC_ATTEMPTS], returns `Result.retry()`
-     * - **Failure**: After exhausting retries, returns `Result.failure()`
-     * - **Success**: Returns `Result.success()` when sync completes without errors
-     *
-     * ## Threading
-     * All operations run on [ioDispatcher] to avoid blocking the main thread.
-     *
-     * @return [Result.success] if sync completed successfully,
-     *         [Result.retry] if sync failed but retries remain,
-     *         [Result.failure] if sync failed after all retries
+     * @return Success on completed collection; retry below the retry limit, otherwise failure.
      */
     override suspend fun doWork(): Result {
         return withContext(ioDispatcher) {
@@ -174,18 +122,11 @@ class SyncWorker @AssistedInject constructor(
 
     companion object {
         /**
-         * Maximum number of retry attempts for failed sync operations.
+         * Retry limit compared with zero-based [runAttemptCount].
          *
-         * If sync fails (due to network issues, server errors, etc.), WorkManager will retry up
-         * to this many times before [doWork] gives up and returns `Result.failure()`.
-         *
-         * [startUpSyncWork] never calls `setBackoffCriteria`, so the spacing between those
-         * retries is WorkManager's own default: `BackoffPolicy.EXPONENTIAL` over
-         * `WorkRequest.DEFAULT_BACKOFF_DELAY_MILLIS` (30 seconds), doubled per attempt and
-         * capped at `WorkRequest.MAX_BACKOFF_MILLIS`. That works out to roughly 30s, 60s and
-         * 120s here, not the 10s floor — `WorkRequest.MIN_BACKOFF_MILLIS` is the lower bound a
-         * custom delay is clamped to, not the value used when none is set. Add
-         * `setBackoffCriteria(...)` to [startUpSyncWork] to choose a different schedule.
+         * A failure at counts 0, 1, or 2 requests retry; a failure at 3 returns failure, allowing
+         * four attempts in total. No custom backoff is set: WorkManager defaults to exponential
+         * backoff starting at 30 seconds. Constraints and scheduling can delay execution further.
          */
         const val TOTAL_SYNC_ATTEMPTS = 3
 
@@ -212,26 +153,12 @@ class SyncWorker @AssistedInject constructor(
                 .build()
 
         /**
-         * Creates a WorkRequest for initial sync on app startup.
+         * Creates connected-network, one-time work targeting [SyncWorker] through [DelegatingWorker].
          *
-         * This method creates a one-time expedited work request with:
-         * - **Expedited**: Runs as soon as possible, promoted to foreground service
-         * - **Unique**: Only one sync runs at a time (enforced by `enqueueUniqueWork`)
-         * - **Network Constraint**: Only runs when network is available
-         * - **Delegated**: Uses [DelegatingWorker] to enable Hilt injection
+         * Requests expedited execution, falling back to ordinary work when quota is unavailable.
+         * [dev.atick.sync.manager.Sync.initialize] supplies the unique-work name and KEEP policy.
          *
-         * ## Expedited Work
-         * Expedited work is prioritized by WorkManager and runs in the foreground.
-         * If the system quota for expedited work is exhausted, it falls back to
-         * normal work (via [OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST]).
-         *
-         * ## Delegation Pattern
-         * Uses [DelegatingWorker] to enable Hilt dependency injection in Workers.
-         * The actual worker class ([SyncWorker]) is passed via `delegatedData()`.
-         *
-         * @return A [OneTimeWorkRequest] configured for startup sync
-         * @see DelegatingWorker
-         * @see Sync.initialize
+         * @return The request; constructing it does not enqueue it.
          */
         fun startUpSyncWork(): OneTimeWorkRequest {
             return OneTimeWorkRequestBuilder<DelegatingWorker>()

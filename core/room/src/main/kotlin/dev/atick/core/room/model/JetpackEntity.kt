@@ -21,96 +21,29 @@ import androidx.room.PrimaryKey
 import java.util.UUID
 
 /**
- * Room database entity representing a Jetpack item with offline-first sync capabilities.
+ * Room row containing Home content and local sync metadata.
  *
- * This entity implements an **offline-first** pattern with automatic sync tracking.
- * All local modifications are tracked via sync metadata fields, enabling bidirectional
- * synchronization with a remote data source (e.g., Firestore, REST API).
+ * The repository sets pending metadata on local writes; entity construction alone does not
+ * schedule work. Pulled rows carry remote content/timestamps and default to no pending action.
+ * Acknowledgement clears pending flags by ID, without a version check. Deleted rows remain
+ * locally after remote acknowledgement; no automatic cleanup is implemented.
  *
- * ## Sync Metadata Pattern
+ * @property id Primary key shared with the remote document.
+ * @property name Display name.
+ * @property price Numeric price; the entity itself does not enforce a range.
+ * @property userId Owner used by user-scoped list, pending, and cursor queries.
+ * @property lastUpdated Edit time in epoch milliseconds from the writing device. Used for list
+ *     ordering and comparison with [lastSynced] when selecting pending rows.
+ * @property lastSynced Epoch milliseconds set during upload and local acknowledgement, and also
+ *     carried from remote mappings. Not a guarantee that the current content was uploaded.
+ * @property serverUpdatedAtNanos Server write time in epoch nanoseconds copied from a pull, or zero
+ *     before such a timestamp is stored. Used by the timestamp-only pull cursor.
+ * @property needsSync Explicit pending-change flag used alongside the timestamp comparison.
+ * @property deleted Soft-delete flag excluding the row from the normal list query.
+ * @property syncAction Remote operation selected for a pending row.
  *
- * The entity uses several fields to track synchronization state:
- * - **lastUpdated**: Timestamp of the last local modification (set on every update)
- * - **lastSynced**: Timestamp of the last successful sync with remote
- * - **serverUpdatedAtNanos**: The *remote server's* write timestamp, and the sync cursor
- * - **needsSync**: Flag indicating this entity has pending changes to sync
- * - **deleted**: Soft delete flag (entity is hidden from UI but kept for sync)
- * - **syncAction**: The type of sync operation to perform ([SyncAction])
- *
- * ## Lifecycle States
- *
- * 1. **Created Locally**:
- *    - needsSync = true, syncAction = UPSERT, lastUpdated > lastSynced
- * 2. **Updated Locally**:
- *    - needsSync = true, syncAction = UPSERT, lastUpdated > lastSynced
- * 3. **Deleted Locally** (Soft Delete):
- *    - deleted = true, needsSync = true, syncAction = DELETE
- * 4. **Synced**:
- *    - needsSync = false, syncAction = NONE, lastSynced = current timestamp
- * 5. **Updated from Remote**:
- *    - Upserted with remote data, lastUpdated and lastSynced updated
- *
- * ## Usage Example
- *
- * ```kotlin
- * // Create new entity (needs sync)
- * val newJetpack = JetpackEntity(
- *     name = "Jetpack MK-1",
- *     price = 499.99,
- *     userId = currentUserId,
- *     lastUpdated = System.currentTimeMillis(),
- *     needsSync = true,
- *     syncAction = SyncAction.UPSERT
- * )
- *
- * // Update existing entity
- * val updated = existingJetpack.copy(
- *     price = 399.99,
- *     lastUpdated = System.currentTimeMillis(),
- *     needsSync = true,
- *     syncAction = SyncAction.UPSERT
- * )
- *
- * // Soft delete entity
- * val softDeleted = existingJetpack.copy(
- *     deleted = true,
- *     needsSync = true,
- *     syncAction = SyncAction.DELETE,
- *     lastUpdated = System.currentTimeMillis()
- * )
- *
- * // Mark as synced after successful remote operation
- * val synced = existingJetpack.copy(
- *     needsSync = false,
- *     syncAction = SyncAction.NONE,
- *     lastSynced = System.currentTimeMillis()
- * )
- * ```
- *
- * @property id Unique identifier (UUID). Auto-generated if not provided.
- * @property name Display name of the jetpack. Required field for domain logic.
- * @property price Price of the jetpack in the app's currency. Must be non-negative.
- * @property userId Identifier of the user who owns this jetpack. Used for multi-user filtering.
- * @property lastUpdated Timestamp (milliseconds since epoch) when this entity was last modified locally.
- *                       Updated on every create/update operation. Used to determine if entity needs sync.
- * @property lastSynced Timestamp (milliseconds since epoch) when this entity was last successfully synced
- *                      with the remote data source. Updated after successful sync operations.
- * @property serverUpdatedAtNanos Nanoseconds since epoch, taken from the timestamp the *remote server*
- *                                assigned when it wrote this record. `0` until the record has been
- *                                pulled back from remote. Unlike [lastUpdated] and [lastSynced] it does
- *                                not come from a device clock, which is what makes it the only field
- *                                that can order records across devices — see `JetpackDao.getSyncCursor`.
- * @property needsSync Flag indicating this entity has pending local changes that need to be synced to remote.
- *                     Set to `true` on create/update/delete, reset to `false` after successful sync.
- * @property deleted Soft delete flag. When `true`, the entity is hidden from normal queries but kept in
- *                   the database for synchronization. Allows deletion to be synced with remote before
- *                   permanent removal.
- * @property syncAction The type of synchronization action to perform during the next sync operation.
- *                      See [SyncAction] for possible values.
- *
- * @see JetpackDao for database operations
- * @see LocalDataSource for data access abstraction
- * @see SyncAction for sync operation types
+ * @see dev.atick.core.room.data.JetpackDao
+ * @see dev.atick.core.room.data.LocalDataSource
  */
 @Entity(tableName = "jetpacks")
 data class JetpackEntity(
@@ -131,62 +64,23 @@ data class JetpackEntity(
 )
 
 /**
- * Defines the type of synchronization action to perform on an entity.
+ * Remote operation selected by the repository when pushing a pending row.
  *
- * This enum is used to track what operation needs to be performed during the next
- * sync operation with a remote data source. It enables fine-grained control over
- * sync behavior and supports conflict resolution strategies.
- *
- * ## Usage
- *
- * Set the appropriate action when modifying entities:
- * ```kotlin
- * // After creating or updating
- * entity.copy(syncAction = SyncAction.UPSERT, needsSync = true)
- *
- * // After soft deleting
- * entity.copy(syncAction = SyncAction.DELETE, needsSync = true, deleted = true)
- *
- * // After successful sync
- * entity.copy(syncAction = SyncAction.NONE, needsSync = false)
- * ```
- *
- * ## Sync Worker Implementation
- *
- * ```kotlin
- * when (entity.syncAction) {
- *     SyncAction.UPSERT -> remoteDataSource.upsert(entity.toRemote())
- *     SyncAction.DELETE -> remoteDataSource.delete(entity.id)
- *     SyncAction.NONE -> {} // Already synced, skip
- * }
- * ```
+ * This value does not implement conflict resolution or schedule a pass.
  */
 enum class SyncAction {
     /**
-     * No synchronization action needed.
-     *
-     * This entity is already in sync with the remote data source,
-     * or synchronization is not required.
+     * No remote operation in the push branch. The repository still acknowledges the row.
      */
     NONE,
 
     /**
-     * Insert or update this entity on the remote data source.
-     *
-     * Used when:
-     * - Entity was created locally and needs to be pushed to remote
-     * - Entity was updated locally and changes need to be synced
-     * - Remote should be updated with the latest local version
+     * Create or replace the remote document with the pending row's mapped content.
      */
     UPSERT,
 
     /**
-     * Delete this entity from the remote data source.
-     *
-     * Used when:
-     * - Entity was soft-deleted locally (deleted = true)
-     * - Remote copy should be removed
-     * - After successful remote deletion, entity can be permanently removed locally
+     * Hard-delete the remote document. The local soft-deleted row is retained.
      */
     DELETE,
 }

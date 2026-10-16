@@ -1,7 +1,7 @@
 # Module :core:room
 
-**Purpose:** Local Room database — the single source of truth the UI reads from, with sync-tracking
-metadata on every entity so `:sync` knows what still needs to reach Firestore.
+**Purpose:** Local Room storage observed by the Home UI, with metadata used by
+`HomeRepositoryImpl` in `:data` to select pending changes for Firestore sync.
 
 ## Key APIs
 
@@ -23,15 +23,17 @@ suspend fun markJetpackAsDeleted(id: String)
 
 ## Gotchas
 
-- `deleted` is a **soft delete** — a row marked deleted is hidden from `getJetpacks()` but kept until
-  it's pushed to Firestore, so a deletion made offline isn't lost.
-- Three timestamps, two clocks. `lastUpdated` and `lastSynced` come from whichever device wrote the
-  row and are for display only; `serverUpdatedAtNanos` is the remote server's own write time and is
-  the only one that orders records consistently across devices, which is why `getSyncCursor` reads
-  it and nothing else. A cursor taken from `lastUpdated` follows the fleet's fastest clock and drops
-  every record written by a slower device.
-- `getSyncCursor` counts soft-deleted rows on purpose — their server timestamp has still been
-  consumed, and skipping them would rewind the cursor.
+- `deleted` is a soft delete: hidden from the list, retained locally after remote deletion is
+  acknowledged. No automatic cleanup is implemented; remote hard deletes do not remove other
+  devices' existing local rows through the incremental pull.
+- `lastUpdated` and `lastSynced` are device-clock milliseconds used in pending-change detection;
+  both are transmitted to/from Firestore. `serverUpdatedAtNanos` is the server write timestamp
+  used by the pull cursor. See [metadata and algorithm](../../docs/data.md#algorithm-and-metadata).
+- `getSyncCursor` includes soft-deleted rows because their server timestamps are already stored.
+  It is a timestamp-only cursor, with interruption/tie limitations described in the guide.
+- Version 2 has no registered migration from version 1 and uses destructive fallback. Upgrades can
+  erase unsent local changes. Same-version schema-integrity errors are a different failure path;
+  see [schema changes](../../docs/data.md#room-persistence-and-schema-changes).
 
 ## Related Documentation
 

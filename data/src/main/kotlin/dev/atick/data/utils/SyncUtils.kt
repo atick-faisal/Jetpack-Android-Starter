@@ -19,56 +19,36 @@ package dev.atick.data.utils
 import kotlinx.coroutines.flow.Flow
 
 /**
- * Manager interface for controlling application-wide data synchronization.
+ * Contract for requesting background sync and observing running state.
  *
- * This is typically implemented by the sync module and injected into the app layer
- * to provide access to sync status and manual sync triggering.
- *
- * @see SyncManagerImpl Implementation in the sync module
- * @see Syncable Interface implemented by repositories that support sync
+ * The implementation is supplied by the sync module.
  */
 interface SyncManager {
     /**
-     * Flow that emits a boolean value indicating whether the sync operation is in progress.
+     * Emits whether matching work is running; waiting or failed work is not running.
      */
     val isSyncing: Flow<Boolean>
 
     /**
-     * Starts the sync operation.
+     * Requests background work without awaiting completion. The scheduler may keep existing work.
      */
     fun requestSync()
 }
 
 /**
- * Interface representing a syncable entity.
+ * Repository contract for synchronization with progress reporting.
  *
- * Repositories that implement this interface can be synchronized in the background
- * by SyncWorker. The [sync] method should handle fetching remote data and updating
- * the local database while emitting progress updates.
+ * The Home implementation returns a cold Flow: collect it to execute its push and pull phases.
+ * Calling the suspend method alone does not execute those phases.
  *
- * ## Implementation Pattern
- * ```kotlin
- * override suspend fun sync(): Flow<SyncProgress> = flow {
- *     emit(SyncProgress(total = 100, current = 0, message = "Starting sync"))
- *     // Fetch from network
- *     val data = networkDataSource.getData()
- *     // Update local database
- *     localDataSource.saveData(data)
- *     emit(SyncProgress(total = 100, current = 100, message = "Sync complete"))
- * }
- * ```
- *
- * @sample dev.atick.data.repository.home.HomeRepositoryImpl.sync Complete sync implementation with push/pull
- *
- * @see SyncProgress For progress reporting
- * @see SyncManager For triggering sync operations
+ * @see SyncProgress
+ * @see SyncManager
  */
 interface Syncable {
     /**
-     * Synchronizes data and returns a Flow emitting the progress of the sync operation.
+     * Returns synchronization progress. Execution and error behavior depend on the implementation.
      *
-     * @return A Flow emitting SyncProgress objects representing the progress of the sync operation.
-     * @sample dev.atick.data.repository.home.HomeRepositoryImpl.sync Complete sync implementation
+     * @return A [Flow] of [SyncProgress]; Home performs I/O during collection and may throw.
      */
     suspend fun sync(): Flow<SyncProgress>
 }
@@ -79,8 +59,8 @@ interface Syncable {
  * This is emitted by [Syncable.sync] implementations to report progress to SyncWorker,
  * which displays it in a foreground service notification.
  *
- * @param total The total number of items to sync.
- * @param current The current number of items synced.
+ * @param total Number of items in the current phase, not an overall operation total.
+ * @param current Number of items processed in the current phase.
  * @param message The message to display during the sync operation.
  *
  * @see Syncable Interface implemented by syncable repositories

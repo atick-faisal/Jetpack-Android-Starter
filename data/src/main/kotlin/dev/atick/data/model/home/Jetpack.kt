@@ -23,41 +23,21 @@ import dev.atick.firebase.firestore.model.serverUpdatedAtNanos
 import java.util.UUID
 
 /**
- * Domain model representing a Jetpack library item in the application's data layer.
+ * Home item exposed by the repository after mapping Room data.
  *
- * This is the core domain model used throughout the app for representing Jetpack library entries.
- * It sits between the database layer ([JetpackEntity]) and the remote layer ([FirebaseJetpack]),
- * serving as the single source of truth that the UI layer observes.
+ * Room supplies observed content; this model is not a separate persistence store.
  *
- * The model supports offline-first architecture with sync tracking:
- * - [lastUpdated]: Timestamp when the item was modified locally
- * - [lastSynced]: Timestamp of the last successful sync with Firebase
- * - [needsSync]: Flag indicating if local changes need to be pushed to Firebase
+ * @param id Item ID shared with local and remote storage.
+ * @param name Display name.
+ * @param price Numeric price.
+ * @param lastUpdated Edit time in epoch milliseconds, carried from the writing device.
+ * @param lastSynced Epoch milliseconds carried from local acknowledgement or remote mapping.
+ *     It is not an acknowledgement of the current form's persistence.
+ * @param needsSync Local pending flag; the DAO also compares edit and acknowledgement times.
+ * @param formattedDate Display text derived from [lastUpdated].
  *
- * Mapping extensions are provided to convert between layers:
- * - [toJetpackEntity]: Convert to Room database entity for local storage
- * - [toFirebaseJetpack]: Convert to Firebase document for remote storage
- * - [JetpackEntity.toJetpack]: Convert from Room entity to domain model
- * - [FirebaseJetpack.toJetpackEntity]: Convert from Firebase to Room entity
- *
- * Usage context:
- * - UI layer displays lists and details of Jetpack items via [dev.atick.feature.home.ui.home.HomeViewModel]
- * - Repository returns Flow<List<Jetpack>> as the single source of truth
- * - ViewModel wraps Jetpack data in [dev.atick.feature.home.ui.home.HomeScreenData]
- * - Background sync uses [needsSync] flag to identify items requiring upload
- *
- * @param id Unique identifier (UUID) for the Jetpack item, consistent across all layers.
- * @param name Display name of the Jetpack library (e.g., "Compose", "Room", "Hilt").
- * @param price Numeric value representing the item's price (demo field for CRUD operations).
- * @param lastUpdated Unix timestamp (milliseconds) of the last local modification.
- * @param lastSynced Unix timestamp (milliseconds) of the last successful Firebase sync.
- * @param needsSync Boolean flag indicating if local changes haven't been synced to Firebase.
- * @param formattedDate Human-readable date string derived from [lastUpdated] for UI display.
- *
- * @see JetpackEntity Room database entity representing local storage
- * @see FirebaseJetpack Firestore document representing remote storage
- * @see dev.atick.data.repository.home.HomeRepository Repository providing Jetpack operations
- * @see dev.atick.feature.home.ui.home.HomeViewModel ViewModel consuming Jetpack data
+ * @see JetpackEntity
+ * @see FirebaseJetpack
  */
 data class Jetpack(
     val id: String = UUID.randomUUID().toString(),
