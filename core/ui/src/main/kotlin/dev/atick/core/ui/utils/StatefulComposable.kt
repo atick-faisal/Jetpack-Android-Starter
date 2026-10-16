@@ -33,49 +33,21 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 /**
- * A centralized composable wrapper that handles loading states, error handling, and content display.
+ * Renders [UiState.data], a loading indicator, and an error snackbar callback.
  *
- * This composable implements the standard UI state pattern used throughout the application:
- * - Displays content based on the current state data
- * - Shows an overlay loading indicator when [UiState.loading] is true
- * - Automatically displays errors via snackbar when [UiState.error] contains an unhandled exception
+ * The error is consumed during composition, before the callback completes. Recomposition can
+ * cancel an unfinished callback; a replacement error under the same callback key can be consumed
+ * without starting another callback. Consumption does not acknowledge successful delivery.
  *
- * ## Usage Example
- * ```kotlin
- * @Composable
- * fun FeatureRoute(
- *     onShowSnackbar: suspend (String, SnackbarAction, Throwable?) -> Boolean,
- *     viewModel: FeatureViewModel = hiltViewModel()
- * ) {
- *     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+ * Screens collect their ViewModel state with `collectAsStateWithLifecycle` and pass it here.
+ * See the state-management guide for subscription lifetimes and event-delivery limitations.
  *
- *     StatefulComposable(
- *         state = uiState,
- *         onShowSnackbar = onShowSnackbar
- *     ) { screenData ->
- *         FeatureScreen(
- *             screenData = screenData,
- *             onAction = viewModel::handleAction
- *         )
- *     }
- * }
- * ```
- *
- *
- * ## Pattern
- * This composable enforces a clean separation of concerns:
- * 1. **Route composable**: Manages ViewModel and state collection (uses StatefulComposable)
- * 2. **Screen composable**: Pure UI that receives data and event callbacks
- *
- * @param T The type of the screen data. Must be a non-nullable type.
- * @param state The current UI state containing data, loading flag, and error events.
- * @param onShowSnackbar Callback to display error messages. Returns true if the error was handled.
- * @param content The screen content to display. Receives the current data from [state].
- *
+ * @param T The non-null screen-data type; its properties may be nullable.
+ * @param state Data, loading flag, and error event to render.
+ * @param onShowSnackbar Callback invoked with the error message, REPORT action, and throwable.
+ *                       Its Boolean return value is ignored by this wrapper.
+ * @param content Content rendered with the current data, including while loading.
  * @see UiState
- * @see updateState
- * @see updateStateWith
- * @see updateWith
  */
 // This is a state/error wrapper, not a layout node, so it has nothing to apply a Modifier to.
 @Suppress("ktlint:compose:modifier-missing-check")
@@ -99,13 +71,7 @@ fun <T : Any> StatefulComposable(
         }
     }
 
-    // ⚠️ getContentIfNotHandled() flips OneTimeEvent's internal AtomicBoolean the instant it's
-    // called, during composition -- not inside a side-effect. If Compose invokes this composable
-    // body but discards that composition (which recomposition can do), the flag is already set
-    // and the real, committed composition reads null: the error is lost, not delayed. The
-    // LaunchedEffect key below is deliberately onShowSnackbar, not the error itself -- keying on
-    // the error object would risk re-triggering the effect if the same instance were ever read
-    // twice, whereas keying on the stable callback fires this exactly once per non-null read here.
+    // Consumption happens before the effect; it does not confirm snackbar delivery.
     state.error.getContentIfNotHandled()?.let { error ->
         LaunchedEffect(onShowSnackbar) {
             onShowSnackbar(error.message.toString(), SnackbarAction.REPORT, error)
@@ -114,43 +80,16 @@ fun <T : Any> StatefulComposable(
 }
 
 /**
- * Wrapper class representing the complete state of a UI screen.
+ * Screen data with a loading flag and a consumable error event.
  *
- * This is the standard state container used across all ViewModels in the application.
- * It combines screen data with loading and error states in a single, immutable structure.
+ * [updateState] replaces data synchronously; [updateStateWith] replaces it on returned success;
+ * [updateWith] preserves it. The wrapper has read-only properties, but [OneTimeEvent] has mutable
+ * consumption state. Copying a wrapper retains that event unless it is explicitly replaced.
  *
- * ## Key Features
- * - **Type-safe data**: Generic type parameter ensures compile-time safety
- * - **Loading state**: Boolean flag for showing/hiding loading indicators
- * - **One-time errors**: Errors are delivered as events that are handled only once
- *
- * ## Usage in ViewModel
- * ```kotlin
- * @HiltViewModel
- * class FeatureViewModel @Inject constructor(
- *     private val repository: FeatureRepository
- * ) : ViewModel() {
- *     private val _uiState = MutableStateFlow(UiState(FeatureScreenData()))
- *     val uiState = _uiState.asStateFlow()
- * }
- * ```
- *
- * ## State Updates
- * Use the provided extension functions to update state:
- * - [updateState] for synchronous updates
- * - [updateStateWith] for async operations returning new data
- * - [updateWith] for async operations returning Unit
- *
- * @param T The type of the screen data. Must be a non-nullable type.
- * @property data The current screen data. This is always present (never null).
- * @property loading True when an async operation is in progress. Used to show loading indicators.
- * @property error A one-time event containing an error. Automatically consumed after being handled.
- *
- * @see StatefulComposable
- * @see updateState
- * @see updateStateWith
- * @see updateWith
- * @see OneTimeEvent
+ * @param T The non-null screen-data type; individual fields may be nullable.
+ * @property data Current renderable data, retained while an operation is loading or returns failure.
+ * @property loading Flag used by [StatefulComposable] to show a loading indicator.
+ * @property error Error event, initially containing null. Consumption does not confirm display.
  */
 data class UiState<T : Any>(
     val data: T,
@@ -159,41 +98,16 @@ data class UiState<T : Any>(
 )
 
 /**
- * Updates the UI state synchronously without showing loading indicators or handling errors.
+ * Replaces [UiState.data] synchronously, preserving loading and the existing error event.
  *
- * Use this function for immediate, synchronous state updates such as:
- * - Text input changes
- * - UI toggle states
- * - Local UI state modifications
- * - Navigation state updates
+ * For example, an Item form updates a field with `updateState { copy(jetpackName = name) }`.
+ * The transform runs through [MutableStateFlow.update] and may be evaluated more than once under
+ * contention, so keep it free of side effects. Exceptions propagate to the caller.
  *
- * This function does NOT:
- * - Set loading state
- * - Handle exceptions
- * - Run in a coroutine scope
- *
- * ## Usage Example
- * ```kotlin
- * @HiltViewModel
- * class ProfileViewModel @Inject constructor() : ViewModel() {
- *     private val _uiState = MutableStateFlow(UiState(ProfileScreenData()))
- *     val uiState = _uiState.asStateFlow()
- *
- *     fun updateName(name: String) {
- *         _uiState.updateState {
- *             copy(name = name)
- *         }
- *     }
- * }
- * ```
- *
- *
- * @param T The type of the screen data.
- * @param update Lambda that receives current data and returns updated data.
- *               Use data class `copy()` to create the new state.
- *
- * @see updateStateWith for async operations that return new data
- * @see updateWith for async operations that return Unit
+ * @param T The screen-data type.
+ * @param update Transform receiving current data and returning its replacement.
+ * @see updateStateWith
+ * @see updateWith
  */
 inline fun <T : Any> MutableStateFlow<UiState<T>>.updateState(update: T.() -> T) {
     // copy() rather than UiState(...): building a fresh wrapper would discard `loading` and any
@@ -203,74 +117,22 @@ inline fun <T : Any> MutableStateFlow<UiState<T>>.updateState(update: T.() -> T)
 }
 
 /**
- * Updates the UI state with the result of an async operation that returns new data.
+ * Launches an operation in the context ViewModel's scope and replaces data on returned success.
  *
- * This function automatically handles the complete async operation lifecycle:
- * 1. Sets `loading = true` before starting the operation
- * 2. Executes the operation in the ViewModel's coroutine scope
- * 3. Updates state with new data on success
- * 4. Sets error event on failure
- * 5. Sets `loading = false` when complete
+ * A call observing `loading = true` is dropped. The flag is set inside the launched coroutine,
+ * so multiple calls queued before it runs can overlap. Starting clears the previous error event.
+ * Returned failure preserves current data and stores its throwable in [OneTimeEvent]; returned
+ * success replaces data. Both paths clear loading. A successful null payload is treated as an error.
  *
- * Use this function for async operations that fetch or compute new data, such as:
- * - Loading data from a repository
- * - Refreshing screen content
- * - Search operations
- * - Any operation that returns `Result<T>` with new data
+ * Thrown exceptions and cancellation are not caught and can leave loading true. The operation's
+ * receiver is a data snapshot read inside the coroutine; returning a copy of it can overwrite
+ * edits made while the operation was suspended. This helper returns no operation result or Job.
  *
- * ## Kotlin Context Parameters
- * This function uses Kotlin's context parameters feature (`context(viewModel: ViewModel)`).
- * The ViewModel context provides implicit access to `viewModelScope` for launching coroutines.
- * You never need to pass the ViewModel explicitly - it's automatically available when called
- * from within a ViewModel.
- *
- * ## Usage Example
- * ```kotlin
- * @HiltViewModel
- * class HomeViewModel @Inject constructor(
- *     private val repository: HomeRepository
- * ) : ViewModel() {
- *     private val _uiState = MutableStateFlow(UiState(HomeScreenData()))
- *     val uiState = _uiState.asStateFlow()
- *
- *     fun loadData() {
- *         _uiState.updateStateWith {
- *             repository.getData() // Returns Result<HomeScreenData>
- *         }
- *     }
- *
- *     fun search(query: String) {
- *         _uiState.updateStateWith {
- *             repository.search(query) // Returns Result<HomeScreenData>
- *         }
- *     }
- * }
- * ```
- *
- * ## Error Handling
- * - Errors are automatically caught and wrapped in [OneTimeEvent]
- * - The error is displayed via [StatefulComposable]'s snackbar mechanism
- * - Original data is preserved when an error occurs
- *
- * ## Duplicate Requests
- * If called while `loading = true`, the function returns immediately to prevent
- * duplicate concurrent operations.
- *
- *
- * @param T The type of the screen data.
- * @param operation Suspend lambda that receives current data and returns `Result<T>` with new data.
- *                  Typically calls a repository method that returns new screen data.
- *
- * @see updateState for synchronous updates
- * @see updateWith for async operations that don't return new data
- * @see suspendRunCatching for wrapping repository operations in Result
+ * @param T The non-null screen-data type.
+ * @param operation Suspend transform returning replacement data or a failure in [Result].
+ * @see updateState
+ * @see updateWith
  */
-// ❗ context(viewModel: ViewModel) is what supplies viewModelScope here with no constructor
-// parameter. The loading check below is a re-entrancy lock, not an optimization -- a second
-// call while one is already in flight is silently dropped, not queued. value.data (read a few
-// lines down, inside the launched coroutine) is captured once when the coroutine starts, so the
-// eventual copy(data = ...) on success is based on that snapshot, not a fresh read: a concurrent
-// synchronous change to data while this operation is in flight is overwritten once it completes.
 context(viewModel: ViewModel) inline fun <reified T : Any> MutableStateFlow<UiState<T>>.updateStateWith(
     crossinline operation: suspend T.() -> Result<T>,
 ) {
@@ -308,75 +170,21 @@ context(viewModel: ViewModel) inline fun <reified T : Any> MutableStateFlow<UiSt
 }
 
 /**
- * Updates the UI state with the result of an async operation that performs an action without returning new data.
+ * Launches a Result-returning action in the context ViewModel's scope without replacing data.
  *
- * This function automatically handles the complete async operation lifecycle:
- * 1. Sets `loading = true` before starting the operation
- * 2. Executes the operation in the ViewModel's coroutine scope
- * 3. Preserves existing data on success (no data changes)
- * 4. Sets error event on failure
- * 5. Sets `loading = false` when complete
+ * A call observing `loading = true` is dropped; calls queued before the coroutine sets that flag
+ * can overlap. Starting clears the old error event. Returned success clears loading; returned
+ * failure also stores its throwable in [OneTimeEvent]. Current data is preserved on both paths.
  *
- * Use this function for async operations that perform actions but don't update screen data:
- * - Saving/updating data without changing current view
- * - Deleting items
- * - Sending analytics events
- * - Triggering background jobs
- * - Any operation that returns `Result<Unit>`
+ * Thrown exceptions and cancellation are not caught and can leave loading true. The operation
+ * receives a data snapshot, but completion does not write it back. This helper returns no result
+ * or Job. Use it, for example, when deleting an item through a repository returning `Result<Unit>`.
  *
- * ## Kotlin Context Parameters
- * This function uses Kotlin's context parameters feature (`context(viewModel: ViewModel)`).
- * The ViewModel context provides implicit access to `viewModelScope` for launching coroutines.
- * You never need to pass the ViewModel explicitly - it's automatically available when called
- * from within a ViewModel.
- *
- * ## Usage Example
- * ```kotlin
- * @HiltViewModel
- * class SettingsViewModel @Inject constructor(
- *     private val repository: SettingsRepository
- * ) : ViewModel() {
- *     private val _uiState = MutableStateFlow(UiState(SettingsScreenData()))
- *     val uiState = _uiState.asStateFlow()
- *
- *     fun saveSettings() {
- *         _uiState.updateWith {
- *             repository.saveSettings(this) // Returns Result<Unit>
- *         }
- *     }
- *
- *     fun deleteAccount() {
- *         _uiState.updateWith {
- *             repository.deleteAccount() // Returns Result<Unit>
- *         }
- *     }
- * }
- * ```
- *
- *
- * ## Difference from updateStateWith
- * - `updateStateWith`: For operations that return new data → Updates [UiState.data]
- * - `updateWith`: For operations that return Unit → Preserves [UiState.data]
- *
- * ## Error Handling
- * - Errors are automatically caught and wrapped in [OneTimeEvent]
- * - The error is displayed via [StatefulComposable]'s snackbar mechanism
- * - Original data is preserved when an error occurs
- *
- * ## Duplicate Requests
- * If called while `loading = true`, the function returns immediately to prevent
- * duplicate concurrent operations.
- *
- * @param T The type of the screen data.
- * @param operation Suspend lambda that receives current data and returns `Result<Unit>`.
- *                  Typically calls a repository method that performs an action.
- *
- * @see updateState for synchronous updates
- * @see updateStateWith for async operations that return new data
- * @see suspendRunCatching for wrapping repository operations in Result
+ * @param T The screen-data type.
+ * @param operation Suspend action receiving current data and returning [Result] of [Unit].
+ * @see updateState
+ * @see updateStateWith
  */
-// Same re-entrancy guard and context(viewModel) mechanism as updateStateWith above; there's no
-// data payload here, so no snapshot-before-launch subtlety applies.
 context(viewModel: ViewModel) inline fun <T : Any> MutableStateFlow<UiState<T>>.updateWith(
     crossinline operation: suspend T.() -> Result<Unit>,
 ) {

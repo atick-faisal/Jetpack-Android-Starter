@@ -2,7 +2,7 @@
 
 Companion goals, findings, and recovery map: [DOC_FIX_PLAN.md](DOC_FIX_PLAN.md).
 
-Status: DF-00–DF-06 complete; DF-07–DF-15 pending. Checked items identify completed work in the records below. Reviewed base: `1c2103890d16f81f6c6ae4c2d8626281b841e417`.
+Status: DF-00–DF-07 complete; DF-08–DF-15 pending. Checked items identify completed work in the records below. Reviewed base: `1c2103890d16f81f6c6ae4c2d8626281b841e417`.
 Reviewed head: `0fb7882982cfefd55df300e06549731c6fbb33bb` ([PR #647](https://github.com/atick-faisal/Jetpack-Android-Starter/pull/647)).
 
 Complete each task by recording the changed paths, verification result, and any unresolved follow-up
@@ -1130,28 +1130,102 @@ update was performed. Spotless apply remains required before a later commit.
 
 Depends on: DF-02. Scope: `docs/state-management.md`, `StatefulComposable.kt`, linked ViewModel KDoc.
 
-- [ ] Correct the update-function table: `updateState` replaces `data` synchronously via its receiver
+- [x] Correct the update-function table: `updateState` replaces `data` synchronously via its receiver
   lambda; `updateStateWith` replaces it after a successful Result; `updateWith` preserves it.
-- [ ] Describe returned failure handling separately from thrown exceptions/cancellation. Remove
+- [x] Describe returned failure handling separately from thrown exceptions/cancellation. Remove
   claims that helpers automatically catch everything or reset loading on every possible exit.
-- [ ] Explain the loading check's actual call assumptions, dropped actions, and suspended-operation
+- [x] Explain the loading check's actual call assumptions, dropped actions, and suspended-operation
   snapshot behavior. Give readers guidance for independent operations and edits during loading,
   using an explicitly labeled extension if the template does not implement it.
-- [ ] Document subscription/restart behavior from DF-02 and show an appropriate test pattern that
+- [x] Document subscription/restart behavior from DF-02 and show an appropriate test pattern that
   actively collects `stateInDelayed`; do not teach that a `.value` assertion always exercises it.
-- [ ] Replace exactly-once delivery guarantees with the actual `OneTimeEvent` consumption contract;
+- [x] Replace exactly-once delivery guarantees with the actual `OneTimeEvent` consumption contract;
   align error/snackbar and navigation explanations with the DF-02 outcome.
-- [ ] Fix the save example after DF-02 disposition. Clearly show how the repository Result affects
+- [x] Fix the save example after DF-02 disposition. Clearly show how the repository Result affects
   the success event, or identify the current limitation; do not advertise the ignored Result as safe.
-- [ ] Keep raw price input guidance, but explain parsing/formatting separately. Verify edge-case
+- [x] Keep raw price input guidance, but explain parsing/formatting separately. Verify edge-case
   examples such as `1.` against the actual parser instead of claiming every issue is parse failure.
-- [ ] Remove fabricated Posts/User.EMPTY demonstrations and blanket “nullable fields are bad” advice.
+- [x] Remove fabricated Posts/User.EMPTY demonstrations and blanket “nullable fields are bad” advice.
   Explain renderable initial state and legitimate optional data using current screen models.
-- [ ] Reduce duplicate helper tutorials in KDoc; retain callable contracts, relevant examples,
+- [x] Reduce duplicate helper tutorials in KDoc; retain callable contracts, relevant examples,
   parameters, and resolvable API links. Put longer lifecycle explanations in the guide.
 
 Accept: a reader can select an update function, handle a failed operation, and test a collected
 ViewModel state without relying on unsupported lifecycle/error guarantees.
+
+### DF-07 completion record
+
+Completed 2026-10-16 against clean starting revision `7aaee2d2b` on `fix/docs-v3`.
+No executable behavior, API, dependency, schema, or configuration changed.
+
+Changed paths:
+
+- `docs/state-management.md`.
+- State/helper KDoc and comments in `core/ui/src/main/kotlin/dev/atick/core/ui/utils/StatefulComposable.kt`.
+- Event and sharing KDoc in `core/android/src/main/kotlin/dev/atick/core/utils/OneTimeEvent.kt`
+  and `core/android/src/main/kotlin/dev/atick/core/extensions/FlowExtensions.kt`.
+- Home/Item ViewModel KDoc and directly related comments in
+  `feature/home/src/main/kotlin/dev/atick/feature/home/ui/home/HomeViewModel.kt` and
+  `feature/home/src/main/kotlin/dev/atick/feature/home/ui/item/ItemViewModel.kt`.
+- This execution record. Generated API/site output and example harnesses are not tracked.
+
+Coverage and decisions:
+
+- Corrected helper selection, synchronous replacement, returned Result handling, uncaught
+  exception/cancellation cleanup limits, launch-time overlap, dropped calls, and suspended snapshots.
+  Restored independent-operation, data/whole-state reset, optional-field, and optimistic-update
+  guidance. Extensions and their concurrency/rollback responsibilities are labeled explicitly.
+- Explained WhileSubscribed upstream lifetimes separately from ViewModel-owned repository jobs,
+  including collector accumulation on restart. Added a complete active-collection Item input test
+  with imports, MainDispatcherRule, Turbine, and a constructor-supplied fake.
+- Replaced delivery guarantees with at-most-once consumption, null-content and competing-consumer
+  behavior, callback return handling, reproduced snackbar cancellation/replacement limits, and
+  the separately source-reviewed discarded-composition risk. Navigation consumption is described
+  separately from its completion and from Item's current failed-save behavior.
+- Preserved current Item save/load limitations and linked the bounded runtime follow-ups. The guide
+  presents a proposed Result.map save correction, not an already-applied fix. Raw text, parsing,
+  zero fallback, and missing price validation are distinguished; trailing-decimal parsing is verified.
+- Replaced duplicate fictional helper tutorials with callable contracts and real API examples.
+  Removed unresolved cross-module event KDoc links and Route-wrapper instructions in edited comments.
+  The DF-00 recovery topics owned here are covered by the guide's helper, lifecycle, reset,
+  extension, event, and testing sections. Full feature walkthrough/module-reference repair remains
+  with its later owners.
+
+Verification:
+
+- `./gradlew :core:ui:testDebugUnitTest :core:android:testDebugUnitTest
+  :feature:home:testDebugUnitTest check spotlessCheck dokkaGeneratePublicationHtml
+  --init-script gradle/init.gradle.kts --no-configuration-cache` — BUILD SUCCESSFUL;
+  1,417 actionable tasks, 316 executed, 3 from cache, 1,098 up-to-date. Debug XML reports:
+  UI 27, Android utilities 38, Home 11 tests; all 76 have zero failures/errors/skips.
+  Spotless emitted its formatter-resolution notice for StatefulComposable.kt but both check tasks
+  passed. Dokka reported unresolved references in unchanged files, including UI components,
+  CoroutineUtils, Settings and Firebase references; none identify an edited source file. These
+  outstanding reference repairs remain with the later module/KDoc cleanup tasks.
+- Extracted the guide's complete test and proposed save method into `/tmp/df07-examples`, wired
+  only Kotlin's `debugUnitTest` source set using `/tmp/df07-examples.init.gradle`, and ran
+  `./gradlew :feature:home:testDebugUnitTest --tests '*ItemInputExampleTest'
+  --tests '*ProposedSaveExampleTest' --init-script /tmp/df07-examples.init.gradle
+  --no-configuration-cache` — BUILD SUCCESSFUL. Both tests passed: raw trailing-decimal text,
+  returned save success/failure and navigation/error/loading outcomes, plus `1.` and `12e` parsing.
+  Initial harness attempts failed while configuring the included build/source-set names; the final
+  isolated run compiled and exercised both examples. No test or example was added to production.
+- Assembled real Dokka output and the README homepage using the build guide's procedure;
+  `.venv/bin/python -m mkdocs build --strict` passed after the final guide edit. Existing Material
+  notice and homepage-not-in-nav informational message remain.
+- Regenerated API output after the final consumption-order wording correction with
+  `./gradlew dokkaGeneratePublicationHtml spotlessCheck --init-script gradle/init.gradle.kts
+  --no-configuration-cache` — BUILD SUCCESSFUL; 456 actionable tasks, 13 executed, 443 up-to-date.
+  Reassembled the site and repeated the strict MkDocs build successfully.
+- Inspected the guide's comparison table and the generated updateStateWith API contract in Chrome.
+  Shortened table labels after visual review; inspected the final table, worked test, and event API
+  page. All 125 local guide links/fragment references resolve against the generated site.
+- Compared executable Kotlin token streams against HEAD while preserving string literals: all
+  five changed Kotlin files differ only in comments/KDoc. `git diff --check` passed.
+
+Runtime follow-ups remain unchanged: Async state lifecycle, Observation lifetime, Event delivery,
+and Item failure handling. No runtime fix, commit, push, deployment, or external update was performed.
+Spotless apply remains required before a later commit.
 
 ## DF-08 — Turn the feature tour into a usable walkthrough
 
