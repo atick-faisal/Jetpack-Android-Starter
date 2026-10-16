@@ -3,6 +3,32 @@
 How the project is built, kept in style, guarded against regressions, and shipped. For the module
 graph and the two-layer design these tools build on top of, see [Architecture](architecture.md).
 
+## Command reference
+
+Run these commands from the repository root. Start with the JDK 21 and Android SDK setup in
+[Getting Started](getting-started.md). Gradle downloads missing dependencies on the first run.
+
+| Task | Command | Prerequisite / result |
+|---|---|---|
+| Build debug APK | `./gradlew assembleDebug` | `app/build/outputs/apk/debug/app-debug.apk` |
+| Install debug app | `./gradlew installDebug` | Connected device or running emulator; launch the app afterward |
+| Unit tests | `./gradlew test` | Module reports under `<module>/build/reports/tests/`; includes Robolectric tests |
+| One module's unit tests | `./gradlew :feature:home:testDebugUnitTest` | HTML report in `feature/home/build/reports/tests/testDebugUnitTest/` |
+| Device tests | `./gradlew connectedAndroidTest` | Device/emulator visible to `adb devices`; reports under `<module>/build/reports/androidTests/connected/` |
+| Custom lint tests | `./gradlew :lint:test` | Report in `lint/build/reports/tests/test/` |
+| Android lint | `./gradlew lint` | Reports under `<module>/build/reports/` |
+| Convention plugin checks | `./gradlew :build-logic:convention:check` | Checks the included build's own code |
+| Format / check format | `./gradlew spotlessApply --init-script gradle/init.gradle.kts --no-configuration-cache` / `./gradlew spotlessCheck --init-script gradle/init.gradle.kts --no-configuration-cache` | See [Spotless](#spotless-via-an-init-script) for scope |
+| API documentation | `./gradlew dokkaGeneratePublicationHtml` | `build/dokka/html/index.html` |
+| Dependency baseline check | `./gradlew :app:dependencyGuard` | Compares release runtime dependencies with `app/dependencies/releaseRuntimeClasspath.txt` |
+| APK badging check | `./gradlew :app:checkReleaseBadging` | Builds release APK and compares badging with `app/release-badging.txt` |
+| Baseline profile / benchmark | See [Baseline profiles](#baseline-profiles) | Managed emulator and SDK system image required |
+| Signed release APK / AAB | `./gradlew assembleRelease` / `./gradlew bundleRelease` | Configure [release signing](getting-started.md#release-build-setup); outputs in `app/build/outputs/apk/release/` / `app/build/outputs/bundle/release/` |
+
+Regenerate guard files only after reviewing an intentional dependency or manifest change; the
+[guardrail sections](#build-guardrails) explain the update tasks. Use a focused module task while
+iterating; a routine build does not require `clean`.
+
 ## Convention plugins
 
 Every module applies build configuration through one of seven convention plugins in
@@ -24,13 +50,49 @@ themselves: `configureKotlinAndroid`, `configureAndroidCompose`, `configureAndro
 `configureAndroidTest`, `configureResourcePrefix`, `configureBadgingTasks`,
 `configureGradleManagedDevices`.
 
-`gradle/libs.versions.toml` is the single source of truth for every dependency and plugin version in
-the project — a new library or plugin gets a `[versions]` entry, a `[libraries]`/`[plugins]` alias,
-then a reference in the consuming `build.gradle.kts`, never a hardcoded version string.
+### Apply or extend the build configuration
 
-To add a new convention plugin: write the class in `build-logic/convention/src/main/kotlin/`,
-register it in `build-logic/convention/build.gradle.kts`'s `gradlePlugin { plugins { ... } }` block,
-then add a `jetpack-*` alias to `libs.versions.toml` so modules can apply it by ID.
+A Compose feature module applies the existing UI, Hilt and documentation aliases, as
+`feature/home/build.gradle.kts` does:
+
+```kotlin
+plugins {
+    alias(libs.plugins.jetpack.ui.library)
+    alias(libs.plugins.jetpack.dagger.hilt)
+    alias(libs.plugins.jetpack.dokka)
+}
+```
+
+Use `jetpack.library` for a non-UI Android library. These aliases resolve to the convention plugins
+above; module-specific configuration still belongs in the module's `android` and `dependencies`
+blocks. Follow the [feature guide](guide.md) for module registration and dependencies.
+
+For an approved new dependency, add its version to `[versions]` and alias to `[libraries]` in
+`gradle/libs.versions.toml`, then consume the generated accessor:
+
+```kotlin
+// Existing aliases in core/network/build.gradle.kts:
+dependencies {
+    implementation(platform(libs.okhttp.bom))
+    implementation(libs.okhttp.core)
+}
+```
+
+A BOM supplies versions for its member libraries; do not assign competing member versions.
+For a new external Gradle plugin, add a `[plugins]` alias. The catalog owns library and plugin
+versions used through these aliases; the Spotless init script and GitHub workflows also contain
+explicit tool versions. Editing prose does not move or update them.
+
+`.github/renovate.json` extends `config:recommended`, `group:all`, `:dependencyDashboard`, and
+`schedule:daily`. When adopting the template, enable the Renovate GitHub App for your repository
+and review its onboarding/dashboard and grouped updates. No Dependabot configuration is supplied.
+
+Discuss new dependencies, modules, convention-plugin changes, SDK/compiler upgrades and formatting
+configuration changes before implementing them. To extend a convention plugin after agreement,
+edit its class/shared helpers in `build-logic/convention/src/main/kotlin/`; a new plugin also needs
+registration in `build-logic/convention/build.gradle.kts` and a catalog alias. Run the convention
+checks and affected consumer build afterward. Root-relative paths in shared build logic use
+`isolated.rootProject.projectDirectory` to support Isolated Projects.
 
 ### Compose compiler stability config
 
@@ -44,37 +106,45 @@ models:
 dev.atick.data.model.**
 ```
 
-Wired into every Compose module via `AndroidCompose.kt:88-90`
-(`stabilityConfigurationFiles.add(...)`), so recomposition skipping works for model types the
-compiler can't otherwise infer stability for across module boundaries.
+Every Compose module reads this file through `AndroidCompose.kt`
+(`stabilityConfigurationFiles.add(...)`). The configuration lets the compiler treat matching types
+as stable across module boundaries; it does not verify their immutability.
 
 ## Code quality
 
 ### Spotless, via an init script
 
-Spotless is applied from `gradle/init.gradle.kts`, a Gradle **init script**, not a `plugins {}` block
-— it's injected into every subproject from `rootProject { subprojects { apply<SpotlessPlugin>() } }`
-rather than declared per-module. The file's own comment is the reason on record:
-
-```kotlin
-// TODO: Verify Spotless task discoverability in Gradle 9.4.0 (Issue #580)
-// Note: Spotless tasks may not appear in standard task listings but still execute correctly
-```
-
-> [!WARNING]
-> Because Spotless is never applied through `plugins {}`, `./gradlew tasks` won't list
-> `spotlessApply`/`spotlessCheck`. Both need the init script passed explicitly:
-> `./gradlew spotlessCheck --init-script gradle/init.gradle.kts`.
+Spotless is applied by `gradle/init.gradle.kts` when that init script is passed explicitly.
+Without it, the normal build does not register Spotless tasks. With it, the script applies the
+plugin to subprojects and defines these targets relative to each project's directory:
 
 | Target | Files | License header | Ruleset |
 |---|---|---|---|
-| `kotlin` | `**/*.kt` | `spotless/copyright.kt` | ktlint 1.6.0, `android=true`, custom rules `io.nlopez.compose.rules:ktlint:0.6.3` |
-| `groovy` | `**/*.gradle` | `spotless/copyright.gradle` | — |
-| `kts` | `**/*.kts` | `spotless/copyright.kts` | — |
-| `xml` | `**/*.xml` | `spotless/copyright.xml` | — |
+| `kotlin` | `**/*.kt` | `spotless/copyright.kt` | ktlint 1.6.0, `android=true`, Compose rules 0.6.3 |
+| `groovy` | `**/*.gradle` | `spotless/copyright.gradle` | Header insertion |
+| `kts` | `**/*.kts` | `spotless/copyright.kts` | Header insertion |
+| `xml` | `**/*.xml` | `spotless/copyright.xml` | Header insertion |
 
-`./gradlew spotlessApply --init-script gradle/init.gradle.kts` applies fixes; the `.run/` configs
-below run both with `--no-configuration-cache` in addition.
+Each target excludes files under `build/`. Markdown is not a target, and the root project's own
+files are outside the `subprojects` block. The root `spotlessCheck` invocation checks main-build
+subprojects, including intermediate grouping projects; it does not run the included build's checks.
+
+Task discovery works when the init script is present:
+`./gradlew tasks --all --init-script gradle/init.gradle.kts --no-configuration-cache`.
+The included build also registers Spotless tasks when addressed explicitly, but its check currently
+fails: header paths resolve to the missing `build-logic/spotless/copyright.*` templates. A successful
+root check therefore does not establish formatting coverage for convention-plugin sources. Fixing
+that init-script limitation is a separate build configuration change.
+
+```bash
+./gradlew spotlessApply --init-script gradle/init.gradle.kts --no-configuration-cache
+./gradlew spotlessCheck --init-script gradle/init.gradle.kts --no-configuration-cache
+```
+
+To personalize copyright headers, edit the holder/year in all four `spotless/copyright.*`
+templates, run the apply command, and review the resulting source diff before checking it.
+The XML template is an XML comment; the Kotlin/Gradle templates are block comments. Preserve those
+wrappers and the init script's header delimiters. Changing targets or rules needs separate agreement.
 
 ### Custom lint (`:lint`)
 
@@ -115,7 +185,6 @@ Fails the build when the release runtime classpath drifts from a committed basel
 transitive dependency has to be reviewed rather than arriving unnoticed:
 
 ```kotlin
-// app/build.gradle.kts:177-179
 // Regenerate with: ./gradlew :app:dependencyGuardBaseline
 dependencyGuard {
     configuration("releaseRuntimeClasspath")
@@ -135,10 +204,12 @@ instrumented tests and baseline-profile generation don't depend on whatever's pl
 | Pixel 6 | 33 | `aosp` | `pixel6Api33` |
 | Pixel 4 | 30 | `aosp-atd` (smaller, automated-test-device) | `pixel4Api30` |
 
-Pixel 6's API 33 is required, not arbitrary — the baseline profile format changed and an older image
-produces one the installer silently ignores. `dev.atick.test` (`:benchmarks` only) registers these
-devices; standard AGP task naming applies, e.g.
-`./gradlew :benchmarks:pixel6Api33BenchmarkReleaseAndroidTest`.
+`dev.atick.test` registers these devices in `:benchmarks`. Its baseline-profile configuration selects
+`pixel6Api33` and disables connected devices. API 33 is the configured generation environment; this
+is not a minimum API requirement for apps consuming profiles. See the current
+[profile generation requirements](https://developer.android.com/topic/performance/baselineprofiles/create-baselineprofile).
+Install the corresponding SDK emulator/system image and enable hardware virtualization. Gradle can
+download missing device components; running these tasks boots an emulator.
 
 ### Baseline profiles
 
@@ -157,6 +228,44 @@ baselineProfile {
 > `automaticGenerationDuringBuild = false` means the profile is **not** regenerated automatically —
 > every build would otherwise wait for an emulator. Run `./gradlew :app:generateReleaseBaselineProfile`
 > by hand whenever the app's startup path changes.
+
+Generate the startup profile, then measure the two compilation modes in `StartupBenchmark`:
+
+```bash
+./gradlew :app:generateReleaseBaselineProfile
+./gradlew :benchmarks:pixel6Api33BenchmarkReleaseAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=dev.atick.benchmarks.StartupBenchmark
+```
+
+The class filter keeps the measurement run separate from `BaselineProfileGenerator`. Generation
+writes profile sources under `app/src/release/generated/baselineProfiles/`; review those files when
+regenerating. Managed-device HTML results are under
+`benchmarks/build/reports/androidTests/managedDevice/`; benchmark JSON/traces are in the corresponding
+`benchmarks/build/outputs/managed_device_android_test_additional_output/` tree. Compare
+`timeToInitialDisplayMs` for `startupNoCompilation` and `startupWithBaselineProfile`; the latter
+requires a packaged profile. Emulator results help check the harness; use a physical device for
+representative performance measurements. This generator covers app startup only.
+
+### Compose compiler metrics and reports
+
+Compile a UI module with both opt-in properties:
+
+```bash
+./gradlew :feature:home:compileReleaseKotlin -PenableComposeCompilerMetrics=true -PenableComposeCompilerReports=true
+```
+
+`AndroidCompose.kt` enables each destination only when its property is true. Outputs are relative
+to the **root** build directory, retaining the module path: this command writes to
+`build/feature/home/compose-metrics/` and `build/feature/home/compose-reports/`, not
+`feature/home/build/`. Other UI modules use the same layout. If an up-to-date compile has no output,
+repeat the focused command with `--rerun-tasks`.
+
+Read the metrics JSON for aggregate counts, the composables text/CSV reports for inferred stability
+and restartable/skippable functions, and the classes report for unstable fields. Compare reports
+from the same variant before and after a change. These are compiler decisions, not runtime timings;
+use Android Studio's Layout Inspector for recomposition inspection and CPU/System Trace profiling
+for measured work. To inspect app size, build a release APK and open it in Studio's APK Analyzer.
+Release shrinking is already enabled; investigate release-only failures with Logcat and
+`app/build/outputs/mapping/release/mapping.txt` before changing keep rules.
 
 ## Local dev
 
@@ -180,6 +289,14 @@ baselineProfile {
 | Generate Docs | `:dokkaGeneratePublicationHtml` |
 | Signing Report | `signingReport` |
 
+### Local build configuration
+
+The REST client reads `BuildConfig.BACKEND_URL`. Supply `BACKEND_URL=https://your-backend.example/`
+in root `local.properties` when adopting a backend, with a trailing slash as Retrofit requires.
+The secrets plugin uses `secrets.defaults.properties` as its fallback file; see
+[Firebase setup](firebase.md) for the separate `GOOGLE_WEB_CLIENT_ID` input. These values become
+build configuration, so do not use them to embed server credentials in the app.
+
 ### Gradle build performance
 
 Set in `gradle.properties`: `org.gradle.parallel=true`, `org.gradle.caching=true`,
@@ -187,36 +304,193 @@ Set in `gradle.properties`: `org.gradle.parallel=true`, `org.gradle.caching=true
 `org.gradle.jvmargs=-Xmx8g -XX:+UseParallelGC -XX:MaxMetaspaceSize=2g`.
 
 Develocity build scans (`settings.gradle.kts:47-56`) publish only when a `CI` environment variable is
-set, so local builds never prompt for scan publication.
+set, so automatic publication is disabled when `CI` is absent or empty. A nonempty value such as `CI=false`
+still satisfies that predicate; an explicit `--scan` request is a separate choice.
 
 ## CI/CD
 
 | Workflow | Trigger | Does |
 |---|---|---|
-| `ci.yml` (🚀 Build & Validate) | Pull request | `lint` job: Spotless check, `:build-logic:convention:check`. `build` job: Dependency Guard, unit tests, `:lint:test`, project build, Android Lint (uploaded to Code Scanning), APK badging check |
+| `ci.yml` (🚀 Build & Validate) | Pull request; `repository_dispatch` type `libs-versions-updated` | `lint` job: Spotless check, `:build-logic:convention:check`. `build` job: Dependency Guard, unit tests, `:lint:test`, project build, Android Lint (uploaded to Code Scanning), APK badging check |
 | `cd.yml` (🚀 Release APK) | Tag push `v*.*.*` | `lint` → `build` (assembles the signed release) → `github-release` and `play-store-release` (Fastlane) |
 | `docs.yml` (📚 Documentation Deployment) | Push to `main` | Builds and deploys the MkDocs site |
 | `claude.yml` (Claude Code) | Issue/PR comments and reviews | Claude Code GitHub Action automation — not part of the build pipeline |
 
-`cd.yml` requires five repository secrets: `GOOGLE_SERVICES`, `KEYSTORE`, `KEYSTORE_PROPERTIES`,
-`GOOGLE_WEB_CLIENT_ID`, `PLAY_STORE_JSON`.
-
 ## Release
 
-`fastlane/Fastfile` defines three lanes under `platform :android`:
+### Prepare the application and signing
 
-| Lane | Does |
+1. Set the adopted application's ID in `app/build.gradle.kts` and match it in Firebase, Play Console
+   and `fastlane/Appfile`. The supplied Appfile still names `dev.atick.compose`.
+2. Update `majorUpdateVersion`, `minorUpdateVersion`, and `patchVersion` in the app build file.
+   The current formula is `major * 10000 + minor * 100 + patch`; verify that the resulting
+   `versionCode` exceeds every version already uploaded to Play. A Git tag does not set the version.
+3. Follow [release signing setup](getting-started.md#release-build-setup). Keep the established
+   signing/upload key for updates. For the workflow's `app/key.jks`, set `storeFile=key.jks` in the
+   root signing properties: the build resolves this path relative to `app`, not the repository root.
+4. Build and test the signed release locally, review `CHANGELOG.md`, and run the checks listed in
+   [Contributing](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/main/CONTRIBUTING.md).
+   Keep signing material and service-account keys out of commits.
+
+> [!CAUTION]
+> Without `keystore.properties`, the release build falls back to the debug key. Build success alone
+> does not establish that an APK or AAB is correctly signed for publication.
+
+### Play access and Bundler
+
+Use a managed Ruby environment with Bundler; the release workflow currently selects Ruby 4.0.6,
+while `Gemfile.lock` records Bundler 2.7.2 and Fastlane 2.237.0. From the repository root:
+
+```bash
+bundle install
+```
+
+Use `bundle exec` for later Fastlane commands so they use the lockfile. Do not run `fastlane init`
+over this repository's existing Appfile/Fastfile. See [Fastlane installation](https://docs.fastlane.tools/getting-started/android/setup/)
+for Ruby/Bundler setup.
+
+For Play access, create the app in Play Console and complete an initial manual build upload before
+using Supply. Enable the Google Play Developer API in a Cloud project, create a service account,
+and invite its email in Play Console's Users and permissions with access to the intended app and
+release track. Google no longer requires linking the developer account to a Cloud project; follow
+[Google's API setup](https://developers.google.com/android-publisher/getting_started) for current
+account steps. This workflow uses a downloaded service-account JSON key at
+`fastlane/play-store.json`; Firebase's `google-services.json` is a different file.
+
+The Appfile uses this shape; replace its supplied `dev.atick.compose` package with your adopted ID.
+Run Fastlane from the repository root so the key path resolves correctly:
+
+```ruby
+json_key_file("fastlane/play-store.json")
+package_name("your.application.id")
+```
+
+After supplying your key and matching package name, these commands validate access and fetch the
+existing listing; they do not publish a release:
+
+```bash
+bundle exec fastlane run validate_play_store_json_key json_key:fastlane/play-store.json
+bundle exec fastlane supply init
+```
+
+Supply downloads metadata into `fastlane/metadata/android/<locale>/`. Review titles/descriptions
+there and add images/screenshots explicitly; the initial download does not retrieve existing
+screenshots or videos. See [Supply setup and metadata](https://docs.fastlane.tools/actions/supply/).
+
+### Repository secrets
+
+In the adopted GitHub repository's **Settings → Secrets and variables → Actions**, add these
+repository secrets. The table follows `.github/workflows/cd.yml`; use your own files and values.
+
+| Secret | Stored format | Workflow destination |
+|---|---|---|
+| `GOOGLE_SERVICES` | Base64 of Android Firebase configuration JSON | `app/google-services.json` |
+| `KEYSTORE` | Base64 of the binary signing keystore | `app/key.jks` |
+| `KEYSTORE_PROPERTIES` | Base64 of signing properties (`storeFile=key.jks`, `storePassword`, `keyAlias`, `keyPassword`) | Root `keystore.properties` |
+| `GOOGLE_WEB_CLIENT_ID` | Plain web OAuth client ID | `GOOGLE_WEB_CLIENT_ID=…` in root `local.properties` |
+| `PLAY_STORE_JSON` | Base64 of the Play service-account JSON key | `fastlane/play-store.json` in the Play job |
+
+To encode a file on macOS or Linux without wrapped lines, use the following pattern locally with
+your own input/output paths, then paste the output into the matching secret:
+
+```bash
+base64 < /path/to/input-file | tr -d '\r\n' > /path/to/encoded-file
+```
+
+Repeat for the four encoded inputs; paste the web client ID directly. Base64 is an encoding, not
+encryption: treat encoded copies like the originals. The workflow decodes those four inputs and
+writes the client ID as text. Both build jobs reconstruct their own signing/Firebase inputs;
+the Play job additionally reconstructs the service-account key.
+
+### Lanes, metadata, and publication
+
+| Lane | Current behavior |
 |---|---|
-| `test` | `gradle(task: "test")` |
-| `beta` | `gradle(task: "assembleRelease")`, uploads to Crashlytics |
-| `deploy` | `gradle(task: "bundleRelease")`, builds a changelog from git commits, `upload_to_play_store` |
+| `test` | Runs Gradle `test` |
+| `beta` | Legacy lane calling `assembleRelease` then `crashlytics`; not a working distribution setup for the locked Fastlane version |
+| `deploy` | Builds an AAB with `bundleRelease`, generates English release notes from five commits, then calls `upload_to_play_store(validate_only: false)` |
 
-A tag push (`v*.*.*`) drives the release end to end through `cd.yml`'s `play-store-release` job.
-Fastlane's own setup and lane options are documented in the tool-generated
-[`fastlane/README.md`](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/main/fastlane/README.md) — not duplicated here.
+The legacy Crashlytics Beta action is not present in Fastlane 2.237.0. Firebase Crashlytics crash
+reporting handles crash reports; a future distribution workflow would need separate
+configuration, such as [Firebase App Distribution](https://firebase.google.com/docs/app-distribution/android/distribute-fastlane).
+Do not use the supplied `beta` lane as release instructions.
+
+`deploy` overwrites `fastlane/metadata/android/en-US/changelogs/default.txt`. Hand-editing that file
+before running the lane will lose the edits. Supply prefers `<versionCode>.txt` over `default.txt`
+for that version; other locale notes and listing assets also need review. Changelog files are
+currently gitignored, so local notes will not reach a tag checkout unless you deliberately change
+how they are supplied. The release checkout also uses the default shallow history: the lane's
+five-commit request does not guarantee five commits are available there.
+
+> [!WARNING]
+> The supplied deploy lane performs a real upload. With no track/status override, the locked
+> Supply defaults are **production** and **completed**. Metadata and images are uploaded too when
+> supplied. Choose and configure your release policy before triggering this workflow; the lane is
+> not a validation-only or internal-testing lane.
+
+Once the adopted repository is configured and the release is reviewed, create a version tag such
+as `v1.3.1` on that revision and push that tag to trigger `cd.yml`. Tag publication is an explicit
+release action. The workflow then:
+
+1. Runs formatting validation and builds a signed APK.
+2. Starts two separate jobs after the APK build: `github-release` attaches that APK and uses the
+   whole root `CHANGELOG.md` as the release body; `play-store-release` rebuilds an AAB with Fastlane
+   and uploads it to Play. Neither publication job waits for the other to succeed.
+
+For a deliberate local Play publication with the same configured lane, the command is
+`bundle exec fastlane android deploy`. Generated `fastlane/README.md` lists lane commands; this
+section supplies the setup and consequences.
+
+If a release fails, inspect the failed job first. Base64/JSON errors point to secret format;
+signing errors to the decoded properties, app-relative key path or alias; Play permission errors
+to API enablement and app access; duplicate-version errors to `versionCode`. Check listing/draft-app
+requirements in Play Console for metadata rejection. The APK build has a 45-minute timeout; a
+successful GitHub release does not establish that Play publication succeeded.
+
+## Local documentation preview
+
+Run from the repository root after completing Android/JDK setup. Python 3.14 matches `docs.yml`.
+The packages below mirror that workflow; only the admonitions plugin is pinned there.
+
+```bash
+python3 -m venv .venv
+.venv/bin/python -m pip install mkdocs mkdocs-material mkdocs-github-admonitions-plugin==0.1.1 Pygments
+./gradlew dokkaGeneratePublicationHtml
+```
+
+Assemble the real API output and generated homepage. This portable transformation removes `docs/`
+only from Markdown link destinations, preserving external URLs, text and fragment suffixes:
+
+```bash
+.venv/bin/python - <<'PYTHON'
+from pathlib import Path
+import re
+import shutil
+
+api = Path("docs/api")
+api.mkdir(parents=True, exist_ok=True)
+shutil.copytree("build/dokka/html", api, dirs_exist_ok=True)
+readme = Path("README.md").read_text(encoding="utf-8")
+index = re.sub(r"(\]\()docs/", r"\1", readme)
+Path("docs/index.md").write_text(index, encoding="utf-8")
+PYTHON
+.venv/bin/python -m mkdocs build --strict
+.venv/bin/python -m mkdocs serve
+```
+
+Open the server URL printed in the terminal (normally `http://127.0.0.1:8000/`) and stop it with
+Ctrl+C. Open `/` for the README homepage and `/api/` for Dokka. The current nav has no Home entry;
+MkDocs may report that the generated index is omitted from navigation. The workflow uses a broader
+`sed` replacement; site assembly/CI consistency and navigation repairs are tracked separately.
+
+`build/dokka/html/`, `docs/api/`, `docs/index.md`, `site/` and `.venv/` are generated/local artifacts
+covered by `.gitignore`. Do not commit them. Copying API output merges into the destination; when
+checking removed APIs, clear only the generated `docs/api/` directory before copying to avoid stale
+pages. Authored guides remain in `docs/*.md`. Run the strict build again after editing; serving a
+page alone is not validation. These commands build and preview locally; deployment is separate.
 
 ## Further reading
 
 - [Architecture](architecture.md) — the module graph these plugins build
 - [Getting Started](getting-started.md) — first build on a fresh clone
-- [Contributing](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/main/CONTRIBUTING.md) — the comment and alert conventions this repo follows
+- [Contributing](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/main/CONTRIBUTING.md) — contribution and verification guidance

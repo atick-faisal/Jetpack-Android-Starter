@@ -2,7 +2,7 @@
 
 Companion goals, findings, and recovery map: [DOC_FIX_PLAN.md](DOC_FIX_PLAN.md).
 
-Status: DF-00–DF-03 complete; DF-04–DF-15 pending. Checked items identify completed work in the records below. Reviewed base: `1c2103890d16f81f6c6ae4c2d8626281b841e417`.
+Status: DF-00–DF-04 complete; DF-05–DF-15 pending. Checked items identify completed work in the records below. Reviewed base: `1c2103890d16f81f6c6ae4c2d8626281b841e417`.
 Reviewed head: `0fb7882982cfefd55df300e06549731c6fbb33bb` ([PR #647](https://github.com/atick-faisal/Jetpack-Android-Starter/pull/647)).
 
 Complete each task by recording the changed paths, verification result, and any unresolved follow-up
@@ -856,35 +856,101 @@ explanations. No commit, push, deployment, or external issue/comment was made.
 
 Depends on: DF-00–01. Scope: `docs/build-and-tooling.md`; root README navigation.
 
-- [ ] Restore a compact command reference for build/install, unit and device tests, formatting,
+- [x] Restore a compact command reference for build/install, unit and device tests, formatting,
   Dokka, Dependency Guard, APK badging, and baseline profiles; give prerequisites and output paths.
-- [ ] Restore release secret formats from `cd.yml`: `GOOGLE_SERVICES`, `KEYSTORE`,
+- [x] Restore release secret formats from `cd.yml`: `GOOGLE_SERVICES`, `KEYSTORE`,
   `KEYSTORE_PROPERTIES`, and `PLAY_STORE_JSON` are base64-decoded; `GOOGLE_WEB_CLIENT_ID` is written
   as plain text. Map each to its actual destination, including `app/key.jks` and matching `storeFile`.
-- [ ] Restore Play service-account setup references, `fastlane/Appfile` package/key path, Bundler
+- [x] Restore Play service-account setup references, `fastlane/Appfile` package/key path, Bundler
   workflow, actual metadata/changelog behavior, version-code preparation, and tag-triggered release
   steps. Verify current provider requirements with official sources. Use placeholders for secrets.
-- [ ] Describe GitHub APK publication and Play AAB upload as separate jobs. Inspect the legacy `beta`
+- [x] Describe GitHub APK publication and Play AAB upload as separate jobs. Inspect the legacy `beta`
   lane before presenting it as usable; do not treat generated `fastlane/README.md` as a setup guide.
-- [ ] Restore Compose metrics/report flags and actual output layout from `AndroidCompose.kt`:
+- [x] Restore Compose metrics/report flags and actual output layout from `AndroidCompose.kt`:
   `enableComposeCompilerMetrics`, `enableComposeCompilerReports`, and root
   `build/<module>/compose-metrics` / `compose-reports`. Show how to inspect results.
-- [ ] Retain baseline profile generation and measurement instructions; verify managed-device task
+- [x] Retain baseline profile generation and measurement instructions; verify managed-device task
   names and required API from the configured plugin/SDK. Remove unsupported “silently ignored” claims.
-- [ ] Explain existing convention-plugin use, catalog aliases, actual Renovate setup, and approval
+- [x] Explain existing convention-plugin use, catalog aliases, actual Renovate setup, and approval
   boundaries for build changes. Correct “all versions live in the catalog”: the init script and
   workflow contain explicit tool versions. Do not move versions as part of a prose edit.
-- [ ] Explain the Spotless init script's observed scope and invocation. Remove “every Gradle
+- [x] Explain the Spotless init script's observed scope and invocation. Remove “every Gradle
   invocation” and unverified claims that the script formats the included build. Use
   `--init-script gradle/init.gradle.kts --no-configuration-cache` consistently.
-- [ ] Recover header-template customization instructions from `docs/spotless.md`, without changing
+- [x] Recover header-template customization instructions from `docs/spotless.md`, without changing
   headers or Spotless configuration as part of this task.
-- [ ] Document local site setup using the dependencies/extensions in `docs.yml` and `mkdocs.yml`:
+- [x] Document local site setup using the dependencies/extensions in `docs.yml` and `mkdocs.yml`:
   isolated Python environment, Dokka generation, API copy, README-to-index transformation, strict
   build, then preview. Explain which files are generated and ignored. Cross-check with DF-14.
 
 Accept: build/format/preview commands are usable from a clean checkout; release preparation includes
 formats and paths rather than only names. Publishing commands are documented, not executed.
+
+### DF-04 completion record
+
+Completed 2026-10-16 against working-tree base `28404fcc38c3f5f396934d50a91ad2d6ccd6b756`.
+The initial tree was clean. Changed `docs/build-and-tooling.md`, README navigation, and this record
+only; no runtime, dependency, signing, workflow, formatting configuration, or secret changes.
+
+- Restored command prerequisites/results, catalog/BOM and convention-plugin use, Renovate adoption,
+  header customization, local backend configuration, compiler report inspection, profiling and
+  release-size diagnosis. Checked aliases, run configurations and paths against current sources.
+- Restored the release setup, five secret formats/destinations, app-relative signing path, version
+  formula, Appfile, Bundler, service-account access, metadata and separate APK/AAB publication jobs.
+  [Google API setup](https://developers.google.com/android-publisher/getting_started) confirms that
+  developer-account/Cloud-project linking is no longer required. [Fastlane setup](https://docs.fastlane.tools/getting-started/android/setup/)
+  supplies the Bundler and initial metadata steps; [Supply](https://docs.fastlane.tools/actions/supply/)
+  supplies initial-upload, release-note precedence and metadata behavior. No account setup was run.
+- Downloaded Fastlane 2.237.0 to temporary storage and verified its SHA-256 against `Gemfile.lock`.
+  Inspected its packaged sources: no `crashlytics.rb` action; Supply defaults to production/completed,
+  and upload skip flags default to false. Documented the unusable legacy lane, real-upload behavior,
+  overwritten default notes, ignored changelogs and shallow-checkout history limitation.
+- Verified generation/measurement task names by Gradle task discovery and dry runs. Checked the
+  cached baseline-profile plugin 1.5.0-alpha07 sources: application profile output defaults to
+  `src/<variant>/generated/baselineProfiles`, with `saveInSrc=true` and no merge into main by default.
+  Documented the configured API 33 environment without treating it as a consumer minimum.
+- Restored the local Python/Dokka/MkDocs assembly and portable README link transformation. Added
+  README links to release preparation and local preview. Generated inputs/output remain ignored.
+
+Verification:
+
+- `./gradlew :feature:home:compileReleaseKotlin dokkaGeneratePublicationHtml
+  -PenableComposeCompilerMetrics=true -PenableComposeCompilerReports=true` — BUILD SUCCESSFUL,
+  280 actionable tasks (6 executed, 274 up-to-date). Real Dokka HTML was used for site assembly.
+- `./gradlew :feature:home:compileReleaseKotlin --rerun
+  -PenableComposeCompilerMetrics=true -PenableComposeCompilerReports=true` — reran the focused
+  compiler task to verify report generation; inspected `build/feature/home/compose-metrics/release/`
+  JSON and the classes/composables text/CSV reports under `compose-reports/`.
+- `./gradlew :benchmarks:tasks --all` and profile-generation dry run — passed. The filtered
+  `:benchmarks:pixel6Api33BenchmarkReleaseAndroidTest` and `:feature:home:testDebugUnitTest` dry run
+  also passed. No emulator was started and no profile sources were regenerated.
+- `./gradlew tasks --all spotlessCheck --init-script gradle/init.gradle.kts
+  --no-configuration-cache` — BUILD SUCCESSFUL. Tasks are discoverable with the init script;
+  the root formatting check covers main-build subprojects, not the root project's files or the
+  included build's formatting tasks.
+- Explicit included-build task discovery succeeds, but
+  `./gradlew :build-logic:convention:spotlessCheck --init-script gradle/init.gradle.kts
+  --no-configuration-cache` fails at `spotlessGroovy` because
+  `build-logic/spotless/copyright.gradle` does not exist. The guide now states this limitation.
+  A build configuration fix needs separate scope/agreement; DF-12 still owns the misleading
+  init-script source comment. Root formatting success is not presented as included-build coverage.
+- Executed the guide's exact Python assembly snippet with real API HTML. Checked that all external
+  README URLs remain unchanged and both new documentation fragments survive the transformation.
+  `mkdocs build --strict` passes. Environment: Python 3.14, MkDocs 1.6.1, Material 9.7.7,
+  admonitions plugin 0.1.1 and Pygments 2.20.0, using the existing isolated `.venv`.
+- `mkdocs serve --dev-addr 127.0.0.1:8000` started successfully; HTTP retrieval served the updated
+  guide. Inspected generated HTML: ten tables, fourteen code blocks, numbered procedures, rendered
+  alerts, and all local guide links/fragments resolving. Browser inventory was empty, so no visual
+  browser/GitHub rendering check is claimed. Material's upstream notice and the existing
+  homepage-not-in-nav informational message remain; navigation/CI repairs belong to DF-14.
+- All Bash blocks pass `bash -n`; the documented base64 pipeline round-trips placeholder bytes
+  without wrapping. `git diff --check` passes. No new unit tests are needed for these prose edits.
+
+Not run: fresh-machine dependency installation, device tests, full Android test/build checks,
+profile capture/measurement, live credential validation, signing reports, account setup or any
+release/deployment. No protected configuration was read and no commit, tag, push or external update
+was made. The included-build formatter failure is a recorded existing limitation, not a new failure
+introduced by this documentation change.
 
 ## DF-05 — Repair the architecture explanation and module map
 

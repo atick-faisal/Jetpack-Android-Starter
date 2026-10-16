@@ -93,6 +93,8 @@ template [here](https://github.com/atick-faisal?tab=repositories&q=&type=source&
 ### 🚧 Development Tools
 
 - [Build & Tooling](docs/build-and-tooling.md)
+- [Release Preparation](docs/build-and-tooling.md#release)
+- [Local Documentation Preview](docs/build-and-tooling.md#local-documentation-preview)
 - [Troubleshooting](docs/troubleshooting.md)
 
 ### [📚 API Reference](https://atick.dev/Jetpack-Android-Starter/api/)
