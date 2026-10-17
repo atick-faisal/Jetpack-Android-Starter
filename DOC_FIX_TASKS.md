@@ -2,7 +2,7 @@
 
 Companion goals, findings, and recovery map: [DOC_FIX_PLAN.md](DOC_FIX_PLAN.md).
 
-Status: DF-00–DF-08 complete; DF-09–DF-15 pending. Checked items identify completed work in the records below. Reviewed base: `1c2103890d16f81f6c6ae4c2d8626281b841e417`.
+Status: DF-00–DF-09 complete; DF-10–DF-15 pending. Checked items identify completed work in the records below. Reviewed base: `1c2103890d16f81f6c6ae4c2d8626281b841e417`.
 Reviewed head: `0fb7882982cfefd55df300e06549731c6fbb33bb` ([PR #647](https://github.com/atick-faisal/Jetpack-Android-Starter/pull/647)).
 
 Complete each task by recording the changed paths, verification result, and any unresolved follow-up
@@ -1348,24 +1348,84 @@ before a later commit.
 
 Depends on: DF-00–01. Scope: `docs/components.md`, UI/localization references.
 
-- [ ] Rewrite the opening to explain what the components provide. Put lint rules alongside guidance
+- [x] Rewrite the opening to explain what the components provide. Put lint rules alongside guidance
   for choosing/adding a component, instead of opening with a threat that the build will fail.
-- [ ] Keep the useful catalog and link to source/API details. Verify overloads, behavior, default
+- [x] Keep the useful catalog and link to source/API details. Verify overloads, behavior, default
   colors, adaptive navigation modes, image-loader/tint claims, and supported lint substitutions.
-- [ ] Remove fragile component/file counts and unsupported “used/unused” declarations, or verify
+- [x] Remove fragile component/file counts and unsupported “used/unused” declarations, or verify
   usages including calls inside other wrappers. Avoid repeated “real” as a quality claim.
-- [ ] Restore short examples for theme colors, typography, dynamic color, previewing, and creating a
+- [x] Restore short examples for theme colors, typography, dynamic color, previewing, and creating a
   component. Explain public API choices and extending `DesignSystemDetector`/its tests when relevant.
-- [ ] Restore actionable accessibility guidance: labels/decorative icons, touch interaction,
+- [x] Restore actionable accessibility guidance: labels/decorative icons, touch interaction,
   semantics, loading/error announcements, and checking customized theme contrast. Do not restore
   claims that theme colors automatically guarantee accessibility.
-- [ ] Restore the localization path: resources and prefixes, `Language`, language option UI,
+- [x] Restore the localization path: resources and prefixes, `Language`, language option UI,
   `getPreferredLanguage`, locale config, AppCompat persistence, and RTL checks.
-- [ ] Give `UiText`, permission helpers, validation utilities, and shared preview annotations useful
+- [x] Give `UiText`, permission helpers, validation utilities, and shared preview annotations useful
   examples or maintained links. Separate lint conventions from actual preview failure causes.
 
 Accept: a reader can customize or extend the UI accessibly and test previews/locales using the
 project's components, without reading the entire component implementation first.
+
+### DF-09 completion record
+
+Completed 2026-10-17 on the working tree based on
+`315e673e1602655320bd5069dbcb88a08c1ce651`. The starting tree was clean. Changed authored paths:
+`docs/components.md`, `core/ui/README.md`, and this execution record. No production API, runtime,
+resource, manifest, dependency, lint-rule or source-comment changes; no commit or publication.
+
+The guide now starts with choosing components, retains the catalog, and restores customization,
+accessibility, previews, localization, utilities, extension and performance guidance. The UI README
+links to the restored utility/preview sections and corrects its contradictory Screen/Route claim.
+
+#### Recovery coverage
+
+All DF-09-owned rows in the DF-00 ledger have destinations below. Historical examples were used
+as reader needs, not restored as current APIs.
+
+| Assigned source sections | Repaired destination / disposition |
+|---|---|
+| Components opening, selection, buttons, inputs, app bars, navigation, dividers and FAB | Catalog and Real usage; preserve current overloads and screen excerpts, label omissions. Remove counts and unverified used/unused lists. Navigation delegates to adaptive defaults; no asserted expanded-window drawer mapping. |
+| Chips, tags, icon toggles, exclusive options and tabs | Catalog, caller-owned selection explanation, and a labeled hoisted-tab excerpt in Add a shared component. Remove unsupported option-count enforcement and tag-persistence distinctions. |
+| Loaders, swipe dismissal, image loading and backgrounds | Catalog, Images and loading feedback, and Theming; distinguish visual overlay from an interaction barrier, explain effect callback scope/no undo, painter/error/preview behavior, loader configuration and theme tint. |
+| Theme colors, typography, overrides, dynamic color; tips prebuilt components/theming; FAQ customization | Theming; paired light/dark roles, actual wrapper color choices, local text/gradient/tint examples and the settings preference path. No invented button colors parameter. |
+| Accessibility, custom-component creation and organization; FAQ component selection/creation | Accessibility and Add a shared component; labeled complete retry example, caller-owned state, resource prefix, package/placement, KDoc, preview and meaningful interaction checks. Enforcement explains when detector mappings/tests need extension. |
+| Tips shared previews and preview optimization | Previews and complete component preview; independent multipreview configurations, explicit device/theme combinations, locale/font checks and render-failure diagnosis. Correct the eight-combination claim using Android's maintained preview reference. |
+| Tips multilingual support | Localization; resources → Language → option labels/order → preferred-language mapping → AppCompat locale setter/persistence → generated locale config → restart/system-picker/RTL checks. No claimed DataStore language persistence. |
+| Tips validators; core/ui README text/permission usage | Text, validation and permissions; actual nullable validators, String-backed TextFieldData, UiText resource arguments/resolution, complete lifecycle-registered permission launcher and the high-level helper's early-return/denial limitations. |
+| Components performance; FAQ Compose optimization; deleted performance stability/lists/images; tips image/loading performance | Performance checks plus Images and loading feedback; stable keys, optional mixed-list content types, stability contracts, loader behavior and links to existing compiler reports/profiling. Remove universal lambda/derived-state prescriptions and unsupported crossfade guarantees. |
+| Tips component conventions | Add a shared component and Enforcement; existing wrappers first, feature-local vs shared placement, public API choices and lint tests. Documentation build workflow remains with the already repaired build guide. |
+| Deleted performance image guidance also assigned to core/network README | Keep loader/image usage in the guide beside wrapper behavior and source location; core/network README reconciliation remains DF-11. No second image tutorial added. |
+
+#### Verification
+
+| Command / review | Result and limits |
+|---|---|
+| `./gradlew :core:ui:compileDebugKotlin` | Passed with the two complete guide examples extracted into a temporary debug Kotlin source: notification permission Activity and RetryButton/preview. Removed that source before quality checks. Partial argument/state/tab excerpts were checked against signatures and surrounding source; they are labeled as excerpts. |
+| `./gradlew dokkaGeneratePublicationHtml` | Passed; inspected generated Core UI module entry point and guide link. Generated artifacts remain ignored. |
+| Local assembly from docs/build-and-tooling.md, then `.venv/bin/python -m mkdocs build --strict` | Passed. Existing informational notice that index.md is absent from nav remains; no strict-build warnings/errors. |
+| `./gradlew spotlessCheck --init-script gradle/init.gradle.kts --no-configuration-cache check` | Passed, including repository quality gates (1,141 actionable tasks). Temporary examples were absent. No formatter apply or commit performed. |
+| `git diff --check` | Passed; only the three authored Markdown paths remain changed. |
+| Chrome inspection of locally served generated pages | Inspected components catalog/table structure, table of contents, extension code rendering and linked Core UI Dokka module. Browser rendering of documentation was exercised; no app installed or docs deployed. |
+| Preview combinations | Checked annotation definitions and Android's official multipreview documentation linked in the guide. Live Android Studio rendering was not exercised. |
+| Accessibility/theme/locale scenarios | Source and guidance inspection only. No TalkBack/Scanner, contrast measurements, large-font device run, pre-33/33+ locale persistence or RTL interaction run claimed. These are adopter checks, not results established by this docs-only change. |
+
+Gradle initially failed inside the sandbox because it could not access its wrapper lock; rerunning
+with approved cache access passed. Local preview serving likewise required approved localhost
+socket access. Logs are in `/private/tmp/df09-{examples,dokka,mkdocs,check}.log` (local evidence,
+not repository artifacts). No protected configuration or credential files were opened.
+
+#### Visible limitations and queued follow-ups
+
+- `DynamicAsyncImage` converts a null description to the string `"null"` for its loading wheel.
+  The guide exposes this limitation; fixing accessibility behavior needs a separate runtime scope.
+- The permission helper's already-granted early return and internal launcher registration remain
+  unchanged; the guide teaches a lifecycle-registered launcher for user actions.
+- Current auth validation messages are hardcoded English. The guide identifies the localization
+  gap without changing state types or introducing a new text/error architecture.
+- DF-11 retains the broader module README reconciliation. DF-12 owns stale source KDoc, including
+  the preview Cartesian-product claim, navigation drawer assertion, and image-wrapper description.
+  DF-14 retains site-wide URL/source-link compatibility; DF-10 is the next queued repair task.
 
 ## DF-10 — Rebuild troubleshooting around reliable diagnosis
 
