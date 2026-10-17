@@ -91,9 +91,15 @@ This file provides AI coding agents with project-specific instructions, conventi
 Every screen follows the `UiState<T>` pattern defined in `core:ui`:
 
 - `UiState<T>`: wraps `data`, `loading`, `error: OneTimeEvent<Throwable?>`
-- `updateState {}`: synchronous state updates
-- `updateStateWith {}` / `updateWith {}`: async operations with automatic loading/error handling, reentrancy-guarded (a call while already loading is dropped)
+- `updateState {}`: synchronously replaces data, preserving loading and the existing error event
+- `updateStateWith {}`: launches a `Result<T>` operation and replaces data on returned success
+- `updateWith {}`: launches a `Result<Unit>` operation without replacing data
+- Both async helpers manage loading and error events for returned Results. Thrown exceptions and
+  cancellation are not caught and can leave loading true. A call observing loading is dropped,
+  but calls queued before loading is set can overlap.
 - `StatefulComposable`: renders the loading/error/content UI for a `UiState`
+
+Shortened HomeViewModel excerpt; imports, annotations, and other members are omitted:
 
 ```kotlin
 // feature/home/.../HomeViewModel.kt
@@ -107,7 +113,11 @@ fun deleteJetpack(jetpack: Jetpack) {
 }
 ```
 
-Full pattern, including context parameters and `OneTimeEvent`: [State Management](docs/state-management.md).
+The `onStart` pattern above can accumulate repository collectors on resubscription. Before copying
+it, read [Subscription lifetimes](docs/state-management.md#subscription-lifetimes). The guide also
+covers [async overlap, cancellation, and suspended edits](docs/state-management.md#exceptions-cancellation-and-concurrent-calls)
+and [error-event delivery limitations](docs/state-management.md#onetimeeventt). Context parameters
+provide the helpers with the ViewModel scope.
 
 ### Navigation Pattern
 Jetpack Navigation 3 — type-safe `NavKey`s, no string routes, no `NavController`/`NavHost`:
@@ -128,24 +138,33 @@ Multi-back-stack state, `ListDetailSceneStrategy`, and assisted-inject ViewModel
 arguments: [Navigation](docs/navigation.md).
 
 ### Data Flow & Dependency Injection
-Offline-first: the UI observes a Room `Flow`, a `SyncManager`/WorkManager worker pushes local
-changes and pulls remote ones in the background, and the local database is the single source of
-truth. Repositories are bound with Hilt `@Binds`; data sources use `@IoDispatcher` and
-`suspendRunCatching` to convert exceptions to `Result`. Full pattern, including the sync
-contract and `@Binds` vs `@Provides`: [Data](docs/data.md).
+Home observes a Room `Flow`; request-triggered, one-time WorkManager sync pushes local changes
+and pulls remote records into Room. Settings and Profile observe typed JSON DataStore preferences.
+Repositories are bound with Hilt `@Binds`; objects requiring factory calls use `@Provides`.
+Repositories use `suspendRunCatching` to return ordinary exceptions as failed Results while
+propagating cancellation. Observable Flow failures need their own handling. See [Data](docs/data.md)
+for DI, storage, and [sync delivery/conflict limitations](docs/data.md#delivery-and-conflict-limitations).
 
 ### Module Dependencies (Respect These Boundaries)
-```
-feature/* → data → core:* → firebase:*
-                  ↓
-                sync
+
+Arrows point from consumer to declared dependency. This is a summary; the
+[full graph and dependency table](docs/architecture.md#module-dependencies) include app assembly,
+lint publication, and baseline profiles.
+
+```text
+feature/* → data, core:ui
+core:ui → core:android, core:navigation (both api)
+data → core:android, core:network, core:preferences, core:room, firebase:auth, firebase:firestore
+sync → data, core:android
+core:network, core:preferences, core:room, firebase:* → core:android
 ```
 
-**Rules**:
-- Features depend on data + core:ui only
-- Data depends on core:* + firebase:*
-- Core modules are independent (except core:ui can use core:android)
-- Firebase modules are independent
+- Features use data and core:ui for application dependencies; do not add feature-to-feature edges.
+- `core:android` and `core:navigation` have no direct project dependencies.
+- `core:testing` depends on `core:android` and exposes `core:preferences` and `firebase:auth` via
+  `api`. Home, Settings, data, and core:ui use it through `testImplementation`.
+- Keep testing/tooling dependencies separate from application dependencies. Navigation types are
+  available to features through core:ui's `api` dependency.
 
 ## Conventions & Patterns
 
@@ -173,8 +192,10 @@ feature/* → data → core:* → firebase:*
 ### Error Handling
 - Repositories return `Result<T>` for one-time operations
 - Repositories return `Flow<T>` for observable data
-- Use `suspendRunCatching` to wrap suspend functions and convert exceptions to Results
-- UI layer handles errors via `UiState.error: OneTimeEvent<Throwable?>`
+- Use `suspendRunCatching` at repository boundaries to convert ordinary exceptions to Results;
+  cancellation propagates. Handle observable Flow failures separately.
+- UI state carries errors via `UiState.error: OneTimeEvent<Throwable?>`; consumption does not
+  guarantee snackbar delivery. See the state guide before changing event handling.
 
 ### Kotlin Compiler Features
 - **Context parameters** — on by default since Kotlin 2.4, no compiler flag needed: `updateStateWith` and `updateWith` use them to access `viewModelScope` without it being passed explicitly
@@ -184,8 +205,8 @@ feature/* → data → core:* → firebase:*
 ## Known Gotchas & Special Notes
 
 ### Build
-- **Spotless task discovery**: applied via an init script, not a plugin — tasks are invisible in `./gradlew tasks` but still exist and run; always pass `--init-script gradle/init.gradle.kts`
-- **Custom APK output filename**: not implemented on AGP 9 — `androidComponents.onVariants` in `app/build.gradle.kts` is currently a no-op placeholder (tracked as GitHub Issue #579); this is unrelated to APK badging, which does work (see below)
+- **Spotless task discovery**: applied via an init script; pass `--init-script gradle/init.gradle.kts --no-configuration-cache` to run or discover its tasks. Root invocations do not establish formatting coverage for the included `build-logic` build; see [Spotless scope](docs/build-and-tooling.md#spotless-via-an-init-script).
+- **Custom APK output filename**: not implemented on AGP 9 (tracked as GitHub Issue #579). The no-op `onVariants` block was removed; APK badging remains implemented.
 - **Dependency Guard** (`:app:dependencyGuard`) and **APK badging** (`:app:checkReleaseBadging`) run in CI on every PR — a dependency or manifest/permission change that isn't accompanied by a baseline/golden-file update will fail the build
 - **Configuration cache**: enabled; may be discarded by `OssLicensesTask` (harmless)
 - **JVM heap**: 8GB configured in `gradle.properties`
@@ -230,9 +251,10 @@ files; never a hardcoded version string.
 - Never commit keystore files or credentials
 
 ### Firebase
-- Debug build has template `google-services.json` (features won't work until configured)
+- Debug build has template `google-services.json`; Firebase-backed features need project configuration
 - Requires Firebase project setup with package name `dev.atick.compose`
-- See [Firebase](docs/firebase.md) for detailed setup
+- Configure the web client ID for Credential Manager as described in [Firebase](docs/firebase.md#local-project-setup); the auth module reads it from `local.properties` via the secrets plugin
+- Review [existing-install and document compatibility](docs/firebase.md#existing-installs-and-documents) before upgrading a configured project
 
 ### LeakCanary
 - Enabled in debug builds by default
@@ -241,15 +263,15 @@ files; never a hardcoded version string.
 ## Boundaries & Guidelines
 
 ### ALWAYS DO
-✅ Run `./gradlew spotlessApply --init-script gradle/init.gradle.kts` before any commit
+✅ Run `./gradlew spotlessApply --init-script gradle/init.gradle.kts --no-configuration-cache` before any commit
 ✅ Use existing state management patterns (`UiState<T>`, `updateStateWith`)
 ✅ Use type-safe Navigation 3 `NavKey`s
 ✅ Use Hilt for dependency injection (`@HiltViewModel`, `@Inject`)
 ✅ Use `suspendRunCatching` for error handling in repositories
 ✅ Use dispatcher qualifiers (`@IoDispatcher`, `@MainDispatcher`)
 ✅ Return `Flow` for observable data, `Result<T>` for one-time operations
-✅ Follow offline-first pattern (local database as source of truth)
-✅ Respect module boundaries (features → data → core)
+✅ Keep Home observations local-first through Room; use the repository contracts for other sources
+✅ Respect the declared module boundaries above and in the architecture guide
 ✅ Add unit tests for new ViewModels/repositories using `core:testing`'s `MainDispatcherRule` and fakes
 
 ### ASK FIRST

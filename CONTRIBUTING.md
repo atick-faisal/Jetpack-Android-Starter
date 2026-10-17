@@ -8,15 +8,15 @@ If you want to discuss on something then feel free to present your opinions, vie
 
 - Open issue regarding proposed change.
 - If your proposed change is approved, Fork this repo and do changes.
-- Open PR against latest *development* branch. Add nice description in PR.
+- Open PR against latest `main` branch. Add nice description in PR.
 - You're done!
 
 ### Code contribution checklist
 
 - New code addition/deletion should not break existing flow of a system.
-- All tests should be passed.
+- All tests should be passed. Run `./gradlew check` before committing.
 - Verify `./gradlew build` is passing before raising a PR.
-- Reformat code with Spotless before raising a PR: `./gradlew spotlessApply --init-script gradle/init.gradle.kts`
+- Reformat code with Spotless before raising a PR: `./gradlew spotlessApply --init-script gradle/init.gradle.kts --no-configuration-cache`
   (the init script flag is required — see [Build & Tooling](docs/build-and-tooling.md)).
 
 ### Comments and docs

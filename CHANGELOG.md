@@ -7,34 +7,56 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+The navigation, lint, benchmark, testing, build-guardrail, and AGP entries below record earlier
+unreleased work. The documentation repair also includes the behavior fixes and compatibility
+changes listed here.
+
 ### Added
 
-- Migrate navigation to Jetpack Navigation 3 (`NavKey`, `Navigator`, `NavDisplay`,
-  multi-back-stack `NavigationState`, `ListDetailSceneStrategy`)
-- Add `:lint` module with custom lint checks (`DesignSystemDetector`, `TestMethodNameDetector`),
-  shipped to consumers via `lintPublish`
-- Add baseline profile generation and startup benchmarking (`:benchmarks`,
-  `BaselineProfileGenerator`, `StartupBenchmark`)
-- Add a Robolectric + Compose test harness (`:core:testing`, `MainDispatcherRule`, fakes) and
-  ~110 reference tests across the repository, ViewModel, and DAO layers
-- Add Dependency Guard, pinning the release runtime classpath to a committed baseline
-- Add APK badging, diffing `aapt2 dump badging` output against a committed golden file to catch
-  manifest/permission drift
+- Custom lint checks for design-system usage and test names, distributed through `core:ui`.
+- Baseline profile generation and startup benchmarking in `:benchmarks`.
+- Shared Robolectric/Compose test support, dispatcher rules, and fakes in `:core:testing`.
+- Dependency Guard and APK badging checks for release dependency and manifest drift.
 
 ### Changed
 
-- Bump Android Gradle Plugin to 9.3.1
+- Navigation uses Jetpack Navigation 3 with typed keys, multiple back stacks, and adaptive list/detail
+  scenes.
+- Bump Android Gradle Plugin to 9.3.1.
+- Rework setup, Firebase, release, feature-development, testing, customization, and local
+  documentation-preview guidance to match the implementation and expose known limitations.
+- Sync pulls use Firestore's `serverUpdatedAt`, stored locally as `serverUpdatedAtNanos`, instead of
+  a device-clock cursor. This changes Room schema 1 → 2 and the remote document shape.
 
 ### Fixed
 
-- Order sync pulls by a Firestore server timestamp instead of `System.currentTimeMillis()`.
-  The pull cursor was the largest local `lastUpdated`, a device clock, so a single device running
-  fast moved every other device's cursor into the future and records written by correctly-clocked
-  devices were dropped from every later pull, silently and permanently. `FirebaseJetpack` now
-  carries a server-assigned `serverUpdatedAt`, stored locally as `JetpackEntity.serverUpdatedAtNanos`
-  and read back by `JetpackDao.getSyncCursor`. Room schema 1 → 2, handled by the existing
-  destructive-migration fallback. The Firestore security rules in `docs/firebase.md` gained the
-  field, pinned to `request.time` so a client cannot forge the ordering.
+- Swipe dismissal invokes deletion from a Compose effect instead of during recomposition.
+- Connectivity observation emits an initial active-network capability sample and suppresses
+  duplicate states. This does not establish backend reachability.
+- Item price editing preserves raw text, including empty and partial input. Submit parses the
+  text, with invalid or empty input becoming `0.0`; no non-negative-price validation is added.
+
+### Removed
+
+- Unused public `DarkThemeConfigSerializer`. Adopters using that symbol must replace their references;
+  this removal does not add DataStore corruption recovery.
+- `FirebaseJetpack`'s Kotlin serialization `@Serializable` annotation. Adopters using its generated
+  serializer need a replacement; Firestore mapping remains in use.
+- The no-op `onVariants` version assignment. Custom APK filenames remain unimplemented.
+
+### Upgrade considerations
+
+- **Local data loss:** Room has no registered 1 → 2 migration and uses destructive fallback.
+  Upgrading can erase local rows, including edits and deletions not yet uploaded. Remote re-fetching
+  cannot recover changes that never reached the server. Plan a data-preserving migration for
+  existing installs; none is supplied here.
+- **Backend compatibility:** Legacy Firestore documents missing `serverUpdatedAt` are excluded by
+  the new query, even with a zero cursor. The updated example rules require that field to equal
+  `request.time` and reject older writers that omit it. Existing projects need a separately planned
+  backfill and coordinated client/rules rollout. Editing the documented rules deploys nothing.
+- Review [existing-install guidance](docs/firebase.md#existing-installs-and-documents),
+  [sync limitations](docs/data.md#delivery-and-conflict-limitations), and
+  [state/error-handling limitations](docs/state-management.md) before adopting these changes.
 
 ## [1.3.0] - 2026-07-24
 
