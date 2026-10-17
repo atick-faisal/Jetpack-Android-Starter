@@ -2,7 +2,7 @@
 
 Companion goals, findings, and recovery map: [DOC_FIX_PLAN.md](DOC_FIX_PLAN.md).
 
-Status: DF-00–DF-12 complete (publication gaps explicitly deferred to DF-14); DF-13–DF-15 pending. Checked items identify completed work in the records below. Reviewed base: `1c2103890d16f81f6c6ae4c2d8626281b841e417`.
+Status: DF-00–DF-13 complete (publication gaps explicitly deferred to DF-14); DF-14–DF-15 pending. Checked items identify completed work in the records below. Reviewed base: `1c2103890d16f81f6c6ae4c2d8626281b841e417`.
 Reviewed head: `0fb7882982cfefd55df300e06549731c6fbb33bb` ([PR #647](https://github.com/atick-faisal/Jetpack-Android-Starter/pull/647)).
 
 Complete each task by recording the changed paths, verification result, and any unresolved follow-up
@@ -1796,23 +1796,83 @@ reruns with granted access succeeded.
 
 Depends on: DF-03–12. Scope: `README.md`, `AGENTS.md`, `CONTRIBUTING.md`, `CHANGELOG.md`, old plan/task files.
 
-- [ ] Make root README a useful starting map: setup, feature walkthrough, reference, testing,
+- [x] Make root README a useful starting map: setup, feature walkthrough, reference, testing,
   customization, releases, and local docs preview. Preserve project-specific voice and presentation.
-- [ ] Fix `AGENTS.md`'s module diagram/rules to reflect actual declared dependencies, including
+- [x] Fix `AGENTS.md`'s module diagram/rules to reflect actual declared dependencies, including
   `core:navigation`, `core:testing`, Firebase → core, and sync → data. Keep intended boundaries clear.
-- [ ] Remove the stale claim that `app/build.gradle.kts` still contains a no-op `onVariants` block.
+- [x] Remove the stale claim that `app/build.gradle.kts` still contains a no-op `onVariants` block.
   Reconcile state/error helper guidance, Firebase terminology, and all command flags with the guides.
-- [ ] Review inherited contribution workflow advice such as targeting a “development” branch against
+- [x] Review inherited contribution workflow advice such as targeting a “development” branch against
   the current project workflow; avoid changing unrelated author preferences without evidence.
-- [ ] Rework the new changelog prose around reader-visible changes and compatibility effects. Make
+- [x] Rework the new changelog prose around reader-visible changes and compatibility effects. Make
   schema/data loss and backend field/rule changes explicit; remove test counts and long bug narratives.
-- [ ] Ensure material runtime fixes in this PR have appropriate release-note coverage. Distinguish
+- [x] Ensure material runtime fixes in this PR have appropriate release-note coverage. Distinguish
   newly recorded earlier work from runtime changes actually introduced by this branch.
-- [ ] Keep previous plan/task logs as dated history with a pointer to the new work. Correct active
+- [x] Keep previous plan/task logs as dated history with a pointer to the new work. Correct active
   “complete/all examples verified” implications without erasing historical verification records.
 
 Accept: root instructions agree with the guides and code; release notes disclose actual upgrade
 implications; readers can tell which plan is active.
+
+### DF-13 completion record
+
+Completed 2026-10-17 from clean starting HEAD `a17a7e99e` on `fix/docs-v3`.
+This is an uncommitted editorial patch. Production code, public APIs, dependencies, configuration,
+backend rules, and workflow files are unchanged.
+
+Changed `README.md`, `AGENTS.md`, `CONTRIBUTING.md`, `CHANGELOG.md`, `PLAN.md`, `TASKS.md`, and this
+execution record:
+
+- README now describes a starting template, links release/upgrade and runtime limitations, exposes
+  feature testing and customization/localization reading paths, repairs library-label formatting,
+  replaces unsupported Firebase Performance coverage with Crashlytics, and closes the footer paragraph.
+  Existing branding, images, badges, quotation, and project links remain.
+- Agent guidance now follows the declared Gradle module edges, including navigation API exposure,
+  Firebase/core relationships, sync's dependency on data, and test-only support. It states returned
+  Result handling and exception/overlap/collector/event limitations, fixes Spotless flags and discovery
+  scope, removes the no-op variant-block claim, and links Credential Manager's local client-ID setup.
+  Existing approval boundaries are preserved.
+- Contribution guidance targets `main`, evidenced by local `origin/HEAD → origin/main` and the
+  deployment workflow's main trigger. The issue-first process is retained. Full Spotless flags and
+  the pre-commit `check` gate agree with the build guide and repository instructions. No remote
+  default-branch query or contribution-policy change was performed.
+- Unreleased release notes distinguish previously unrecorded navigation/tooling/AGP work from this
+  branch's behavior changes. They cover swipe deletion, initial connectivity, price editing,
+  server-clock sync, both affected serialization APIs, and variant-block removal. Upgrade notes
+  explicitly disclose Room data loss, missing-field document exclusion, old-client rule rejection,
+  and the need for a separately planned migration/backfill/client-rules rollout.
+- Historical plan/task introductions retain original checkmarks, counts, and verification evidence
+  while dating the original completion to 2026-08-29, confirmed by commit `0fb788298`. They point to
+  the active repair queue and do not present old results as current validation.
+
+#### Evidence and verification
+
+Dependency statements were compared with module `build.gradle.kts` declarations and the canonical
+architecture dependency table. Helper and connectivity claims were checked against current source;
+storage/backend compatibility agrees with the data and Firebase guides and DF-02's behavior ledger.
+Release-note provenance was checked against `git log 1c210389..HEAD`, the base changelog, and the
+model/schema/source changes. The base changelog's Unreleased section was empty; navigation, tooling,
+and AGP were already implemented at the audit base, whereas the behavior changes above belong to
+this branch. Earlier released changelog entries are unchanged.
+
+| Check | Result |
+|---|---|
+| `git diff --check` | Passed. |
+| Local root-document links and fragments | All 58 local links in the six edited root pages resolve; fragment targets checked against rendered Markdown headings. External URL availability was not audited. |
+| `./gradlew spotlessApply --init-script gradle/init.gradle.kts --no-configuration-cache` | BUILD SUCCESSFUL in 6 seconds; 180 tasks up-to-date. No formatter edits. |
+| `./gradlew spotlessCheck --init-script gradle/init.gradle.kts --no-configuration-cache check` | BUILD SUCCESSFUL in 7 seconds; 1,141 tasks, 18 executed and 1,123 up-to-date. Included-build formatting coverage is not inferred from this root invocation. |
+| Browser Markdown preview | Inspected README's reading map and repaired library labels, and changelog's removal/upgrade sections. Headings, lists, bold labels, inline code, and links render legibly. These are isolated Python-Markdown previews with local CSS, not GitHub or MkDocs theme validation. |
+| Changed-path review | Only the seven Markdown files listed above; no generated site/API output, credentials, or production-source changes. No tests added for prose edits. |
+
+Full GitHub/MkDocs/Dokka rendering, source-link reconciliation, old-URL compatibility, and CI
+validation remain DF-14. The browser preview showed the existing external license badge displaying
+`INVALID`; external badge/image availability remains a publication-check follow-up there. Runtime
+and upgrade limitations retain DF-02's bounded follow-ups; no migration, backfill, or rule deployment
+was attempted. No commit, push, PR update, or site publication was performed.
+
+Validation logs, the link-check/render helper, and preview HTML are under `/private/tmp/df13-*`.
+Gradle cache locking and the loopback preview server were initially sandbox-blocked; reruns with
+granted access succeeded.
 
 ## DF-14 — Repair site assembly, links, and validation
 

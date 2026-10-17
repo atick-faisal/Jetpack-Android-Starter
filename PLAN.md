@@ -9,10 +9,11 @@
 
 Companion checklist: [TASKS.md](TASKS.md).
 
-## Status — complete
+## Historical status — recorded complete on 2026-08-29
 
-All seven phases are done, and so are the seven defects the audit turned up along the way. Kept as
-the record of the analysis behind the change, including where the analysis was wrong.
+The earlier refactor recorded all seven phases and seven follow-up fixes as complete. The later
+repair audit found remaining coverage and accuracy gaps; its active queue is linked above. The
+original analysis and verification results below are retained as historical evidence.
 
 | Measure | Before | After | Target |
 |---|---|---|---|
@@ -22,7 +23,8 @@ the record of the analysis behind the change, including where the analysis was w
 | Emoji markers in `.kt`/`.kts` | 0 | **17** | 25-35 ceiling |
 | `mkdocs build --strict` | 54 warnings (A11) | **0 warnings** | 0 |
 
-`./gradlew build`, `test`, `spotlessCheck` and `dokkaGeneratePublicationHtml` all pass.
+The earlier refactor recorded passing `./gradlew build`, `test`, `spotlessCheck` and
+`dokkaGeneratePublicationHtml` runs. These are not verification results for the current revision.
 
 Where this plan was wrong, and the checklist entry that corrects it:
 

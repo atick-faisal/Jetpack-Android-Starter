@@ -11,10 +11,9 @@
 
 # 🚀 Jetpack Android Starter
 
-A robust, production-ready template for modern Android development that takes the pain out of
-setting up a new project. Built on the foundation
-of [Now In Android](https://github.com/android/nowinandroid)'s architecture, this template provides
-a comprehensive starting point for both new and experienced Android developers.
+A starting template for modern Android development that takes the pain out of setting up a new
+project. Built on the foundation of [Now In Android](https://github.com/android/nowinandroid)'s
+architecture, it provides a starting point for both new and experienced Android developers.
 
 <div align="center">
   <p><i>"Android Development is Easy until You Rotate the Device"</i></p>
@@ -29,7 +28,7 @@ template [here](https://github.com/atick-faisal?tab=repositories&q=&type=source&
 
 ## ☃️ Why This Template?
 
-- **Production-Ready Authentication**: Firebase authentication with Google Sign-In and
+- **Authentication**: Firebase authentication with Google Sign-In and
   email/password
 - **Clean Architecture**: Clear separation of concerns with a modular, scalable architecture
 - **Modern Tech Stack**: Latest Android development tools including Jetpack Compose
@@ -40,23 +39,22 @@ template [here](https://github.com/atick-faisal?tab=repositories&q=&type=source&
 - **Multilingual Support**: Runtime localization update with support for RTL languages
 - **CI/CD**: Automated build, release, and deployment with GitHub Actions
 
+Before preparing an app for release, review the [sync limitations](docs/data.md#delivery-and-conflict-limitations),
+[state and error-handling limitations](docs/state-management.md), and
+[release checklist](docs/build-and-tooling.md#release). Existing projects also need an
+[upgrade compatibility plan](docs/firebase.md#existing-installs-and-documents).
+
 ## 📂 Technical Stack
 
 ### 💾 Core Libraries
 
-- **UI
-  **: [Jetpack Compose](https://developer.android.com/compose), [Material3](https://m3.material.io/)
+- **UI**: [Jetpack Compose](https://developer.android.com/compose), [Material3](https://m3.material.io/)
 - **DI**: [Dagger Hilt](https://dagger.dev/hilt/)
-- **Async
-  **: [Kotlin Coroutines](https://kotlinlang.org/docs/coroutines-overview.html) & [Flow](https://kotlinlang.org/docs/flow.html)
-- **Network
-  **: [Retrofit](https://square.github.io/retrofit/), [OkHttp](https://square.github.io/okhttp/)
-- **Storage
-  **: [Room DB](https://developer.android.com/training/data-storage/room), [DataStore](https://developer.android.com/topic/libraries/architecture/datastore)
-- **Firebase
-  **: [Auth](https://firebase.google.com/docs/auth/android/start), [Firestore](https://firebase.google.com/docs/firestore/quickstart), [Analytics](https://firebase.google.com/docs/analytics), [Performance](https://firebase.google.com/docs/perf-mon)
-- **Others
-  **: [WorkManager](https://developer.android.com/topic/libraries/architecture/workmanager), [Coil](https://coil-kt.github.io/coil/), [Timber](https://github.com/JakeWharton/timber), [Lottie](https://airbnb.io/lottie/)
+- **Async**: [Kotlin Coroutines](https://kotlinlang.org/docs/coroutines-overview.html) & [Flow](https://kotlinlang.org/docs/flow.html)
+- **Network**: [Retrofit](https://square.github.io/retrofit/), [OkHttp](https://square.github.io/okhttp/)
+- **Storage**: [Room DB](https://developer.android.com/training/data-storage/room), [DataStore](https://developer.android.com/topic/libraries/architecture/datastore)
+- **Firebase**: [Auth](https://firebase.google.com/docs/auth/android/start), [Firestore](https://firebase.google.com/docs/firestore/quickstart), [Analytics](https://firebase.google.com/docs/analytics), [Crashlytics](https://firebase.google.com/docs/crashlytics)
+- **Others**: [WorkManager](https://developer.android.com/topic/libraries/architecture/workmanager), [Coil](https://coil-kt.github.io/coil/), [Timber](https://github.com/JakeWharton/timber), [Lottie](https://airbnb.io/lottie/)
 
 ### 🏗️ Build & Tools
 
@@ -87,8 +85,14 @@ template [here](https://github.com/atick-faisal?tab=repositories&q=&type=source&
 - [Adding New Features](docs/guide.md)
 - [State Management](docs/state-management.md)
 - [Navigation](docs/navigation.md)
-- [Components](docs/components.md)
 - [Data Layer](docs/data.md)
+- [Testing a Feature](docs/guide.md#testing)
+
+### 🎨 Customize the App
+
+- [Shared Components and Accessibility](docs/components.md)
+- [Colors and Typography](docs/components.md#theming)
+- [Localization and RTL](docs/components.md#localization)
 
 ### 🚧 Development Tools
 
@@ -100,5 +104,5 @@ template [here](https://github.com/atick-faisal?tab=repositories&q=&type=source&
 ### [📚 API Reference](https://atick.dev/Jetpack-Android-Starter/api/)
 
 <p align="center"><img src="https://raw.githubusercontent.com/catppuccin/catppuccin/main/assets/footers/gray0_ctp_on_line.svg?sanitize=true" /></p>
-<p align="center"><a href="https://sites.google.com/view/mchowdhury" target="_blank">Qatar University Machine Learning Group</a>
+<p align="center"><a href="https://sites.google.com/view/mchowdhury" target="_blank">Qatar University Machine Learning Group</a></p>
 <p align="center"><a href="https://github.com/atick-faisal/Jetpack-Android-Starter/blob/main/LICENSE"><img src="https://img.shields.io/github/license/atick-faisal/Jetpack-Android-Starter?style=for-the-badge&colorA=363a4f&colorB=b7bdf8"/></a></p>

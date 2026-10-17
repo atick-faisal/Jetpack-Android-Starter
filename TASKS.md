@@ -11,10 +11,10 @@ Execution checklist for [PLAN.md](PLAN.md). Phases are ordered so the repo is co
 Findings referenced as A1-A11 (stale), B1-B10 (duplication), C1-C15 (comments) are defined in PLAN.md.
 
 > [!NOTE]
-> **Complete.** All seven phases and all seven follow-up fixes are done. Nothing below is
-> outstanding; the file is kept as the record of what was changed and why, including the places
-> where the plan turned out to be wrong. Deferred by explicit choice, not forgotten: the
-> second-tier comment sites in Phase 5, listed there under "if time allows".
+> **Historical completion, recorded 2026-08-29.** The earlier refactor marked all seven phases
+> and seven follow-up fixes complete. The later repair audit found additional work tracked in
+> the active queue linked above. These checkmarks preserve the earlier record, including its
+> verification claims and the second-tier comment sites deferred in Phase 5.
 
 ---
 
