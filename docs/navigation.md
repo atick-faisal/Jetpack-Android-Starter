@@ -64,7 +64,9 @@ fun EntryProviderScope<NavKey>.homeEntries(
 
 The app module combines each feature's entries under one `entryProvider { }` per graph (see
 [Wiring `NavDisplay`](#wiring-navdisplay)). Each feature also declares `fun Navigator.navigateToX()`
-extensions next to its keys, so navigating never requires importing another feature's key types:
+extensions next to its keys, so the app can wire callbacks through that feature's public API.
+A feature should not depend on another feature to call its extension; cross-feature wiring belongs
+in the app:
 
 ```kotlin
 fun Navigator.navigateToItem(itemId: String?) = navigate(ItemNavKey(itemId))
@@ -167,24 +169,52 @@ Calling `goBack()` from the start key does nothing — there is nowhere left to 
 handler finishes the activity. A screen can wire a back button straight to `navigator::goBack`; use
 `canGoBack()` to decide whether to *handle* back at all (see [Wiring `NavDisplay`](#wiring-navdisplay)).
 
-> [!WARNING]
-> A non-top-level key must belong to exactly one top-level destination. Navigation 3 identifies an entry
-> by `NavEntry.contentKey`, which defaults to the key itself, so pushing the same key from two different
-> tabs puts it in `backStack` twice — and the two copies share one `rememberSaveable` bundle and one
-> `ViewModelStore`. Give each tab its own key type rather than reusing one across tabs.
+### Entry identity and duplicate destinations
+
+Two identities matter in this template:
+
+- `Navigator` uses key equality when removing a destination from the **current** sub-stack before
+  pushing it. `ItemNavKey("a")` and `ItemNavKey("b")` are different keys; navigating to `"a"` again
+  moves that key to the top of this sub-stack. It does not remove an equal key from another tab.
+- Navigation 3's entry decorators use `NavEntry.contentKey`. In the pinned Navigation 3 **1.1.4**,
+  its default is **`key.toString()`**, not the key object. The saveable-state decorator passes this
+  value to `SaveableStateProvider`; lifecycle **2.11.0** uses it to select the ViewModel store owner.
+
+For these data-class keys, different item IDs produce different default content keys. Sharing a key
+**type** is therefore not itself a collision. Equal keys in two flattened tab stacks do collide; even
+unequal custom keys can collide if their `toString()` values are the same. The decorators associate
+state by content key, and simultaneous rendering of duplicate saveable-state keys can fail rather
+than produce two independent screens. The resolved
+[Compose saveable-state 1.11.4 sources](https://dl.google.com/dl/android/maven2/androidx/compose/runtime/runtime-saveable-android/1.11.4/runtime-saveable-android-1.11.4-sources.jar)
+contain the duplicate-key check.
+
+Keep a nested destination owned by one top-level stack when following the existing design. If two
+tabs need independent instances of a shared screen, give them distinct destination keys (separate
+key types are one option) and verify their content keys differ. Do not resolve this by overriding
+`toString()` casually: identity must stay stable across restoration. An owner argument or custom
+content-key policy requires a separately reviewed navigation design and restoration tests.
+
+The version-specific behavior above was checked in the published
+[Navigation 3 runtime sources](https://dl.google.com/dl/android/maven2/androidx/navigation3/navigation3-runtime-android/1.1.4/navigation3-runtime-android-1.1.4-sources.jar)
+and [lifecycle decorator sources](https://dl.google.com/dl/android/maven2/androidx/lifecycle/lifecycle-viewmodel-navigation3-android/2.11.0/lifecycle-viewmodel-navigation3-android-2.11.0-sources.jar).
+Recheck this behavior when upgrading those dependencies.
 
 ## Wiring `NavDisplay`
 
 `JetpackApp` picks between two independent graphs based on `appState.isUserLoggedIn`. Each graph builds
-its own `NavigationState`, so signing in or out discards the other graph's back stack rather than leaving
-history the user could return to:
+its own `NavigationState`. Changing between signed-in and signed-out UI removes the previous
+graph's composition; back in the new graph does not traverse the removed graph's navigation history:
 
 | Graph | Composable | `startKey` | `topLevelKeys` |
 |---|---|---|---|
 | Signed-out | `SignedOutNavigation` | `SignInNavKey` | `setOf(SignInNavKey)` |
 | Signed-in | `SignedInNavigation` | `TopLevelDestination.START.key` | `TopLevelDestination.keys` |
 
-Both follow the same setup:
+These are navigation boundaries, not data authorization or a complete account-reset protocol.
+A direct account change that leaves `isUserLoggedIn` true does not itself select another graph.
+Repositories, cached preferences and pending sync work need their own account handling.
+
+The signed-in setup uses the enum's keys; the signed-out setup supplies `SignInNavKey` instead:
 
 ```kotlin
 val navigationState = rememberNavigationState(
@@ -229,6 +259,29 @@ app also wires an explicit handler next to every `NavDisplay`:
 BackHandler(enabled = navigator.canGoBack()) { navigator.goBack() }
 ```
 
+### Add a destination to the app
+
+1. Add the approved feature module as an app dependency, or keep the destination in its existing
+   feature module. Expose its keys and entry-registration function publicly; the Screen can remain
+   `internal` because the registration function calls it within that module.
+2. Import and call that registration function inside the appropriate `entryProvider` in
+   `JetpackApp.kt`: signed-out for authentication, signed-in for authenticated screens. Every key
+   that can be pushed in that graph needs a matching entry. Do not register one key type twice.
+3. For a tab, add an entry to `app/.../navigation/TopLevelDestination.kt` with its root key, selected
+   and unselected icons, and app string resources for label/title. `keys` derives from enum entries;
+   bar/rail items iterate those entries. Keep `START` pointing at the intended exit destination.
+4. Wire list clicks to the feature's navigator extension with an ID, and a create action with null
+   if following Item's create/edit convention. Home's create FAB is explicitly conditional on the
+   current top-level key in `JetpackApp.kt`; another tab's create action needs its own condition and
+   callback. Registering a tab does not supply that action automatically.
+5. Preserve the existing decorators, scene strategy and explicit `BackHandler`. Verify switching
+   tabs preserves each sub-stack, selecting the current tab pops to its root, and back from another
+   tab's root follows top-level history. Returning to the start tab clears that history; back at
+   the start key is left to the system.
+
+A screen pushed only inside a tab does not need a `TopLevelDestination` enum entry. Follow
+[the feature guide](guide.md) for model, DI, resources, and testing steps.
+
 ## Adaptive list-detail
 
 The signed-in `NavDisplay` installs `rememberListDetailSceneStrategy<NavKey>()`. An entry opts into it with
@@ -247,7 +300,8 @@ val isAtTopLevel = navigationState.currentKey == navigationState.currentTopLevel
 
 ## Passing arguments to ViewModels
 
-Navigation 3 carries destination arguments on the `NavKey` itself, not in a `SavedStateHandle`. The
+This template carries destination arguments on the `NavKey` itself and explicitly supplies them
+to the factory; it does not decode those arguments from a `SavedStateHandle`. The
 argument reaches the ViewModel through Hilt's assisted-injection support, using `ItemNavKey.itemId` as the
 example end to end:
 
@@ -285,7 +339,15 @@ example end to end:
    }
    ```
 
-Every destination that needs a keyed argument in its ViewModel follows this same four-step chain.
+Use `kotlinx.serialization.Serializable` on the real key declaration (as shown under
+[Defining a destination](#defining-a-destination)); the abbreviated declaration in step 1 omits it.
+The Screen uses `androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel`; factory annotations come
+from `dagger.assisted`, and `HiltViewModel` from `dagger.hilt.android.lifecycle`.
+
+Every destination that needs a keyed argument in its ViewModel follows this four-step chain.
+The entry's ViewModel store retains an existing ViewModel; the creation callback supplies arguments
+when that instance is first created. It is not a mechanism for updating an existing ViewModel's
+arguments. Put identity-bearing arguments on the key and test restoration with two different IDs.
 
 ## Testing
 
@@ -293,7 +355,16 @@ Every destination that needs a keyed argument in its ViewModel follows this same
 `NavigationState` by hand and exercises `navigate()`/`goBack()`'s branches, while `NavigationStateTest`
 drives an actual save/restore cycle with `StateRestorationTester` to guard the `key()` behavior described
 under [Multi-back-stack state](#multi-back-stack-state). See `core/navigation/src/test/kotlin/dev/atick/core/navigation/`
-for both.
+for both. Run:
+
+```bash
+./gradlew :core:navigation:testDebugUnitTest :feature:home:testDebugUnitTest
+```
+
+When adding a destination, test equal-key re-navigation, distinct argument keys, top-level history,
+and restoration. If extending cross-tab identity, include a real decorated `NavDisplay` test;
+`NavigatorTest` alone does not exercise saveable-state or ViewModel-store collisions. On a device,
+check system and toolbar back in narrow/wide layouts and sign-in/sign-out graph changes.
 
 ## Further reading
 
