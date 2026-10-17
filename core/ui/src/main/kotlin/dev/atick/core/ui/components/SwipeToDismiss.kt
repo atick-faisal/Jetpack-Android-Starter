@@ -45,7 +45,7 @@ import androidx.compose.ui.unit.dp
  * - **End-to-start swipe only**: Prevents accidental dismissal from start-to-end
  * - **Visual feedback**: Shows delete icon with error container background color during swipe
  * - **Animated background**: Background color animates based on swipe progress
- * - **Confirmation**: onDelete is only called when swipe completes the threshold
+ * - **Deletion callback**: Invoked when the settled state enters EndToStart
  *
  * Common use cases include:
  * - Dismissing items in a LazyColumn list
@@ -77,16 +77,10 @@ fun SwipeToDismiss(
 ) {
     val dismissState = rememberSwipeToDismissBoxState()
 
-    // The effect below is remembered against currentValue alone, so a recomposition that only
-    // supplies a fresh onDelete does not replace the block it already holds. Callers in a list
-    // pass a new lambda closed over the row's item on every emission, so reading the newest one
-    // through rememberUpdatedState is what keeps a delete bound to the item actually swiped.
+    // Use the latest callback without restarting the effect when only the callback changes.
     val currentOnDelete by rememberUpdatedState(onDelete)
 
-    // ⚠️ onDelete has to fire from an effect, not from the composition body. currentValue stays at
-    // EndToStart for as long as the item remains dismissed, so a bare call here would re-run on
-    // every recomposition of this composable and delete repeatedly. Keying the effect on
-    // currentValue makes it run once per transition into the dismissed state, the actual event.
+    // Invoke deletion on entry into EndToStart, rather than on every dismissed recomposition.
     LaunchedEffect(dismissState.currentValue) {
         if (dismissState.currentValue == SwipeToDismissBoxValue.EndToStart) {
             currentOnDelete()

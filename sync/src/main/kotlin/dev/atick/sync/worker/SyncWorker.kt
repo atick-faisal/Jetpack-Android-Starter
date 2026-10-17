@@ -131,21 +131,7 @@ class SyncWorker @AssistedInject constructor(
         const val TOTAL_SYNC_ATTEMPTS = 3
 
         /**
-         * WorkManager constraints that must be met for sync to run.
-         *
-         * Current constraints:
-         * - **Network**: CONNECTED (any network type - WiFi or cellular)
-         *
-         * Additional constraints can be added:
-         * ```kotlin
-         * val SyncConstraints = Constraints.Builder()
-         *     .setRequiredNetworkType(NetworkType.UNMETERED) // WiFi only
-         *     .setRequiresBatteryNotLow(true) // Battery not low
-         *     .setRequiresStorageNotLow(true) // Storage not low
-         *     .build()
-         * ```
-         *
-         * @see Constraints
+         * Requires a connected network; this does not establish access to Firestore.
          */
         val SyncConstraints
             get() = Constraints.Builder()

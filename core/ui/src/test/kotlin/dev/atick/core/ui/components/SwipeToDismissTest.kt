@@ -37,9 +37,7 @@ import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 
 /**
- * A dismissed item stays dismissed, so `currentValue` keeps reporting `EndToStart` for as long as
- * the composable is alive. That makes deletion the one callback here that a recomposition can
- * silently repeat, and repeating it deletes rows the user never swiped.
+ * Checks deletion after a swipe, across recomposition while dismissed, and with an updated callback.
  */
 @RunWith(RobolectricTestRunner::class)
 class SwipeToDismissTest {
@@ -76,8 +74,7 @@ class SwipeToDismissTest {
         composeTestRule.setContent {
             // The counter has to be read out here, in the scope that calls SwipeToDismiss, so the
             // call itself re-executes. Reading it inside the content lambda would only recompose
-            // that child scope and would not exercise the composable's own body. A LazyColumn row
-            // recomposes this way for real on every list emission.
+            // that child scope and would not exercise the composable's own body.
             val tick = recompose
 
             SwipeToDismiss(onDelete = { deleteCount++ }) {

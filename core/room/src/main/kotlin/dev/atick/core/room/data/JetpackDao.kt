@@ -83,7 +83,6 @@ interface JetpackDao {
      * If it doesn't exist locally, a new entry will be created.
      *
      * @param remoteJetpacks List of jetpack entities from the remote source to be upserted.
-     * @return List of row IDs for the inserted rows.
      */
     @Transaction
     @Upsert
@@ -115,8 +114,8 @@ interface JetpackDao {
     suspend fun deleteJetpackPermanently(id: String)
 
     /**
-     * Marks a jetpack as synced by setting the needsSync flag to 0, the syncAction to 'NONE',
-     * and updating the lastSynced timestamp.
+     * Clears needsSync and syncAction by ID and updates lastSynced, without checking which
+     * version was uploaded. An edit made during upload can lose its pending flags.
      *
      * @param id The ID of the jetpack to mark as synced.
      * @param timestamp The timestamp to set as the last synced time. Defaults to the current system time.

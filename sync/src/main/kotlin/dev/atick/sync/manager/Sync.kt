@@ -55,25 +55,7 @@ object Sync {
 }
 
 /**
- * The unique name identifier for the sync worker.
- *
- * This constant is used to:
- * - Uniquely identify the sync worker in WorkManager's queue
- * - Ensure only one sync worker runs at a time (via `enqueueUniqueWork`)
- * - Query the sync worker's status in [SyncManager]
- *
- * ## Usage
- * ```kotlin
- * // Enqueue sync work
- * WorkManager.getInstance(context).enqueueUniqueWork(
- *     SYNC_WORK_NAME,
- *     ExistingWorkPolicy.KEEP,
- *     syncWorkRequest
- * )
- *
- * // Query sync status
- * val workInfo = WorkManager.getInstance(context)
- *     .getWorkInfosForUniqueWork(SYNC_WORK_NAME)
- * ```
+ * Unique-work name shared by enqueue and status queries. [Sync.initialize] uses KEEP so an
+ * unfinished request with this name is retained rather than replaced or followed by another pass.
  */
 internal const val SYNC_WORK_NAME = "dev.atick.jetpack.sync.worker"

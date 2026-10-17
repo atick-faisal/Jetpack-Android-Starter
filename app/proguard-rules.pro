@@ -1,12 +1,7 @@
-# Minify obfuscates navigation destinations marked with @Serializable
+# Keeps the serialization annotation and all annotated classes and members, including NavKeys.
+# Historical navigation workaround; applicability to the current Navigation 3/R8 is unverified:
 # https://issuetracker.google.com/issues/353898971?pli=1
 -keep @interface kotlinx.serialization.Serializable
-# ⚠️ The issue above only requires keeping navigation-destination classes from being
-# stripped/renamed, but this rule keeps every member of every @Serializable class in the app, not
-# just navigation destinations. That breadth is deliberate: any new @Serializable class is
-# automatically covered with no keep-list maintenance, at the cost of being much blunter than the
-# bug requires. See core/network/consumer-rules.pro and firebase/auth/consumer-rules.pro for the
-# narrower, per-rule style used elsewhere.
 -keep @kotlinx.serialization.Serializable class * { *; }
 
 # Crashlytics

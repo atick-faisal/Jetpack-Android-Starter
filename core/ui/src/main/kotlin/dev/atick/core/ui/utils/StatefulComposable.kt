@@ -110,9 +110,7 @@ data class UiState<T : Any>(
  * @see updateWith
  */
 inline fun <T : Any> MutableStateFlow<UiState<T>>.updateState(update: T.() -> T) {
-    // copy() rather than UiState(...): building a fresh wrapper would discard `loading` and any
-    // error event that has not been consumed yet, so a keystroke arriving mid-request would
-    // silently cancel the loading indicator and swallow a pending error.
+    // Preserve loading and the existing error event while replacing data.
     update { it.copy(data = update(it.data)) }
 }
 
@@ -147,8 +145,7 @@ context(viewModel: ViewModel) inline fun <reified T : Any> MutableStateFlow<UiSt
             if (data != null) {
                 update { it.copy(data = data, loading = false) }
             } else {
-                // Result.success(null) has no sensible meaning for a non-null T, so it's
-                // promoted to a real, visible error instead of silently doing nothing.
+                // Reject a null success payload for the non-null screen-data type.
                 update {
                     it.copy(
                         loading = false,

@@ -19,241 +19,67 @@ package dev.atick.firebase.firestore.data
 import dev.atick.firebase.firestore.model.FirebaseJetpack
 
 /**
- * Interface for Firebase Firestore data source operations.
+ * Firestore operations under `/dev.atick.jetpack/{userId}/jetpacks/{documentId}`.
  *
- * This interface defines CRUD operations for syncing data between the local Room database
- * and Firebase Firestore. It implements an offline-first sync pattern where:
- * - Local Room database is the source of truth for the UI
- * - Firestore serves as the remote backup and sync hub
- * - Changes are synchronized bidirectionally between local and remote
- *
- * ## Sync Strategy
- * **Pull (Download from Firestore)**:
- * - Query items where `lastUpdated > lastSyncTimestamp`
- * - Merge remote changes into local database
- * - Handle conflicts (typically last-write-wins)
- *
- * **Push (Upload to Firestore)**:
- * - Query local items with pending sync actions (CREATE, UPDATE, DELETE)
- * - Upload changes to Firestore
- * - Mark items as synced after successful upload
- *
- * ## Firestore Structure
- * ```
- * /dev.atick.jetpack/
- *   /jetpacks/
- *     /{userId}/
- *       /{jetpackId}/
- *         - id: String
- *         - name: String
- *         - price: Double
- *         - userId: String
- *         - lastUpdated: Long
- *         - lastSynced: Long
- *         - deleted: Boolean
- * ```
- *
- * ## Usage in Repository
- * ```kotlin
- * class HomeRepository @Inject constructor(
- *     private val localDataSource: LocalDataSource,
- *     private val firebaseDataSource: FirebaseDataSource,
- *     private val authDataSource: AuthDataSource
- * ) {
- *     // Pull remote changes
- *     suspend fun pullData(): Result<Unit> = suspendRunCatching {
- *         val userId = authDataSource.getCurrentUser()?.id ?: return@suspendRunCatching
- *         val lastSync = localDataSource.getLastSyncTimestamp()
- *         val remoteItems = firebaseDataSource.pullJetpacks(userId, lastSync)
- *
- *         // Merge into local database
- *         remoteItems.forEach { remote ->
- *             localDataSource.upsertJetpack(remote.toEntity())
- *         }
- *     }
- *
- *     // Push local changes
- *     suspend fun pushData(): Result<Unit> = suspendRunCatching {
- *         val pendingItems = localDataSource.getPendingSyncItems()
- *
- *         pendingItems.forEach { local ->
- *             when (local.syncAction) {
- *                 SyncAction.CREATE, SyncAction.UPDATE ->
- *                     firebaseDataSource.createOrUpdateJetpack(local.toFirebase())
- *                 SyncAction.DELETE ->
- *                     firebaseDataSource.deleteJetpack(local.toFirebase())
- *                 SyncAction.SYNCED -> { /* Skip */ }
- *             }
- *             localDataSource.markAsSynced(local.id)
- *         }
- *     }
- * }
- * ```
- *
- * ## Thread Safety
- * All operations are suspend functions and should be called from appropriate coroutine contexts.
- * The implementation uses Firebase's built-in thread handling which is safe for concurrent access.
- *
- * ## Error Handling
- * Operations can throw:
- * - `FirebaseFirestoreException` - Firestore-specific errors
- * - `FirebaseNetworkException` - Network connectivity issues
- * - `SecurityException` - Firestore security rules violations
+ * The repository owns Room persistence, pending metadata, and push/pull ordering. These calls
+ * propagate SDK failures; they do not resolve conflicts or acknowledge local rows.
  *
  * @see FirebaseJetpack
- * @see dev.atick.core.room.data.LocalDataSource
  */
 interface FirebaseDataSource {
     companion object {
         /**
-         * The name of the Firestore database.
-         *
-         * This is used as the root collection name for all app data in Firestore.
+         * The root collection name; this does not select a named Firestore database.
          */
         const val DATABASE_NAME = "dev.atick.jetpack"
 
         /**
-         * The name of the jetpacks collection within the database.
-         *
-         * Full Firestore path: `/dev.atick.jetpack/jetpacks/{userId}/{jetpackId}`
+         * The subcollection under each user document: `/dev.atick.jetpack/{userId}/jetpacks`.
          */
         const val JETPACK_COLLECTION_NAME = "jetpacks"
     }
 
     /**
-     * Pulls every Jetpack item the server has written since [syncedAfterNanos].
+     * Queries documents whose [FirebaseJetpack.serverUpdatedAt] is greater than [syncedAfterNanos].
      *
-     * The cursor is compared against [FirebaseJetpack.serverUpdatedAt], which Firestore assigns
-     * itself. A client clock is never involved: a caller that passed its own `lastUpdated` here
-     * would skip, permanently and silently, every record written by a device whose clock runs
-     * slower than the fastest device that ever wrote to the collection.
+     * The default SDK source may return cached results. Documents missing serverUpdatedAt are excluded,
+     * even with a zero cursor. Hard-deleted documents are absent; this is not a deletion feed.
      *
-     * Soft-deleted items (`deleted = true`) are included so a deletion made on another device can
-     * reach this one.
-     *
-     * @param userId The unique identifier of the user (Firebase Auth UID). Only items
-     *               belonging to this user are returned.
-     * @param syncedAfterNanos The newest `serverUpdatedAtNanos` already ingested. Pass `0` on a
-     *                         first sync to fetch the whole collection.
-     * @return The matching [FirebaseJetpack] objects, empty if there is nothing new.
-     * @throws FirebaseFirestoreException if the query fails
-     * @throws FirebaseNetworkException if network is unavailable
+     * @param userId Owner document ID, expected to be the Firebase Auth UID.
+     * @param syncedAfterNanos Stored server write time in epoch nanoseconds; zero starts at the epoch.
+     * @return Matching documents, without snapshot cache/pending-write metadata.
+     * @throws com.google.firebase.firestore.FirebaseFirestoreException if the SDK query fails
      */
     suspend fun pullJetpacks(userId: String, syncedAfterNanos: Long): List<FirebaseJetpack>
 
     /**
-     * Creates a new Jetpack item in Firestore.
+     * Adds a document with a Firestore-generated ID, independent of [FirebaseJetpack.id].
      *
-     * This method adds a new document to the Firestore collection. If a document with
-     * the same ID already exists, this operation will fail with a conflict error.
+     * Repository sync uses [createOrUpdateJetpack] to address documents by the model ID instead.
      *
-     * ## Document Path
-     * `/dev.atick.jetpack/jetpacks/{userId}/{jetpackId}`
-     *
-     * ## When to Use
-     * Use this when you're certain the item doesn't exist in Firestore. For most sync
-     * operations, prefer [createOrUpdateJetpack] which handles both cases.
-     *
-     * ## Example
-     * ```kotlin
-     * suspend fun uploadNewItem(item: JetpackEntity) {
-     *     val firebaseItem = item.toFirebase().copy(
-     *         userId = getCurrentUserId(),
-     *         lastUpdated = System.currentTimeMillis()
-     *     )
-     *     firebaseDataSource.createJetpack(firebaseItem)
-     * }
-     * ```
-     *
-     * @param firebaseJetpack The [FirebaseJetpack] object to create. Must have a unique
-     *                        ID and all required fields populated.
-     * @throws FirebaseFirestoreException if creation fails or document already exists
-     * @throws FirebaseNetworkException if network is unavailable
+     * @param firebaseJetpack Content to add under its userId.
+     * @throws com.google.firebase.firestore.FirebaseFirestoreException if the SDK write fails
      */
     suspend fun createJetpack(firebaseJetpack: FirebaseJetpack)
 
     /**
-     * Creates or updates a Jetpack item in Firestore (upsert operation).
+     * Creates or replaces the document identified by the model's userId and id using set(), without merge.
      *
-     * This method uses Firestore's `set()` operation to either create a new document
-     * or replace an existing one. This is the preferred method for sync operations as
-     * it handles both new items and updates uniformly.
+     * Fresh upload mappings leave serverUpdatedAt null so Firestore assigns a server timestamp.
      *
-     * ## Behavior
-     * - If document doesn't exist: Creates new document
-     * - If document exists: Completely replaces the document with new data
-     * - **Warning**: This performs a full replace, not a merge. All fields are overwritten.
-     *
-     * ## Document Path
-     * `/dev.atick.jetpack/jetpacks/{userId}/{jetpackId}`
-     *
-     * ## Usage in Sync
-     * ```kotlin
-     * suspend fun syncPush() {
-     *     val pendingItems = localDataSource.getItemsWithSyncAction(
-     *         SyncAction.CREATE, SyncAction.UPDATE
-     *     )
-     *
-     *     pendingItems.forEach { local ->
-     *         val firebaseItem = local.toFirebase().copy(
-     *             lastUpdated = System.currentTimeMillis()
-     *         )
-     *         firebaseDataSource.createOrUpdateJetpack(firebaseItem)
-     *         localDataSource.markAsSynced(local.id)
-     *     }
-     * }
-     * ```
-     *
-     * @param firebaseJetpack The [FirebaseJetpack] object to create or update. Should have
-     *                        `lastUpdated` set to the current timestamp.
-     * @throws FirebaseFirestoreException if the operation fails
-     * @throws FirebaseNetworkException if network is unavailable
-     * @throws SecurityException if Firestore security rules deny the operation
+     * @param firebaseJetpack Full document content; fields omitted from an existing document are removed.
+     * @throws com.google.firebase.firestore.FirebaseFirestoreException if the SDK write fails
      */
     suspend fun createOrUpdateJetpack(firebaseJetpack: FirebaseJetpack)
 
     /**
-     * Deletes a Jetpack item from Firestore (hard delete).
+     * Hard-deletes the document identified by the model's userId and id.
      *
-     * This method permanently removes the document from Firestore. **Warning**: This is
-     * a destructive operation and cannot be undone.
+     * The repository uses this for pending local soft deletes, then acknowledges the retained local row.
+     * No remote tombstone is written, so incremental pulls cannot remove another device's existing row.
      *
-     * ## Soft Delete vs Hard Delete
-     * In practice, this template uses **soft deletes** by setting `deleted = true` via
-     * [createOrUpdateJetpack]. Hard deletion using this method should only be used for:
-     * - Final cleanup after all devices have synchronized the soft delete
-     * - Administrative operations
-     * - GDPR/data deletion requests
-     *
-     * ## Recommended Pattern (Soft Delete)
-     * ```kotlin
-     * // Instead of calling deleteJetpack():
-     * val softDeleted = item.copy(
-     *     deleted = true,
-     *     lastUpdated = System.currentTimeMillis()
-     * )
-     * firebaseDataSource.createOrUpdateJetpack(softDeleted)
-     * ```
-     *
-     * ## Hard Delete Usage
-     * ```kotlin
-     * suspend fun permanentlyDelete(item: JetpackEntity) {
-     *     // First, ensure all devices have synced the soft delete
-     *     if (allDevicesSynced(item.id)) {
-     *         firebaseDataSource.deleteJetpack(item.toFirebase())
-     *         localDataSource.hardDelete(item.id)
-     *     }
-     * }
-     * ```
-     *
-     * ## Document Path
-     * `/dev.atick.jetpack/jetpacks/{userId}/{jetpackId}`
-     *
-     * @param firebaseJetpack The [FirebaseJetpack] object to delete. Only the ID field
-     *                        is used to identify the document to delete.
-     * @throws FirebaseFirestoreException if deletion fails
-     * @throws FirebaseNetworkException if network is unavailable
-     * @throws SecurityException if Firestore security rules deny deletion
+     * @param firebaseJetpack Identifies the owner and document; other fields are not used.
+     * @throws com.google.firebase.firestore.FirebaseFirestoreException if the SDK delete fails
      */
     suspend fun deleteJetpack(firebaseJetpack: FirebaseJetpack)
 }

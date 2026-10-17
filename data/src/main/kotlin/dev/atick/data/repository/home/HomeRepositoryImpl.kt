@@ -58,11 +58,7 @@ internal class HomeRepositoryImpl @Inject constructor(
      * @return A [Flow] of a list of [Jetpack].
      */
     override fun getJetpacks(): Flow<List<Jetpack>> {
-        // 💡 This call sits above the flow{} builder, so it fires every time getJetpacks() is
-        // invoked -- at flow-construction time, not once per collection. A cold Flow normally
-        // defers everything inside its builder until collection, but this call isn't inside it,
-        // so even building the flow without ever collecting it still triggers a sync.
-        // TODO: This should be done in a more efficient way
+        // Request work when constructing the Flow, even if it is never collected.
         syncManager.requestSync()
 
         return flow {
@@ -175,11 +171,7 @@ internal class HomeRepositoryImpl @Inject constructor(
                 )
             }
 
-            // Remote jetpacks
-            // ⚠️ The cursor is the newest timestamp the *server* assigned, never a local edit time.
-            // lastUpdated comes from whichever device wrote the row, so a fleet where one clock runs
-            // fast would push the cursor into the future and every record from a slower device would
-            // be skipped from then on, silently and permanently.
+            // Resume from stored server timestamps, independent of device edit clocks.
             val syncedAfterNanos = localDataSource.getSyncCursor(userId)
             val remoteJetpacks = firebaseDataSource.pullJetpacks(userId, syncedAfterNanos)
             val totalRemoteJetpacks = remoteJetpacks.size

@@ -49,6 +49,7 @@ import dev.atick.feature.home.R
 /**
  * Item screen.
  *
+ * @param itemId Item ID from the navigation key, or null for a new item.
  * @param onBackClick The back click listener.
  * @param onShowSnackbar The snackbar callback.
  * @param itemViewModel The [ItemViewModel].
@@ -58,8 +59,7 @@ internal fun ItemScreen(
     itemId: String?,
     onBackClick: () -> Unit,
     onShowSnackbar: suspend (String, SnackbarAction, Throwable?) -> Boolean,
-    // Navigation 3 passes destination arguments through the NavKey rather than a
-    // SavedStateHandle, so the id is handed to the ViewModel by assisted injection.
+    // Pass the ItemNavKey argument to the assisted ViewModel factory.
     itemViewModel: ItemViewModel = hiltViewModel<ItemViewModel, ItemViewModel.Factory>(
         creationCallback = { factory -> factory.create(itemId) },
     ),

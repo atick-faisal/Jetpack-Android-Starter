@@ -2,7 +2,7 @@
 
 Companion goals, findings, and recovery map: [DOC_FIX_PLAN.md](DOC_FIX_PLAN.md).
 
-Status: DF-00–DF-11 complete (DF-11 publication gaps explicitly deferred to DF-14); DF-12–DF-15 pending. Checked items identify completed work in the records below. Reviewed base: `1c2103890d16f81f6c6ae4c2d8626281b841e417`.
+Status: DF-00–DF-12 complete (publication gaps explicitly deferred to DF-14); DF-13–DF-15 pending. Checked items identify completed work in the records below. Reviewed base: `1c2103890d16f81f6c6ae4c2d8626281b841e417`.
 Reviewed head: `0fb7882982cfefd55df300e06549731c6fbb33bb` ([PR #647](https://github.com/atick-faisal/Jetpack-Android-Starter/pull/647)).
 
 Complete each task by recording the changed paths, verification result, and any unresolved follow-up
@@ -1656,53 +1656,141 @@ Perform an editorial and factual pass at every listed site. Retain licenses, val
 issue links and non-obvious constraints. Edit prose only here; protected rule/build changes and
 runtime fixes belong to separately scoped work.
 
-- [ ] `app/proguard-rules.pro`: remove unsupported intent; state actual keep scope; verify the linked
+- [x] `app/proguard-rules.pro`: remove unsupported intent; state actual keep scope; verify the linked
   workaround against current Navigation/R8 before retaining a necessity claim. Keep rule tokens intact.
-- [ ] `app/build.gradle.kts`: concise signing consequence/action; remove the removed-placeholder
+- [x] `app/build.gradle.kts`: concise signing consequence/action; remove the removed-placeholder
   story while retaining useful issue tracking for custom APK naming.
-- [ ] `gradle/init.gradle.kts`: explain invocation and observed scope, not hypothetical reasons for
+- [x] `gradle/init.gradle.kts`: explain invocation and observed scope, not hypothetical reasons for
   the architecture. Correct the “every Gradle invocation” claim; review adjacent stale TODO wording.
-- [ ] `build-logic/.../AndroidCompose.kt`: explain that missing/false flags leave report destinations
+- [x] `build-logic/.../AndroidCompose.kt`: explain that missing/false flags leave report destinations
   unset; avoid the long provider/null lecture. Follow the repo's convention-plugin boundary.
-- [ ] `firebase/auth/consumer-rules.pro`: verify discovery from SDK source; do not assume
+- [x] `firebase/auth/consumer-rules.pro`: verify discovery from SDK source; do not assume
   `ServiceLoader`. Explain the actual kept provider classes and condition without changing rules.
-- [ ] `firebase/auth/.../AuthDataSourceImpl.kt`: verify the lint issue's actual meaning and error
+- [x] `firebase/auth/.../AuthDataSourceImpl.kt`: verify the lint issue's actual meaning and error
   handling, then shorten the suppression/filter explanations and redundant cross-function comment.
-- [ ] `core/ui/.../theme/Background.kt`, `Gradient.kt`, `Tint.kt`: fix `LocalGradientTheme` to the
+- [x] `core/ui/.../theme/Background.kt`, `Gradient.kt`, `Tint.kt`: fix `LocalGradientTheme` to the
   actual `LocalGradientColors` where appropriate; verify any recommended rule-setting syntax.
   Explain the present suppression without implementing a Spotless/EditorConfig change here.
-- [ ] `core/ui/.../utils/StatefulComposable.kt`: reconcile enclosing KDoc and body comments with
+- [x] `core/ui/.../utils/StatefulComposable.kt`: reconcile enclosing KDoc and body comments with
   DF-07, especially effect keys, consumption, thrown exceptions, and concurrent-update limits.
-- [ ] `feature/home/.../HomeViewModel.kt`, `ItemViewModel.kt`, `ItemScreen.kt`, and
+- [x] `feature/home/.../HomeViewModel.kt`, `ItemViewModel.kt`, `ItemScreen.kt`, and
   `feature/settings/.../SettingsViewModel.kt`: concise lifecycle/input/locale guidance; remove
   “most-copied idiom,” obsolete Route KDoc, and unsupported parser examples.
-- [ ] `core/network/.../NetworkUtils.kt` and `NetworkUtilsImpl.kt`: state initial emission and
+- [x] `core/network/.../NetworkUtils.kt` and `NetworkUtilsImpl.kt`: state initial emission and
   subsequent callback behavior; remove the overbroad “only reports transitions” assertion and long
   retelling of the fixed startup bug. Distinguish available network from validated Internet access.
-- [ ] `core/ui/.../components/SwipeToDismiss.kt`: explain the deletion side effect and transition
+- [x] `core/ui/.../components/SwipeToDismiss.kt`: explain the deletion side effect and transition
   lifetime briefly; preserve the fix and its regression test.
-- [ ] `data/.../HomeRepositoryImpl.kt`, `data/.../model/home/Jetpack.kt`: local sync-request timing,
+- [x] `data/.../HomeRepositoryImpl.kt`, `data/.../model/home/Jetpack.kt`: local sync-request timing,
   field mapping, server cursor, and echo behavior consistent with DF-02/06. Avoid universal claims
   that an echo cannot change content.
-- [ ] `core/room/.../JetpackDao.kt`, `JetpackDatabase.kt`, `LocalDataSource.kt`,
+- [x] `core/room/.../JetpackDao.kt`, `JetpackDatabase.kt`, `LocalDataSource.kt`,
   `LocalDataSourceImpl.kt`, `JetpackEntity.kt`: check query, units, null/default cursor, tombstones,
   and schema documentation. Move repeated clock-skew narratives into one guide explanation.
-- [ ] `firebase/firestore/.../FirebaseDataSource.kt`, `FirebaseDataSourceImpl.kt`,
+- [x] `firebase/firestore/.../FirebaseDataSource.kt`, `FirebaseDataSourceImpl.kt`,
   `model/FirebaseJetpack.kt`: retain null-on-write server timestamp behavior and the constructor
   visibility constraint succinctly. Clarify what nanosecond conversion preserves without repeating
   “silently and permanently” or overstating first-pull coverage of old documents.
-- [ ] `sync/.../Sync.kt`, `SyncManagerImpl.kt`, `SyncWorker.kt`: remove unjustified safety assurances,
+- [x] `sync/.../Sync.kt`, `SyncManagerImpl.kt`, `SyncWorker.kt`: remove unjustified safety assurances,
   reconcile cross-links, and shorten retry/backoff documentation to the relevant contract.
-- [ ] Check comment/KDoc consistency in the five changed test files: `NetworkUtilsImplTest`,
+- [x] Check comment/KDoc consistency in the five changed test files: `NetworkUtilsImplTest`,
   `JetpackDaoTest`, `SwipeToDismissTest`, `HomeRepositoryImplTest`, `ItemViewModelTest`. Preserve
   meaningful setup explanations and regression intent; remove claims beyond their assertions.
-- [ ] Review adjacent surviving boilerplate only where it contradicts the edited contract. Verify
+- [x] Review adjacent surviving boilerplate only where it contradicts the edited contract. Verify
   the removed `DarkThemeConfigSerializer` leaves no instructions telling readers to use it.
-- [ ] Compare the final source diff to the pre-repair head and confirm editorial commits contain
+- [x] Compare the final source diff to the pre-repair head and confirm editorial commits contain
   no unintended Kotlin, Gradle, R8, annotation, SQL, or test-behavior changes.
 
 Accept: every PR-touched source site has a disposition; comments help with behavior or maintenance,
 and neither invented intent nor documented bugs are presented as architectural guarantees.
+
+### DF-12 completion record
+
+Completed 2026-10-17 on `fix/docs-v3`, starting from
+`f06290a8b6fb2f65cafc592f952897d0f8a82bc1` with a clean working tree. This record covers the
+uncommitted editorial patch; no commit, push, deployment, or external update was made.
+
+#### Coverage and dispositions
+
+Compared the pinned PR base `1c2103890d16f81f6c6ae4c2d8626281b841e417` with the starting HEAD:
+46 Kotlin, Gradle, and rule files. Reviewed each file's surviving comments and enclosing contracts;
+33 required edits, and 13 retained the already-correct guidance or contained no further substantive
+comment changes. Two adjacent interfaces required corrections. License headers are unchanged.
+
+Paths below use their module's `src/main/kotlin/dev/atick/` package root unless a full path or test
+root is specified. Every file in the 46-file inventory has a disposition here.
+
+| Area / files | Disposition |
+|---|---|
+| `app/build.gradle.kts`, `app/proguard-rules.pro` | Shortened signing consequences and removed placeholder history; described actual serialization keep scope without claiming the historical issue proves current necessity. Preserved rule directives. |
+| `gradle/init.gradle.kts`, `build-logic/convention/src/main/kotlin/dev/atick/AndroidCompose.kt` | Corrected explicit invocation, main-build formatting scope and included-build header limitation; explained unset report destinations. Comments only, including the convention helper. |
+| `firebase/auth/consumer-rules.pro`, `firebase/auth/data/AuthDataSourceImpl.kt` | Replaced ServiceLoader claim with manifest-metadata/reflection discovery; documented broad keep scope and the SDK's narrower rule. Corrected lint's project-wide NoCredentialException-use check and account filtering. |
+| `core/ui/theme/Background.kt`, `Gradient.kt`, `Tint.kt` | Explained the current file suppressions using the declared local names, including LocalGradientColors. Removed proposed EditorConfig syntax rather than adding a formatting policy change. |
+| `core/network/utils/NetworkUtils.kt`, `NetworkUtilsImpl.kt` | Documented the initial capability sample, sample/registration race, emitted/logged callbacks, cleanup and duplicate suppression. Removed startup-bug history and backend-reachability assurances. |
+| `core/android/utils/OneTimeEvent.kt`, `core/ui/utils/StatefulComposable.kt`, `components/SwipeToDismiss.kt` | Shortened redundant body comments, retained established consumption/exception/concurrency limits, and explained callback freshness and dismissal effects without delivery guarantees. |
+| `core/room/data/JetpackDao.kt`, `LocalDataSource.kt`, `LocalDataSourceImpl.kt` | Corrected acknowledgement/version wording and the false row-ID return documentation; replaced fictional repository examples with current local-storage responsibilities. Retained server-cursor units, deleted-row inclusion and null-to-zero behavior. |
+| `data/model/home/Jetpack.kt`, `repository/home/HomeRepositoryImpl.kt` | Shortened construction-time sync-request and server-clock explanations; retained null-on-write mapping, pending-write risks and possible content changes from upload echoes. |
+| `feature/home/ui/item/ItemScreen.kt`, `feature/settings/ui/SettingsViewModel.kt` | Clarified assisted argument wiring, immediate upstream restart, surviving collectors, locale mapping and the unused load-error state. |
+| `firebase/firestore/data/FirebaseDataSource.kt`, `FirebaseDataSourceImpl.kt`, `model/FirebaseJetpack.kt` | Replaced obsolete cursor/merge/deletion guidance and fictional APIs with the actual path, strict server boundary, default-source cache limitation, generated-ID add versus ID-addressed set, hard deletes and null-only ID check. Corrected device-timestamp semantics and shortened constructor/precision constraints. |
+| `sync/manager/Sync.kt`, `SyncManagerImpl.kt`, `worker/SyncWorker.kt` | Retained the repaired KEEP, retry and cancellation contracts; shortened repeated work-name/constraint guidance and removed the incorrect WiFi-only interpretation of UNMETERED. |
+| Tests under each module's `src/test/kotlin/dev/atick/`: `core/network/utils/NetworkUtilsImplTest.kt`, `core/room/data/JetpackDaoTest.kt`, `core/ui/components/SwipeToDismissTest.kt`, `data/repository/home/HomeRepositoryImplTest.kt`, `feature/home/ui/item/ItemViewModelTest.kt`, `feature/settings/ui/SettingsViewModelTest.kt` | Corrected overbroad regression/fake claims and retained meaningful setup explanations. Assertions and test behavior are unchanged. Network tests cover initial samples, not duplicate suppression or callback ordering; Settings state tests do not render snackbars. |
+| `core/android/extensions/FlowExtensions.kt`; `core/preferences/model/UserDataPreferences.kt`, `utils/UserDataSerializer.kt` | Retained prior repairs: sharing versus separately launched jobs, JSON model defaults, and corruption propagation without a handler. No DarkThemeConfigSerializer usage instructions remain. |
+| `core/room/data/JetpackDatabase.kt`, `di/DatabaseModule.kt`, `model/JetpackEntity.kt` | Retained the actual schema declaration, destructive-fallback limits, field units, pending metadata and deleted-row lifetime. |
+| `data/build.gradle.kts`, `data/utils/SyncUtils.kt`, `feature/home/build.gradle.kts` | Retained test-classpath explanation, cold-sync/progress contracts and existing grouping comments. |
+| `feature/home/ui/home/HomeViewModel.kt`, `ui/item/ItemViewModel.kt` | Retained the earlier lifecycle, raw-input, ignored-save-Result, unused-load-error and event-consumption repairs. |
+| `core/ui/src/test/kotlin/dev/atick/core/ui/utils/StatefulComposableEventTest.kt`, `UiStateContractTest.kt` | Retained characterization coverage and the supervised-scope setup explanation. No assertions or behavior changed. |
+| Adjacent: `core/network/data/NetworkDataSource.kt` | Qualified unresolved KDoc links/exception types without adding imports; labeled the repository/mapping example as an adopter extension. |
+| Adjacent: `core/preferences/data/UserPreferencesDataSource.kt` | Replaced contradictory Proto DataStore and direct-ViewModel examples with the JSON storage contract, repository boundary, error propagation and stored-profile-versus-auth distinction. Removed the unresolved withContext reference. |
+
+#### Factual evidence and unresolved necessity
+
+- Credentials discovery was checked in the exact `androidx.credentials:credentials:1.6.0` source
+  archive's `CredentialProviderFactory.kt`: service metadata under CREDENTIAL_PROVIDER_KEY supplies
+  class names, followed by Class.forName and a Context constructor. The resolved play-services AAR
+  manifest names CredentialProviderPlayServicesImpl; its consumer rules keep that class, while this
+  repository's rule keeps the entire playservices package. No shrinker-removal diagnosis is claimed.
+- Checked CredentialManagerMisuse in resolved lint-checks 32.3.1 and its
+  [official check documentation](https://googlesamples.github.io/android-custom-lint-rules/checks/CredentialManagerMisuse.md.html).
+  It looks for NoCredentialException use across the project, rather than requiring a nearby catch.
+  Repository wrappers still provide generic Result handling, without a distinct no-credential path.
+- Checked filtering against Google's
+  [GetGoogleIdOption.Builder contract](https://developers.google.com/identity/android-credential-manager/android/reference/com/google/android/libraries/identity/googleid/GetGoogleIdOption.Builder).
+  Authorization filtering does not establish whether the Firebase user exists.
+- The historical [navigation issue](https://issuetracker.google.com/issues/353898971) did not expose
+  usable issue content during this review. Necessity with Navigation 3 1.1.4/current R8 remains
+  unverified and is explicitly labeled in the comment. No rule removal or narrowing is proposed.
+
+#### Verification
+
+Validated the final source patch against starting HEAD. Source-only `git diff -- '*.kt' '*.kts'
+'*.pro'` SHA-256: `aba9c9e707fe5144dbfc94d15a11158011175e3ca43f1147dd1fc088bbf94ee4`.
+The completion record itself was added afterward.
+
+| Check | Result |
+|---|---|
+| Kotlin-aware executable-token comparison | Passed for all 33 changed Kotlin/Gradle files using Kotlin 2.4.10's KotlinLexer, excluding only whitespace/comment tokens. This preserves string literals, annotations, SQL and test assertions. An initial overbroad edit was caught and restored before final validation. |
+| R8 directive comparison | Passed for both changed rule files, excluding only comments/blank lines. |
+| `git diff --check` | Passed. |
+| `./gradlew spotlessCheck --init-script gradle/init.gradle.kts --no-configuration-cache check dokkaGeneratePublicationHtml` | BUILD SUCCESSFUL, 23 seconds, 1,417 tasks: 124 executed, 3 from cache, 1,290 up-to-date. Final network and preferences module/publication HTML tasks executed; this was not just cached API output. |
+| Generated API HTML | Inspected eight aggregate pages: network state/data-source reference, Firestore pull/add/delete, nanosecond conversion, local cursor and UiState. Checked revised prose and all 80 local link targets; all exist. This is HTML/content/link inspection, not a browser visual review. |
+| Obsolete-symbol search | No DarkThemeConfigSerializer, LocalGradientTheme or ServiceLoader instructions remain in the reviewed preferences/theme/auth source sites. |
+
+The final incremental run reported no unresolved-link warnings. The earlier broader generation did
+report warnings in untouched files: CoroutineModule/CoroutineUtils/ThrowableExtensions,
+Button/Tabs/TextField/ActivityExtensions/Theme, AuthDataSource, Settings and HomeRepository.
+Those warnings remain publication follow-ups under DF-14; cached tasks do not establish their
+resolution. The edited network references resolved during both generated module and publication
+passes. No blanket warning-free API-site claim is made.
+
+The existing DF-11 aggregate-module/README-inclusion gaps remain DF-14 work. Runtime limitations
+retain DF-02's dispositions. No MkDocs/site assembly, device, Firebase or release validation was
+needed for these source-only edits. Spotless apply remains required before a later commit; it was
+not run as part of this uncommitted editorial change. Root formatting success does not establish
+included-build formatting coverage.
+
+Logs, the SDK source archive, token-audit helper and source inventory/dispositions are under
+`/private/tmp/df12-*`. Initial Gradle lock-file access and SDK download were sandbox-blocked;
+reruns with granted access succeeded.
 
 ## DF-13 — Reconcile root guidance, changelog, and review history
 

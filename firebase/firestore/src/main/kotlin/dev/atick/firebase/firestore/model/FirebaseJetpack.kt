@@ -24,23 +24,20 @@ import java.util.UUID
  * A Jetpack item as it is stored in Firestore, at
  * `/dev.atick.jetpack/{userId}/jetpacks/{jetpackId}`.
  *
- * Two clocks appear on this document and they are not interchangeable. [lastUpdated] and
- * [lastSynced] are stamped by whichever device wrote the row, so they are only meaningful for
- * display. [serverUpdatedAt] is assigned by Firestore itself and is the only field ordered
- * consistently across devices, which is why it — and nothing else — drives the pull cursor.
+ * [lastUpdated] and [lastSynced] carry device-clock milliseconds into Room, where they affect
+ * list ordering and pending-row selection. [serverUpdatedAt] carries the server write timestamp
+ * used by the pull cursor; it is independent of those device clocks.
  *
  * @property id Unique identifier, shared with the Room entity and used as the document ID.
  * @property name Display name.
  * @property price Price in the user's currency.
  * @property userId Firebase Auth UID of the owner. Also the parent document in the path above.
  * @property lastUpdated Writing device's clock, in milliseconds, when the row was last edited.
- * @property lastSynced Writing device's clock, in milliseconds, when it last pushed the row.
+ * @property lastSynced Device-clock milliseconds set on upload; also mapped back into Room.
  * @property deleted Soft delete flag.
- * @see dev.atick.core.room.model.JetpackEntity
  */
 data class FirebaseJetpack(
-    // Every property has to be initialized for Firestore serialization.
-    // https://stackoverflow.com/a/67298049/12737399
+    // Constructor defaults supply the no-argument constructor used when mapping Firestore documents.
     val id: String = UUID.randomUUID().toString(),
     val name: String = String(),
     val price: Double = 0.0,
@@ -49,16 +46,9 @@ data class FirebaseJetpack(
     val lastSynced: Long = 0L,
     val deleted: Boolean = false,
 ) {
-    // The server's own write time, and deliberately not a constructor parameter. :data builds
-    // FirebaseJetpack with default arguments, and a Timestamp in the constructor would put
-    // com.google.firebase.Timestamp on :data's compile classpath -- which it does not have, because
-    // this module declares the SDK with implementation rather than api. Keeping the property in the
-    // body lets :data stay blind to the type and read the value through serverUpdatedAtNanos().
-    //
-    // Left null on every write: CustomClassMapper substitutes FieldValue.serverTimestamp() for a
-    // null @ServerTimestamp property, so the value below is only ever what the server assigned. The
-    // @get: use-site is the one the SDK documents for Kotlin; the annotation is read on write only
-    // and ignored when reading documents back.
+    // Keep Timestamp out of the constructor: :data calls it without the SDK on its compile classpath.
+    // Fresh upload mappings leave this null; @ServerTimestamp then requests a server-assigned value.
+    // :data reads pulled values through serverUpdatedAtNanos(), without naming Timestamp.
     @get:ServerTimestamp
     var serverUpdatedAt: Timestamp? = null
 }
@@ -67,11 +57,8 @@ data class FirebaseJetpack(
  * [FirebaseJetpack.serverUpdatedAt] as nanoseconds since the epoch, or `0` for a document the server
  * has not stamped yet.
  *
- * 💡 Nanoseconds rather than milliseconds because this value is stored and replayed as a sync
- * cursor. Firestore timestamps carry nanosecond precision, so a cursor truncated to milliseconds
- * sits *below* the timestamp of the newest document it just ingested, and that document is pulled
- * again on every later sync, forever. A [Long] holds nanoseconds since the epoch until the year
- * 2262.
+ * Preserves sub-millisecond precision when storing and rebuilding the pull cursor. A signed Long
+ * can represent epoch nanoseconds only within its range (approximately years 1677–2262).
  *
  * @return Nanoseconds since the epoch.
  */

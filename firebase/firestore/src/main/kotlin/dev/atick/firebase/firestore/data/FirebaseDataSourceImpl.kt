@@ -37,12 +37,12 @@ internal class FirebaseDataSourceImpl @Inject constructor(
 ) : FirebaseDataSource {
 
     /**
-     * Firestore database reference.
+     * Root collection in the injected Firestore database.
      */
     private val database = firestore.collection(FirebaseDataSource.DATABASE_NAME)
 
     /**
-     * Pulls a list of [FirebaseJetpack] objects the server has written since [syncedAfterNanos].
+     * Queries [FirebaseJetpack] documents after [syncedAfterNanos] using the SDK default source.
      *
      * @param userId The unique identifier of the user.
      * @param syncedAfterNanos The newest server timestamp already ingested, in nanoseconds.
@@ -67,7 +67,7 @@ internal class FirebaseDataSourceImpl @Inject constructor(
     }
 
     /**
-     * Creates a new [FirebaseJetpack] object in the database.
+     * Adds [FirebaseJetpack] content under a generated document ID.
      *
      * @param firebaseJetpack The [FirebaseJetpack] object to create.
      */
@@ -114,7 +114,7 @@ internal class FirebaseDataSourceImpl @Inject constructor(
     }
 
     /**
-     * Checks if the user is authenticated.
+     * Rejects a null owner ID; this does not check Firebase Auth or document authorization.
      *
      * @param userId The unique identifier of the user.
      * @return The user ID.

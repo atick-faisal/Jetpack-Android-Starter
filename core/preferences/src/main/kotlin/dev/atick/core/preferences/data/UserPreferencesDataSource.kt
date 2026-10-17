@@ -22,86 +22,16 @@ import dev.atick.core.preferences.model.UserDataPreferences
 import kotlinx.coroutines.flow.Flow
 
 /**
- * Data source for managing user preferences using DataStore (Proto DataStore pattern).
+ * Reads and updates [UserDataPreferences] in a typed JSON DataStore.
  *
- * This interface provides type-safe access to user preferences stored via Jetpack DataStore.
- * Unlike SharedPreferences, DataStore offers:
- * - **Type safety** through Protocol Buffers (Proto DataStore)
- * - **Reactive updates** via [Flow]
- * - **Coroutine support** for all operations
- * - **Data consistency** with transactional updates
- * - **Crash safety** with atomic read/write operations
+ * Reads expose a [Flow]; writes use transactional updateData calls through the implementation's
+ * IO dispatcher. Stored profile data is not a check of the current Firebase authentication session.
+ * Read/write failures propagate; malformed JSON has no configured default-value recovery handler.
+ * Repositories map this storage model to screen-facing data and wrap one-time operations in Result.
  *
- * ## Design Pattern
- *
- * This follows the **DataStore Pattern**:
- * - All reads return [Flow] for reactive UI updates
- * - All writes are suspend functions (transactional and async)
- * - Preferences are strongly typed via [UserDataPreferences]
- * - No blocking I/O operations
- *
- * ## Common Use Cases
- *
- * 1. **Store user session data** (user ID, profile info)
- * 2. **Manage UI preferences** (theme, dynamic colors)
- * 3. **Persist app settings** that survive app restarts
- * 4. **Track onboarding state** or first-run flags
- *
- * ## Usage in Repositories
- *
- * ```kotlin
- * class UserRepository @Inject constructor(
- *     private val userPreferencesDataSource: UserPreferencesDataSource
- * ) {
- *     // Reactive query for UI
- *     fun observeUserData(): Flow<UserData> =
- *         userPreferencesDataSource.getUserDataPreferences()
- *             .map { it.toDomainModel() }
- *
- *     // Check authentication
- *     suspend fun requireUserId(): String =
- *         userPreferencesDataSource.getUserIdOrThrow()
- *
- *     // Update theme
- *     suspend fun setDarkMode(enabled: Boolean): Result<Unit> = suspendRunCatching {
- *         val config = if (enabled) DarkThemeConfigPreferences.DARK
- *                      else DarkThemeConfigPreferences.LIGHT
- *         userPreferencesDataSource.setDarkThemeConfig(config)
- *     }
- * }
- * ```
- *
- * ## Usage in ViewModels
- *
- * ```kotlin
- * @HiltViewModel
- * class SettingsViewModel @Inject constructor(
- *     private val userPreferencesDataSource: UserPreferencesDataSource
- * ) : ViewModel() {
- *     val userData = userPreferencesDataSource.getUserDataPreferences()
- *         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), UserDataPreferences())
- *
- *     fun toggleDarkMode() {
- *         _uiState.updateWith {
- *             val newConfig = when (userData.value.darkThemeConfigPreferences) {
- *                 DarkThemeConfigPreferences.LIGHT -> DarkThemeConfigPreferences.DARK
- *                 DarkThemeConfigPreferences.DARK -> DarkThemeConfigPreferences.LIGHT
- *                 DarkThemeConfigPreferences.FOLLOW_SYSTEM -> DarkThemeConfigPreferences.DARK
- *             }
- *             userPreferencesDataSource.setDarkThemeConfig(newConfig)
- *         }
- *     }
- * }
- * ```
- *
- * ## Threading
- *
- * All suspend functions execute on IO dispatcher automatically (handled by DataStore).
- * Callers should **not** wrap calls with [withContext].
- *
- * @see UserDataPreferences for the preferences data model
- * @see DarkThemeConfigPreferences for theme options
- * @see PreferencesUserProfile for user profile data
+ * @see UserDataPreferences
+ * @see DarkThemeConfigPreferences
+ * @see PreferencesUserProfile
  */
 interface UserPreferencesDataSource {
 
@@ -127,34 +57,17 @@ interface UserPreferencesDataSource {
      *     .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), false)
      * ```
      *
-     * @return A [Flow] emitting [UserDataPreferences] on every preference change.
-     *         The flow never completes unless DataStore is cleared.
+     * @return A [Flow] of stored preferences; storage and decoding failures propagate.
      */
     fun getUserDataPreferences(): Flow<UserDataPreferences>
 
     /**
-     * Retrieves the authenticated user's ID, or throws if user is not authenticated.
+     * Returns the stored profile ID, rejecting an empty value.
      *
-     * This is a convenience function to get the user ID when authentication is **required**.
-     * If the user ID is empty (not authenticated), this function throws [IllegalStateException].
+     * This does not check Firebase Auth or refresh an expired session.
      *
-     * ## When to Use
-     *
-     * - Before operations that require authentication
-     * - In repositories that need the current user ID
-     * - When user ID is mandatory for the operation
-     *
-     * ## Example
-     *
-     * ```kotlin
-     * suspend fun loadUserData(): Result<UserData> = suspendRunCatching {
-     *     val userId = userPreferencesDataSource.getUserIdOrThrow()
-     *     networkDataSource.fetchUserData(userId)
-     * }
-     * ```
-     *
-     * @return The authenticated user's ID as a [String].
-     * @throws IllegalStateException if the user is not authenticated (ID is empty).
+     * @return Stored user ID.
+     * @throws IllegalStateException if the stored ID is empty.
      */
     suspend fun getUserIdOrThrow(): String
 
