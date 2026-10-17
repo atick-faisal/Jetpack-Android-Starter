@@ -31,10 +31,8 @@ import org.robolectric.Shadows.shadowOf
 import org.robolectric.shadows.ShadowNetworkCapabilities
 
 /**
- * A `NetworkCallback` only reports transitions, so the state a collector sees before anything
- * changes is entirely down to the initial emission. That first value is what an offline banner
- * renders from on a cold start, and getting it wrong is invisible until someone opens the app
- * with no connectivity.
+ * Checks the initial capability sample with an active network, without INTERNET capability, and
+ * without an active network. These tests do not establish callback ordering or Internet reachability.
  */
 @RunWith(RobolectricTestRunner::class)
 class NetworkUtilsImplTest {

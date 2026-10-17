@@ -68,7 +68,7 @@ internal class SyncManagerImpl @Inject constructor(
  * - **ENQUEUED**: Work is scheduled but not yet running
  * - **RUNNING**: Work is actively executing (this function returns `true`)
  * - **SUCCEEDED**: Work completed successfully
- * - **FAILED**: Work failed after all retries
+ * - **FAILED**: Work returned terminal failure
  * - **BLOCKED**: Work is waiting for prerequisites
  * - **CANCELLED**: Work was cancelled
  *

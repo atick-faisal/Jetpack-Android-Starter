@@ -35,8 +35,8 @@ class OneTimeEvent<T>(private val content: T) {
     /**
      * Atomically marks this event consumed, returning its content only on the first call.
      *
-     * This is the primary way to consume the event. Only the first consuming call can return the content, including when
-     * called concurrently. Null content is indistinguishable from an already-consumed event.
+     * Only the first consuming call can return the content, including under concurrent calls.
+     * Null content is indistinguishable from an already-consumed event.
      *
      * ## Usage Example
      * ```kotlin

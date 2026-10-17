@@ -37,13 +37,8 @@ import org.junit.Rule
 import org.junit.Test
 
 /**
- * The price field is the only text input in the project bound to a non-String model, which is
- * what made it possible for a keystroke to be silently discarded. These tests pin the rule that
- * came out of that: the field holds what was typed, and parsing happens once, at save.
- *
- * Every assertion goes through Turbine rather than reading `itemUiState.value`. The state is a
- * `stateInDelayed`, so with no collector it just replays its initial value and an assertion
- * against it would pass no matter what the ViewModel did.
+ * Checks raw price input, parsing at save, and current save/load and collector-lifetime limitations.
+ * Turbine starts the shared upstream; reading itemUiState.value alone would leave it unstarted.
  */
 @OptIn(ExperimentalCoroutinesApi::class)
 class ItemViewModelTest {

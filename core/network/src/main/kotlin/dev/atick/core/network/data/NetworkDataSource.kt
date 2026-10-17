@@ -30,10 +30,12 @@ import dev.atick.core.network.model.NetworkPost
  * This follows the **Data Source Pattern**:
  * - Encapsulates all network communication logic
  * - Returns domain-agnostic network models ([NetworkPost])
- * - Throws exceptions on network errors (handled by repositories with [suspendRunCatching])
+ * - Throws exceptions on network errors (handled by repositories with [dev.atick.core.utils.suspendRunCatching])
  * - Executes on IO dispatcher (automatically handled by implementation)
  *
- * ## Usage in Repositories
+ * ## Illustrative repository extension
+ *
+ * The local-data and Post mapping APIs below would need to be supplied by the adopter.
  *
  * ```kotlin
  * class PostsRepository @Inject constructor(
@@ -54,14 +56,14 @@ import dev.atick.core.network.model.NetworkPost
  * ## Error Handling
  *
  * This interface does not return [Result] types. Instead:
- * - Network errors throw [IOException]
- * - HTTP errors throw [HttpException]
- * - Repositories should wrap calls with [suspendRunCatching]
+ * - Network errors throw [java.io.IOException]
+ * - HTTP errors throw [retrofit2.HttpException]
+ * - Repositories should wrap calls with [dev.atick.core.utils.suspendRunCatching]
  *
  * ## Threading
  *
  * All suspend functions execute on the IO dispatcher automatically. Callers should **not**
- * wrap calls with [withContext] - the implementation handles dispatching.
+ * wrap calls with [kotlinx.coroutines.withContext] - the implementation handles dispatching.
  *
  * @see NetworkPost
  * @see dev.atick.core.utils.suspendRunCatching
@@ -89,8 +91,8 @@ interface NetworkDataSource {
      * ```
      *
      * @return A [List] of [NetworkPost] objects from the remote server.
-     * @throws IOException if network communication fails
-     * @throws HttpException if the server returns an error response
+     * @throws java.io.IOException if network communication fails
+     * @throws retrofit2.HttpException if the server returns an error response
      * @throws kotlinx.serialization.SerializationException if response parsing fails
      */
     suspend fun getPosts(): List<NetworkPost>
@@ -117,8 +119,8 @@ interface NetworkDataSource {
      *
      * @param id The unique identifier of the post to retrieve. Must be a positive integer.
      * @return A [NetworkPost] object representing the requested post.
-     * @throws IOException if network communication fails
-     * @throws HttpException if the server returns an error response (e.g., 404 if post not found)
+     * @throws java.io.IOException if network communication fails
+     * @throws retrofit2.HttpException if the server returns an error response (e.g., 404 if post not found)
      * @throws kotlinx.serialization.SerializationException if response parsing fails
      */
     suspend fun getPost(id: Int): NetworkPost

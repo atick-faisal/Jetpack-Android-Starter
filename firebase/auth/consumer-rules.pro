@@ -1,7 +1,7 @@
-# The playservices Google-Identity provider is discovered via ServiceLoader at runtime, not
-# referenced directly from app code, so R8 full mode sees no live reference and strips it -- the
-# symptom is a provider-not-found failure at runtime with no compile-time warning. This keeps it
-# only when CredentialManager itself is present on the classpath.
+# CredentialProviderFactory reads provider class names from manifest service metadata and
+# instantiates them reflectively. When CredentialManager is present, this rule keeps every
+# class and member in the playservices package, including CredentialProviderPlayServicesImpl.
+# The credentials-play-services-auth library also supplies a narrower rule for that provider.
 -if class androidx.credentials.CredentialManager
 -keep class androidx.credentials.playservices.** {
   *;

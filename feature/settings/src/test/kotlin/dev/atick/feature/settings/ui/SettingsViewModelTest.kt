@@ -39,14 +39,9 @@ import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 
 /**
- * Reference test for the ViewModel pattern used by every feature in the project.
- *
- * Shows the three moving parts: state is exposed as a `StateFlow<UiState<T>>` and collected with
- * Turbine, repository data flows into it on first collection via `onStart`, and writes go
- * through `updateWith` so a failure lands in `UiState.error` rather than throwing.
- *
- * Runs under Robolectric because the ViewModel reads the app locale through `AppCompatDelegate`.
- * Settings was chosen because it survives an adopter deleting the demo feature.
+ * Checks collected settings, returned write failures, load-error loss, and collector lifetime.
+ * Runs under Robolectric because the ViewModel reads the app locale through AppCompatDelegate.
+ * These state tests do not establish snackbar delivery.
  */
 @RunWith(RobolectricTestRunner::class)
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -125,8 +120,7 @@ class SettingsViewModelTest {
 
             viewModel.updateDarkThemeConfig(DarkThemeConfig.DARK)
 
-            // updateWith routes the failure into the one-time error event that
-            // StatefulComposable turns into a snackbar.
+            // A returned failure becomes an error event; this test does not render a snackbar.
             val errored = expectMostRecentItem()
             assertThat(errored.loading).isFalse()
             assertThat(errored.error.getContentIfNotHandled()).isSameInstanceAs(boom)

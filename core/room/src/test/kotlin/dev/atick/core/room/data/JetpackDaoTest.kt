@@ -31,15 +31,9 @@ import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 
 /**
- * Reference test for the Room layer, and the only executable description of what the sync
- * metadata on [JetpackEntity] actually means.
- *
- * The offline-first scheme is easy to get subtly wrong: `deleted` is a soft delete that must
- * stay queryable for the sync pass, and "needs syncing" is two conditions OR'd together, not
- * just the `needsSync` flag. Both are pinned here.
- *
- * Lives in `:core:room` next to the entity it describes, so an adopter replacing the demo model
- * deletes the entity and this test together.
+ * Checks list visibility, pending-row selection, and the stored server-timestamp cursor.
+ * Soft-deleted rows remain queryable for sync; either needsSync or a newer edit time selects a
+ * pending row. These DAO tests do not exercise upload acknowledgement or remote deletion delivery.
  */
 @RunWith(RobolectricTestRunner::class)
 class JetpackDaoTest {
@@ -169,7 +163,7 @@ class JetpackDaoTest {
     fun `getUnsyncedJetpacks still returns soft-deleted rows`() = runTest {
         dao.insertJetpack(jetpack("gone", deleted = true, needsSync = true))
 
-        // A deletion that never reached the remote is exactly what sync exists to push.
+        // Deleted rows remain eligible for the pending query.
         assertThat(dao.getUnsyncedJetpacks(userId).map { it.id }).containsExactly("gone")
     }
 

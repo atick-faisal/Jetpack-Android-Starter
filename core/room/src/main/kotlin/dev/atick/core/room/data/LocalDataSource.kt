@@ -20,72 +20,18 @@ import dev.atick.core.room.model.JetpackEntity
 import kotlinx.coroutines.flow.Flow
 
 /**
- * Local data source for managing offline-first data persistence using Room database.
+ * Room operations used by the Home repository for content and pending-sync metadata.
  *
- * This interface defines the contract for local database operations, enabling:
- * - **Offline-first architecture**: Data is always available locally
- * - **Sync management**: Tracks which entities need synchronization with remote
- * - **Soft deletes**: Marks items as deleted instead of removing immediately
- * - **Reactive queries**: Returns [Flow] for real-time UI updates
- *
- * ## Design Pattern
- *
- * This follows the **Repository Pattern with Local Data Source**:
- * - Abstracts Room DAO implementation details
- * - Provides domain-agnostic data access
- * - Handles sync metadata automatically
- * - Executes queries on IO dispatcher (handled by Room)
- *
- * ## Sync Strategy
- *
- * The data source tracks sync state using:
- * - `lastUpdated`: When the entity was last modified locally
- * - `lastSynced`: When the entity was last synced with remote
- * - `serverUpdatedAtNanos`: When the *remote server* wrote the entity; the pull cursor
- * - `needsSync`: Flag indicating sync is required
- * - `syncAction`: Action to perform during sync (UPSERT, DELETE, NONE)
- *
- * ## Usage in Repositories
- *
- * ```kotlin
- * class JetpackRepository @Inject constructor(
- *     private val localDataSource: LocalDataSource,
- *     private val networkDataSource: NetworkDataSource
- * ) {
- *     // Reactive query for UI
- *     fun observeJetpacks(userId: String): Flow<List<Jetpack>> =
- *         localDataSource.getJetpacks(userId)
- *             .map { entities -> entities.map { it.toDomain() } }
- *
- *     // Sync local changes to remote
- *     suspend fun syncLocalChanges(userId: String): Result<Unit> = suspendRunCatching {
- *         val unsyncedItems = localDataSource.getUnsyncedJetpacks(userId)
- *         unsyncedItems.forEach { entity ->
- *             when (entity.syncAction) {
- *                 SyncAction.UPSERT -> networkDataSource.upsert(entity.toNetwork())
- *                 SyncAction.DELETE -> networkDataSource.delete(entity.id)
- *                 SyncAction.NONE -> {}
- *             }
- *             localDataSource.markAsSynced(entity.id)
- *         }
- *     }
- *
- *     // Sync remote changes to local
- *     suspend fun syncRemoteChanges(userId: String): Result<Unit> = suspendRunCatching {
- *         val cursor = localDataSource.getSyncCursor(userId)
- *         val remoteChanges = networkDataSource.getChanges(since = cursor)
- *         localDataSource.upsertJetpacks(remoteChanges.map { it.toEntity() })
- *     }
- * }
- * ```
+ * User-scoped lists exclude soft-deleted rows. Pending queries include rows with needsSync set
+ * or lastUpdated greater than lastSynced. The stored server timestamp supplies the pull cursor.
+ * Writes do not schedule sync; the repository requests it separately.
  *
  * @see JetpackEntity
  * @see JetpackDao
- * @see SyncAction
  */
 interface LocalDataSource {
     /**
-     * Retrieves a list of jetpacks for a specific user.
+     * Observes a user's non-deleted jetpacks, newest edit first.
      *
      * @param userId The ID of the user whose jetpacks to retrieve.
      * @return A Flow emitting a list of [JetpackEntity] objects.
@@ -151,7 +97,7 @@ interface LocalDataSource {
     suspend fun deleteJetpackPermanently(id: String)
 
     /**
-     * Marks a jetpack as synced.
+     * Clears pending flags by ID and sets lastSynced, without checking the uploaded version.
      *
      * @param id The ID of the jetpack to mark as synced.
      * @param timestamp The timestamp to set as the last synced time. Defaults to the current system time.
@@ -159,10 +105,11 @@ interface LocalDataSource {
     suspend fun markAsSynced(id: String, timestamp: Long = System.currentTimeMillis())
 
     /**
-     * Gets the newest remote server timestamp this device has already stored, to resume a pull from.
+     * Returns the largest stored server write time, including soft-deleted rows.
+     * This timestamp alone does not establish a complete pull checkpoint.
      *
      * @param userId The ID of the user whose jetpacks to check.
-     * @return The newest server timestamp in nanoseconds, or 0 if the user has no jetpacks.
+     * @return The newest server timestamp in nanoseconds, or 0 if no timestamp is stored for the user.
      */
     suspend fun getSyncCursor(userId: String): Long
 }

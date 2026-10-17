@@ -19,89 +19,24 @@ package dev.atick.core.network.utils
 import kotlinx.coroutines.flow.Flow
 
 /**
- * Utility for monitoring network connectivity state changes.
+ * Observes the default network for connectivity UI. CONNECTED does not prove validated Internet
+ * access or backend reachability; network operations must still handle failures.
  *
- * This interface provides reactive access to network connectivity status using Android's
- * [ConnectivityManager]. It enables real-time monitoring of network availability, allowing
- * the application to respond to connectivity changes (e.g., showing offline UI, pausing
- * network operations, or retrying failed requests).
- *
- * ## Usage Example
- *
- * In a ViewModel, observe network state to update UI accordingly:
- * ```kotlin
- * @HiltViewModel
- * class MyViewModel @Inject constructor(
- *     private val networkUtils: NetworkUtils
- * ) : ViewModel() {
- *     val networkState = networkUtils.getCurrentState()
- *         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), NetworkState.UNAVAILABLE)
- *
- *     val isOnline = networkState.map { it == NetworkState.CONNECTED }
- *         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
- * }
- * ```
- *
- * In a Repository, check network state before making requests:
- * ```kotlin
- * class MyRepository @Inject constructor(
- *     private val networkUtils: NetworkUtils,
- *     private val networkDataSource: NetworkDataSource
- * ) {
- *     suspend fun syncData(): Result<Unit> = suspendRunCatching {
- *         networkUtils.getCurrentState().first().let { state ->
- *             if (state != NetworkState.CONNECTED) {
- *                 throw IOException("No network connection")
- *             }
- *         }
- *         networkDataSource.fetchData()
- *     }
- * }
- * ```
- *
- * @see NetworkState for possible connectivity states
+ * @see NetworkState
  */
 interface NetworkUtils {
     /**
-     * Observes the current network connectivity state.
+     * Returns a cold [Flow] that samples the active network's INTERNET capability before registering
+     * a default-network callback. Sampling and registration are not an atomic snapshot.
      *
-     * This function returns a cold [Flow] that emits connectivity as it stands the moment it is
-     * collected, then every change after that. The flow registers a
-     * [ConnectivityManager.NetworkCallback] when collected and unregisters it when the collector
-     * is cancelled, ensuring proper resource cleanup.
+     * The sample emits [NetworkState.CONNECTED] or [NetworkState.UNAVAILABLE]. Subsequent callbacks
+     * emit CONNECTED, [NetworkState.LOST], or UNAVAILABLE; LOSING and capability changes are logged
+     * without emitting. Consecutive equal values are suppressed.
      *
-     * ## Emitted States
+     * Each collector registers its own callback, removed when collection closes. Callback
+     * registration errors can terminate collection.
      *
-     * - [NetworkState.CONNECTED] - Network is available and connected
-     * - [NetworkState.LOST] - Network connection was lost
-     * - [NetworkState.UNAVAILABLE] - No network is available
-     *
-     * [NetworkState.LOSING] is declared but never emitted: the implementation logs the callback
-     * and leaves the last state standing, because a network that is losing is still usable.
-     *
-     * ## Lifecycle
-     *
-     * - The callback is registered when the flow is collected
-     * - The callback is automatically unregistered when the flow collector is cancelled
-     * - Each collection creates a new callback registration (cold flow)
-     *
-     * ## Threading
-     *
-     * Network callbacks execute on a background thread managed by the system.
-     * The flow emissions are thread-safe and can be collected from any coroutine context.
-     *
-     * ## Best Practices
-     *
-     * - Convert to [StateFlow] in ViewModels for UI consumption
-     * - Handle all network states, not just CONNECTED/LOST
-     *
-     * Consecutive duplicates are already collapsed by the implementation, so collectors do not
-     * need their own [Flow.distinctUntilChanged].
-     *
-     * @return A cold [Flow] that emits the current [NetworkState] on collection and then each
-     *         change. The flow never completes unless the collector is cancelled.
-     *
-     * @see NetworkState
+     * @return Connectivity observations, not a check that a particular request will succeed.
      */
     fun getCurrentState(): Flow<NetworkState>
 }

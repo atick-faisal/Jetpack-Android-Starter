@@ -42,11 +42,7 @@ internal class NetworkUtilsImpl @Inject constructor(
      * @return [Flow] of [NetworkState].
      */
     override fun getCurrentState(): Flow<NetworkState> = callbackFlow {
-        // ⚠️ A NetworkCallback only reports transitions, so without this seed a collector that
-        // starts while the device is already offline receives nothing at all -- and a UI deriving
-        // an offline flag from this flow keeps whatever it defaulted to. JetpackAppState defaults
-        // isOffline to false, so the app would report itself online for as long as connectivity
-        // never changed. Emit the state that is true right now, then report transitions.
+        // Seed from active-network capabilities before callback registration; the two can race.
         trySend(currentNetworkState())
 
         val callback = object : ConnectivityManager.NetworkCallback() {
@@ -99,9 +95,7 @@ internal class NetworkUtilsImpl @Inject constructor(
             connectivityManager.unregisterNetworkCallback(callback)
         }
     }
-        // registerDefaultNetworkCallback usually replays onAvailable for the network that is
-        // already up, which would repeat the seed above. Collapsing duplicates keeps that an
-        // implementation detail of the platform rather than something collectors have to handle.
+        // Suppress repeated states, including an onAvailable callback matching the initial sample.
         .distinctUntilChanged()
 
     /**

@@ -39,13 +39,9 @@ import kotlinx.coroutines.test.runTest
 import org.junit.Test
 
 /**
- * Covers the two-way sync in [HomeRepositoryImpl], and in particular which clock orders a pull.
- *
- * `lastUpdated` is stamped by whichever device edited a row, so it cannot order records across
- * devices: the fleet's fastest clock drags the cursor into the future and every record written by a
- * slower device is skipped from then on, with no error anywhere. The cursor therefore reads
- * `serverUpdatedAtNanos`, assigned by Firestore itself. The tests below fail if it goes back to a
- * device clock.
+ * Exercises push/pull ordering and the server-timestamp cursor with in-memory data sources.
+ * Also characterizes pending-write, overwrite, and interrupted-pull limitations. The fakes do not
+ * exercise Firestore caching, security rules, or WorkManager scheduling.
  */
 @OptIn(ExperimentalCoroutinesApi::class)
 class HomeRepositoryImplTest {
@@ -343,8 +339,8 @@ private class FakeLocalDataSource : LocalDataSource {
 }
 
 /**
- * In-memory [FirebaseDataSource] that filters exactly the way the real Firestore query does, so a
- * cursor taken from the wrong field shows up as records that never arrive.
+ * Filters by owner and a strict server-timestamp boundary, ordered by that timestamp.
+ * Does not model SDK caching, missing-field queries, or document-path ordering within ties.
  */
 private class FakeFirebaseDataSource : FirebaseDataSource {
 

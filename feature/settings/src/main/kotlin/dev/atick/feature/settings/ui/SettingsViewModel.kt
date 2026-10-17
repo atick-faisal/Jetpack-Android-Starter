@@ -52,10 +52,11 @@ class SettingsViewModel @Inject constructor(
     private val _settingsUiState = MutableStateFlow(UiState(Settings()))
     val settingsUiState = _settingsUiState
         .onStart { updateSettings() }
-        // Can't use stateInDelayed here because language change doesn't update
-        // after activity restart, as it caches value for 5 seconds
+        // Restart the upstream immediately after a subscription gap to refresh the app locale.
+        // updateSettings launches separate collectors that survive until the ViewModel is cleared.
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), UiState(Settings()))
 
+    // The catch constructs an unused state; repository read failures are not exposed to the UI.
     private fun updateSettings() {
         settingsRepository.getSettings()
             .map { UiState(it.copy(language = getPreferredLanguage())) }
@@ -86,10 +87,8 @@ class SettingsViewModel @Inject constructor(
         _settingsUiState.updateWith { settingsRepository.signOut() }
     }
 
-    // ⚠️ Every locale except Arabic falls through to English here regardless of what
-    // generateLocaleConfig = true (app/build.gradle.kts) actually offers the system. Adding a
-    // new values-<lang> resource directory makes Android offer that language in Settings, but
-    // this when won't route to it until a matching branch is added here too.
+    // Keep this mapping and the Language model in sync with supported locale resources.
+    // Unrecognized language codes currently display as English in the settings UI.
     private fun getPreferredLanguage(): Language {
         val preferredLanguage = getPreferredLocale().language
         return when (preferredLanguage) {

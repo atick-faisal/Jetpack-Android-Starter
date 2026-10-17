@@ -108,8 +108,7 @@ fun Jetpack.toFirebaseJetpack(): FirebaseJetpack {
 /**
  * Extension function to map a [JetpackEntity] to a [FirebaseJetpack].
  *
- * `serverUpdatedAt` is left unset on purpose: it is the server's field to write, and Firestore
- * replaces the null with its own timestamp on every push.
+ * Leaves serverUpdatedAt null so Firestore assigns a server timestamp when writing.
  *
  * @return The mapped [FirebaseJetpack].
  */
@@ -128,10 +127,9 @@ fun JetpackEntity.toFirebaseJetpack(): FirebaseJetpack {
 /**
  * Extension function to map a [FirebaseJetpack] to a [JetpackEntity].
  *
- * Carries the server's own write timestamp across, which is what lets
- * [dev.atick.core.room.data.JetpackDao.getSyncCursor] resume the next pull from a clock every
- * device agrees on. The reverse mapper deliberately does not send it back — see
- * [JetpackEntity.toFirebaseJetpack].
+ * Copies the server write timestamp into Room for [dev.atick.core.room.data.JetpackDao.getSyncCursor].
+ * Pending flags use entity defaults. Pull upserts can overwrite pending local content; an upload
+ * echo is not guaranteed to leave that content unchanged.
  *
  * @return The mapped [JetpackEntity].
  */

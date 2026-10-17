@@ -36,7 +36,7 @@ internal class LocalDataSourceImpl @Inject constructor(
 ) : LocalDataSource {
 
     /**
-     * Retrieves a list of jetpacks for a specific user.
+     * Observes a user's non-deleted jetpacks, newest edit first.
      *
      * @param userId The ID of the user whose jetpacks to retrieve.
      * @return A Flow emitting a list of [JetpackEntity] objects.
@@ -120,7 +120,7 @@ internal class LocalDataSourceImpl @Inject constructor(
     }
 
     /**
-     * Marks a jetpack as synced.
+     * Clears pending flags by ID and sets lastSynced, without checking the uploaded version.
      *
      * @param id The ID of the jetpack to mark as synced.
      * @param timestamp The timestamp to set as the last synced time. Defaults to the current system time.
@@ -130,10 +130,10 @@ internal class LocalDataSourceImpl @Inject constructor(
     }
 
     /**
-     * Gets the newest remote server timestamp this device has already stored, to resume a pull from.
+     * Returns the largest stored server write time, including soft-deleted rows.
      *
      * @param userId The ID of the user whose jetpacks to check.
-     * @return The newest server timestamp in nanoseconds, or 0 if the user has no jetpacks.
+     * @return The newest server timestamp in nanoseconds, or 0 if no timestamp is stored for the user.
      */
     override suspend fun getSyncCursor(userId: String): Long =
         withContext(ioDispatcher) {
