@@ -2,7 +2,7 @@
 
 Companion goals, findings, and recovery map: [DOC_FIX_PLAN.md](DOC_FIX_PLAN.md).
 
-Status: DF-00–DF-07 complete; DF-08–DF-15 pending. Checked items identify completed work in the records below. Reviewed base: `1c2103890d16f81f6c6ae4c2d8626281b841e417`.
+Status: DF-00–DF-08 complete; DF-09–DF-15 pending. Checked items identify completed work in the records below. Reviewed base: `1c2103890d16f81f6c6ae4c2d8626281b841e417`.
 Reviewed head: `0fb7882982cfefd55df300e06549731c6fbb33bb` ([PR #647](https://github.com/atick-faisal/Jetpack-Android-Starter/pull/647)).
 
 Complete each task by recording the changed paths, verification result, and any unresolved follow-up
@@ -1231,27 +1231,118 @@ Spotless apply remains required before a later commit.
 
 Depends on: DF-05–07. Scope: `docs/guide.md`, `docs/navigation.md`.
 
-- [ ] State which excerpts explain the existing home feature and which steps create an adopter's
+- [x] State which excerpts explain the existing home feature and which steps create an adopter's
   new feature. Include exact placement and integration steps omitted by a source-code tour.
-- [ ] Cover module registration/plugin/dependency wiring when a new module is needed; otherwise
+- [x] Cover module registration/plugin/dependency wiring when a new module is needed; otherwise
   explain adding a screen to an existing module. Respect the existing approval boundary for new modules.
-- [ ] Cover entity/DAO/database registration and DI, repository binding, screen data, ViewModel,
+- [x] Cover entity/DAO/database registration and DI, repository binding, screen data, ViewModel,
   destination entries, app-level registration, and tests. For synced features, identify the worker
   integration point rather than implying `Syncable` alone registers the feature.
-- [ ] Update the `JetpackEntity` excerpt to include `serverUpdatedAtNanos` or explicitly mark the
+- [x] Update the `JetpackEntity` excerpt to include `serverUpdatedAtNanos` or explicitly mark the
   omitted metadata. Check all other snippets against their source and label abbreviations.
-- [ ] Preserve Navigation 3, assisted injection, multi-stack restoration, list/detail panes, and back
+- [x] Preserve Navigation 3, assisted injection, multi-stack restoration, list/detail panes, and back
   handling. Explain adding a top-level destination and account-boundary stack behavior.
-- [ ] Clarify navigation identity: equal content keys matter, not simply reuse of a key type. Verify
+- [x] Clarify navigation identity: equal content keys matter, not simply reuse of a key type. Verify
   duplicate-entry advice against the pinned Navigation 3 implementation before proposing a solution.
-- [ ] Use a small real feature test with `MainDispatcherRule`, a fake, active Flow collection, and
+- [x] Use a small real feature test with `MainDispatcherRule`, a fake, active Flow collection, and
   meaningful success/failure assertions. Existing test links alone are not a worked example.
-- [ ] Walk the complete sequence in a disposable checkout or a clearly labeled example, checking
+- [x] Walk the complete sequence in a disposable checkout or a clearly labeled example, checking
   imports, visibility, resource prefixes, and Gradle registration. Do not add a demonstration module
   to the production tree merely to validate documentation.
 
 Accept: a reader can follow the guide through app integration and validation; omitted code is
 identified, and examples do not disguise unresolved DF-02 behavior as a recommended pattern.
+
+### DF-08 completion record
+
+Completed 2026-10-17 against clean starting revision `af070eb7b` on `fix/docs-v3`.
+Tracked changes are limited to `docs/guide.md`, `docs/navigation.md`, and this execution record.
+No production runtime, public API, dependency, module, schema, or configuration changed.
+
+Coverage and decisions:
+
+- Kept Home/Item as the real running example, as selected during planning. Distinguished existing
+  excerpts, omitted members/imports, and adopter integration steps. Added module registration,
+  plugin/dependency setup, source placement, namespace/resource prefixes, and the existing-module path.
+- Restored entity/DAO/database/accessor/provider registration, data-source construction/binding,
+  repository binding with full Hilt module context, and schema/migration responsibilities. Included
+  `serverUpdatedAtNanos`; linked complete mappings and local/REST/synced source choices.
+- Added the explicit `SyncWorker` repository/Flow-collection integration point. `Syncable` alone
+  does not register work. Preserved the documented scheduling, concurrency, deletion, and cursor
+  limitations; no sync protocol or security-rule design was changed.
+- Covered screen data, observation, Screen callbacks/visibility, raw price text, assisted creation,
+  navigation events, app entry-provider registration, top-level enum/resources, and create FAB wiring.
+  Removed the unqualified failed-save snippet. Linked the proposed Result.map correction and kept
+  Item load/save defects, observation lifetime, and event-delivery limitations visible.
+- Corrected navigation identity against exact published source artifacts: Navigation 3 1.1.4
+  `defaultContentKey` returns `key.toString()`; its saveable-state decorator and lifecycle 2.11.0
+  decorator use content keys. Compose saveable-state 1.11.4 rejects simultaneous duplicate keys.
+  Equal key values and shared key types are distinguished; no cross-tab identity redesign was made.
+- Preserved multi-stack restoration, list/detail metadata, explicit back handling and top-level
+  history. Explained signed-in/signed-out graph removal without claiming complete account-data reset.
+- Added a complete MainDispatcherRule/fake/Turbine test with an explicitly suspended delete,
+  success/failure outcomes, loading, observed data, original error identity, and scope cleanup.
+  Restored DAO/repository test expectations and manual device/Firebase acceptance steps.
+- These sections cover the DF-00 recovery items owned here: module/DI setup, persistence wiring,
+  model→repository→UI integration, direct Screens, Navigation 3/assisted arguments, app registration,
+  and worked unit testing. Module README/KDoc reconciliation remains with DF-11/12.
+
+Verification:
+
+- `./gradlew :feature:home:testDebugUnitTest :core:navigation:testDebugUnitTest
+  --no-configuration-cache` — BUILD SUCCESSFUL before edits. The initial sandboxed invocation
+  could not create the Gradle wrapper lock; the approved cache-access retry succeeded.
+- Extracted the guide's complete test unchanged into `/tmp/df08-examples`, wired only the Home
+  `debugUnitTest` source set through `/tmp/df08-examples.init.gradle`, and ran
+  `./gradlew :feature:home:testDebugUnitTest --tests '*HomeFeatureExampleTest'
+  --init-script /tmp/df08-examples.init.gradle --no-configuration-cache` — BUILD SUCCESSFUL;
+  both example tests passed. No example test was added to the production tree.
+- `./gradlew :core:room:testDebugUnitTest :data:testDebugUnitTest :feature:home:testDebugUnitTest
+  :core:navigation:testDebugUnitTest :app:assembleDebug spotlessCheck dokkaGeneratePublicationHtml
+  --init-script gradle/init.gradle.kts --no-configuration-cache` — BUILD SUCCESSFUL;
+  927 actionable tasks, 19 executed, 4 from cache, 904 up-to-date. Debug XML results: Room 18,
+  Data 19, Home 11, Navigation 14 tests; all 62 have zero failures/errors/skips. Dokka tasks were
+  up-to-date: this change edits no KDoc or executable source.
+- Walked the integration sequence in a disposable source copy at `/tmp/df08-walkthrough`, created
+  from tracked files while excluding credentials, service files, keystores and local properties.
+  `/tmp/df08-disposable.py` records the adaptation; `/tmp/df08-add-validation-tests.py` adds its
+  DAO/repository checks. Added a local-only Catalog model/table/DAO/data source/repository, Hilt
+  providers/bindings, a renamed Home/Item-shaped UI module, prefixed resources, top-level tab,
+  entries and create FAB. Its create/edit ViewModel uses the labeled proposed Result.map save
+  correction. A fresh database version was used only in this disposable copy; no upgrade was tested.
+- Disposable initial command: `./gradlew :feature:catalog:testDebugUnitTest
+  :core:room:testDebugUnitTest :data:testDebugUnitTest :app:assembleDebug
+  --init-script df08-validation.init.gradle --no-configuration-cache` — BUILD SUCCESSFUL;
+  483 actionable tasks, 429 executed, 54 from cache. Google Services processing is disabled only
+  in this copy; this validates Gradle/KSP/Hilt/resource/app integration without a Firebase runtime.
+- Temporarily swallowed the delete Result in the disposable Catalog ViewModel. The worked
+  failure test failed, while its success test passed (`/tmp/df08-mutation.log`). Restored the
+  ViewModel, aligned fake parameter names, and added two proposed-save success/failure tests.
+  Final disposable command adds `:feature:catalog:lintDebug` to the initial command — BUILD
+  SUCCESSFUL; 690 actionable tasks, 237 executed, 7 from cache, 446 up-to-date. XML results:
+  Catalog 4, Room 19, Data 21 tests, all zero failures/errors/skips. Lint has no errors and one
+  VectorRaster warning from the copied resources. DAO coverage checks upsert/read/update/delete;
+  repository coverage checks mapping, writes and returned failures. Save checks cover raw input,
+  parsing fallback, error/loading and navigation only on returned success.
+- Downloaded exact Navigation/lifecycle source archives from Google Maven, rather than relying
+  on the older cached sources. `:core:navigation:dependencyInsight --dependency runtime-saveable
+  --configuration debugRuntimeClasspath` confirmed Compose saveable-state 1.11.4; checked that
+  version's source too. The three source links are in the navigation guide. Duplicate-renderer
+  failure behavior is source-verified, not a newly executed Compose reproduction.
+- Assembled real Dokka output and the README homepage using the existing build-guide procedure.
+  `.venv/bin/python -m mkdocs build --strict` passed after the final edits. Existing Material notice
+  and homepage-not-in-nav informational message remain. Checked all 518 local links/fragments
+  across the two rendered pages with `/tmp/df08-check-links.py`: no missing files or fragments.
+- Inspected module setup, the worked test and navigation identity in Chrome. Replaced the overview's
+  zero-based ordered list with bullets to avoid Markdown renumbering against the section headings,
+  and shortened the worked test's inline placement text. `git diff --check` passed.
+
+Device/emulator interaction, configured Firebase, migration upgrades, cross-tab decorated-renderer
+collision tests, and worker/remote integration were not executed. The guide identifies the relevant
+manual/extension checks; it does not claim those guarantees. Existing bounded runtime follow-ups
+remain unchanged. Generated site/API output, disposable code and test harnesses are untracked.
+No commit, push, deployment, or external update was performed; Spotless apply remains required
+before a later commit.
 
 ## DF-09 — Restore practical UI customization guidance
 
