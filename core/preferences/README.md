@@ -37,5 +37,5 @@ data class UserDataPreferences(
 
 ## Related Documentation
 
-- [Data Layer](../../docs/data.md) — where this data source fits in the repository pattern
-- [State Management](../../docs/state-management.md) — how `SettingsViewModel` surfaces these preferences
+- [Data Layer](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/fa19cbbd83ae609dcc0886a1b6b37379e91a12cc/docs/data.md) — where this data source fits in the repository pattern
+- [State Management](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/fa19cbbd83ae609dcc0886a1b6b37379e91a12cc/docs/state-management.md) — how `SettingsViewModel` surfaces these preferences

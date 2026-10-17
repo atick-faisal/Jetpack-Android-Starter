@@ -2,7 +2,7 @@
 
 Companion goals, findings, and recovery map: [DOC_FIX_PLAN.md](DOC_FIX_PLAN.md).
 
-Status: DF-00–DF-10 complete; DF-11–DF-15 pending. Checked items identify completed work in the records below. Reviewed base: `1c2103890d16f81f6c6ae4c2d8626281b841e417`.
+Status: DF-00–DF-11 complete (DF-11 publication gaps explicitly deferred to DF-14); DF-12–DF-15 pending. Checked items identify completed work in the records below. Reviewed base: `1c2103890d16f81f6c6ae4c2d8626281b841e417`.
 Reviewed head: `0fb7882982cfefd55df300e06549731c6fbb33bb` ([PR #647](https://github.com/atick-faisal/Jetpack-Android-Starter/pull/647)).
 
 Complete each task by recording the changed paths, verification result, and any unresolved follow-up
@@ -1528,27 +1528,125 @@ No new runtime tests were added for this documentation-only change.
 
 Depends on: DF-03–10. Scope: nineteen module READMEs, Dokka output.
 
-- [ ] Preserve the leading `# Module :...` syntax used by Dokka. Keep a purpose statement, important
+- [x] Preserve the leading `# Module :...` syntax used by Dokka. Keep a purpose statement, important
   entry points, enough usage context, and links; choose structure by module needs, not a fixed cap.
-- [ ] Review `app`, `core/android`, `core/navigation`, `core/network`, `core/preferences`, `core/room`,
+- [x] Review `app`, `core/android`, `core/navigation`, `core/network`, `core/preferences`, `core/room`,
   `core/testing`, and `core/ui`; reconcile all findings with their repaired guide sections.
-- [ ] Review `data` and `sync`: include all key repository roles, correct the claim that `sync`
+- [x] Review `data` and `sync`: include all key repository roles, correct the claim that `sync`
   implements `Syncable` itself, and remove unsupported local-write/scheduling assurances.
-- [ ] Review `feature/auth`, `feature/home`, `feature/profile`, `feature/settings`: remove nonexistent
+- [x] Review `feature/auth`, `feature/home`, `feature/profile`, `feature/settings`: remove nonexistent
   undo and Route wrappers; check settings/sign-out and actual repository boundaries.
-- [ ] Review `firebase/auth`, `firebase/firestore`, `firebase/analytics`: accurate auth filter,
+- [x] Review `firebase/auth`, `firebase/firestore`, `firebase/analytics`: accurate auth filter,
   timestamp, rule deployment, and Crashlytics guidance without duplicated defensive explanations.
-- [ ] Review `benchmarks` and `lint`: preserve practical commands, remove invented adopter behavior
+- [x] Review `benchmarks` and `lint`: preserve practical commands, remove invented adopter behavior
   (“first hour”), and distinguish the actual startup scenario from unsupported CI/runtime promises.
-- [ ] Replace `core/testing`'s “does the thing” example with a useful real test; remove “a mock can't
+- [x] Replace `core/testing`'s “does the thing” example with a useful real test; remove “a mock can't
   express it” and stale consuming-module lists. Explain how consumers add and use the helpers.
-- [ ] Verify API names and source pointers. In particular, `core/network`'s enum inventory must not
+- [x] Verify API names and source pointers. In particular, `core/network`'s enum inventory must not
   imply `LOSING` is emitted when the implementation only logs it.
-- [ ] Check both repository-relative links and their rendered Dokka destinations. A link working
-  from a README on GitHub does not prove it works in generated API HTML.
+- [x] Audit repository-relative links and rendered Dokka destinations. Review completed; actual
+  README rendering is absent and publication acceptance is deferred to DF-14 by user choice.
+  See the completion record; working GitHub links do not establish working Dokka introductions.
 
 Accept: all nineteen module references have a recorded review; each helps a reader use the module
-and reaches accurate deeper guidance from both GitHub and Dokka.
+and reaches accurate deeper guidance from both GitHub and Dokka. **The publication portion of this
+acceptance criterion is deferred to DF-14 by user choice; the README review is complete.**
+
+### DF-11 completion record
+
+Completed 2026-10-17 from clean working-tree revision `fa19cbbd83ae609dcc0886a1b6b37379e91a12cc`.
+Changed the nineteen module READMEs below and this execution record only. No runtime, public API,
+type, dependency, source-comment, convention-plugin, build or backend changes; no commit or deployment.
+
+The user chose **document and defer** for missing Dokka publication coverage. This completes the
+README/editorial review, not the original end-to-end publication acceptance claim. Actual generated
+API coverage and README inclusion remain incomplete as described below; DF-14 owns their repair.
+
+#### Nineteen-module review and disposition
+
+All nineteen retain their `# Module :...` heading. Existing useful descriptions/snippets were
+checked against the corresponding implementation, build declarations and repaired guide sections;
+previously corrected content was retained. Changed paths are this table's module directories plus
+`README.md`, and `DOC_FIX_TASKS.md`.
+
+| Module directory | Reviewed content and final disposition |
+|---|---|
+| `app` | Checked MainActivity, JetpackAppState and version calculation; qualified wiring description, labeled excerpts, retained AppCompat/locales and debug-signing caveat. |
+| `core/android` | Checked event/coroutine/Flow helpers; replaced event-delivery promise with atomic consumption, clarified sharing versus separate-job lifetime. |
+| `core/navigation` | Checked Navigator/NavigationState and repaired identity guide; removed enforced-encapsulation and key-type collision claims, described equality versus string content keys. |
+| `core/network` | Checked REST API/data source, monitor and image-loader bindings; corrected emitted-state inventory, capability/availability boundaries and shared app use. |
+| `core/preferences` | Checked model, source, serializer and DataStore construction; retained accurate JSON corruption/default/evolution/reset guidance from prior repair; updated deeper links. |
+| `core/room` | Checked entity, DAO and persistence guide; retained pending flags, clock units, tombstones, cursor and destructive-upgrade limitations; updated deeper links. |
+| `core/testing` | Checked rule/fakes, exported dependencies and SettingsRepositoryImplTest; added consumer setup and complete success/failure example; removed empty example, stale consumers and mock restrictions. |
+| `core/ui` | Checked helper/component/permission ownership against guides; clarified lint execution and state-helper exception/concurrency/event limits; retained screen/content preview guidance. |
+| `data` | Checked all four repository roles, binding module and sync contracts; added auth role and getJetpack interface member, separated SyncManager implementation from Syncable repository execution. |
+| `sync` | Checked manager, proxy, worker constraints/retries and diagnostics; clarified Hilt factory delegation and attempted foreground execution, retained scheduling/cancellation limits and exposed foreground configuration gap. |
+| `feature/auth` | Checked screen signature, ViewModels and AuthRepository boundary; made the repository/data-source relationship explicit and labeled the signature excerpt. |
+| `feature/home` | Checked list/item signatures and repaired state guide; removed undo claim, labeled signature, exposed save/load and observation-lifetime limitations. |
+| `feature/profile` | Checked screen/ViewModel and ProfileRepository; clarified auth-before-reset order, Result boundary and read-only UI; no Room/remote erasure promise. |
+| `feature/settings` | Checked dialog/ViewModel and SettingsRepository; clarified DataStore versus locales, sign-out/reset scope, observation/load limitations and full localization path. |
+| `firebase/auth` | Checked interface/request builders and repaired Firebase guide; distinguished Firebase Auth from Credential Manager, labeled private excerpt and removed account-existence guarantee. |
+| `firebase/firestore` | Checked model/query/write source and data guide; retained null-on-write timestamps, SDK visibility, rules/legacy/query limitations; qualified current Home integration. |
+| `firebase/analytics` | Checked CrashReporter/FirebaseCrashReporter and guide; distinguished non-fatal calls, uncaught crashes and optional UI report action from analytics events. |
+| `benchmarks` | Checked generator, benchmark modes and build/CI setup; removed performance/CI/adopter assurances, retained startup sequence and added class-filtered comparison command and environment/output guidance. |
+| `lint` | Checked registry, detector implementation and core:ui publication; removed stale line number and historical naming rationale, added actual prefix behavior and :lint:test command. |
+
+#### Links and reading surfaces
+
+Cross-file guide/source links use absolute GitHub permalinks at the reviewed revision above, rather
+than repository-relative paths that would resolve inside the generated API directory. Module-topic
+links lead to their repaired canonical guides instead of older module prose at that revision.
+Checked all **72** permalink occurrences against local Git objects and rendered heading slugs:
+all files/fragments exist. This validates the exact repository content, not remote HTTP availability.
+DF-14 must reconcile these preview/review links with the final release strategy.
+
+Generated GitHub-flavored Markdown with the previously installed temporary cmarkgfm renderer under
+`/private/tmp/df10-render-deps`; no project dependency added. All nineteen pages render tables,
+code fences and links. Chrome visual review covered testing, data, Home, Firebase Auth, benchmarks
+and lint. This is local GFM output, not proof of GitHub-specific sanitization/alert styling.
+Also inspected actual generated Dokka network landing output and the MkDocs state-management page.
+
+#### Verification
+
+| Check | Result and limits |
+|---|---|
+| `./gradlew dokkaGeneratePublicationHtml :data:testDebugUnitTest --tests dev.atick.data.repository.settings.SettingsRepositoryImplTest` | Passed; seven existing repository tests, zero failures/errors/skips. Dokka was up-to-date; this alone did not validate README rendering. |
+| `./gradlew :core:network:dokkaGenerateModuleHtml --rerun :dokkaGeneratePublicationHtml --rerun` | Passed with a forced network module and root publication render. Thirteen unresolved source KDoc-link warnings; README introduction still absent. Other module generators were not forced. |
+| Documented README/API preparation, then `.venv/bin/python -m mkdocs build --strict` | Passed using actual Dokka output after the forced render. Existing informational index-omitted-from-nav notice remains. No dummy API pages. |
+| `.venv/bin/python /private/tmp/df11_verify.py` | Passed: nineteen module headings preserved and 72 file/fragment permalink checks. Temporary preview HTML generated outside the repo. |
+| `./gradlew spotlessCheck --init-script gradle/init.gradle.kts --no-configuration-cache` | Passed; 180 tasks up-to-date. No formatter apply or commit performed. |
+| `./gradlew check` | Passed; 965 tasks, 18 executed, one from cache, 946 up-to-date. |
+| `git diff --check`, changed-path inspection and `git check-ignore` | Passed; only nineteen module READMEs and this record changed. Generated homepage/API/site and local venv remain ignored. |
+
+The worked test class is a complete adaptation of the two existing reference test cases; its real
+counterparts were executed, not a separately added example class. No runtime tests were added.
+Device/Firebase/benchmark execution is not claimed; commands were checked against current setup
+and the previously repaired build guide. No protected credential files were opened.
+
+Logs/scripts/previews: `/private/tmp/df11-*`. Initial Gradle cache access and localhost serving were
+sandbox-blocked; reruns with granted access succeeded. Before a later commit, run the required
+Spotless apply command, inspect any formatter changes and repeat applicable gates if code changes.
+
+#### Explicit publication and source follow-ups
+
+- **DF-14 — Missing aggregate modules:** root Dokka dependencies omit `core/navigation`,
+  `core/testing`, `benchmarks` and `lint`. The first two already apply the Dokka convention;
+  benchmarks/lint do not. Root API output contains fifteen module landing pages, not nineteen.
+  Publication/configuration changes remain deferred by the user's scope choice.
+- **DF-14 — Missing README content:** none of those fifteen aggregate landing pages contains its
+  README's Related Documentation section. A forced network render also has no README introduction.
+  The convention attaches includes only when the Dokka source set is named `main`, while generated
+  network output identifies `release`. Review source-set inclusion and Gradle input tracking before
+  claiming module README links were exercised in real Dokka HTML. Absolute links address path
+  relocation; they do not make omitted README content appear. Do not change the convention plugin
+  without the required review.
+- **DF-12/14 — Unresolved network KDoc:** the forced render reported thirteen occurrences involving
+  `suspendRunCatching`, `IOException`, `HttpException`, `withContext`, `ConnectivityManager`, its
+  `NetworkCallback`, `StateFlow` and `Flow.distinctUntilChanged`. Source comments are unchanged;
+  reconcile their references under DF-12 and recheck generated links under DF-14. A successful
+  Gradle or strict MkDocs build does not establish warning-free API documentation.
+- Existing runtime limitations retain their DF-02/DF-10 dispositions. This task explains them;
+  it does not repair sync consistency, foreground configuration, event delivery or ViewModel lifetime.
 
 ## DF-12 — Edit every source comment touched by the PR
 
@@ -1647,6 +1745,8 @@ documentation links, generated-output handling in `.gitignore`; PR validation wo
   incompatible content. Choose a deliberate preview/release link strategy and verify it at both stages.
 - [ ] Review module README links in generated Dokka, KDoc unresolved references, generated asset
   paths, and the API nav entry. A passing MkDocs build is only one part of this check.
+  Include DF-11’s recorded missing aggregate modules, absent README introductions/source-set
+  inclusion, thirteen network KDoc-link warnings, and pinned review-link release reconciliation.
 - [ ] Inspect representative GitHub and MkDocs rendering: tables, Mermaid, Kotlin fences, alerts,
   details/summary contents, narrow-screen layout, and link destinations. Render claims require
   an actual rendering check, not inference from syntax alone.

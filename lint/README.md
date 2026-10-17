@@ -1,7 +1,7 @@
 # Module :lint
 
 **Purpose:** Two custom lint checks, published to every module that depends on `core:ui` via
-`lintPublish(projects.lint)` (`core/ui/build.gradle.kts:78`) — no per-module wiring needed.
+`lintPublish(projects.lint)` (`core/ui/build.gradle.kts`) — no per-module wiring needed.
 
 ## Key APIs
 
@@ -21,10 +21,11 @@ override val issues = listOf(
 
 ## Gotchas
 
-- `TestMethodNameDetector` deliberately does not port Now in Android's `given_when_then` naming
-  check — this repo uses Kotlin backtick sentence names for tests, and that rule would flag all of
-  them.
+- `TestMethodNameDetector` checks methods annotated with `org.junit.Test` whose names start with
+  lowercase `test`; it does not enforce a sentence or `given_when_then` format.
+- Run `./gradlew :lint:test` after changing a detector. The component guide covers adding a wrapper
+  and updating detector coverage; custom lint runs in consuming modules through Android lint.
 
 ## Related Documentation
 
-- [Components § Enforcement](../docs/components.md#enforcement) — the full `DesignSystemDetector` rationale and its method-name table
+- [Components § Enforcement](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/fa19cbbd83ae609dcc0886a1b6b37379e91a12cc/docs/components.md#enforcement) — the full `DesignSystemDetector` rationale and its method-name table

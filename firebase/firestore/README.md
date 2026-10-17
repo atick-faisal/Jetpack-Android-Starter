@@ -19,11 +19,11 @@ var serverUpdatedAt: Timestamp? = null
 
 ## Gotchas
 
-- This module is only ever read through `:data`'s `HomeRepositoryImpl` — no screen queries Firestore
-  directly.
+- Current Home screens observe Room through `HomeRepository`; that repository calls this source
+  during synchronization. No current screen queries Firestore directly.
 - The repository upload mapping leaves `serverUpdatedAt` as `null`: Firestore substitutes its timestamp for a null
   `@ServerTimestamp` property, and that server clock — never `lastUpdated`, which belongs to the
-  writing device — is what orders `pullJetpacks`. See [Data Layer](../../docs/data.md).
+  writing device — is what orders `pullJetpacks`. See [Data Layer](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/fa19cbbd83ae609dcc0886a1b6b37379e91a12cc/docs/data.md).
 - It is not a constructor parameter, so `:data` never needs `com.google.firebase.Timestamp` on its
   compile classpath. This module declares the SDK with `implementation`, not `api`, and moving the
   property into the constructor would break that boundary.
@@ -32,10 +32,10 @@ var serverUpdatedAt: Timestamp? = null
 - Pull uses default-source `get()` and a strict server-timestamp filter. Cached results do not
   establish server completeness; missing timestamp fields are excluded, and equal-timestamp
   interruption can skip records. Remote hard deletes supply no deletion feed. See
-  [delivery limitations](../../docs/data.md#delivery-and-conflict-limitations) and
-  [upgrade requirements](../../docs/firebase.md#existing-installs-and-documents).
+  [delivery limitations](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/fa19cbbd83ae609dcc0886a1b6b37379e91a12cc/docs/data.md#delivery-and-conflict-limitations) and
+  [upgrade requirements](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/fa19cbbd83ae609dcc0886a1b6b37379e91a12cc/docs/firebase.md#existing-installs-and-documents).
 
 ## Related Documentation
 
-- [Firebase Setup § Firestore Security Rules](../../docs/firebase.md#firestore-security-rules) — the full rule set and field validation
-- [Data Layer](../../docs/data.md) — the two-way sync algorithm this module participates in
+- [Firebase Setup § Firestore Security Rules](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/fa19cbbd83ae609dcc0886a1b6b37379e91a12cc/docs/firebase.md#firestore-security-rules) — the full rule set and field validation
+- [Data Layer](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/fa19cbbd83ae609dcc0886a1b6b37379e91a12cc/docs/data.md) — the two-way sync algorithm this module participates in
