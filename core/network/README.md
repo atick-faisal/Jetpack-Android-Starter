@@ -9,7 +9,7 @@ plain backend — `HomeRepositoryImpl` doesn't use it; it syncs through Firestor
 |---|---|
 | `JetpackRestApi` | `getPosts(): List<NetworkPost>`, `getPost(id): NetworkPost` — a demo REST endpoint (`jsonplaceholder`-style `/photos`), unrelated to the `Jetpack` domain model |
 | `NetworkDataSource` / `NetworkDataSourceImpl` | Wraps `JetpackRestApi` on `@IoDispatcher`; throws on error, caught by callers via `suspendRunCatching` |
-| `NetworkUtils` / `NetworkUtilsImpl` | `getCurrentState(): Flow<NetworkState>` — `CONNECTED`/`LOSING`/`LOST`/`UNAVAILABLE` from a `ConnectivityManager.NetworkCallback` |
+| `NetworkUtils` / `NetworkUtilsImpl` | `getCurrentState(): Flow<NetworkState>` — initial `CONNECTED`/`UNAVAILABLE`, then callback `CONNECTED`/`LOST`/`UNAVAILABLE`; `LOSING` is only logged |
 
 ```kotlin
 // core/network/src/main/kotlin/dev/atick/core/network/api/JetpackRestApi.kt
@@ -24,17 +24,18 @@ interface JetpackRestApi {
 
 ## Gotchas
 
-- `getCurrentState()` emits connectivity as it stands the moment it is collected, then every change
-  after that, and collapses consecutive duplicates — collectors don't need their own
-  `distinctUntilChanged`.
-- `NetworkState.LOSING` is declared but never emitted; a losing network is still usable, so the
-  callback is only logged.
-- Reach for this module only if a feature talks to a plain REST backend instead of Firebase; don't
-  mix it with Firestore sync for the same feature.
+- Each collection seeds from the active network’s `NET_CAPABILITY_INTERNET`, then registers a
+  default-network callback and collapses consecutive duplicates. Availability reports `CONNECTED`;
+  capability changes are only logged. This does not check `NET_CAPABILITY_VALIDATED` or guarantee
+  reachable Internet access, and the snapshot/registration sequence is not atomic.
+- `NetworkState.LOSING` is declared but never emitted; the callback logs it without
+  sending a state.
+- The app uses this module’s connectivity monitor and shared image-loader configuration even
+  though Home uses Firestore. REST integration is an optional extension; see the data guide.
 - The base URL is a build secret, not a constant: the Gradle Secrets plugin reads `BACKEND_URL` from
   `secrets.defaults.properties` (version-controlled default) or `local.properties` (real value,
   gitignored) into `BuildConfig.BACKEND_URL`, consumed by `RetrofitModule`.
 
 ## Related Documentation
 
-- [Data Layer](../../docs/data.md) — the four data sources and where each is actually used
+- [Data Layer](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/fa19cbbd83ae609dcc0886a1b6b37379e91a12cc/docs/data.md) — the four data sources and where each is actually used

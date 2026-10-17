@@ -1,6 +1,6 @@
 # Module :app
 
-**Purpose:** The application module — wires every `feature`/`core`/`firebase` module together behind
+**Purpose:** The application module — composes feature screens and supplies application-level wiring behind
 `MainActivity` and `JetpackApp`, and owns app-level config (signing, versioning, ProGuard).
 
 ## Key APIs
@@ -9,6 +9,8 @@
 |---|---|
 | `MainActivity` | Splash screen, theme resolution, `POST_NOTIFICATIONS` request (Android 13+), edge-to-edge, hosts `JetpackApp` |
 | `JetpackApp` / `rememberJetpackAppState` | Root composable; window size class, auth state, profile picture URI, network/crash-reporter access |
+
+Method excerpt from `MainActivity`; surrounding lifecycle/theme setup and imports are omitted.
 
 ```kotlin
 // app/src/main/kotlin/dev/atick/compose/MainActivity.kt
@@ -20,6 +22,8 @@ enableEdgeToEdge(
     navigationBarStyle = SystemBarStyle.auto(lightScrim = lightScrim, darkScrim = darkScrim) { darkTheme },
 )
 ```
+
+Version calculation excerpt; update the version components when preparing a release.
 
 ```kotlin
 // app/build.gradle.kts
@@ -38,11 +42,11 @@ val mVersionCode = majorUpdateVersion.times(10_000).plus(minorUpdateVersion.time
 
 - Theme resolution combines `isSystemInDarkTheme()` with `DarkThemeConfigPreferences`
   (`FOLLOW_SYSTEM`/`LIGHT`/`DARK`) collected via `repeatOnLifecycle(STARTED)`.
-- A release build without `keystore.properties` silently falls back to the debug signing key — see
-  [Getting Started](../docs/getting-started.md#release-build-setup) for the full trap.
+- A release build without `keystore.properties` falls back to the debug signing key — see
+  [Getting Started](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/fa19cbbd83ae609dcc0886a1b6b37379e91a12cc/docs/getting-started.md#release-build-setup) for the full trap.
 
 ## Related Documentation
 
-- [Architecture](../docs/architecture.md) — the module graph `:app` sits at the top of
-- [Navigation](../docs/navigation.md) — `JetpackApp`'s `NavDisplay`/`Navigator` wiring
-- [Data Layer](../docs/data.md) — the repositories injected across feature ViewModels
+- [Architecture](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/fa19cbbd83ae609dcc0886a1b6b37379e91a12cc/docs/architecture.md) — the module graph `:app` sits at the top of
+- [Navigation](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/fa19cbbd83ae609dcc0886a1b6b37379e91a12cc/docs/navigation.md) — `JetpackApp`'s `NavDisplay`/`Navigator` wiring
+- [Data Layer](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/fa19cbbd83ae609dcc0886a1b6b37379e91a12cc/docs/data.md) — the repositories injected across feature ViewModels

@@ -1,13 +1,14 @@
 # Module :benchmarks
 
-**Purpose:** Generates the release build's baseline profile and measures the cold-start improvement
-it produces, using a Gradle Managed Device so CI doesn't need a physical or manually-started emulator.
+**Purpose:** Generates a release baseline profile and compares cold-start timings with and
+without it. The configured generation device is a Gradle Managed Device; these tasks are not
+automatically run by the current CI workflows.
 
 ## Key APIs
 
 | API | What it does |
 |---|---|
-| `BaselineProfileGenerator` | `BaselineProfileRule` that drives app start → theme → Compose setup → navigation → first frame, deliberately nothing past startup (see Gotchas) |
+| `BaselineProfileGenerator` | `BaselineProfileRule` that presses Home, starts the activity and waits for idle; no in-app screen journey |
 | `StartupBenchmark` | `MacrobenchmarkRule` comparing `timeToInitialDisplayMs` with `CompilationMode.None()` vs. `Partial(baselineProfileMode = Require)` |
 
 ```kotlin
@@ -25,11 +26,18 @@ fun generate() = baselineProfileRule.collect(
 
 ## Gotchas
 
-- Startup-only is deliberate: most adopters delete `:feature:home` in their first hour, and a
-  generator that also drives those screens would break the moment they do.
-- Regenerate with `./gradlew :app:generateReleaseBaselineProfile`; run the comparison with
-  `./gradlew :benchmarks:pixel6Api33BenchmarkReleaseAndroidTest`.
+- Regenerate with `./gradlew :app:generateReleaseBaselineProfile`. Generation is not automatic
+  during app builds. Add representative interaction journeys when extending the app.
+- Run only the comparison class with:
+
+  ```bash
+  ./gradlew :benchmarks:pixel6Api33BenchmarkReleaseAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=dev.atick.benchmarks.StartupBenchmark
+  ```
+
+- These tasks boot an emulator and require its SDK image and virtualization. Compare
+  `timeToInitialDisplayMs` between compilation modes; improvement is not guaranteed. Use a physical
+  device for representative timing. The build guide lists generated profiles and result locations.
 
 ## Related Documentation
 
-- [Build & Tooling § Gradle Managed Devices](../docs/build-and-tooling.md#gradle-managed-devices) — the `pixel6Api33` device definition and baseline-profile task table
+- [Build & Tooling § Gradle Managed Devices](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/fa19cbbd83ae609dcc0886a1b6b37379e91a12cc/docs/build-and-tooling.md#gradle-managed-devices) — the `pixel6Api33` device definition and baseline-profile task table

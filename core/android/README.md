@@ -8,9 +8,9 @@ qualifiers, and extension functions with no UI or domain dependency.
 | API | What it does |
 |---|---|
 | `suspendRunCatching` | `runCatching` for `suspend` functions that re-throws `CancellationException` instead of swallowing it — the repository-boundary error wrapper used everywhere |
-| `OneTimeEvent<T>` | Thread-safe (`AtomicBoolean`) wrapper so an event fires once even if observed from multiple recompositions |
+| `OneTimeEvent<T>` | Atomic one-time consumption with non-consuming `peekContent()`; consumption does not acknowledge delivery |
 | `@IoDispatcher`, `@DefaultDispatcher`, `@MainDispatcher` (`di/DispatcherModule.kt`) | Qualified `CoroutineDispatcher`s — always inject rather than hardcode `Dispatchers.IO` |
-| `stateInDelayed` (`extensions/FlowExtensions.kt`) | `stateIn` preset to `WhileSubscribed(5000)` |
+| `stateInDelayed` (`extensions/FlowExtensions.kt`) | `stateIn` with `WhileSubscribed(5000)`; collection requires a subscriber, and separate jobs launched by callbacks have their own lifetime |
 | `isEmailValid`, `isPasswordValid`, `isValidFullName` (`extensions/StringExtensions.kt`) | Form-input validators used by `feature:auth` |
 
 ```kotlin
@@ -28,5 +28,5 @@ suspend inline fun <T> suspendRunCatching(crossinline block: suspend () -> T): R
 
 ## Related Documentation
 
-- [Data Layer](../../docs/data.md) — `suspendRunCatching` at the repository boundary
-- [State Management](../../docs/state-management.md) — `OneTimeEvent` inside `UiState`
+- [Data Layer](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/fa19cbbd83ae609dcc0886a1b6b37379e91a12cc/docs/data.md) — `suspendRunCatching` at the repository boundary
+- [State Management](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/fa19cbbd83ae609dcc0886a1b6b37379e91a12cc/docs/state-management.md) — `OneTimeEvent` inside `UiState`
