@@ -2,7 +2,7 @@
 
 Companion goals, findings, and recovery map: [DOC_FIX_PLAN.md](DOC_FIX_PLAN.md).
 
-Status: DF-00–DF-09 complete; DF-10–DF-15 pending. Checked items identify completed work in the records below. Reviewed base: `1c2103890d16f81f6c6ae4c2d8626281b841e417`.
+Status: DF-00–DF-10 complete; DF-11–DF-15 pending. Checked items identify completed work in the records below. Reviewed base: `1c2103890d16f81f6c6ae4c2d8626281b841e417`.
 Reviewed head: `0fb7882982cfefd55df300e06549731c6fbb33bb` ([PR #647](https://github.com/atick-faisal/Jetpack-Android-Starter/pull/647)).
 
 Complete each task by recording the changed paths, verification result, and any unresolved follow-up
@@ -1431,27 +1431,98 @@ not repository artifacts). No protected configuration or credential files were o
 
 Depends on: DF-03–09. Scope: all entries in `docs/troubleshooting.md`.
 
-- [ ] Review all 29 existing entries and unique deleted symptoms from DF-00. Each should state the
+- [x] Review all 29 existing entries and unique deleted symptoms from DF-00. Each should state the
   symptom, plausible causes, how to distinguish them, a fix, and how to confirm recovery.
-- [ ] Correct claims that `collectAsState()` prevents updates, ordinary `@Preview` or non-private
+- [x] Correct claims that `collectAsState()` prevents updates, ordinary `@Preview` or non-private
   previews inherently fail, or every repeated event is caused by omitting `OneTimeEvent`.
-- [ ] Correct sync retry diagnosis: swallowed errors do not explain retry exhaustion. Distinguish
+- [x] Correct sync retry diagnosis: swallowed errors do not explain retry exhaustion. Distinguish
   pending constraints, dropped requests, authentication/rules failures, and exhausted retries.
-- [ ] Replace client-clock conflict-resolution advice with the DF-02/06 outcome. Verify debugging
+- [x] Replace client-clock conflict-resolution advice with the DF-02/06 outcome. Verify debugging
   commands; do not assume an Android device ships a usable `sqlite3` binary.
-- [ ] Check configuration-cache/plugin diagnoses against current build config and upstream sources.
+- [x] Check configuration-cache/plugin diagnoses against current build config and upstream sources.
   Remove “nothing to do” as a universal answer to configuration-cache warnings.
-- [ ] Correct Room integrity/migration advice and notification/foreground-service guidance against
+- [x] Correct Room integrity/migration advice and notification/foreground-service guidance against
   the actual manifest and permission flow. Link to the specific setup/configuration steps.
-- [ ] Replace “clean build --refresh-dependencies resolves most mysterious states” with targeted
+- [x] Replace “clean build --refresh-dependencies resolves most mysterious states” with targeted
   checks. Include missing new-tool symptoms such as dependency/badging baseline drift and lint errors.
-- [ ] Move “How do I run tests?” to the command/testing guide; replace remaining “Cause: N/A” entries
+- [x] Move “How do I run tests?” to the command/testing guide; replace remaining “Cause: N/A” entries
   with appropriate instructional content. Remove editorial commentary about nonexistent symptoms.
-- [ ] Preserve readable/searchable summaries and functional links, alerts, and code inside details
+- [x] Preserve readable/searchable summaries and functional links, alerts, and code inside details
   blocks in both GitHub and MkDocs rendering.
 
 Accept: each entry helps diagnose rather than guessing a single cause; restored topics are easy
 to find, with no arbitrary line ceiling.
+
+### DF-10 completion record
+
+Completed 2026-10-17 from clean working-tree revision `6e84c49c645bc6c24c32151b2b1a8edd21897419`.
+Changed only `docs/troubleshooting.md` and this execution record. No runtime, public API, dependency,
+manifest, backend, database, build configuration or source-comment changes; no commit or deployment.
+
+#### Coverage and recovery disposition
+
+Reviewed all 29 prior entries. The resulting page has 34 collapsible entries plus direct Testing
+instructions; entry count is an observation, not an acceptance target. All ten existing section
+anchors are preserved. The following groups account for the prior entries and the DF-00 recovery
+rows assigned to DF-10, including topics from deleted DI/tips pages and shortened navigation,
+Firebase, getting-started and sync references.
+
+| Prior entries / recovery topics | Final disposition |
+|---|---|
+| JDK; dependency resolution; historical Gradle sync/catalog setup | Corrected JVM/toolchain diagnosis; differentiated aliases, coordinates, offline mode and network errors; targeted retry instead of blanket refresh. |
+| Missing binding; deleted DI troubleshooting (bindings, fields, scopes, KSP, cycles) | Expanded qualifier/component/module visibility and duplicate/cycle checks; restored processor-first Hilt/Room diagnosis in a separate KSP entry. Existing DI guide owns field/construction examples. |
+| Duplicate classes; configuration cache | Added executable dependencyInsight example; report-led cache diagnosis with official Gradle reference, no unsupported single-plugin attribution. |
+| Historical slow build/processor failures | Restored local profiling, phase comparison and memory checks; no automatic scan upload or cache invalidation prescription. |
+| Firebase initialization; Hilt startup | Retained and corrected variant, manifest, initialization and annotation checks; linked canonical setup. |
+| Destination/arguments; historical navigation serialization, back stack, restoration, chrome | Corrected NavKey/entry/assisted-factory checks and restored a separate identity/restoration entry; linked current wiring instead of obsolete nested graphs. |
+| Stale UI; repeated events; helper compilation | Corrected observation/equality/lifecycle and Result/context checks; documented event consumption versus successful delivery. |
+| Historical loading, lifecycle, state reset and effect restarts | Restored loading/ignored/save-failure entry; distributed composition identity, process restoration and collector-lifetime diagnosis across navigation, UI and event entries. |
+| Preview; jank/list/recomposition | Removed private/ordinary Preview failure myths and Route requirement; linked preview-safe content and measured performance rather than universal annotations/lambdas fixes. |
+| Historical emulator/install failures | Restored device inventory, explicit device selection and installation-error diagnosis without default uninstall/data loss. |
+| Google sign-in; Credential Manager | Corrected certificate/client/provider/account-filter diagnosis; linked configured sign-in/registration behavior. |
+| Firestore permission denied; historical missing documents | Added deployed-rule/path/UID/field checks and old timestamp-field compatibility; no permissive-rules shortcut. |
+| Crashlytics; historical duplicate initialization and reporting | Corrected test/restart/upload/mapping diagnosis; initialization stays in its own entry, instrumentation scope stays in Firebase guide. |
+| Sync never runs; repeated retries; notification; customization/conflicts | Separated queue/constraints/KEEP, actual failures, delivery gaps and notification visibility/foreground setup. Corrected four-attempt limit; replaced clock-conflict and device-sqlite assumptions with established limitations and official diagnostics. Customization remains explicitly instructional. |
+| Spotless; historical headers/ktlint/CI; new guardrails | Retained exact init-script flags, added baseline/badging/custom-lint diagnosis and reviewed-regeneration links. |
+| Signing fallback; R8 | Retained targeted release diagnosis and signing verification; keep-rule edits remain subject to review. |
+| Repository crash; Room integrity | Corrected Result versus Flow/throw handling; distinguished same-version integrity, migration paths, destructive loss and missing upgrade tests. |
+| LeakCanary; image OOM; deleted tips leak workflow | Restored retained-object trace/reproduction/recheck workflow; corrected Context lifetime and image-loader assumptions. Performance duplicates merged into existing UI entry. |
+| How to run tests; additional help | Replaced Cause: N/A with links to existing command/testing guides and shared-Flow testing caveat; replaced universal clean/build advice with reproducible diagnostic collection. |
+
+#### Verification
+
+| Check | Result and limits |
+|---|---|
+| Source/configuration review | Checked current worker/request/notification creation, permission request, JVM criteria, image painter and repaired canonical guides. Existing generated debug and release merged manifests contain SystemForegroundService without a service type; these artifacts were inspected, not freshly rebuilt. |
+| Upstream contracts | Checked official Android long-running WorkManager, notification-permission and WorkManager diagnostics pages, plus Gradle configuration-cache debugging. Linked those contracts at the relevant instructions. |
+| `./gradlew dokkaGeneratePublicationHtml` | Passed; 276 actionable tasks, configuration cache reused. |
+| Documented local assembly and `.venv/bin/python -m mkdocs build --strict` | Passed after final summary markup change. Existing index-omitted-from-nav informational notice remains; no strict warnings/errors. Generated output is ignored. |
+| Rendered local links/anchors | Checked all 88 local hrefs in generated troubleshooting HTML against existing output and target fragment IDs; 34 details/summary pairs. |
+| GitHub Markdown compatibility | Temporary cmarkgfm renderer installed under `/private/tmp/df10-render-deps`, with no project dependency change. Verified 34 balanced details/summary pairs, nested emphasis, links, fenced code and caution blockquote. Changed summary backticks to explicit HTML code tags after GFM exposed literal-backtick rendering. GitHub-specific alert styling/sanitization was not simulated and no page was published. |
+| Chrome rendering | Inspected local MkDocs page and expanded sync diagnostics/code and release caution. Also inspected standalone GFM output summaries. No app UI/device execution claimed. |
+| `./gradlew --version` | Passed; documented JVM diagnostic exercised. |
+| `./gradlew :app:dependencyInsight --configuration debugRuntimeClasspath --dependency kotlin-stdlib` | Passed; documented configuration/dependency diagnostic exercised. |
+| `adb devices -l` | Command succeeded after sandbox cache/socket access was granted; no devices attached. Broadcast, jobscheduler, install, notification and Inspector scenarios are instructions checked against official docs, not device results. |
+| `./gradlew spotlessCheck --init-script gradle/init.gradle.kts --no-configuration-cache` | Passed; 180 tasks up-to-date. No formatter apply or commit performed. |
+| `git diff --check` | Passed. Only the two intended authored Markdown files changed. |
+
+Local logs: `/private/tmp/df10-{dokka,mkdocs,version,dependency,spotless}.log`. Initial Gradle wrapper
+lock, localhost serving, ADB socket and temporary renderer download attempts were sandbox-blocked;
+rerunning with granted access succeeded. No protected credential/configuration files were opened.
+No new runtime tests were added for this documentation-only change.
+
+#### Visible limitations and follow-ups
+
+- **Foreground sync configuration:** source-confirmed missing runtime service type in ForegroundInfo;
+  inspected merged manifests also lack a SystemForegroundService type and dataSync-specific permission.
+  A separately reviewed fix must align manifest service type/permission and runtime type, then verify
+  affected API levels, notification denied/granted states and worker results on a device/emulator.
+  This task documents the gap; it does not establish a device reproduction or change configuration.
+- Existing sync consistency, pull checkpoints, event delivery, observation lifetime, Item error handling
+  and worker cancellation concerns retain their DF-02 dispositions. Successful work does not imply
+  complete delivery or persistence.
+- Device/Firebase/rules/R8/Room-upgrade/Android Studio preview and memory scenarios were not executed.
+  Site-wide source-link/URL compatibility remains DF-14; module README reconciliation is next, DF-11.
 
 ## DF-11 — Reconcile all module READMEs and API entry points
 
