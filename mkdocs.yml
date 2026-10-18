@@ -90,6 +90,11 @@ not_in_nav: |
   /spotless.md
   /tips.md
 
+# Agent planning state, not documentation (see AGENTS.md › Planning).
+exclude_docs: |
+  /goal.md
+  /features/
+
 extra:
   consent:
     title: Cookie consent
