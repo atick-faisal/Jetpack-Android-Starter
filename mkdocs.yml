@@ -48,12 +48,12 @@ markdown_extensions:
           format: !!python/name:pymdownx.superfences.fence_code_format
   - pymdownx.inlinehilite
   - pymdownx.snippets
-  - pymdownx.superfences
   - pymdownx.details
   - admonition
   - md_in_html
 
 nav:
+  - Home: index.md
   - Getting Started: getting-started.md
   - Architecture: architecture.md
   - Guide: guide.md
@@ -64,8 +64,31 @@ nav:
   - Build & Tooling: build-and-tooling.md
   - Firebase: firebase.md
   - Troubleshooting: troubleshooting.md
+  - Tooling:
+      - Benchmarks: reference/benchmarks.md
+      - Custom Lint: reference/lint.md
   - 📚 API Reference: api/index.html
-  - ⚖️ License: https://github.com/atick-faisal/Jetpack-Android-Starter/blob/main/LICENSE
+  - ⚖️ License: license.md
+
+validation:
+  links:
+    not_found: warn
+    anchors: warn
+    unrecognized_links: warn
+
+not_in_nav: |
+  /data-flow.md
+  /dependency-injection.md
+  /dependency.md
+  /faq.md
+  /fastlane.md
+  /github.md
+  /performance.md
+  /philosophy.md
+  /plugins.md
+  /quick-reference.md
+  /spotless.md
+  /tips.md
 
 extra:
   consent:
@@ -89,6 +112,9 @@ extra:
       link: https://stackoverflow.com/users/12737399/atick-faisal
     - icon: fontawesome/brands/researchgate
       link: https://scholar.google.com/citations?user=ZiPKjAgAAAAJ&hl=en
+
+hooks:
+  - scripts/docs_hooks.py
 
 plugins:
   - gh-admonitions
