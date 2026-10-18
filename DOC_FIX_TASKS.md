@@ -2,7 +2,7 @@
 
 Companion goals, findings, and recovery map: [DOC_FIX_PLAN.md](DOC_FIX_PLAN.md).
 
-Status: DF-00–DF-14 complete; DF-15 reader audit complete, final validation and PR preparation pending. Checked items identify completed work in the records below. Reviewed base: `1c2103890d16f81f6c6ae4c2d8626281b841e417`.
+Status: DF-00–DF-15 complete. Final local validation and PR draft are recorded below; external PR update and commit remain separate actions. Checked items identify completed work in the records below. Reviewed base: `1c2103890d16f81f6c6ae4c2d8626281b841e417`.
 Reviewed head: `0fb7882982cfefd55df300e06549731c6fbb33bb` ([PR #647](https://github.com/atick-faisal/Jetpack-Android-Starter/pull/647)).
 
 Complete each task by recording the changed paths, verification result, and any unresolved follow-up
@@ -2019,25 +2019,25 @@ No commit, push, PR update, Firebase operation, device installation or site publ
 
 Depends on: DF-00–14. Scope: final diff and completion evidence.
 
-- [ ] Complete DF-00's recovery ledger and every task's evidence note. Reconcile remaining DF-02
+- [x] Complete DF-00's recovery ledger and every task's evidence note. Reconcile remaining DF-02
   behavior concerns with the final docs; none may remain hidden behind a promise of safety.
-- [ ] Perform reader walkthroughs: fresh debug run; configure Firebase; add and test a feature;
+- [x] Perform reader walkthroughs: fresh debug run; configure Firebase; add and test a feature;
   customize a component/locale; diagnose a failed sync; prepare a signed release; preview docs.
   Record the steps actually exercised and those checked by inspection only.
-- [ ] Review every changed example for existence, placement, imports, omitted code, return/error
+- [x] Review every changed example for existence, placement, imports, omitted code, return/error
   behavior, and agreement with the final implementation. Compile meaningful complete examples or
   exercise their real counterparts; a symbol search alone is insufficient.
-- [ ] Search authored docs and source comments for obsolete APIs/claims (`NavController`, `NavHost`,
+- [x] Search authored docs and source comments for obsolete APIs/claims (`NavController`, `NavHost`,
   Route wrappers, `networkBoundResource`, `LocalGradientTheme`, planned tests/profiles, periodic
   sync, undo, Proto-style storage). Review each match in context; valid historical references are
   not failures. Exclude generated output and old audit logs from claims about active instructions.
-- [ ] Read the prose aloud, especially comments and warnings. Remove repetition, invented intent,
+- [x] Read the prose aloud, especially comments and warnings. Remove repetition, invented intent,
   rhetorical comparisons, and false certainty while retaining concrete constraints and useful depth.
-- [ ] Run the applicable checks below against the finished revision and record exact commands and
+- [x] Run the applicable checks below against the finished revision and record exact commands and
   outcomes. Never copy the old plan's successful results into the new completion record.
-- [ ] Inspect `git diff --check`, final changed paths, generated outputs, and secret/config handling.
+- [x] Inspect `git diff --check`, final changed paths, generated outputs, and secret/config handling.
   Confirm any runtime or protected configuration edits have their own review scope and authorization.
-- [ ] Prepare a concise PR title/body covering the final scope, recovered guidance, validation, and
+- [x] Prepare a concise PR title/body covering the final scope, recovered guidance, validation, and
   remaining runtime/compatibility concerns. Remove line-count victory claims and unsupported “all
   snippets verified” wording. Obtain authorization before posting the update or any review comment.
 
@@ -2056,11 +2056,11 @@ Checks for the final repair (do not publish, deploy, or install on a user's devi
 | `./gradlew :app:dependencyGuard :app:checkReleaseBadging` | Verify any separately approved dependency/manifest/build changes; the original PR already includes runtime/build edits. Do not refresh baselines merely to silence a failure. |
 | Manual GitHub/MkDocs/Dokka review | Record pages and links inspected; strict builds do not prove usability or factual correctness. |
 
-Completion record (fill when the repair is finished):
+Completion record (detailed commands and limits follow in the final-validation record):
 
 | Revision | Check or reader workflow | Result | Limitation / follow-up |
 |---|---|---|---|
-| Pending implementation | — | Not run | — |
+| `93351a6f1539190ab17d6d271abacf94e9a65089` plus documentation-only completion patch | Final local gates, fresh rendering and local PR draft | Passed; see final-validation record | JVM tests up-to-date; Firebase/device/signing workflows retain inspection-only limits; initial badging scheduled mapping upload |
 
 Accept: repair goals are met with evidence at the final revision, and the PR accurately describes
 what is ready and what remains separately tracked.
@@ -2070,7 +2070,9 @@ what is ready and what remains separately tracked.
 Completed 2026-10-18 from clean starting HEAD
 `3be551e9f31cdd283f0fdbc2f8528eae6f751744` on `fix/docs-v3`. The user selected reader audit first,
 with full validation gates and the local PR draft reserved for a second chunk. This record describes
-an uncommitted editorial patch, not completion of DF-15 or validation of a future commit.
+the editorial patch at the time of that audit, not completion of DF-15 or validation of a future commit.
+The patch was subsequently committed as `93351a6f1539190ab17d6d271abacf94e9a65089`; the final
+validation below starts from that clean commit.
 
 #### Recovery and behavior reconciliation
 
@@ -2199,3 +2201,99 @@ comments. Record current results rather than copying prior success, and retain t
 limits on Firebase, signing and device workflows. Prepare a local PR title/body describing recovered
 guidance, actual verification and outstanding runtime/compatibility concerns. Posting, committing,
 pushing, installing and publishing are outside this chunk.
+
+### DF-15 final-validation chunk — completion record
+
+Completed 2026-10-18 on `fix/docs-v3`, starting from clean HEAD
+`93351a6f1539190ab17d6d271abacf94e9a65089`. Java 21 and the existing Python 3.14.8 `.venv`
+were used, with existing Android/Gradle caches. This is local validation of the committed reader
+audit plus the documentation-only completion patch, not evidence of a fresh clone, remote CI run
+or production readiness.
+
+#### Changes and reconciliation
+
+- Completed the remaining validation and local PR preparation; the reader-audit evidence above
+  supplies recovery reconciliation, example coverage and inspection of the seven reader journeys.
+  The build and current rendering below close its explicitly deferred checks. Firebase setup,
+  actual debug launch, device accessibility/locale checks and production signing remain unexecuted.
+- Added the observed Crashlytics mapping-upload boundary and an upload-excluding local badging
+  command to `docs/build-and-tooling.md`. No runtime source, API/type, dependency, migration,
+  baseline, rule, workflow or protected configuration was edited in this chunk.
+- Reconciled the reader-audit patch's subsequent commit and completed this task's checklist and
+  evidence table. Historical results retain their original scope; they are not current check results.
+- Prepared local `pr-title.txt` and `pr-body.md` under `/private/tmp/df15-final-validation/`.
+  The draft covers the whole branch, distinguishes editorial repairs from earlier runtime changes,
+  and retains upgrade/runtime limitations. No PR update or review comment was posted.
+
+#### Commands and outcomes
+
+Commands run from the repository root. Logs are under `/private/tmp/df15-final-validation/`.
+`<revision>` below is the full starting HEAD printed above.
+
+| Exact command | Result and evidence boundary |
+|---|---|
+| `./gradlew spotlessApply --init-script gradle/init.gradle.kts --no-configuration-cache` | Passed in 7s; 180 tasks up-to-date; no formatter changes. |
+| `./gradlew spotlessCheck --init-script gradle/init.gradle.kts --no-configuration-cache check` | Passed in 7s; 1,141 tasks, 18 executed and 1,123 up-to-date. |
+| `./gradlew :build-logic:convention:check` | Passed; two tasks up-to-date. Kept separate from root Spotless; no claim of included-build formatting coverage. |
+| `./gradlew assembleDebug test :lint:test :app:dependencyGuard :app:checkReleaseBadging` | Passed in 3m35s; 1,474 tasks, 169 executed, eight from cache and 1,297 up-to-date. Debug assembly and both guardrails passed; unit/custom-lint test tasks were up-to-date, not newly executed tests. No baselines changed. |
+| `./gradlew :app:checkReleaseBadging -x :app:uploadCrashlyticsMappingFileRelease` | Passed in 57s; 651 tasks, 16 executed and 635 up-to-date. Release APK/badging generation ran, comparison was up-to-date; the upload task was absent. Confirms the new local-validation command. |
+| `./gradlew dokkaGeneratePublicationHtml -PdocsRevision=<revision>` | Passed in 1m12s; 282 tasks, 39 executed and 243 up-to-date. Real module/aggregate generation ran; no unresolved-link warnings. Source links pin the starting commit. |
+| `.venv/bin/python -m unittest discover -s scripts -p 'test_*.py'` | Eleven tests passed. |
+| `.venv/bin/python scripts/prepare_docs.py --revision <revision>` | Passed using real Dokka output, rebuilding assembled inputs. |
+| `.venv/bin/python -m mkdocs build --strict --config-file build/docs-mkdocs.yml` | Passed. Material printed its upstream MkDocs 2 notice; no strict-build link warnings. |
+| `.venv/bin/python scripts/check_docs.py --site site` | Passed; 19,638 local destinations, zero errors before the completion note; final rerun recorded below. Checks all seventeen module introductions and tooling references. |
+| `git diff --check`; changed-path/generated-output review | Passed before completion edits; final review below. Only the build guide and this execution record are changed. |
+
+The badging gate builds a release APK, including R8, and its initial invocation also executed
+`:app:uploadCrashlyticsMappingFileRelease`. That side effect was not excluded in the initial
+plan/command. The task log does not establish whether a remote upload occurred; do not infer that
+no network side effect occurred. The subsequent run explicitly excluded it, and the build guide now
+documents that option. No Firebase console operation, rule deployment, app/site publication or
+production-signing verification was performed. Release compilation reported ten Compose stack-trace
+mapping warnings for Google's OSS licences classes; both gate invocations still passed. No project
+configuration was changed to suppress them.
+
+#### Fresh rendering review
+
+Served freshly generated `site/` on loopback port 8016. Inspected the homepage and source revision,
+feature guide/testing content, component catalog/tables, compatibility page and its maintained
+link target, and benchmark tooling reference. Reviewed desktop layout and mobile component/tooling/
+compatibility layouts (requested 390×844 viewport; browser zoom reported a 433×937 CSS viewport).
+Code blocks retain horizontal scrolling. Blank captures after jumping within long pages were
+avoided with fresh navigation and a short disposable diagram page; no layout fix was inferred
+from that capture behavior.
+
+Reviewed freshly generated Navigator/navigate entry identity, lifecycle collection, SnackbarAction,
+locale setter, TextFieldData, SignUpScreenData, navigation scaffold, DelegatingWorker and JetpackTheme
+API content. Checked rendered examples, member/guide links and commit-pinned source URLs. The
+HTML-link gate covers destinations beyond these manual samples. It does not verify external server
+availability or every visual state.
+
+Rendered the unchanged sync sequence excerpt in a disposable copy of the built Data page, using
+its actual Material/Mermaid scripts and CSS; inspected the completed diagram at mobile and desktop
+sizes. The temporary copy is outside site output and is not a shipped page. GitHub's Markdown API
+rendered README, CONTRIBUTING and CHANGELOG in GFM mode; inspected the returned HTML locally with
+simple preview CSS. This verifies the rendering engine and content, not GitHub's hosted PR layout
+or relative-link behavior from the temporary server. No hosted PR was modified. Browser viewport
+overrides were reset after review.
+
+#### Completion and retained follow-ups
+
+The repair ledger, task evidence, current gates, rendering samples and local PR draft satisfy this
+chunk. The bounded sync, checkpoint, observation, async/event, Item/Settings error and upgrade
+follow-ups remain documented under DF-02; foreground-service configuration remains a runtime
+concern, and the reader audit adds auth submission validation. None is silently marked fixed.
+No installation, instrumented/device/backend test, production signing, publishing, deployment,
+commit, push or external PR update is claimed. The automatic mapping-upload task boundary is
+recorded separately above.
+
+#### Final patch verification
+
+After the build-guide addition, repeated Spotless apply (7s, no formatter changes), Spotless check
+plus project check (7s, 1,141 tasks: 18 executed and 1,123 up-to-date), preparation with the same
+revision, strict MkDocs (0.78s), and the site link audit (19,638 destinations, zero errors). All passed.
+Final diff review confirms exactly the two documentation paths above, no generated/configuration
+files or baseline changes, and no whitespace errors. The exact final patch and its SHA-256 manifest
+are saved as `final.patch` and `patch-sha256.txt` beside the local PR draft and logs. The fingerprint
+is external to this record to avoid a self-referential digest. Generated source links identify the
+starting commit; the local badging paragraph and completion record are not committed source links.
