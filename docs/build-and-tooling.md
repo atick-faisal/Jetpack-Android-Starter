@@ -86,6 +86,9 @@ explicit tool versions. Editing prose does not move or update them.
 `.github/renovate.json` extends `config:recommended`, `group:all`, `:dependencyDashboard`, and
 `schedule:daily`. When adopting the template, enable the Renovate GitHub App for your repository
 and review its onboarding/dashboard and grouped updates. No Dependabot configuration is supplied.
+CI commits the regenerated Dependency Guard baseline to Renovate PRs (see
+[Renovate PRs](#renovate-prs)), and `gitIgnoredAuthors` lists the bot authors of that commit so
+Renovate keeps rebasing the branch.
 
 Discuss new dependencies, modules, convention-plugin changes, SDK/compiler upgrades and formatting
 configuration changes before implementing them. To extend a convention plugin after agreement,
@@ -198,6 +201,23 @@ dependencyGuard {
 
 Baseline lives at `app/dependencies/releaseRuntimeClasspath.txt`. `./gradlew :app:dependencyGuard`
 checks it (also run in CI); `./gradlew :app:dependencyGuardBaseline` regenerates it.
+
+#### Renovate PRs
+
+The hosted Renovate app cannot run Gradle, so its version bumps never update the baseline. On a
+pull request opened by `renovate[bot]` from this repository, the `build` job in `ci.yml` regenerates
+the baseline when the check fails, commits it to the PR branch as
+`📌 chore(deps): update Dependency Guard baseline [no-task]`, and runs the remaining checks against
+it. This follows [Now in Android](https://github.com/android/nowinandroid/blob/main/.github/workflows/Build.yaml).
+Every other run, including your own PRs, fork PRs and `repository_dispatch`, still fails on drift.
+
+- The bot commit has no checks of its own: a push made with `GITHUB_TOKEN` does not start a new
+  workflow run. The run that made the commit already tested the regenerated baseline. If
+  `🏗️ Build & Test` is a required check, merge these PRs as an admin.
+- That job checks out the PR branch (`github.head_ref`) on Renovate PRs, because
+  `git-auto-commit-action` cannot push from the default merge ref. Keep that `ref:` line.
+- APK badging is not updated automatically. A bump that changes merged-manifest permissions
+  still fails [APK badging](#apk-badging) until someone reviews and updates the golden file.
 
 ### Gradle Managed Devices
 
@@ -316,7 +336,7 @@ still satisfies that predicate; an explicit `--scan` request is a separate choic
 
 | Workflow | Trigger | Does |
 |---|---|---|
-| `ci.yml` (🚀 Build & Validate) | Pull request; `repository_dispatch` type `libs-versions-updated` | `lint` job: Spotless check, `:build-logic:convention:check`. `build` job: Dependency Guard, unit tests, `:lint:test`, project build, Android Lint (uploaded to Code Scanning), APK badging check |
+| `ci.yml` (🚀 Build & Validate) | Pull request; `repository_dispatch` type `libs-versions-updated` | `lint` job: Spotless check, `:build-logic:convention:check`. `build` job: Dependency Guard (regenerated and committed on Renovate PRs), unit tests, `:lint:test`, project build, Android Lint (uploaded to Code Scanning), APK badging check |
 | `cd.yml` (🚀 Release APK) | Tag push `v*.*.*` | `lint` → `build` (assembles the signed release) → `github-release` and `play-store-release` (Fastlane) |
 | `docs.yml` (📚 Documentation Validation & Deployment) | Pull request; push to `main` | Validates real API/site output; a separate main-only job deploys the validated artifact |
 | `claude.yml` (Claude Code) | Issue/PR comments and reviews | Claude Code GitHub Action automation — not part of the build pipeline |

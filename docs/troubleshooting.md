@@ -390,6 +390,10 @@ Compare the failure with the intended code, dependency or manifest change.
 [Dependency Guard](build-and-tooling.md#dependency-guard) or [APK badging](build-and-tooling.md#apk-badging)
 to update its baseline/golden file and inspect the diff. Follow [custom lint](build-and-tooling.md#custom-lint-lint)
 for reported resource/API rules. Rerun the failing gate; regenerating a baseline is not diagnosis.
+
+**Renovate PRs:** CI commits the Dependency Guard baseline itself, so review that bot commit's
+diff instead of regenerating it. The bot commit shows no checks; that is expected. Badging still
+fails until updated by hand. See [Renovate PRs](build-and-tooling.md#renovate-prs).
 </details>
 
 ## Build Configuration
