@@ -23,7 +23,7 @@ package dev.atick.core.ui.utils
  * a clean way to manage text field state and validation errors. It's commonly used
  * in screen data classes to represent form inputs.
  *
- * ## Usage in Screen Data
+ * ## Illustrative screen data (not an existing class)
  * ```kotlin
  * data class LoginScreenData(
  *     val email: TextFieldData = TextFieldData(""),
@@ -31,7 +31,7 @@ package dev.atick.core.ui.utils
  * )
  * ```
  *
- * ## Usage in ViewModel
+ * ## Illustrative ViewModel excerpt (imports and repository omitted)
  * ```kotlin
  * @HiltViewModel
  * class LoginViewModel @Inject constructor(
@@ -49,45 +49,37 @@ package dev.atick.core.ui.utils
  *     private fun validateEmail(email: String): String? {
  *         return when {
  *             email.isBlank() -> "Email cannot be empty"
- *             !email.isValidEmail() -> "Invalid email format"
+ *             !email.isEmailValid() -> "Invalid email format"
  *             else -> null
  *         }
  *     }
  * }
  * ```
  *
- * ## Usage in Composable
+ * ## Illustrative composable excerpt (imports omitted)
  * ```kotlin
  * @Composable
  * fun LoginScreen(
  *     screenData: LoginScreenData,
  *     onEmailChange: (String) -> Unit
  * ) {
- *     OutlinedTextField(
+ *     JetpackTextField(
  *         value = screenData.email.value,
  *         onValueChange = onEmailChange,
  *         label = { Text("Email") },
- *         isError = screenData.email.errorMessage != null,
- *         supportingText = screenData.email.errorMessage?.let { { Text(it) } }
+ *         errorMessage = screenData.email.errorMessage,
  *     )
  * }
  * ```
  *
- * ## With UiText for Type-Safe Errors
- * ```kotlin
- * data class TextFieldData(
- *     val value: String,
- *     val errorMessage: UiText? = null  // Use UiText instead of String
- * )
- *
- * // In Composable:
- * supportingText = screenData.email.errorMessage?.let { error ->
- *     { Text(error.asString()) }
- * }
- * ```
+ * [UiText] is available for localized UI text, but this class currently stores `String?` errors.
+ * Changing that type requires updating the form state and rendering calls together; the
+ * [form guide](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/main/docs/components.md#uitext-and-form-errors)
+ * explains the current validation and localization boundaries.
  *
  * @property value The current text content of the field
- * @property errorMessage Optional validation error message. When null, the field is valid.
+ * @property errorMessage Optional validation error message. Null means no stored error, not proof
+ *     that validation ran or that the backend accepts the value.
  *
  * @see UiState
  * @see UiText

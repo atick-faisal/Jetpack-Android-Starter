@@ -97,7 +97,7 @@ val DarkDefaultColorScheme = darkColorScheme(
 )
 
 /**
- * Now in Android theme.
+ * App theme with expressive Material colors, typography, backgrounds, gradients, and image tint.
  *
  * @param darkTheme Whether the theme should use a dark color scheme (follows system by default).
  * @param disableDynamicTheming If `true`, disables the use of dynamic theming, even when it is

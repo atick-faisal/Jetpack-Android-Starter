@@ -22,11 +22,12 @@ import dev.atick.core.ui.R
 /**
  * Represents different action types that can be attached to a Snackbar message.
  *
- * This enum provides standardized action buttons for Snackbars, enabling users to respond
- * to notifications or messages. Actions are automatically handled by [StatefulComposable]
- * when errors occur, and can be used in custom snackbar implementations.
+ * Values identify localized labels; the snackbar callback owns the resulting behavior.
+ * [StatefulComposable] requests REPORT for errors and ignores the callback's Boolean result.
+ * The app's callback reports the throwable only when that action is selected. UNDO has no
+ * built-in rollback implementation.
  *
- * ## Usage in ViewModels
+ * ## Illustrative ViewModel excerpt (repository and state declarations omitted)
  * ```kotlin
  * @HiltViewModel
  * class MyViewModel @Inject constructor(
@@ -40,10 +41,10 @@ import dev.atick.core.ui.R
  * }
  * ```
  *
- * ## Usage in UI Layer
+ * ## Illustrative Screen excerpt (imports and content omitted)
  * ```kotlin
  * @Composable
- * fun MyRoute(
+ * fun ExampleScreen(
  *     onShowSnackbar: suspend (String, SnackbarAction, Throwable?) -> Boolean,
  *     viewModel: MyViewModel = hiltViewModel()
  * ) {
@@ -53,7 +54,7 @@ import dev.atick.core.ui.R
  *         state = uiState,
  *         onShowSnackbar = onShowSnackbar
  *     ) { screenData ->
- *         MyScreen(
+ *         ExampleContent(
  *             onDelete = { id ->
  *                 viewModel.deleteItem(id)
  *             }
@@ -62,15 +63,18 @@ import dev.atick.core.ui.R
  * }
  * ```
  *
- * ## Custom Snackbar Handler
+ * ## Illustrative custom handler inside a composable
+ * Imports and surrounding UI are omitted; resource lookup uses the captured Context
+ * because the suspend callback runs outside composition.
  * ```kotlin
  * val snackbarHostState = remember { SnackbarHostState() }
+ * val context = LocalContext.current
  *
  * val onShowSnackbar: suspend (String, SnackbarAction, Throwable?) -> Boolean = { message, action, _ ->
  *     val result = snackbarHostState.showSnackbar(
  *         message = message,
  *         actionLabel = if (action != SnackbarAction.NONE) {
- *             stringResource(action.actionText)
+ *             context.getString(action.actionText)
  *         } else {
  *             null
  *         },
@@ -86,7 +90,7 @@ import dev.atick.core.ui.R
  */
 enum class SnackbarAction(@StringRes val actionText: Int) {
     /**
-     * No action button is shown on the Snackbar.
+     * Empty action label; a custom handler can map this to null to omit the button.
      *
      * Use this for informational messages that don't require user interaction.
      *
@@ -97,8 +101,7 @@ enum class SnackbarAction(@StringRes val actionText: Int) {
     /**
      * Shows a "Report" action button.
      *
-     * Use this to allow users to report errors or issues. The action typically
-     * navigates to a bug report screen or opens an email client.
+     * The app callback forwards the throwable to its crash reporter when this action is selected.
      *
      * Example: "Failed to load data" with REPORT action
      */
@@ -107,8 +110,7 @@ enum class SnackbarAction(@StringRes val actionText: Int) {
     /**
      * Shows an "Undo" action button.
      *
-     * Use this for destructive operations that can be reversed, such as
-     * deleting items or dismissing notifications.
+     * The caller must implement the reversal. Home does not currently offer undo.
      *
      * Example: "Item deleted" with UNDO action
      */

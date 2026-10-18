@@ -32,7 +32,7 @@ import kotlinx.coroutines.launch
  * This extension provides a cleaner syntax for LiveData observation with automatic
  * null filtering. The action is only invoked when the LiveData emits a non-null value.
  *
- * ## Usage in Fragment/Activity
+ * ## Illustrative Fragment usage (ViewModel and binding supplied by the caller)
  * ```kotlin
  * class MyFragment : Fragment() {
  *     private val viewModel: MyViewModel by viewModels()
@@ -40,7 +40,7 @@ import kotlinx.coroutines.launch
  *     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
  *         super.onViewCreated(view, savedInstanceState)
  *
- *         observe(viewModel.userData) { user ->
+ *         viewLifecycleOwner.observe(viewModel.userData) { user ->
  *             binding.userName.text = user.name
  *             binding.userEmail.text = user.email
  *         }
@@ -75,41 +75,16 @@ inline fun <T> LifecycleOwner.observe(
 /**
  * Observes a LiveData containing OneTimeEvents and consumes unhandled events.
  *
- * This extension is specifically designed for [OneTimeEvent] wrapped in LiveData,
- * ensuring events are only consumed once even if the Activity/Fragment is recreated.
- * Perfect for navigation events, snackbar messages, and other one-time actions.
+ * Consumption is at most once per [OneTimeEvent] instance. The content is marked consumed
+ * before [action] runs; an exception in the action does not make the event available again.
+ * A newly created event has its own consumption flag, and the flag is not persisted across
+ * process death. This helper does not acknowledge completed navigation or snackbar display.
  *
- * ## Usage for Navigation Events
+ * Illustrative Fragment excerpt; ViewModel, binding, and Material Snackbar imports are omitted.
+ * Register in `onViewCreated` with the view's lifecycle owner:
  * ```kotlin
- * class MyFragment : Fragment() {
- *     private val viewModel: MyViewModel by viewModels()
- *
- *     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
- *         super.onViewCreated(view, savedInstanceState)
- *
- *         observeEvent(viewModel.navigationEvent) { destination ->
- *             findNavController().navigate(destination)
- *         }
- *     }
- * }
- * ```
- *
- * ## Usage for Snackbar Messages
- * ```kotlin
- * observeEvent(viewModel.snackbarMessage) { message ->
+ * viewLifecycleOwner.observeEvent(viewModel.snackbarMessage) { message ->
  *     Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT).show()
- * }
- * ```
- *
- * ## ViewModel Side
- * ```kotlin
- * class MyViewModel : ViewModel() {
- *     private val _navigationEvent = MutableLiveData<OneTimeEvent<String>>()
- *     val navigationEvent: LiveData<OneTimeEvent<String>> = _navigationEvent
- *
- *     fun navigateToDetails() {
- *         _navigationEvent.value = OneTimeEvent("details_screen")
- *     }
  * }
  * ```
  *
@@ -156,9 +131,11 @@ inline fun <T> LifecycleOwner.observeEvent(
  *
  * This extension collects the Flow when the lifecycle is at least STARTED and
  * automatically cancels collection when the lifecycle falls below STARTED. This
- * prevents unnecessary work and memory leaks.
+ * restarts collection on a later STARTED transition. Separately launched upstream jobs have
+ * their own lifetimes; this helper does not cancel those jobs. In a Fragment, use
+ * `viewLifecycleOwner` when updating its views.
  *
- * ## Usage in Fragment
+ * ## Illustrative Fragment usage (ViewModel and binding supplied by the caller)
  * ```kotlin
  * class MyFragment : Fragment() {
  *     private val viewModel: MyViewModel by viewModels()
@@ -166,7 +143,7 @@ inline fun <T> LifecycleOwner.observeEvent(
  *     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
  *         super.onViewCreated(view, savedInstanceState)
  *
- *         collectWithLifecycle(viewModel.uiState) { state ->
+ *         viewLifecycleOwner.collectWithLifecycle(viewModel.uiState) { state ->
  *             binding.progressBar.isVisible = state.loading
  *             binding.errorText.text = state.error
  *         }
@@ -197,8 +174,8 @@ inline fun <T> LifecycleOwner.observeEvent(
  *
  * ## Lifecycle Behavior
  * - Collection starts when lifecycle reaches STARTED
- * - Collection pauses when lifecycle falls below STARTED (e.g., app backgrounded)
- * - Collection resumes when lifecycle reaches STARTED again
+ * - Collection is cancelled when lifecycle falls below STARTED (e.g., app backgrounded)
+ * - A new collection starts when lifecycle reaches STARTED again
  * - Collection stops permanently when lifecycle is DESTROYED
  *
  * @param T The type of data emitted by the Flow
