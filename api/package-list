@@ -9,6 +9,8 @@ module::core:android
 dev.atick.core.di
 dev.atick.core.extensions
 dev.atick.core.utils
+module::core:navigation
+dev.atick.core.navigation
 module::core:network
 dev.atick.core.network.api
 dev.atick.core.network.data
@@ -27,6 +29,9 @@ module::core:room
 dev.atick.core.room.data
 dev.atick.core.room.di
 dev.atick.core.room.model
+module::core:testing
+dev.atick.core.testing.data
+dev.atick.core.testing.rule
 module::core:ui
 dev.atick.core.ui.components
 dev.atick.core.ui.extensions

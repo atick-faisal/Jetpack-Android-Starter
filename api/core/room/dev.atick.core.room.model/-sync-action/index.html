@@ -94,7 +94,7 @@
   <div class="breadcrumbs"><a href="../../index.html">:core:room</a><span class="delimiter">/</span><a href="../index.html">dev.atick.core.room.model</a><span class="delimiter">/</span><span class="current">SyncAction</span></div>
   <div class="cover ">
     <h1 class="cover"><span>Sync</span><wbr><span><span>Action</span></span></h1>
-    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":core:room/release"><div class="symbol monospace"><span class="token keyword">enum </span><a href="index.html">SyncAction</a> : <a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-enum/index.html">Enum</a><span class="token operator">&lt;</span><a href="index.html">SyncAction</a><span class="token operator">&gt; </span></div><p class="paragraph">Defines the type of synchronization action to perform on an entity.</p><p class="paragraph">This enum is used to track what operation needs to be performed during the next sync operation with a remote data source. It enables fine-grained control over sync behavior and supports conflict resolution strategies.</p><h2 class="">Usage</h2><p class="paragraph">Set the appropriate action when modifying entities:</p><div class="sample-container"><pre><code class="block lang-kotlin" theme="idea">// After creating or updating<br>entity.copy(syncAction = SyncAction.UPSERT, needsSync = true)<br><br>// After soft deleting<br>entity.copy(syncAction = SyncAction.DELETE, needsSync = true, deleted = true)<br><br>// After successful sync<br>entity.copy(syncAction = SyncAction.NONE, needsSync = false)</code></pre><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><h2 class="">Sync Worker Implementation</h2><div class="sample-container"><pre><code class="block lang-kotlin" theme="idea">when (entity.syncAction) {<br>    SyncAction.UPSERT -&gt; remoteDataSource.upsert(entity.toRemote())<br>    SyncAction.DELETE -&gt; remoteDataSource.delete(entity.id)<br>    SyncAction.NONE -&gt; {} // Already synced, skip<br>}</code></pre><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":core:room/release"><div class="symbol monospace"><span class="token keyword">enum </span><a href="index.html">SyncAction</a> : <a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-enum/index.html">Enum</a><span class="token operator">&lt;</span><a href="index.html">SyncAction</a><span class="token operator">&gt; </span><span class="source-link-wrapper"><span class="source-link" data-element-type="source-link">(<a href="https://github.com/atick-faisal/Jetpack-Android-Starter/tree/f14943c646bc1e5bb68e3139c10cea192fba2d83/core/room/src/main/kotlin/dev/atick/core/room/model/JetpackEntity.kt#L71">source</a>)</span></span></div><p class="paragraph">Remote operation selected by the repository when pushing a pending row.</p><p class="paragraph">This value does not implement conflict resolution or schedule a pass.</p></div></div>
   </div>
   <div class="tabbedcontent">
     <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button><button class="section-tab" data-togglable="ENTRY">Entries</button></div>
@@ -111,7 +111,7 @@
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":core:room/release"><div class="symbol monospace"><div class="block"><a href="-n-o-n-e/index.html">NONE</a></div></div><div class="brief "><p class="paragraph">No synchronization action needed.</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":core:room/release"><div class="symbol monospace"><div class="block"><a href="-n-o-n-e/index.html">NONE</a></div></div><div class="brief "><p class="paragraph">No remote operation in the push branch. The repository still acknowledges the row.</p></div></div></div>
                 </div>
               </div>
             </div>
@@ -126,7 +126,7 @@
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":core:room/release"><div class="symbol monospace"><div class="block"><a href="-u-p-s-e-r-t/index.html">UPSERT</a></div></div><div class="brief "><p class="paragraph">Insert or update this entity on the remote data source.</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":core:room/release"><div class="symbol monospace"><div class="block"><a href="-u-p-s-e-r-t/index.html">UPSERT</a></div></div><div class="brief "><p class="paragraph">Create or replace the remote document with the pending row's mapped content.</p></div></div></div>
                 </div>
               </div>
             </div>
@@ -141,7 +141,7 @@
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":core:room/release"><div class="symbol monospace"><div class="block"><a href="-d-e-l-e-t-e/index.html">DELETE</a></div></div><div class="brief "><p class="paragraph">Delete this entity from the remote data source.</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":core:room/release"><div class="symbol monospace"><div class="block"><a href="-d-e-l-e-t-e/index.html">DELETE</a></div></div><div class="brief "><p class="paragraph">Hard-delete the remote document. The local soft-deleted row is retained.</p></div></div></div>
                 </div>
               </div>
             </div>
@@ -161,36 +161,6 @@
               <div>
                 <div class="title">
                   <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":core:room/release"><div class="symbol monospace"><span class="token keyword">val </span><a href="entries.html">entries</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.enums/-enum-entries/index.html">EnumEntries</a><span class="token operator">&lt;</span><a href="index.html">SyncAction</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Returns a representation of an immutable list of all enum entries, in the order they're declared.</p></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-<a data-name="-372974862%2FProperties%2F759384628" anchor-label="name" id="-372974862%2FProperties%2F759384628" data-filterable-set=":core:room/release"></a>
-          <div class="table-row table-row_content" data-filterable-current=":core:room/release" data-filterable-set=":core:room/release">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="-d-e-l-e-t-e/index.html#-372974862%2FProperties%2F759384628"><span><span>name</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-372974862%2FProperties%2F759384628"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":core:room/release"><div class="symbol monospace"><span class="token keyword">val </span><a href="-d-e-l-e-t-e/index.html#-372974862%2FProperties%2F759384628">name</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-<a data-name="-739389684%2FProperties%2F759384628" anchor-label="ordinal" id="-739389684%2FProperties%2F759384628" data-filterable-set=":core:room/release"></a>
-          <div class="table-row table-row_content" data-filterable-current=":core:room/release" data-filterable-set=":core:room/release">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="-d-e-l-e-t-e/index.html#-739389684%2FProperties%2F759384628"><span><span>ordinal</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-739389684%2FProperties%2F759384628"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":core:room/release"><div class="symbol monospace"><span class="token keyword">val </span><a href="-d-e-l-e-t-e/index.html#-739389684%2FProperties%2F759384628">ordinal</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a></div></div></div>
                 </div>
               </div>
             </div>

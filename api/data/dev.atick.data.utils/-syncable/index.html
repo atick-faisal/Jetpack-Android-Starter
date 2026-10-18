@@ -94,73 +94,7 @@
   <div class="breadcrumbs"><a href="../../index.html">:data</a><span class="delimiter">/</span><a href="../index.html">dev.atick.data.utils</a><span class="delimiter">/</span><span class="current">Syncable</span></div>
   <div class="cover ">
     <h1 class="cover"><span><span>Syncable</span></span></h1>
-    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":data/release"><div class="symbol monospace"><span class="token keyword">interface </span><a href="index.html">Syncable</a></div><p class="paragraph">Interface representing a syncable entity.</p><p class="paragraph">Repositories that implement this interface can be synchronized in the background by SyncWorker. The <a href="sync.html">sync</a> method should handle fetching remote data and updating the local database while emitting progress updates.</p><h2 class="">Implementation Pattern</h2><div class="sample-container"><pre><code class="block lang-kotlin" theme="idea">override suspend fun sync(): Flow&lt;SyncProgress&gt; = flow {<br>    emit(SyncProgress(total = 100, current = 0, message = "Starting sync"))<br>    // Fetch from network<br>    val data = networkDataSource.getData()<br>    // Update local database<br>    localDataSource.saveData(data)<br>    emit(SyncProgress(total = 100, current = 100, message = "Sync complete"))<br>}</code></pre><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><h4 class="tableheader">See also</h4><div class="table"><div class="table-row table-row_content" data-filterable-current=":data/release" data-filterable-set=":data/release"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="../-sync-progress/index.html"><span>Sync</span><wbr><span><span>Progress</span></span></a></div></span></div><div><div class="title"><p class="paragraph">For progress reporting</p></div></div></div></div><div class="table-row table-row_content" data-filterable-current=":data/release" data-filterable-set=":data/release"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="../-sync-manager/index.html"><span>Sync</span><wbr><span><span>Manager</span></span></a></div></span></div><div><div class="title"><p class="paragraph">For triggering sync operations</p></div></div></div></div></div><h4 class="">Samples</h4><div class="sample-container"><pre><code class="monospace block lang-kotlin" theme="idea">return flow {
-    val userId = preferencesDataSource.getUserIdOrThrow()
-
-    // Unsynced jetpacks
-    val unsyncedJetpacks = localDataSource.getUnsyncedJetpacks(userId)
-    val totalUnsyncedJetpacks = unsyncedJetpacks.size
-    Timber.d("Syncing $totalUnsyncedJetpacks unsynced jetpacks")
-
-    // Push updates to remote
-    unsyncedJetpacks.forEachIndexed { index, unsyncedJetpack -&gt;
-        when (unsyncedJetpack.syncAction) {
-            SyncAction.UPSERT -&gt; {
-                Timber.d("Syncing create/update jetpack: ${unsyncedJetpack.id}")
-                firebaseDataSource.createOrUpdateJetpack(
-                    unsyncedJetpack
-                        .toFirebaseJetpack()
-                        .copy(
-                            lastSynced = System.currentTimeMillis(),
-                        ),
-                )
-            }
-
-            SyncAction.DELETE -&gt; {
-                firebaseDataSource.deleteJetpack(
-                    unsyncedJetpack
-                        .toFirebaseJetpack()
-                        .copy(
-                            lastSynced = System.currentTimeMillis(),
-                        ),
-                )
-            }
-
-            SyncAction.NONE -&gt; {
-                // Do nothing
-            }
-        }
-
-        localDataSource.markAsSynced(unsyncedJetpack.id)
-        emit(
-            SyncProgress(
-                total = totalUnsyncedJetpacks,
-                current = index + 1,
-                message = "Syncing jetpacks with the cloud",
-            ),
-        )
-    }
-
-    // Remote jetpacks
-    val lastSynced = localDataSource.getLatestUpdateTimestamp(userId)
-    val remoteJetpacks = firebaseDataSource.pullJetpacks(userId, lastSynced)
-    val totalRemoteJetpacks = remoteJetpacks.size
-    Timber.d("Syncing $totalRemoteJetpacks remote jetpacks")
-
-    // Pull updates from remote
-    // We pull after pushing local changes to save the local changes to the cloud first
-    // and avoid accidentally overwriting them with stale data
-    remoteJetpacks.forEachIndexed { index, remoteJetpack -&gt;
-        localDataSource.upsertJetpack(remoteJetpack.toJetpackEntity())
-        emit(
-            SyncProgress(
-                total = totalRemoteJetpacks,
-                current = index + 1,
-                message = "Fetching jetpacks from the cloud",
-            ),
-        )
-    }
-}</code></pre><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><h4 class="tableheader">Inheritors</h4><div class="table"><div class="table-row table-row_content" data-filterable-current=":data/release" data-filterable-set=":data/release"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="../../dev.atick.data.repository.home/-home-repository/index.html">HomeRepository</a></div></span></div><div></div></div></div></div></div></div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":data/release"><div class="symbol monospace"><span class="token keyword">interface </span><a href="index.html">Syncable</a><span class="source-link-wrapper"><span class="source-link" data-element-type="source-link">(<a href="https://github.com/atick-faisal/Jetpack-Android-Starter/tree/f14943c646bc1e5bb68e3139c10cea192fba2d83/data/src/main/kotlin/dev/atick/data/utils/SyncUtils.kt#L47">source</a>)</span></span></div><p class="paragraph">Repository contract for synchronization with progress reporting.</p><p class="paragraph">The Home implementation returns a cold Flow: collect it to execute its push and pull phases. Calling the suspend method alone does not execute those phases.</p><h4 class="tableheader">See also</h4><div class="table"><div class="table-row table-row_content" data-filterable-current=":data/release" data-filterable-set=":data/release"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="../-sync-progress/index.html"><span>Sync</span><wbr><span><span>Progress</span></span></a></div></span></div><div></div></div></div><div class="table-row table-row_content" data-filterable-current=":data/release" data-filterable-set=":data/release"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="../-sync-manager/index.html"><span>Sync</span><wbr><span><span>Manager</span></span></a></div></span></div><div></div></div></div></div><h4 class="tableheader">Inheritors</h4><div class="table"><div class="table-row table-row_content" data-filterable-current=":data/release" data-filterable-set=":data/release"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="../../dev.atick.data.repository.home/-home-repository/index.html">HomeRepository</a></div></span></div><div></div></div></div></div></div></div>
   </div>
   <div class="tabbedcontent">
     <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
@@ -177,7 +111,7 @@
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":data/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="sync.html"><span class="token function">sync</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><span data-unresolved-link="kotlinx.coroutines.flow/Flow///PointingToDeclaration/">Flow</span><span class="token operator">&lt;</span><a href="../-sync-progress/index.html">SyncProgress</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Synchronizes data and returns a Flow emitting the progress of the sync operation.</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":data/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="sync.html"><span class="token function">sync</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><span data-unresolved-link="kotlinx.coroutines.flow/Flow///PointingToDeclaration/">Flow</span><span class="token operator">&lt;</span><a href="../-sync-progress/index.html">SyncProgress</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Returns synchronization progress. Execution and error behavior depend on the implementation.</p></div></div></div>
                 </div>
               </div>
             </div>

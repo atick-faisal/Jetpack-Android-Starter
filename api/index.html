@@ -89,7 +89,9 @@
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1050529138%2FMain%2F0"></span>
                 <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
               </span></span></div>
-          <div><span class="brief-comment"></span></div>
+          <div><span class="brief-comment">
+              <p class="paragraph"><strong>Purpose:</strong> The application module — composes feature screens and supplies application-level wiring behind <code class="lang-kotlin">MainActivity</code> and <code class="lang-kotlin">JetpackApp</code>, and owns app-level config (signing, versioning, ProGuard).</p>
+            </span></div>
         </div>
       </div>
 <a data-name="-92369537%2FMain%2F0" anchor-label=":core:android" id="-92369537%2FMain%2F0" data-filterable-set=""></a>
@@ -100,7 +102,22 @@
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-92369537%2FMain%2F0"></span>
                 <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
               </span></span></div>
-          <div><span class="brief-comment"></span></div>
+          <div><span class="brief-comment">
+              <p class="paragraph"><strong>Purpose:</strong> The lowest-level shared module — coroutine/error-handling utilities, dispatcher qualifiers, and extension functions with no UI or domain dependency.</p>
+            </span></div>
+        </div>
+      </div>
+<a data-name="1265540768%2FMain%2F0" anchor-label=":core:navigation" id="1265540768%2FMain%2F0" data-filterable-set=""></a>
+      <div class="table-row table-row_multimodule">
+        <div class="main-subrow ">
+          <div class="w-100"><span class="inline-flex">
+              <div><a href="core/navigation/index.html">:core:navigation</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1265540768%2FMain%2F0"></span>
+                <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+              </span></span></div>
+          <div><span class="brief-comment">
+              <p class="paragraph"><strong>Purpose:</strong> Jetpack Navigation 3 multi-back-stack state and a <code class="lang-kotlin">Navigator</code> for changing it. Destination keys implement <code class="lang-kotlin">NavKey</code>; screens register entries in the app’s entry provider.</p>
+            </span></div>
         </div>
       </div>
 <a data-name="317181600%2FMain%2F0" anchor-label=":core:network" id="317181600%2FMain%2F0" data-filterable-set=""></a>
@@ -111,7 +128,9 @@
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="317181600%2FMain%2F0"></span>
                 <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
               </span></span></div>
-          <div><span class="brief-comment"></span></div>
+          <div><span class="brief-comment">
+              <p class="paragraph"><strong>Purpose:</strong> Retrofit/OkHttp REST client plus connectivity monitoring. An independent option for a plain backend — <code class="lang-kotlin">HomeRepositoryImpl</code> doesn't use it; it syncs through Firestore only.</p>
+            </span></div>
         </div>
       </div>
 <a data-name="464497302%2FMain%2F0" anchor-label=":core:preferences" id="464497302%2FMain%2F0" data-filterable-set=""></a>
@@ -122,7 +141,9 @@
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="464497302%2FMain%2F0"></span>
                 <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
               </span></span></div>
-          <div><span class="brief-comment"></span></div>
+          <div><span class="brief-comment">
+              <p class="paragraph"><strong>Purpose:</strong> Type-safe local storage for the user's profile and app settings, backed by a single JSON DataStore file, exposed as <code class="lang-kotlin">Flow</code> for reads and suspend functions for writes.</p>
+            </span></div>
         </div>
       </div>
 <a data-name="106136569%2FMain%2F0" anchor-label=":core:room" id="106136569%2FMain%2F0" data-filterable-set=""></a>
@@ -133,7 +154,22 @@
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="106136569%2FMain%2F0"></span>
                 <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
               </span></span></div>
-          <div><span class="brief-comment"></span></div>
+          <div><span class="brief-comment">
+              <p class="paragraph"><strong>Purpose:</strong> Local Room storage observed by the Home UI, with metadata used by <code class="lang-kotlin">HomeRepositoryImpl</code> in <code class="lang-kotlin">:data</code> to select pending changes for Firestore sync.</p>
+            </span></div>
+        </div>
+      </div>
+<a data-name="903690494%2FMain%2F0" anchor-label=":core:testing" id="903690494%2FMain%2F0" data-filterable-set=""></a>
+      <div class="table-row table-row_multimodule">
+        <div class="main-subrow ">
+          <div class="w-100"><span class="inline-flex">
+              <div><a href="core/testing/index.html">:core:testing</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="903690494%2FMain%2F0"></span>
+                <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+              </span></span></div>
+          <div><span class="brief-comment">
+              <p class="paragraph">Shared JVM test helpers for repositories and ViewModels: <code class="lang-kotlin">MainDispatcherRule</code>, <code class="lang-kotlin">FakeUserPreferencesDataSource</code>, and <code class="lang-kotlin">FakeAuthDataSource</code>.</p>
+            </span></div>
         </div>
       </div>
 <a data-name="471096608%2FMain%2F0" anchor-label=":core:ui" id="471096608%2FMain%2F0" data-filterable-set=""></a>
@@ -144,7 +180,9 @@
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="471096608%2FMain%2F0"></span>
                 <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
               </span></span></div>
-          <div><span class="brief-comment"></span></div>
+          <div><span class="brief-comment">
+              <p class="paragraph"><strong>Purpose:</strong> Everything shared across screens — the <code class="lang-kotlin">UiState</code>/<code class="lang-kotlin">StatefulComposable</code> state pattern, the <code class="lang-kotlin">Jetpack*</code> design-system components, <code class="lang-kotlin">JetpackTheme</code>, and Compose/Activity extensions.</p>
+            </span></div>
         </div>
       </div>
 <a data-name="-1984231895%2FMain%2F0" anchor-label=":data" id="-1984231895%2FMain%2F0" data-filterable-set=""></a>
@@ -155,7 +193,9 @@
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1984231895%2FMain%2F0"></span>
                 <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
               </span></span></div>
-          <div><span class="brief-comment"></span></div>
+          <div><span class="brief-comment">
+              <p class="paragraph"><strong>Purpose:</strong> Repository implementations that sit between ViewModels and storage/auth sources: Room, JSON DataStore, Firebase Auth and Firestore, with an optional REST source available for extensions. Observable data uses <code class="lang-kotlin">Flow</code>; one-time operations return <code class="lang-kotlin">Result&lt;T&gt;</code>.</p>
+            </span></div>
         </div>
       </div>
 <a data-name="56097383%2FMain%2F0" anchor-label=":feature:auth" id="56097383%2FMain%2F0" data-filterable-set=""></a>
@@ -166,7 +206,9 @@
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="56097383%2FMain%2F0"></span>
                 <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
               </span></span></div>
-          <div><span class="brief-comment"></span></div>
+          <div><span class="brief-comment">
+              <p class="paragraph"><strong>Purpose:</strong> Email/password and Google sign-in/registration screens, wrapping <code class="lang-kotlin">firebase:auth</code> behind the <code class="lang-kotlin">UiState</code>/<code class="lang-kotlin">StatefulComposable</code> pattern. ViewModels call <code class="lang-kotlin">AuthRepository</code> in <code class="lang-kotlin">:data</code>, which handles authentication and saves the local profile through its data sources.</p>
+            </span></div>
         </div>
       </div>
 <a data-name="-388129008%2FMain%2F0" anchor-label=":feature:home" id="-388129008%2FMain%2F0" data-filterable-set=""></a>
@@ -177,7 +219,9 @@
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-388129008%2FMain%2F0"></span>
                 <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
               </span></span></div>
-          <div><span class="brief-comment"></span></div>
+          <div><span class="brief-comment">
+              <p class="paragraph"><strong>Purpose:</strong> The template's reference feature — a Jetpack list with create/edit/delete, offline support, and background sync. The one feature the <a href="https://github.com/atick-faisal/Jetpack-Android-Starter/blob/f14943c646bc1e5bb68e3139c10cea192fba2d83/docs/guide.md">Guide</a> walks through end to end.</p>
+            </span></div>
         </div>
       </div>
 <a data-name="-1396055286%2FMain%2F0" anchor-label=":feature:profile" id="-1396055286%2FMain%2F0" data-filterable-set=""></a>
@@ -188,7 +232,9 @@
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1396055286%2FMain%2F0"></span>
                 <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
               </span></span></div>
-          <div><span class="brief-comment"></span></div>
+          <div><span class="brief-comment">
+              <p class="paragraph"><strong>Purpose:</strong> Read-only profile display and sign-out, backed by <code class="lang-kotlin">:data</code>'s local-only <code class="lang-kotlin">ProfileRepositoryImpl</code> (DataStore + Firebase Auth, no Room).</p>
+            </span></div>
         </div>
       </div>
 <a data-name="1022504268%2FMain%2F0" anchor-label=":feature:settings" id="1022504268%2FMain%2F0" data-filterable-set=""></a>
@@ -199,7 +245,9 @@
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1022504268%2FMain%2F0"></span>
                 <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
               </span></span></div>
-          <div><span class="brief-comment"></span></div>
+          <div><span class="brief-comment">
+              <p class="paragraph"><strong>Purpose:</strong> Theme (light/dark/system + dynamic color), language, and sign-out, shown as a dialog rather than a full screen. <code class="lang-kotlin">SettingsViewModel</code> uses <code class="lang-kotlin">SettingsRepository</code> in <code class="lang-kotlin">:data</code>; theme/color/profile values come from JSON DataStore, while language uses app locales.</p>
+            </span></div>
         </div>
       </div>
 <a data-name="950771872%2FMain%2F0" anchor-label=":firebase:analytics" id="950771872%2FMain%2F0" data-filterable-set=""></a>
@@ -210,7 +258,9 @@
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="950771872%2FMain%2F0"></span>
                 <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
               </span></span></div>
-          <div><span class="brief-comment"></span></div>
+          <div><span class="brief-comment">
+              <p class="paragraph"><strong>Purpose:</strong> Crash reporting via Firebase Crashlytics, behind one small abstraction.</p>
+            </span></div>
         </div>
       </div>
 <a data-name="-1413892812%2FMain%2F0" anchor-label=":firebase:auth" id="-1413892812%2FMain%2F0" data-filterable-set=""></a>
@@ -221,7 +271,9 @@
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1413892812%2FMain%2F0"></span>
                 <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
               </span></span></div>
-          <div><span class="brief-comment"></span></div>
+          <div><span class="brief-comment">
+              <p class="paragraph"><strong>Purpose:</strong> Firebase Authentication for email/password and Google credentials, with Credential Manager for saved credentials and Google account selection.</p>
+            </span></div>
         </div>
       </div>
 <a data-name="1352803163%2FMain%2F0" anchor-label=":firebase:firestore" id="1352803163%2FMain%2F0" data-filterable-set=""></a>
@@ -232,7 +284,9 @@
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1352803163%2FMain%2F0"></span>
                 <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
               </span></span></div>
-          <div><span class="brief-comment"></span></div>
+          <div><span class="brief-comment">
+              <p class="paragraph"><strong>Purpose:</strong> The remote sync target for <code class="lang-kotlin">:data</code>'s offline-first <code class="lang-kotlin">home</code> feature — read/write access to a per-user Firestore collection.</p>
+            </span></div>
         </div>
       </div>
 <a data-name="885939288%2FMain%2F0" anchor-label=":sync" id="885939288%2FMain%2F0" data-filterable-set=""></a>
@@ -243,7 +297,9 @@
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="885939288%2FMain%2F0"></span>
                 <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
               </span></span></div>
-          <div><span class="brief-comment"></span></div>
+          <div><span class="brief-comment">
+              <p class="paragraph"><strong>Purpose:</strong> Implements <code class="lang-kotlin">SyncManager</code> from <code class="lang-kotlin">:data</code> and schedules a <code class="lang-kotlin">WorkManager</code> job. <code class="lang-kotlin">SyncWorker</code> collects the <code class="lang-kotlin">Syncable</code> repository implementation in <code class="lang-kotlin">:data</code>, which pushes then pulls.</p>
+            </span></div>
         </div>
       </div>
     </div>
