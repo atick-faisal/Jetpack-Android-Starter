@@ -25,7 +25,7 @@ records. Profile is read-only here: there is no avatar upload or profile-editing
 
 ## Related Documentation
 
-- [Guide](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/fa19cbbd83ae609dcc0886a1b6b37379e91a12cc/docs/guide.md) — the canonical feature walkthrough to follow when adding a new screen
-- [State Management](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/fa19cbbd83ae609dcc0886a1b6b37379e91a12cc/docs/state-management.md) — `UiState`/`StatefulComposable` pattern used here
-- [Navigation](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/fa19cbbd83ae609dcc0886a1b6b37379e91a12cc/docs/navigation.md) — how this module's entry is registered with `Navigator`
-- [Credential Manager guide](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/fa19cbbd83ae609dcc0886a1b6b37379e91a12cc/docs/firebase.md#credential-manager-sign-in-vs-register) — the auth source used by `ProfileRepository`
+- [Guide](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/main/docs/guide.md) — the canonical feature walkthrough to follow when adding a new screen
+- [State Management](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/main/docs/state-management.md) — `UiState`/`StatefulComposable` pattern used here
+- [Navigation](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/main/docs/navigation.md) — how this module's entry is registered with `Navigator`
+- [Credential Manager guide](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/main/docs/firebase.md#credential-manager-sign-in-vs-register) — the auth source used by `ProfileRepository`

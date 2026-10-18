@@ -74,7 +74,7 @@ package dev.atick.firebase.analytics.utils
  * }
  * ```
  *
- * @see FirebaseCrashReporter
+ * See [FirebaseCrashReporter](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/main/firebase/analytics/src/main/kotlin/dev/atick/firebase/analytics/utils/FirebaseCrashReporter.kt) for the implementation.
  */
 interface CrashReporter {
     /**

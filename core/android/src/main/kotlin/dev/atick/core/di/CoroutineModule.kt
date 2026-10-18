@@ -118,7 +118,7 @@ annotation class ApplicationScope
  *
  * @see ApplicationScope
  * @see SupervisorJob
- * @see viewModelScope
+ * See [ViewModel scopes](https://developer.android.com/topic/libraries/architecture/coroutines#viewmodelscope).
  */
 @Module
 @InstallIn(SingletonComponent::class)

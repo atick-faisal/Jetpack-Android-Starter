@@ -85,7 +85,7 @@ class SyncWorker @AssistedInject constructor(
     }
 
     /**
-     * Collects sync progress on [ioDispatcher] and updates foreground counts.
+     * Collects sync progress on `ioDispatcher` and updates foreground counts.
      *
      * Earlier acknowledgements and upserts remain committed if a later operation fails.
      * The catch includes cancellation and does not explicitly rethrow it.

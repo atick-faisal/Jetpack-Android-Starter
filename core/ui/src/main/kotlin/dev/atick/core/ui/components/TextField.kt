@@ -69,7 +69,7 @@ import dev.atick.core.ui.R
  *
  * See also:
  * - [JetpackPasswordField] for password input with visibility toggle
- * - Use with [TextFieldData] for integrated state management
+ * - Use with [dev.atick.core.ui.utils.TextFieldData] for integrated state management
  *
  * @param value The current text value of the text field.
  * @param onValueChange The callback invoked when the text value changes.

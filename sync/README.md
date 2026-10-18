@@ -27,16 +27,16 @@ val SyncConstraints
 - No custom backoff is set: the three retry delays nominally start at 30, 60, and 120 seconds.
   Constraints/system scheduling can delay execution. `isSyncing` is true only for RUNNING work.
 - The worker catches `Exception`, including cancellation; it does not explicitly rethrow
-  cancellation. See [progress, retries, and errors](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/fa19cbbd83ae609dcc0886a1b6b37379e91a12cc/docs/data.md#progress-retries-and-errors).
+  cancellation. See [progress, retries, and errors](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/main/docs/data.md#progress-retries-and-errors).
 - Foreground configuration is incomplete: runtime `ForegroundInfo` has no service type, and the
   reviewed merged manifests lack the data-sync service type/permission. A separately reviewed fix
-  and device verification are needed; see [foreground diagnostics](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/fa19cbbd83ae609dcc0886a1b6b37379e91a12cc/docs/troubleshooting.md#sync).
+  and device verification are needed; see [foreground diagnostics](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/main/docs/troubleshooting.md#sync).
 - The only configured work constraint is `NetworkType.CONNECTED`. There is no battery/storage/idle constraint.
 - The actual push-then-pull sync algorithm lives in `HomeRepositoryImpl.sync()` (`:data`), not here —
   this module schedules work, collects progress and manages worker retries.
 
 ## Related Documentation
 
-- [Data Layer](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/fa19cbbd83ae609dcc0886a1b6b37379e91a12cc/docs/data.md) — the sync algorithm this worker calls, with a sequence diagram
-- [Troubleshooting](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/fa19cbbd83ae609dcc0886a1b6b37379e91a12cc/docs/troubleshooting.md#sync) — sync-not-running, retry failures, notification permissions
-- [Firebase Setup](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/fa19cbbd83ae609dcc0886a1b6b37379e91a12cc/docs/firebase.md) — Firestore setup this sync target depends on
+- [Data Layer](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/main/docs/data.md) — the sync algorithm this worker calls, with a sequence diagram
+- [Troubleshooting](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/main/docs/troubleshooting.md#sync) — sync-not-running, retry failures, notification permissions
+- [Firebase Setup](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/main/docs/firebase.md) — Firestore setup this sync target depends on

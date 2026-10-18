@@ -101,7 +101,7 @@ fun Throwable.getStackTraceString(): String {
  * @return A OneTimeEvent containing this throwable.
  *
  * @see dev.atick.core.utils.OneTimeEvent
- * @see dev.atick.core.ui.utils.UiState For the recommended state wrapper pattern
+ * See [state management](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/main/docs/state-management.md) for the recommended wrapper.
  */
 fun Throwable.asOneTimeEvent(): OneTimeEvent<Throwable?> {
     return OneTimeEvent(this)

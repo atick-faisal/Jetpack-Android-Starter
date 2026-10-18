@@ -38,4 +38,4 @@ interface JetpackRestApi {
 
 ## Related Documentation
 
-- [Data Layer](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/fa19cbbd83ae609dcc0886a1b6b37379e91a12cc/docs/data.md) — the four data sources and where each is actually used
+- [Data Layer](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/main/docs/data.md) — the four data sources and where each is actually used

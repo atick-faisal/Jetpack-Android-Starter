@@ -33,7 +33,7 @@ import java.util.UUID
  * @property price Numeric price; the entity itself does not enforce a range.
  * @property userId Owner used by user-scoped list, pending, and cursor queries.
  * @property lastUpdated Edit time in epoch milliseconds from the writing device. Used for list
- *     ordering and comparison with [lastSynced] when selecting pending rows.
+ *     ordering and comparison with [JetpackEntity.lastSynced] when selecting pending rows.
  * @property lastSynced Epoch milliseconds set during upload and local acknowledgement, and also
  *     carried from remote mappings. Not a guarantee that the current content was uploaded.
  * @property serverUpdatedAtNanos Server write time in epoch nanoseconds copied from a pull, or zero

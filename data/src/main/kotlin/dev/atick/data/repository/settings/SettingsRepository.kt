@@ -26,7 +26,7 @@ import kotlinx.coroutines.flow.Flow
  * This repository uses DataStore for local persistence of user preferences like theme
  * configuration and dynamic color preferences. All settings are stored locally only.
  *
- * @see SettingsRepositoryImpl Implementation class with DataStore integration
+ * See [SettingsRepositoryImpl](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/main/data/src/main/kotlin/dev/atick/data/repository/settings/SettingsRepositoryImpl.kt) — Implementation class with DataStore integration.
  */
 interface SettingsRepository {
     /**

@@ -329,7 +329,7 @@ val Configuration.isSystemInDarkTheme
  * - **Conflated**: Only keeps the latest value if collector is slow
  * - **Lifecycle-aware**: Must be collected with appropriate scope
  *
- * @return Cold [Flow] that emits `true` when system is in dark mode, `false` otherwise
+ * @return Cold [kotlinx.coroutines.flow.Flow] that emits `true` when system is in dark mode, `false` otherwise
  *
  * @see Configuration.isSystemInDarkTheme
  * @see callbackFlow

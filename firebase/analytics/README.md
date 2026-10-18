@@ -2,7 +2,7 @@
 
 **Purpose:** Crash reporting via Firebase Crashlytics, behind one small abstraction.
 
-> [!NOTE]
+> **Note:**
 > Despite the module name, this is **Crashlytics** (crash reporting), not Firebase Analytics (event
 > tracking) — no analytics events are logged anywhere in this template.
 
@@ -25,5 +25,5 @@ release mapping upload depend on the Firebase/build configuration described in t
 
 ## Related Documentation
 
-- [Firebase Setup § Crashlytics](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/fa19cbbd83ae609dcc0886a1b6b37379e91a12cc/docs/firebase.md#crashlytics) — mapping-file upload, how to confirm reporting end-to-end
-- [Build & Tooling](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/fa19cbbd83ae609dcc0886a1b6b37379e91a12cc/docs/build-and-tooling.md) — `FirebaseConventionPlugin`
+- [Firebase Setup § Crashlytics](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/main/docs/firebase.md#crashlytics) — mapping-file upload, how to confirm reporting end-to-end
+- [Build & Tooling](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/main/docs/build-and-tooling.md) — `FirebaseConventionPlugin`

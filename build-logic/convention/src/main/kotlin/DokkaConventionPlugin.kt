@@ -23,7 +23,7 @@ import org.gradle.kotlin.dsl.getByType
 import org.gradle.kotlin.dsl.withType
 import org.jetbrains.dokka.gradle.DokkaExtension
 import org.jetbrains.dokka.gradle.engine.plugins.DokkaHtmlPluginParameters
-
+import java.net.URI
 
 class DokkaConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) {
@@ -35,7 +35,6 @@ class DokkaConventionPlugin : Plugin<Project> {
             }
 
             // TODO: AGP 9 Migration - Dokka Configuration Workaround
-            // FIXME: Upgrade to Dokka 2.2.0-Beta when stable for better AGP 9 support
             // Current workaround: afterEvaluate + configureEach to avoid source set resolution issues
             // See: https://github.com/Kotlin/dokka/issues/4256
             // Tracking: GitHub Issue #578
@@ -44,10 +43,24 @@ class DokkaConventionPlugin : Plugin<Project> {
                     moduleName.set(path)
                     // Use configureEach instead of named for AGP 9 compatibility
                     dokkaSourceSets.configureEach {
-                        if (name == "main") {
-                            includes.from("README.md")
-                            suppressGeneratedFiles.set(true)
+                        includes.from(layout.projectDirectory.file("README.md"))
+                        suppressGeneratedFiles.set(true)
+                        providers.gradleProperty("docsRevision").orNull?.let { revision ->
+                            sourceLink {
+                                localDirectory.set(layout.projectDirectory.dir("src"))
+                                val modulePath = path.trimStart(':').replace(':', '/')
+                                remoteUrl.set(
+                                    URI("https://github.com/atick-faisal/Jetpack-Android-Starter/tree/$revision/$modulePath/src"),
+                                )
+                                remoteLineSuffix.set("#L")
+                            }
                         }
+                    }
+                    dokkaPublications.configureEach {
+                        failOnWarning.set(true)
+                        // Inherited Android SDK APIs remain available through superclass links.
+                        // https://kotlinlang.org/docs/dokka-gradle-configuration-options.html
+                        suppressInheritedMembers.set(true)
                     }
                     pluginsConfiguration.withType<DokkaHtmlPluginParameters> {
                         footerMessage.set("Made with ❤\uFE0F by Atick Faisal")

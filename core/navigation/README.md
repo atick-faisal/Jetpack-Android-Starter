@@ -29,9 +29,9 @@ fun navigate(key: NavKey) {
   arguments of the same data-class key can identify different destinations.
 - In the pinned Navigation 3 version, `NavEntry.contentKey` defaults to `key.toString()`. Duplicate
   content keys in flattened stacks can collide in saved state and ViewModel ownership; sharing a
-  key type alone is not a collision. See [entry identity](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/fa19cbbd83ae609dcc0886a1b6b37379e91a12cc/docs/navigation.md#entry-identity-and-duplicate-destinations).
+  key type alone is not a collision. See [entry identity](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/main/docs/navigation.md#entry-identity-and-duplicate-destinations).
 
 ## Related Documentation
 
-- [Navigation](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/fa19cbbd83ae609dcc0886a1b6b37379e91a12cc/docs/navigation.md) — the full Nav3 model: defining destinations, registering entries, `ListDetailSceneStrategy`, assisted-inject ViewModels for keyed args
-- [Guide](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/fa19cbbd83ae609dcc0886a1b6b37379e91a12cc/docs/guide.md) — wiring a new feature's entries into `NavDisplay`
+- [Navigation](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/main/docs/navigation.md) — the full Nav3 model: defining destinations, registering entries, `ListDetailSceneStrategy`, assisted-inject ViewModels for keyed args
+- [Guide](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/main/docs/guide.md) — wiring a new feature's entries into `NavDisplay`

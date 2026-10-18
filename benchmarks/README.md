@@ -40,4 +40,4 @@ fun generate() = baselineProfileRule.collect(
 
 ## Related Documentation
 
-- [Build & Tooling § Gradle Managed Devices](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/fa19cbbd83ae609dcc0886a1b6b37379e91a12cc/docs/build-and-tooling.md#gradle-managed-devices) — the `pixel6Api33` device definition and baseline-profile task table
+- [Build & Tooling § Gradle Managed Devices](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/main/docs/build-and-tooling.md#gradle-managed-devices) — the `pixel6Api33` device definition and baseline-profile task table

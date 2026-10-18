@@ -33,5 +33,5 @@ private fun getSignInRequest(): GetCredentialRequest {
 
 ## Related Documentation
 
-- [Firebase Setup § Credential Manager](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/fa19cbbd83ae609dcc0886a1b6b37379e91a12cc/docs/firebase.md#credential-manager-sign-in-vs-register) — account filtering and Firebase first-sign-in behavior
-- [Data Layer](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/fa19cbbd83ae609dcc0886a1b6b37379e91a12cc/docs/data.md) — where `AuthRepositoryImpl`/`ProfileRepositoryImpl` call this module
+- [Firebase Setup § Credential Manager](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/main/docs/firebase.md#credential-manager-sign-in-vs-register) — account filtering and Firebase first-sign-in behavior
+- [Data Layer](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/main/docs/data.md) — where `AuthRepositoryImpl`/`ProfileRepositoryImpl` call this module

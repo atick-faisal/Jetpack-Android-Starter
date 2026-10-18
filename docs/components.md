@@ -10,7 +10,7 @@ component usage, branding, previews, accessibility, localization, and adding reu
 ## Catalog
 
 Components live in `core/ui/src/main/kotlin/dev/atick/core/ui/components/`. The file names below
-identify their implementations; the [Core UI API](api/core/ui/index.html) has signatures and KDoc.
+identify their implementations; the [Core UI API](https://atick.dev/Jetpack-Android-Starter/api/core/ui/index.html) has signatures and KDoc.
 
 ### Buttons — `Button.kt`
 

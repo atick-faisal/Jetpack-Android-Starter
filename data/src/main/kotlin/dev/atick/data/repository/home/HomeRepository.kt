@@ -31,9 +31,9 @@ import kotlinx.coroutines.flow.Flow
  * This repository implements [Syncable] to support background sync via WorkManager.
  * See [sync] for details on the sync implementation.
  *
- * @see HomeRepositoryImpl Implementation class with network and local data sources
+ * See [HomeRepositoryImpl](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/main/data/src/main/kotlin/dev/atick/data/repository/home/HomeRepositoryImpl.kt) — Implementation class with network and local data sources.
  * @see Syncable For background sync interface
- * @see SyncProgress For sync progress tracking
+ * @see dev.atick.data.utils.SyncProgress For sync progress tracking
  */
 interface HomeRepository : Syncable {
     /**

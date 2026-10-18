@@ -33,12 +33,12 @@ interface HomeRepository : Syncable {
 - `SyncAction` (`core/room`) is `NONE, UPSERT, DELETE`. There is no `CREATE`/`UPDATE`.
 - Home writes update Room before requesting work. Local persistence/requesting work can fail;
   a successful Result does not acknowledge remote delivery. A failed enqueue can leave a local
-  change committed. See [repository behavior](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/fa19cbbd83ae609dcc0886a1b6b37379e91a12cc/docs/data.md#repository-pattern).
+  change committed. See [repository behavior](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/main/docs/data.md#repository-pattern).
 - Sync takes one pending snapshot, then pushes and pulls. It does not protect concurrent edits or
-  guarantee a follow-up pass after a dropped request. See [delivery limitations](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/fa19cbbd83ae609dcc0886a1b6b37379e91a12cc/docs/data.md#delivery-and-conflict-limitations).
+  guarantee a follow-up pass after a dropped request. See [delivery limitations](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/main/docs/data.md#delivery-and-conflict-limitations).
 
 ## Related Documentation
 
-- [Data Layer](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/fa19cbbd83ae609dcc0886a1b6b37379e91a12cc/docs/data.md) — the full repository pattern, `suspendRunCatching` → `Result`, and the two-way sync algorithm
-- [Guide](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/fa19cbbd83ae609dcc0886a1b6b37379e91a12cc/docs/guide.md) — the `home` feature walkthrough built on this module
-- [Sync algorithm](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/fa19cbbd83ae609dcc0886a1b6b37379e91a12cc/docs/data.md#two-way-sync), [Room persistence](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/fa19cbbd83ae609dcc0886a1b6b37379e91a12cc/docs/data.md#room-persistence-and-schema-changes), [Data source choices](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/fa19cbbd83ae609dcc0886a1b6b37379e91a12cc/docs/data.md#data-sources)
+- [Data Layer](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/main/docs/data.md) — the full repository pattern, `suspendRunCatching` → `Result`, and the two-way sync algorithm
+- [Guide](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/main/docs/guide.md) — the `home` feature walkthrough built on this module
+- [Sync algorithm](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/main/docs/data.md#two-way-sync), [Room persistence](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/main/docs/data.md#room-persistence-and-schema-changes), [Data source choices](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/main/docs/data.md#data-sources)
