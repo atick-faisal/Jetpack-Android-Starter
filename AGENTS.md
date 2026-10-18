@@ -66,6 +66,33 @@ This file provides AI coding agents with project-specific instructions, conventi
 ./gradlew :app:updateReleaseBadging
 ```
 
+## Verification
+
+**After implementing anything, run `just verify`.** It is the single entrypoint
+that runs every check CI runs.
+
+Do not report work as done until `just verify` exits zero. If a check fails for
+a reason unrelated to your change, say so explicitly rather than removing the
+check.
+
+Run `just` with no arguments to see every recipe. The ones you will need most:
+
+| Command | Purpose |
+| --- | --- |
+| `just verify` | Full verification. The entrypoint. |
+| `just format` | Apply ktlint formatting. Run before every commit. |
+| `just test` | Unit tests only. Fast inner loop. |
+| `just docs` | Docs site build and link check. |
+
+Things that will trip you up:
+
+- `just verify` is slow (full build, release lint, Dokka). Iterate with the one
+  named recipe that matters, then finish with `verify`.
+- `just docs` needs `.venv` with the docs packages; set it up per
+  [Local documentation preview](docs/build-and-tooling.md#local-documentation-preview).
+- The docs link checker scans every git-tracked `.md`, including `docs/goal.md`
+  and `docs/features/**`. A broken relative link in a plan fails `just docs`.
+
 ## Project Context
 
 ### Tech Stack Overview
@@ -304,6 +331,25 @@ files; never a hardcoded version string.
 The canonical walkthrough — real code, every step — is [Guide](docs/guide.md), built around the
 `home`/`Jetpack` feature (the only one touching every layer). Follow it rather than improvising the
 module/file layout; it stays current where a second copy here would drift.
+
+## Planning
+
+Work here is planned before it is built.
+
+- `docs/goal.md` is the north star: Problem, Success Criteria, Non-Goals,
+  Constraints. Read it first. It is immutable — changing it is a conversation,
+  not a routine edit.
+- `docs/features/` holds one directory per feature, named for its slug:
+  `plan.md` (whose `## Resolved` section is settled law), `tasks.md` (the
+  checklist and its task IDs), `decisions.md` (ADRs), and `pitfalls.md`
+  (footguns hit along the way). These are agent state, not published docs.
+- `/feature-plan` starts a new feature. `/implement` builds one task from an
+  existing one. `/task-plan`, `/write-adr`, `/log-pitfall` and
+  `/resolve-pitfall` are on-demand. None of them run on their own — a human
+  types them.
+- Every commit names its task in the subject, e.g.
+  `✨ feat(api): add refresh endpoint (AUTH-ROTATION-04)`. A commit that
+  genuinely belongs to no task says `[no-task]` instead.
 
 ## Additional Resources
 
