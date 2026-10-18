@@ -179,6 +179,11 @@ instead of at release time:
 CI runs `checkReleaseBadging` on every PR (`.github/workflows/ci.yml`); update the golden file locally
 with `updateReleaseBadging` when a change is intentional.
 
+The badging check builds a release APK and can also schedule Crashlytics mapping upload through
+the release build. For local validation without that upload task, run
+`./gradlew :app:checkReleaseBadging -x :app:uploadCrashlyticsMappingFileRelease`.
+Passing this check does not establish that the APK uses a production signing key.
+
 ### Dependency Guard
 
 Fails the build when the release runtime classpath drifts from a committed baseline, so a new
