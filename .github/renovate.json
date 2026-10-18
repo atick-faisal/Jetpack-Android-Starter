@@ -5,5 +5,11 @@
     "group:all",
     ":dependencyDashboard",
     "schedule:daily"
+  ],
+  "gitIgnoredAuthors": [
+    "renovate[bot]@users.noreply.github.com",
+    "29139614+renovate[bot]@users.noreply.github.com",
+    "github-actions[bot]@users.noreply.github.com",
+    "41898282+github-actions[bot]@users.noreply.github.com"
   ]
 }
