@@ -26,19 +26,7 @@ import java.util.Locale
  * This function retrieves the application-specific locale set via [setLanguagePreference].
  * If no application locale is set, it falls back to the system default locale.
  *
- * ## Usage in ViewModels
- * ```kotlin
- * @HiltViewModel
- * class SettingsViewModel @Inject constructor() : ViewModel() {
- *     private val _uiState = MutableStateFlow(
- *         UiState(
- *             SettingsScreenData(
- *                 currentLanguage = getPreferredLocale().displayLanguage
- *             )
- *         )
- *     )
- * }
- * ```
+ * Settings maps this locale to its `Language` selection.
  *
  * ## Usage for Formatting
  * ```kotlin
@@ -72,58 +60,20 @@ fun getPreferredLocale(): Locale {
 /**
  * Sets the application locale based on a language code.
  *
- * This function allows per-app language preferences, independent of the system
- * language. The locale change takes effect immediately and persists across
- * app restarts. All activities are automatically recreated to reflect the new locale.
+ * Delegates to [AppCompatDelegate.setApplicationLocales]. Locale application and persistence
+ * depend on the Android version and AppCompat configuration; this function does not update a
+ * DataStore preference or make arbitrary date/number formatters use the new locale.
  *
- * ## Supported Language Tags
- * Use IETF BCP 47 language tags:
- * - Simple: `"en"`, `"es"`, `"fr"`, `"de"`, `"ja"`, `"zh"`
- * - With region: `"en-US"`, `"en-GB"`, `"es-ES"`, `"es-MX"`, `"zh-CN"`, `"zh-TW"`
- * - With script: `"zh-Hans"` (Simplified Chinese), `"zh-Hant"` (Traditional Chinese)
+ * The app currently offers English and Arabic. To extend the picker, update resources, the
+ * language model, options and locale mapping together; see
+ * [localization](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/main/docs/components.md#localization).
+ * The manifest enables AppCompat locale storage, and the app generates its locale configuration
+ * from resources. Verify selection, persistence and recreation on pre-33 and 33+ devices.
  *
- * ## Usage in ViewModel
+ * Existing SettingsViewModel method excerpt; imports and containing class omitted:
  * ```kotlin
- * @HiltViewModel
- * class SettingsViewModel @Inject constructor() : ViewModel() {
- *     fun updateLanguage(languageCode: String) {
- *         setLanguagePreference(languageCode)
- *         // Activities will be recreated automatically
- *     }
- * }
- * ```
- *
- * ## Usage in Settings Screen
- * ```kotlin
- * @Composable
- * fun LanguageSelector(onLanguageSelected: (String) -> Unit) {
- *     val languages = listOf(
- *         "en" to "English",
- *         "es" to "Español",
- *         "fr" to "Français",
- *         "de" to "Deutsch"
- *     )
- *
- *     languages.forEach { (code, name) ->
- *         TextButton(onClick = { onLanguageSelected(code) }) {
- *             Text(name)
- *         }
- *     }
- * }
- * ```
- *
- * ## Behavior
- * - Persists across app launches (stored by system)
- * - Triggers activity recreation to apply new locale
- * - Affects all string resources and date/time formatting
- * - Independent of system language setting (API 33+)
- *
- * ## Testing Language Changes
- * ```kotlin
- * @Test
- * fun testLanguageChange() {
- *     setLanguagePreference("es")
- *     assertEquals("es", getPreferredLocale().language)
+ * fun updateLanguagePreference(language: Language) {
+ *     setLanguagePreference(language.code)
  * }
  * ```
  *

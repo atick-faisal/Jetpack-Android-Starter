@@ -31,15 +31,8 @@ import kotlin.reflect.KClass
 /**
  * Hilt entry point for accessing [HiltWorkerFactory] at runtime.
  *
- * This entry point is required because WorkManager creates Worker instances itself,
- * outside of Hilt's normal dependency injection flow. By providing this entry point,
- * we can manually retrieve the HiltWorkerFactory and use it to create Workers with
- * injected dependencies.
- *
- * ## Why This Exists
- * - WorkManager instantiates Workers directly using reflection
- * - Hilt cannot automatically inject dependencies into Workers
- * - This entry point bridges the gap by providing access to HiltWorkerFactory
+ * [DelegatingWorker] retrieves the factory through the application entry point and uses it
+ * to construct the worker named in its input data. WorkManager constructs the proxy itself.
  *
  * @see DelegatingWorker for usage
  */
@@ -64,7 +57,7 @@ private const val WORKER_CLASS_NAME = "JetpackWorkerClassName"
  *
  * ## Usage Example
  * ```kotlin
- * // In Sync.kt
+ * // Existing SyncWorker.startUpSyncWork excerpt; imports and enclosing method omitted.
  * val syncWorkRequest = OneTimeWorkRequestBuilder<DelegatingWorker>()
  *     .setInputData(SyncWorker::class.delegatedData())  // Delegates to SyncWorker
  *     .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
@@ -110,54 +103,15 @@ internal fun KClass<out CoroutineWorker>.delegatedData(
 /**
  * A proxy Worker that delegates work to another [CoroutineWorker] created via [HiltWorkerFactory].
  *
- * ## Why This Pattern Exists
+ * WorkManager constructs this proxy, which reads the target class name from [delegatedData],
+ * obtains [HiltWorkerFactory] through the application entry point, and creates the target.
+ * It forwards [doWork] and [getForegroundInfo]; this is not a general forwarding wrapper for
+ * every Worker lifecycle callback.
  *
- * ### Problem
- * WorkManager creates Worker instances using reflection, which prevents Hilt from automatically
- * injecting dependencies. The standard solution requires configuring a custom WorkManager
- * initializer in the app module, which creates tight coupling and violates separation of concerns.
- *
- * ### Solution
- * This delegating pattern allows library modules (like `:sync`) to define Workers with injected
- * dependencies WITHOUT requiring the app module to configure WorkManager. Instead:
- * 1. The app module enqueues a generic `DelegatingWorker`
- * 2. `DelegatingWorker` receives the actual Worker class name via input data
- * 3. `DelegatingWorker` uses Hilt's entry point to get `HiltWorkerFactory`
- * 4. `HiltWorkerFactory` creates the real Worker with all dependencies injected
- * 5. `DelegatingWorker` delegates all work to the real Worker
- *
- * ## Benefits
- * - **Modular**: Library modules can define Workers without app module configuration
- * - **Type-safe**: Compile-time verification of Worker classes via `delegatedData()` extension
- * - **Clean**: App module doesn't need custom WorkManager initialization
- * - **Testable**: Real Workers can be tested independently with mock dependencies
- *
- * ## Usage Pattern
- * ```kotlin
- * // 1. Define a Worker in a library module with dependencies
- * @HiltWorker
- * class SyncWorker @AssistedInject constructor(
- *     @Assisted appContext: Context,
- *     @Assisted params: WorkerParameters,
- *     private val repository: Repository  // Injected by Hilt!
- * ) : CoroutineWorker(appContext, params) {
- *     override suspend fun doWork(): Result { /* ... */ }
- * }
- *
- * // 2. Enqueue DelegatingWorker with metadata pointing to the real Worker
- * val workRequest = OneTimeWorkRequestBuilder<DelegatingWorker>()
- *     .setInputData(SyncWorker::class.delegatedData())
- *     .build()
- *
- * WorkManager.getInstance(context).enqueue(workRequest)
- * ```
- *
- * ## Architecture Decision
- * This pattern was chosen over custom WorkManager configuration because:
- * - It keeps WorkManager initialization in the app module simple
- * - Library modules remain self-contained and reusable
- * - No need for app module to know about library module Workers
- * - Follows separation of concerns principle
+ * This project uses the proxy instead of installing a Hilt factory in WorkManager's configuration.
+ * Hilt also supports direct worker construction with a configured factory; see the
+ * [official integration](https://developer.android.com/training/dependency-injection/hilt-jetpack#workmanager).
+ * Changing the initialization path requires a separately reviewed implementation.
  *
  * @param appContext The application context provided by WorkManager
  * @param workerParams The worker parameters containing input data with the delegate Worker class name

@@ -42,9 +42,11 @@ class Navigator(val state: NavigationState) {
      *
      * A non-top-level [key] must belong to exactly one top-level destination. Pushing the same
      * key from two different tabs puts it in [NavigationState.backStack] twice, and Navigation 3
-     * identifies an entry by `NavEntry.contentKey`, which defaults to the key itself — so the two
-     * copies would share one `rememberSaveable` bundle and one `ViewModelStore`. Give each tab
-     * its own key type rather than reusing one across tabs.
+     * identifies an entry by `NavEntry.contentKey`, which defaults to `key.toString()`. Duplicate
+     * content keys share decorator state and can fail when rendered together. Distinct arguments
+     * on a data-class key produce distinct content keys; sharing a key type alone is not a collision.
+     * For independent instances across tabs, use distinct stable keys and verify restoration. See
+     * [entry identity](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/main/docs/navigation.md#entry-identity-and-duplicate-destinations).
      */
     fun navigate(key: NavKey) {
         when (key) {

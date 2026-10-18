@@ -119,14 +119,14 @@ class SignUpViewModel @Inject constructor(
  *
  * Form validation is performed in [SignUpViewModel] methods ([SignUpViewModel.updateName],
  * [SignUpViewModel.updateEmail], [SignUpViewModel.updatePassword]) which update the corresponding
- * [TextFieldData.errorMessage] based on validation rules. The form is considered valid when all
- * three fields have null error messages.
+ * [TextFieldData.errorMessage] based on validation rules. Initial fields have no errors before
+ * validation runs; null error messages alone do not establish valid input.
  *
  * Usage context:
- * - Route composable observes [SignUpViewModel.signUpUiState] which wraps this data class
+ * - SignUpScreen observes [SignUpViewModel.signUpUiState] which wraps this data class
  * - Text field composables bind to [SignUpScreenData.name], [SignUpScreenData.email], and [SignUpScreenData.password] with two-way data flow
  * - Error messages from [TextFieldData] are displayed below each input field
- * - Submit button is enabled only when all fields are valid (no error messages)
+ * - The submit button does not use field errors to control its enabled state
  * - Registration success triggers navigation to home screen via repository flow
  *
  * @param name Name field state with validation for full name format.

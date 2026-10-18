@@ -301,5 +301,5 @@ ViewModel scopes in lifetime tests so their separately launched collectors are c
 - [Architecture](architecture.md) — UI and data boundaries
 - [Data](data.md) — repository Result/Flow contracts and local-first persistence
 - [Navigation](navigation.md) — destination arguments and event integration
-- [Guide](guide.md) — current feature integration; its walkthrough repair is queued separately
+- [Guide](guide.md) — feature integration and a complete Home delete test
 - [Core UI Module](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/main/core/ui/README.md)

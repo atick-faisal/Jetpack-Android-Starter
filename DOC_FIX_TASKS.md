@@ -2,7 +2,7 @@
 
 Companion goals, findings, and recovery map: [DOC_FIX_PLAN.md](DOC_FIX_PLAN.md).
 
-Status: DF-00–DF-14 complete; DF-15 pending. Checked items identify completed work in the records below. Reviewed base: `1c2103890d16f81f6c6ae4c2d8626281b841e417`.
+Status: DF-00–DF-14 complete; DF-15 reader audit complete, final validation and PR preparation pending. Checked items identify completed work in the records below. Reviewed base: `1c2103890d16f81f6c6ae4c2d8626281b841e417`.
 Reviewed head: `0fb7882982cfefd55df300e06549731c6fbb33bb` ([PR #647](https://github.com/atick-faisal/Jetpack-Android-Starter/pull/647)).
 
 Complete each task by recording the changed paths, verification result, and any unresolved follow-up
@@ -2064,3 +2064,138 @@ Completion record (fill when the repair is finished):
 
 Accept: repair goals are met with evidence at the final revision, and the PR accurately describes
 what is ready and what remains separately tracked.
+
+### DF-15 reader-audit chunk — partial completion
+
+Completed 2026-10-18 from clean starting HEAD
+`3be551e9f31cdd283f0fdbc2f8528eae6f751744` on `fix/docs-v3`. The user selected reader audit first,
+with full validation gates and the local PR draft reserved for a second chunk. This record describes
+an uncommitted editorial patch, not completion of DF-15 or validation of a future commit.
+
+#### Recovery and behavior reconciliation
+
+Reviewed the recovery ledger against the completed task records and maintained destinations. There
+are no unchecked items before DF-15. The older records remain historical: DF-11's missing aggregate
+modules/README introductions and unresolved network references were subsequently addressed by
+DF-12/14; their old incomplete-publication statements do not describe the current implementation.
+The thirteen compatibility pages and homepage aliases retain the DF-14 disposition. No recovery
+item was dropped merely because the previous task was marked complete.
+
+| Remaining concern | Current reader-facing disposition | Evidence boundary |
+|---|---|---|
+| Sync consistency | Data's delivery/conflict section, feature guide, sync troubleshooting, Room/sync/Home references describe the single snapshot, ID-only acknowledgement, overwrites and absent cross-device delete delivery. | Repository race tests rerun; WorkManager scheduling and multi-device delivery are not covered. |
+| Pull checkpoints | Data distinguishes committed prefixes, equal-timestamp gaps and SDK cache completeness. Firebase explains missing legacy timestamps. | Cursor/tie tests rerun; cache-gap SDK integration remains unverified. |
+| Observation lifetime | State guide, tutorial and ViewModel comments expose separately launched collectors; Profile remains in the follow-up. | Home/Item/Settings lifetime tests rerun; no Profile lifecycle fix or device test. |
+| Async state lifecycle | State/helper contracts distinguish returned Results from throws/cancellation, overlap and suspended-edit replacement. Data describes the worker's cancellation catch. | Existing helper contract tests rerun; no helper/worker behavior changed. |
+| Event delivery | State guide and event KDoc distinguish consumption from callback completion. LiveData and snackbar KDoc now agree. | Existing Compose event and OneTimeEvent tests rerun; no claim of exactly-once delivery. |
+| Item failure handling | State, feature and troubleshooting guides retain failed-save navigation and discarded load-error limitations; proposed save replacement remains labeled. | Existing failure characterizations rerun; proposed runtime replacement was not installed. |
+| Upgrade compatibility | Firebase, Data, Getting Started and changelog expose destructive Room upgrade, legacy field exclusion and older-writer/rules incompatibility. | Inspection only; no migration, backfill, rules deployment or mixed-client test. |
+| Foreground sync | Troubleshooting distinguishes notification visibility from missing service-type configuration. | Worker/manifests inspected; affected Android API behavior remains a runtime follow-up. |
+
+#### Reader journeys
+
+All seven paths were followed through the authored instructions and their implementation/configuration
+counterparts. “Inspection” below does not mean the operational workflow was executed. In particular,
+this chunk establishes neither a fresh debug launch nor Firebase/release readiness.
+
+| Journey | Instructions and expected outcome checked | Exercised / limitation |
+|---|---|---|
+| First debug build/run | Getting Started: clone/cd, JDK 21, SDK 37, SDK location, assemble, APK location, install then launch; app/catalog corroborate the settings. Template buildability is distinguished from configured services. | Inspection only. Existing checkout/dependency caches were used for JVM checks; no clean checkout build, app assembly, install or launch. |
+| Configure Firebase | Firebase: application ID and fingerprints, providers, separate JSON/web OAuth inputs, ignored properties and generated client ID, rules, remote smoke-check expectations and upgrade caveats. Auth build/request code, remote model and release workflow inspected. | No protected configuration read or changed, Firebase console operation, signing report or backend request. Rule allow/deny and authentication smoke checks remain unexecuted. |
+| Add/test a feature | Guide: existing Home wiring, source/resource placement, Room registration, Hilt bindings, repository Results/Flows, keyed entries and app assembly. Excerpts retain explicit omissions and migration/worker integration steps. | Ran existing Home, navigation, DAO and repository suites; compiled/executed the exact complete Home/Item tutorial tests. No new production module/feature or device acceptance run. |
+| Customize component/locale | Components: static/dynamic palette precedence, wrapper contracts, previews, accessibility, resource prefixes and full language-picker path; compared Theme, SettingsDialog/ViewModel, Language and locale helpers. | Exact RetryButton/preview example compiled in core UI's temporary test sources; existing Settings/UI tests rerun. Contrast, TalkBack, RTL rendering, locale persistence/recreation and actual component interaction remain device/manual checks. |
+| Diagnose failed sync | Troubleshooting: unique work name, RUNNING vs waiting/retry, KEEP, diagnostics broadcast, first worker error, retry counts and foreground setup; compared worker, manager and repository. | Repository concurrency/cursor characterizations rerun. No diagnostics broadcast, device inspector, real worker scheduling or remote reproduction. |
+| Prepare signed release | Getting Started and Build & Tooling: app-relative keystore path, debug fallback, versionCode formula, Appfile/package alignment, secret formats, locked Bundler/Fastlane, lane consequences and independent publication jobs. Compared app build, Fastfile/Appfile and cd.yml. | Inspection only; no signing credentials, service-account key, release build, Fastlane command, tag, upload or publication. |
+| Preview docs | Build & Tooling: Android/Python prerequisites, real Dokka input, preparation, strict build, link audit and serve; compared scripts and docs.yml. | Authored-link check ran. Existing site served locally and browser-reviewed; no fresh Dokka/site generation. See provenance below. |
+
+#### Example coverage and editorial changes
+
+Inventoried fenced blocks in changed active Markdown against audit base `1c2103890`: 112 current
+blocks, 108 changed. Excluded generated output, historical PLAN/TASKS and DOC_FIX audit records.
+The 108 changed blocks comprise eight root-guidance blocks, 21 blocks across nineteen module READMEs,
+and 79 blocks in the ten maintained guides. Diagrams and command/configuration excerpts are included;
+these counts describe review coverage, not a completion target or a claim that every block compiled.
+
+| Example group | Disposition |
+|---|---|
+| Root instructions and contributor examples | Commands checked against the build/task definitions; Home/NavKey/query excerpts checked against their real owners. Abbreviations remain explicit. Formatting check ran; full build/guardrail commands remain for the next chunk. |
+| Module README excerpts | Source paths, signatures, query predicates, defaults and plugin/test dependencies checked against their owners. SettingsRepositoryExampleTest extracted verbatim and executed. Benchmark, auth, remote, reporting and lint excerpts were inspected, not exercised against devices/services. |
+| Architecture, data, navigation and feature excerpts | Models/mappings, DAO/provider/binding construction, return/error paths, runtime arguments, registrations and algorithm diagrams compared with current code. Meaningful Home/navigation/Room/repository counterparts exercised. Proposed save handling remains an inspected proposal, not a shipped fix. |
+| State and component examples | Exact HomeFeatureExampleTest and ItemInputExampleTest compiled/executed; RetryButton with its documented package and preview compiled. Helper/event/swipe/state counterparts exercised. Palette, locale, permission and other context-dependent snippets inspected with their surrounding declarations; no claim of device/UI acceptance. |
+| Setup, Firebase, release, tooling and troubleshooting commands | Paths, placeholders, prerequisites and side effects checked against build/scripts/workflows. External-service, signing, installation, instrumentation, baseline generation and publication commands were not run. |
+
+Corrected the following reader-facing contradictions; all Kotlin changes are comments/KDoc only:
+
+- `core/navigation/.../Navigator.kt`: default entry identity is `key.toString()`, not the key object;
+  sharing a key type alone does not imply collision. Rechecked the cached Navigation 3 source used
+  for DF-08 (`NavEntry.kt`, `defaultContentKey`), the pinned catalog and the maintained identity guide.
+- `core/ui/.../components/Navigation.kt`: removed the obsolete NavHost example and unsupported fixed
+  drawer mapping; the wrapper delegates selection to Material defaults.
+- `core/ui/.../extensions/LifecycleExtensions.kt`: use the Fragment view lifecycle for view updates;
+  distinguish cancellation/recollection from pausing, and per-instance event consumption from
+  completed delivery. Removed the Navigation 2 event example.
+- `core/ui/.../utils/SnackbarAction.kt`: labels do not implement report/undo behavior; resource
+  lookup in the suspend callback uses a captured Context. Illustrative Screen examples are labeled.
+- `core/ui/.../utils/LocaleUtils.kt`: replaced fictional Settings wiring and universal persistence/
+  formatting promises with the actual setter excerpt and resource/model/picker integration link.
+- `core/ui/.../utils/TextFieldData.kt`: corrected the email-validator name, used JetpackTextField,
+  labeled illustrative declarations, and replaced a conflicting UiText type redefinition with
+  extension guidance. Null error does not prove validation ran.
+- `feature/auth/.../signup/SignUpViewModel.kt`: corrected Screen terminology and the false claim
+  that field errors disable submission. The screen currently supplies no validation-based enabled
+  condition; this is source-reviewed, not a tested behavior fix.
+- `sync/.../worker/DelegatingWorker.kt`: replaced invented architectural motives and the claim Hilt
+  cannot inject workers with the actual entry-point/factory path and its limited forwarding surface.
+  Checked [official Hilt/WorkManager integration](https://developer.android.com/training/dependency-injection/hilt-jetpack#workmanager).
+- `core/ui/.../theme/Theme.kt`: replaced the copied “Now in Android theme” summary with this API's role.
+- `docs/state-management.md`: removed the stale statement that feature-walkthrough repair is queued.
+- This execution record is the only other changed path. No runtime API/type, dependency, resource,
+  module, migration, rule, protected configuration or formatting policy changed.
+
+Newly exposed follow-up: **Auth form submission validation** needs its own product decision and
+runtime tests for untouched/invalid fields and backend failures before claiming the submit button
+blocks invalid input. This chunk corrects that claim without changing registration behavior.
+Worker lifecycle forwarding beyond doWork/getForegroundInfo is not established by the wrapper;
+review cancellation/progress if changing that integration rather than assuming every callback forwards.
+
+The obsolete-claim search included active Markdown and Kotlin source, excluding generated output
+and historical audit logs. Reviewed remaining matches: explicit absence of periodic sync/undo,
+Screen-vs-Route guidance, the prohibition on NavController/NavHost, SnackbarAction.UNDO's label,
+Git index-hint reversal and historical compatibility anchors are legitimate references. Removed
+remaining positive Navigation 2 examples. Read the edited comments and key warnings for plain,
+factual wording; preserved release, compatibility, sync and state limitations.
+
+#### Fresh checks and provenance
+
+Temporary extracted examples, the init script and logs are under `/private/tmp/df15-reader-audit/`.
+They are not production sources or tracked test additions. The init script attaches extra test
+source directories only to this invocation; normal module configuration remains unchanged.
+
+| Command / check | Result and limits |
+|---|---|
+| `./gradlew :feature:home:testDebugUnitTest :core:navigation:testDebugUnitTest :core:room:testDebugUnitTest :data:testDebugUnitTest :core:ui:testDebugUnitTest :feature:settings:testDebugUnitTest` | Passed; all tasks up-to-date. Used only to establish baseline resolution; not counted as fresh test execution. |
+| `./gradlew --init-script /private/tmp/df15-reader-audit/examples.init.gradle --no-configuration-cache :feature:home:testDebugUnitTest --rerun :core:navigation:testDebugUnitTest --rerun :core:room:testDebugUnitTest --rerun :data:testDebugUnitTest --rerun :core:ui:testDebugUnitTest --rerun :feature:settings:testDebugUnitTest --rerun` | Passed, 13s; all six test tasks executed. 99 tests, zero failures/errors/skips: Home 14 (including three extracted example tests), navigation 14, Room 18, data 19, UI 27, Settings 7. RetryButton/preview compiled as temporary UI test source. The initial harness attempt failed during included-build evaluation because the Home project was absent there; adding an early null guard fixed the temporary script, with no repository build change. |
+| `./gradlew --init-script /private/tmp/df15-reader-audit/examples.init.gradle --no-configuration-cache :data:testDebugUnitTest --tests dev.atick.data.repository.settings.SettingsRepositoryExampleTest` | Passed, 1s; two exact README example tests. This filtered run replaces data's local XML report with the two selected tests; the earlier full-suite result is in targeted-tests.log. |
+| `./gradlew :core:android:testDebugUnitTest --tests dev.atick.core.utils.OneTimeEventTest --tests dev.atick.core.utils.CoroutineUtilsTest --tests dev.atick.core.extensions.StringExtensionsTest --rerun :core:preferences:testDebugUnitTest --rerun :core:network:testDebugUnitTest --rerun` | Passed, 5s; 33 tests, zero failures/errors/skips (20 selected Android, 10 serializer, 3 connectivity). Together the fresh runs exercised 134 tests, including five extracted documentation tests. No emulator/backend execution. |
+| `./gradlew spotlessCheck --init-script gradle/init.gradle.kts --no-configuration-cache` | Passed, 13s. Formatting check only; no formatter applied and no commit made. Included-build formatting caveat remains unchanged. |
+| `.venv/bin/python scripts/check_docs.py` | Passed for authored links; no `--site` claim for this patch. Repeated after adding this record. |
+| Comment-only comparison | Removed line/nested block comments while preserving literals, then compared all nine changed Kotlin files with HEAD: executable content identical. |
+| `git diff --check`; changed-path review | Passed. No extracted examples, generated site/API files, credentials or local configuration are tracked changes. |
+
+Browser review used existing `site/` output with HTML modification time 2026-10-18 09:48 local time.
+Its visible source links pin `fa1d26001d9d7f8bf30af50a78f056cf99f82994`, so it is explicitly an older
+preview, not a build of this patch. Served it on loopback port 8015 and followed Home → Guide →
+Testing and Components; inspected navigation, reading structure, tables and source-link provenance.
+This does not verify newly edited KDoc, current GitHub rendering or a hosted PR. No site was rebuilt
+or deployed. Fresh comprehensive rendering remains for the next chunk.
+
+#### Handoff to the final-validation chunk
+
+Keep DF-15 pending. Run the original final-check matrix against the resulting revision: formatting
+apply/review/check as required before committing, project check, debug assembly, real Dokka,
+preparation/strict MkDocs/HTML-link audit, and applicable dependency/badging gates for the whole PR.
+Recheck regenerated KDoc links and review GitHub/MkDocs/Dokka rendering, including the edited API
+comments. Record current results rather than copying prior success, and retain the inspection-only
+limits on Firebase, signing and device workflows. Prepare a local PR title/body describing recovered
+guidance, actual verification and outstanding runtime/compatibility concerns. Posting, committing,
+pushing, installing and publishing are outside this chunk.
