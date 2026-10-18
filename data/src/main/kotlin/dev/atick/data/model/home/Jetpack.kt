@@ -34,7 +34,7 @@ import java.util.UUID
  * @param lastSynced Epoch milliseconds carried from local acknowledgement or remote mapping.
  *     It is not an acknowledgement of the current form's persistence.
  * @param needsSync Local pending flag; the DAO also compares edit and acknowledgement times.
- * @param formattedDate Display text derived from [lastUpdated].
+ * @param formattedDate Display text derived from [Jetpack.lastUpdated].
  *
  * @see JetpackEntity
  * @see FirebaseJetpack

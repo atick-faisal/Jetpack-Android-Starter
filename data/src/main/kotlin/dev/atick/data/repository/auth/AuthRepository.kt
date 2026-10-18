@@ -25,7 +25,7 @@ import android.app.Activity
  * and Google Sign-In. It wraps the Firebase Auth SDK to provide a consistent repository pattern
  * with Result-based error handling.
  *
- * @see AuthRepositoryImpl Implementation class with Firebase Auth integration
+ * See [AuthRepositoryImpl](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/main/data/src/main/kotlin/dev/atick/data/repository/auth/AuthRepositoryImpl.kt) — Implementation class with Firebase Auth integration.
  */
 interface AuthRepository {
     /**

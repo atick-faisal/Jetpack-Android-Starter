@@ -81,7 +81,7 @@ import dev.atick.firebase.auth.model.AuthUser
  * ```
  *
  * @see AuthUser
- * @see FirebaseAuth
+ * @see com.google.firebase.auth.FirebaseAuth
  */
 interface AuthDataSource {
 
@@ -148,7 +148,7 @@ interface AuthDataSource {
      *
      * @param activity The activity instance required for showing the credential picker UI
      * @return The authenticated [AuthUser] upon successful sign-in
-     * @throws CancellationException if the user cancels the operation
+     * @throws kotlinx.coroutines.CancellationException if the user cancels the operation
      * @throws Exception for authentication failures
      */
     suspend fun signInWithSavedCredentials(activity: Activity): AuthUser
@@ -182,7 +182,7 @@ interface AuthDataSource {
      * @param email The user's email address
      * @param password The user's password
      * @return The authenticated [AuthUser] upon successful sign-in
-     * @throws FirebaseAuthException for authentication failures
+     * @throws com.google.firebase.auth.FirebaseAuthException for authentication failures
      */
     suspend fun signInWithEmailAndPassword(email: String, password: String): AuthUser
 
@@ -226,7 +226,7 @@ interface AuthDataSource {
      * @param password The user's password (must meet Firebase security requirements)
      * @param activity The activity instance required for saving credentials
      * @return The authenticated [AuthUser] upon successful registration
-     * @throws FirebaseAuthException for authentication/registration failures
+     * @throws com.google.firebase.auth.FirebaseAuthException for authentication/registration failures
      */
     suspend fun registerWithEmailAndPassword(
         name: String,
@@ -273,7 +273,7 @@ interface AuthDataSource {
      *
      * @param activity The activity instance required for showing the Google Sign-In UI
      * @return The authenticated [AuthUser] upon successful sign-in
-     * @throws CancellationException if user cancels the operation
+     * @throws kotlinx.coroutines.CancellationException if user cancels the operation
      * @throws Exception for Google Sign-In or Firebase authentication failures
      */
     suspend fun signInWithGoogle(activity: Activity): AuthUser
@@ -310,7 +310,7 @@ interface AuthDataSource {
      *
      * @param activity The activity instance required for showing the Google Sign-In UI
      * @return The authenticated [AuthUser] upon successful registration/sign-in
-     * @throws CancellationException if user cancels the operation
+     * @throws kotlinx.coroutines.CancellationException if user cancels the operation
      * @throws Exception for Google Sign-In or Firebase authentication failures
      * @see signInWithGoogle
      */

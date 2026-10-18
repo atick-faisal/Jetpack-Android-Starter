@@ -25,7 +25,7 @@ import kotlinx.coroutines.flow.Flow
  * This repository observes Firebase Auth state to provide profile information and handle
  * sign-out operations. Profile data is cached locally for offline access.
  *
- * @see ProfileRepositoryImpl Implementation class with Firebase Auth integration
+ * See [ProfileRepositoryImpl](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/main/data/src/main/kotlin/dev/atick/data/repository/profile/ProfileRepositoryImpl.kt) — Implementation class with Firebase Auth integration.
  */
 interface ProfileRepository {
     /**

@@ -28,4 +28,4 @@ override val issues = listOf(
 
 ## Related Documentation
 
-- [Components § Enforcement](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/fa19cbbd83ae609dcc0886a1b6b37379e91a12cc/docs/components.md#enforcement) — the full `DesignSystemDetector` rationale and its method-name table
+- [Components § Enforcement](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/main/docs/components.md#enforcement) — the full `DesignSystemDetector` rationale and its method-name table

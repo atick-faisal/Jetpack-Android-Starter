@@ -28,14 +28,14 @@ suspend fun markJetpackAsDeleted(id: String)
   devices' existing local rows through the incremental pull.
 - `lastUpdated` and `lastSynced` are device-clock milliseconds used in pending-change detection;
   both are transmitted to/from Firestore. `serverUpdatedAtNanos` is the server write timestamp
-  used by the pull cursor. See [metadata and algorithm](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/fa19cbbd83ae609dcc0886a1b6b37379e91a12cc/docs/data.md#algorithm-and-metadata).
+  used by the pull cursor. See [metadata and algorithm](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/main/docs/data.md#algorithm-and-metadata).
 - `getSyncCursor` includes soft-deleted rows because their server timestamps are already stored.
   It is a timestamp-only cursor, with interruption/tie limitations described in the guide.
 - Version 2 has no registered migration from version 1 and uses destructive fallback. Upgrades can
   erase unsent local changes. Same-version schema-integrity errors are a different failure path;
-  see [schema changes](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/fa19cbbd83ae609dcc0886a1b6b37379e91a12cc/docs/data.md#room-persistence-and-schema-changes).
+  see [schema changes](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/main/docs/data.md#room-persistence-and-schema-changes).
 
 ## Related Documentation
 
-- [Data Layer](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/fa19cbbd83ae609dcc0886a1b6b37379e91a12cc/docs/data.md) — the repository that reads/writes through this DAO, and the sync algorithm that drives `SyncAction`
-- [Sync algorithm](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/fa19cbbd83ae609dcc0886a1b6b37379e91a12cc/docs/data.md#two-way-sync) — the `WorkManager` job that consumes `getUnsyncedJetpacks`
+- [Data Layer](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/main/docs/data.md) — the repository that reads/writes through this DAO, and the sync algorithm that drives `SyncAction`
+- [Sync algorithm](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/main/docs/data.md#two-way-sync) — the `WorkManager` job that consumes `getUnsyncedJetpacks`

@@ -87,7 +87,7 @@ use a controlled dispatcher and suspended operations for concurrency tests.
 
 ## Further guidance
 
-- [State Management — Testing](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/fa19cbbd83ae609dcc0886a1b6b37379e91a12cc/docs/state-management.md#testing) — ViewModel example and state/event contract suites
-- [Guide — Testing](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/fa19cbbd83ae609dcc0886a1b6b37379e91a12cc/docs/guide.md#testing) — constructing repository and ViewModel tests
-- [Architecture — Testing](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/fa19cbbd83ae609dcc0886a1b6b37379e91a12cc/docs/architecture.md#testing) — convention test setup
-- [Settings repository tests](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/fa19cbbd83ae609dcc0886a1b6b37379e91a12cc/data/src/test/kotlin/dev/atick/data/repository/settings/SettingsRepositoryImplTest.kt) — executable success, failure, Flow and reset-order examples
+- [State Management — Testing](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/main/docs/state-management.md#testing) — ViewModel example and state/event contract suites
+- [Guide — Testing](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/main/docs/guide.md#testing) — constructing repository and ViewModel tests
+- [Architecture — Testing](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/main/docs/architecture.md#testing) — convention test setup
+- [Settings repository tests](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/main/data/src/test/kotlin/dev/atick/data/repository/settings/SettingsRepositoryImplTest.kt) — executable success, failure, Flow and reset-order examples

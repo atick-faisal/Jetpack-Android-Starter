@@ -137,10 +137,10 @@ class ItemViewModel @AssistedInject constructor(
  * Immutable data class representing the state of the create/edit item form.
  *
  * This class manages form state for both creating new Jetpack items and editing existing ones.
- * When creating a new item, [jetpackId] is pre-populated with a random UUID. When editing,
+ * When creating a new item, [ItemScreenData.jetpackId] is pre-populated with a random UUID. When editing,
  * the ID and other fields are loaded from the repository via `getJetpack()`.
  *
- * The [navigateBack] event is set after the save call returns, including a returned failure.
+ * The [ItemScreenData.navigateBack] event is set after the save call returns, including a returned failure.
  * ItemScreen consumes it inside an effect. Consumption is at most once per event instance and
  * does not acknowledge completed navigation.
  *

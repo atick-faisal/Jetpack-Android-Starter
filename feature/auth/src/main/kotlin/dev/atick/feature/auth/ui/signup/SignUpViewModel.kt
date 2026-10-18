@@ -124,7 +124,7 @@ class SignUpViewModel @Inject constructor(
  *
  * Usage context:
  * - Route composable observes [SignUpViewModel.signUpUiState] which wraps this data class
- * - Text field composables bind to [name], [email], and [password] with two-way data flow
+ * - Text field composables bind to [SignUpScreenData.name], [SignUpScreenData.email], and [SignUpScreenData.password] with two-way data flow
  * - Error messages from [TextFieldData] are displayed below each input field
  * - Submit button is enabled only when all fields are valid (no error messages)
  * - Registration success triggers navigation to home screen via repository flow

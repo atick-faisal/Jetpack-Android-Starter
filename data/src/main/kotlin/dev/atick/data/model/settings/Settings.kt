@@ -24,11 +24,11 @@ import dev.atick.core.preferences.model.UserDataPreferences
  *
  * This model encapsulates all editable user preferences for themes, appearance, and localization.
  * Settings are persisted in DataStore via [UserDataPreferences] and observed by the app's theme
- * system in [dev.atick.app.JetpackApp] to apply user preferences across the entire application.
+ * system in [JetpackApp](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/main/app/src/main/kotlin/dev/atick/compose/ui/JetpackApp.kt) to apply user preferences across the entire application.
  *
  * Settings data flow:
- * - User modifies settings in [dev.atick.feature.settings.ui.SettingsScreen]
- * - [dev.atick.feature.settings.ui.SettingsViewModel] updates via [dev.atick.data.repository.settings.SettingsRepository]
+ * - User modifies settings in [SettingsDialog](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/main/feature/settings/src/main/kotlin/dev/atick/feature/settings/ui/SettingsDialog.kt)
+ * - [SettingsViewModel](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/main/feature/settings/src/main/kotlin/dev/atick/feature/settings/ui/SettingsViewModel.kt) updates via [dev.atick.data.repository.settings.SettingsRepository]
  * - Repository persists changes to DataStore immediately (no sync required)
  * - App composable observes settings and applies theme/language changes reactively
  * - Settings survive app restarts and device reboots (DataStore persistence)
@@ -39,11 +39,11 @@ import dev.atick.core.preferences.model.UserDataPreferences
  * - [DarkThemeConfig.toDarkThemeConfigPreferences]: Convert theme enum to preferences
  *
  * Usage context:
- * - Applied in app-level theme configuration ([dev.atick.app.JetpackApp])
+ * - Applied in app-level theme configuration ([JetpackApp](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/main/app/src/main/kotlin/dev/atick/compose/ui/JetpackApp.kt))
  * - Displayed and edited in settings screen
- * - [useDynamicColor] enables Material You dynamic theming on Android 12+
- * - [darkThemeConfig] controls light/dark/system theme preference
- * - [language] controls app localization (English/Arabic)
+ * - [Settings.useDynamicColor] enables Material You dynamic theming on Android 12+
+ * - [Settings.darkThemeConfig] controls light/dark/system theme preference
+ * - [Settings.language] controls app localization (English/Arabic)
  *
  * @property userName Optional user name displayed in settings (nullable for unauthenticated users).
  * @property useDynamicColor Whether to enable Material You dynamic colors (default: true).
@@ -54,7 +54,7 @@ import dev.atick.core.preferences.model.UserDataPreferences
  * @see DarkThemeConfig Enum representing theme configuration options
  * @see Language Enum representing supported languages
  * @see dev.atick.data.repository.settings.SettingsRepository Repository providing settings operations
- * @see dev.atick.feature.settings.ui.SettingsViewModel ViewModel managing settings state
+ * See [SettingsViewModel](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/main/feature/settings/src/main/kotlin/dev/atick/feature/settings/ui/SettingsViewModel.kt) for the UI consumer.
  */
 data class Settings(
     val userName: String? = null,

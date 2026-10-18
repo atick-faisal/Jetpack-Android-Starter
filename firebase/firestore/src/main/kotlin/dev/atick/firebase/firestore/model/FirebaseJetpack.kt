@@ -24,7 +24,7 @@ import java.util.UUID
  * A Jetpack item as it is stored in Firestore, at
  * `/dev.atick.jetpack/{userId}/jetpacks/{jetpackId}`.
  *
- * [lastUpdated] and [lastSynced] carry device-clock milliseconds into Room, where they affect
+ * [FirebaseJetpack.lastUpdated] and [FirebaseJetpack.lastSynced] carry device-clock milliseconds into Room, where they affect
  * list ordering and pending-row selection. [serverUpdatedAt] carries the server write timestamp
  * used by the pull cursor; it is independent of those device clocks.
  *

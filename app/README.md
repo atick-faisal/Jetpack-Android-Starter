@@ -35,7 +35,7 @@ val mVersionCode = majorUpdateVersion.times(10_000).plus(minorUpdateVersion.time
 
 ## Gotchas
 
-> [!IMPORTANT]
+> **Important:**
 > `MainActivity` extends `AppCompatActivity`, not `ComponentActivity`, to support
 > `setApplicationLocales` for backward-compatible per-app language selection — the manifest sets
 > `android:theme="@style/Theme.AppCompat"` to prevent a crash from that combination.
@@ -43,10 +43,10 @@ val mVersionCode = majorUpdateVersion.times(10_000).plus(minorUpdateVersion.time
 - Theme resolution combines `isSystemInDarkTheme()` with `DarkThemeConfigPreferences`
   (`FOLLOW_SYSTEM`/`LIGHT`/`DARK`) collected via `repeatOnLifecycle(STARTED)`.
 - A release build without `keystore.properties` falls back to the debug signing key — see
-  [Getting Started](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/fa19cbbd83ae609dcc0886a1b6b37379e91a12cc/docs/getting-started.md#release-build-setup) for the full trap.
+  [Getting Started](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/main/docs/getting-started.md#release-build-setup) for the full trap.
 
 ## Related Documentation
 
-- [Architecture](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/fa19cbbd83ae609dcc0886a1b6b37379e91a12cc/docs/architecture.md) — the module graph `:app` sits at the top of
-- [Navigation](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/fa19cbbd83ae609dcc0886a1b6b37379e91a12cc/docs/navigation.md) — `JetpackApp`'s `NavDisplay`/`Navigator` wiring
-- [Data Layer](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/fa19cbbd83ae609dcc0886a1b6b37379e91a12cc/docs/data.md) — the repositories injected across feature ViewModels
+- [Architecture](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/main/docs/architecture.md) — the module graph `:app` sits at the top of
+- [Navigation](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/main/docs/navigation.md) — `JetpackApp`'s `NavDisplay`/`Navigator` wiring
+- [Data Layer](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/main/docs/data.md) — the repositories injected across feature ViewModels

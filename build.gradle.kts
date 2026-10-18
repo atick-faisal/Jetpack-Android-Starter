@@ -38,6 +38,8 @@ dependencies {
     dokka(projects.app)
 
     // ... Core
+    dokka(projects.core.navigation)
+    dokka(projects.core.testing)
     dokka(projects.core.android)
     dokka(projects.core.network)
     dokka(projects.core.preferences)
@@ -67,6 +69,9 @@ dependencies {
 }
 
 dokka {
+    dokkaPublications.configureEach {
+        failOnWarning.set(true)
+    }
     pluginsConfiguration.html {
         customAssets.from("docs/assets/logo-icon.svg")
         customStyleSheets.from("docs/assets/dokka.css")

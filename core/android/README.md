@@ -28,5 +28,5 @@ suspend inline fun <T> suspendRunCatching(crossinline block: suspend () -> T): R
 
 ## Related Documentation
 
-- [Data Layer](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/fa19cbbd83ae609dcc0886a1b6b37379e91a12cc/docs/data.md) — `suspendRunCatching` at the repository boundary
-- [State Management](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/fa19cbbd83ae609dcc0886a1b6b37379e91a12cc/docs/state-management.md) — `OneTimeEvent` inside `UiState`
+- [Data Layer](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/main/docs/data.md) — `suspendRunCatching` at the repository boundary
+- [State Management](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/main/docs/state-management.md) — `OneTimeEvent` inside `UiState`

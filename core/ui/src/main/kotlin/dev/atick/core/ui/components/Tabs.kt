@@ -92,7 +92,7 @@ fun JetpackTab(
 }
 
 /**
- * Jetpack tab row. Wraps Material 3 [TabRow].
+ * Jetpack tab row. Wraps Material 3 [SecondaryTabRow].
  *
  * A container for tabs with a secondary indicator that shows the selected tab position.
  * Tabs are evenly distributed across the available width.

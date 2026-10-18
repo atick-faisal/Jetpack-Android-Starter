@@ -101,7 +101,7 @@ val DarkDefaultColorScheme = darkColorScheme(
  *
  * @param darkTheme Whether the theme should use a dark color scheme (follows system by default).
  * @param disableDynamicTheming If `true`, disables the use of dynamic theming, even when it is
- *        supported. This parameter has no effect if [androidTheme] is `true`.
+ *        supported.
  */
 @Composable
 fun JetpackTheme(

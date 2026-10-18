@@ -68,7 +68,7 @@ fun JetpackButton(
  * Jetpack filled button with text and icon content slots.
  *
  * This is the most commonly used button variant for primary actions. Uses
- * [MaterialTheme.colorScheme.onBackground] as the container color.
+ * `MaterialTheme.colorScheme.onBackground` as the container color.
  *
  * Usage example:
  * ```kotlin

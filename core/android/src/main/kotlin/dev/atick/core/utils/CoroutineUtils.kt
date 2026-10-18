@@ -122,7 +122,7 @@ suspend inline fun <T> suspendCoroutineWithTimeout(
  * ```
  *
  * ## Integration with State Management
- * This function is designed to work seamlessly with [updateStateWith] and [updateWith]:
+ * This function is designed to work seamlessly with `updateStateWith` and `updateWith`:
  * ```kotlin
  * @HiltViewModel
  * class UserViewModel @Inject constructor(
@@ -152,8 +152,7 @@ suspend inline fun <T> suspendCoroutineWithTimeout(
  * @return [Result.success] with the value if successful, [Result.failure] if an exception occurred.
  * @throws CancellationException if the coroutine is cancelled (not caught).
  *
- * @see updateStateWith
- * @see updateWith
+ * See [UI state helpers](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/main/docs/state-management.md).
  */
 suspend inline fun <T> suspendRunCatching(crossinline block: suspend () -> T): Result<T> {
     return try {

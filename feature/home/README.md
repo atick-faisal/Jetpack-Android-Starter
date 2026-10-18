@@ -1,7 +1,7 @@
 # Module :feature:home
 
 **Purpose:** The template's reference feature — a Jetpack list with create/edit/delete, offline
-support, and background sync. The one feature the [Guide](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/fa19cbbd83ae609dcc0886a1b6b37379e91a12cc/docs/guide.md) walks through end to end.
+support, and background sync. The one feature the [Guide](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/main/docs/guide.md) walks through end to end.
 
 ## Key APIs
 
@@ -31,13 +31,13 @@ internal fun ItemScreen(
 
 Home and Item can accumulate repository collectors after resubscription while their ViewModels
 remain alive. Item currently ignores a failed save Result and can navigate back; its load catch
-does not store the error. See [subscription lifetimes](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/fa19cbbd83ae609dcc0886a1b6b37379e91a12cc/docs/state-management.md#subscription-lifetimes)
-and the [feature walkthrough](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/fa19cbbd83ae609dcc0886a1b6b37379e91a12cc/docs/guide.md) for the current behavior and instructional alternatives.
+does not store the error. See [subscription lifetimes](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/main/docs/state-management.md#subscription-lifetimes)
+and the [feature walkthrough](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/main/docs/guide.md) for the current behavior and instructional alternatives.
 A local write does not acknowledge remote delivery.
 
 ## Related Documentation
 
-- [Guide](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/fa19cbbd83ae609dcc0886a1b6b37379e91a12cc/docs/guide.md) — full walkthrough of this feature's ViewModel, screen, and navigation entries
-- [State Management](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/fa19cbbd83ae609dcc0886a1b6b37379e91a12cc/docs/state-management.md) — `UiState`/`StatefulComposable` pattern used here
-- [Navigation](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/fa19cbbd83ae609dcc0886a1b6b37379e91a12cc/docs/navigation.md) — assisted-inject ViewModels for keyed Nav3 arguments
-- [Data Layer](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/fa19cbbd83ae609dcc0886a1b6b37379e91a12cc/docs/data.md) — the `HomeRepository` this feature reads/writes through
+- [Guide](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/main/docs/guide.md) — full walkthrough of this feature's ViewModel, screen, and navigation entries
+- [State Management](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/main/docs/state-management.md) — `UiState`/`StatefulComposable` pattern used here
+- [Navigation](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/main/docs/navigation.md) — assisted-inject ViewModels for keyed Nav3 arguments
+- [Data Layer](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/main/docs/data.md) — the `HomeRepository` this feature reads/writes through

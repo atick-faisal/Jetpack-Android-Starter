@@ -31,7 +31,7 @@ import dev.atick.core.preferences.model.UserDataPreferences
  * - Firebase Auth provides initial profile data (name, photo) after sign-in
  * - [dev.atick.data.repository.profile.ProfileRepository] observes Firebase Auth state
  * - Profile is cached in DataStore for offline access and quick app startup
- * - UI layer observes profile via [dev.atick.feature.profile.ui.ProfileViewModel]
+ * - UI layer observes profile via [ProfileViewModel](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/main/feature/profile/src/main/kotlin/dev/atick/feature/profile/ui/ProfileViewModel.kt)
  *
  * Mapping extensions are provided for layer conversion:
  * - [UserDataPreferences.toProfile]: Convert from DataStore preferences to domain model
@@ -49,7 +49,7 @@ import dev.atick.core.preferences.model.UserDataPreferences
  * @see UserDataPreferences DataStore preferences model for local caching
  * @see PreferencesUserProfile Subset of preferences specifically for profile data
  * @see dev.atick.data.repository.profile.ProfileRepository Repository providing profile operations
- * @see dev.atick.feature.profile.ui.ProfileViewModel ViewModel consuming profile data
+ * See [ProfileViewModel](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/main/feature/profile/src/main/kotlin/dev/atick/feature/profile/ui/ProfileViewModel.kt) for the UI consumer.
  */
 data class Profile(
     val userName: String = String(),

@@ -32,11 +32,11 @@ fun SettingsDialog(
   It does not delete Room or Firestore records.
 - Resubscription can add repository collectors while the ViewModel remains alive; the settings
   load catch currently constructs a state without storing its error. See
-  [subscription lifetimes](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/fa19cbbd83ae609dcc0886a1b6b37379e91a12cc/docs/state-management.md#subscription-lifetimes).
-- Follow [localization](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/fa19cbbd83ae609dcc0886a1b6b37379e91a12cc/docs/components.md#localization) when adding a language; resource
+  [subscription lifetimes](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/main/docs/state-management.md#subscription-lifetimes).
+- Follow [localization](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/main/docs/components.md#localization) when adding a language; resource
   files alone do not update the in-app picker/mapping.
 
 ## Related Documentation
 
-- [State Management](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/fa19cbbd83ae609dcc0886a1b6b37379e91a12cc/docs/state-management.md) — `UiState`/`StatefulComposable` pattern used here
-- [JSON DataStore](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/fa19cbbd83ae609dcc0886a1b6b37379e91a12cc/docs/data.md#typed-json-datastore) — the DataStore preferences this dialog reads/writes
+- [State Management](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/main/docs/state-management.md) — `UiState`/`StatefulComposable` pattern used here
+- [JSON DataStore](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/main/docs/data.md#typed-json-datastore) — the DataStore preferences this dialog reads/writes
