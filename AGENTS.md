@@ -234,7 +234,7 @@ core:network, core:preferences, core:room, firebase:* → core:android
 ### Build
 - **Spotless task discovery**: applied via an init script; pass `--init-script gradle/init.gradle.kts --no-configuration-cache` to run or discover its tasks. Root invocations do not establish formatting coverage for the included `build-logic` build; see [Spotless scope](docs/build-and-tooling.md#spotless-via-an-init-script).
 - **Custom APK output filename**: not implemented on AGP 9 (tracked as GitHub Issue #579). The no-op `onVariants` block was removed; APK badging remains implemented.
-- **Dependency Guard** (`:app:dependencyGuard`) and **APK badging** (`:app:checkReleaseBadging`) run in CI on every PR — a dependency or manifest/permission change that isn't accompanied by a baseline/golden-file update will fail the build
+- **Dependency Guard** (`:app:dependencyGuard`) and **APK badging** (`:app:checkReleaseBadging`) run in CI on every PR — a dependency or manifest/permission change that isn't accompanied by a baseline/golden-file update will fail the build. Exception: on Renovate PRs, CI regenerates and commits the Dependency Guard baseline itself (badging stays manual); see [Renovate PRs](docs/build-and-tooling.md#renovate-prs)
 - **Configuration cache**: enabled; may be discarded by `OssLicensesTask` (harmless)
 - **JVM heap**: 8GB configured in `gradle.properties`
 
