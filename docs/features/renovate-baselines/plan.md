@@ -1,7 +1,7 @@
 ---
 slug: renovate-baselines
 title: Renovate Baseline Auto-Commit
-status: in-progress
+status: shipped
 created: 2026-10-18
 ---
 
