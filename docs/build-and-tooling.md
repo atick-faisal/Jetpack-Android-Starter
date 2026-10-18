@@ -313,7 +313,7 @@ still satisfies that predicate; an explicit `--scan` request is a separate choic
 |---|---|---|
 | `ci.yml` (🚀 Build & Validate) | Pull request; `repository_dispatch` type `libs-versions-updated` | `lint` job: Spotless check, `:build-logic:convention:check`. `build` job: Dependency Guard, unit tests, `:lint:test`, project build, Android Lint (uploaded to Code Scanning), APK badging check |
 | `cd.yml` (🚀 Release APK) | Tag push `v*.*.*` | `lint` → `build` (assembles the signed release) → `github-release` and `play-store-release` (Fastlane) |
-| `docs.yml` (📚 Documentation Deployment) | Push to `main` | Builds and deploys the MkDocs site |
+| `docs.yml` (📚 Documentation Validation & Deployment) | Pull request; push to `main` | Validates real API/site output; a separate main-only job deploys the validated artifact |
 | `claude.yml` (Claude Code) | Issue/PR comments and reviews | Claude Code GitHub Action automation — not part of the build pipeline |
 
 ## Release
@@ -450,44 +450,60 @@ successful GitHub release does not establish that Play publication succeeded.
 ## Local documentation preview
 
 Run from the repository root after completing Android/JDK setup. Python 3.14 matches `docs.yml`.
-The packages below mirror that workflow; only the admonitions plugin is pinned there.
+The packages below mirror CI; only the admonitions plugin is pinned.
 
 ```bash
 python3 -m venv .venv
 .venv/bin/python -m pip install mkdocs mkdocs-material mkdocs-github-admonitions-plugin==0.1.1 Pygments
-./gradlew dokkaGeneratePublicationHtml
-```
-
-Assemble the real API output and generated homepage. This portable transformation removes `docs/`
-only from Markdown link destinations, preserving external URLs, text and fragment suffixes:
-
-```bash
-.venv/bin/python - <<'PYTHON'
-from pathlib import Path
-import re
-import shutil
-
-api = Path("docs/api")
-api.mkdir(parents=True, exist_ok=True)
-shutil.copytree("build/dokka/html", api, dirs_exist_ok=True)
-readme = Path("README.md").read_text(encoding="utf-8")
-index = re.sub(r"(\]\()docs/", r"\1", readme)
-Path("docs/index.md").write_text(index, encoding="utf-8")
-PYTHON
-.venv/bin/python -m mkdocs build --strict
-.venv/bin/python -m mkdocs serve
+./gradlew dokkaGeneratePublicationHtml -PdocsRevision="$(git rev-parse HEAD)"
+.venv/bin/python -m unittest discover -s scripts -p 'test_*.py'
+.venv/bin/python scripts/prepare_docs.py
+.venv/bin/python -m mkdocs build --strict --config-file build/docs-mkdocs.yml
+.venv/bin/python scripts/check_docs.py --site site
+.venv/bin/python -m mkdocs serve --config-file build/docs-mkdocs.yml
 ```
 
 Open the server URL printed in the terminal (normally `http://127.0.0.1:8000/`) and stop it with
-Ctrl+C. Open `/` for the README homepage and `/api/` for Dokka. The current nav has no Home entry;
-MkDocs may report that the generated index is omitted from navigation. The workflow uses a broader
-`sed` replacement; site assembly/CI consistency and navigation repairs are tracked separately.
+Ctrl+C. Home is available at `/`, Dokka at `/api/`, and the benchmark and custom-lint references
+under Tooling. Run preparation and the strict build again after changing documentation; `serve`
+watches the assembled copy rather than the authored guides.
 
-`build/dokka/html/`, `docs/api/`, `docs/index.md`, `site/` and `.venv/` are generated/local artifacts
-covered by `.gitignore`. Do not commit them. Copying API output merges into the destination; when
-checking removed APIs, clear only the generated `docs/api/` directory before copying to avoid stale
-pages. Authored guides remain in `docs/*.md`. Run the strict build again after editing; serving a
-page alone is not validation. These commands build and preview locally; deployment is separate.
+`prepare_docs.py` requires real `build/dokka/html/index.html`; it does not create placeholder API
+pages. It replaces only `build/docs-source/`, copies authored guides and actual API output there,
+and generates the README homepage and tooling references. The generated configuration is
+`build/docs-mkdocs.yml`. Obsolete API files cannot survive a fresh preparation.
+
+The homepage transformation adjusts Markdown link destinations, preserving external URLs and
+fragments. Repository-only links and generated source links point to the documented commit.
+Preparation defaults to HEAD; `--revision <full-commit-sha>` and Gradle's matching
+`-PdocsRevision=<full-commit-sha>` select a different revision. Uncommitted content can be previewed,
+but remote source links describe the selected commit, not local edits. Historical evidence pins
+remain unchanged. Module READMEs use absolute `main` URLs because Dokka treats relative Markdown destinations
+in those introductions as unresolved references. Preparation rewrites active `main` links to the
+selected commit in the assembled site. Use that preview for unmerged documentation; repository
+README links follow the released guides until merge.
+
+Dokka publishes seventeen application/support modules, including navigation and testing. Each
+module includes its README introduction. API pages show declared members; superclass links lead
+to inherited SDK API references. Benchmark and lint READMEs are guide references rather
+than extra API modules, so documenting them does not change their build configuration. Dokka
+warnings fail generation. MkDocs validates authored page links and anchors; `check_docs.py` also
+checks root/module references and assembled HTML destinations, images, assets and fragments.
+External URL availability and visual usability still require review.
+
+The thirteen retired guide paths have compatibility pages. Old heading anchors land on those
+pages, which link to maintained replacements; they do not restore obsolete instructions. The
+historical homepage URL remains `/`. Compatibility pages outside navigation remain published.
+
+Pull requests and every push to main, including workflow-only changes, run the same preparation,
+strict build and link checks. CI validates the PR head commit; it uploads the site as an artifact.
+A separate deployment job runs only after successful main-push validation and publishes that
+artifact without rebuilding. Pull-request validation has read-only repository permissions. Local
+preview commands do not deploy anything.
+
+`build/`, `site/` and `.venv/` are ignored. The older generated paths `docs/index.md` and `docs/api/`
+also remain ignored but are not inputs to the new preparation process. Authored compatibility
+pages in `docs/*.md` remain tracked. Do not commit generated output or local environments.
 
 ## Further reading
 

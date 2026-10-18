@@ -2,7 +2,7 @@
 
 Companion goals, findings, and recovery map: [DOC_FIX_PLAN.md](DOC_FIX_PLAN.md).
 
-Status: DF-00–DF-13 complete (publication gaps explicitly deferred to DF-14); DF-14–DF-15 pending. Checked items identify completed work in the records below. Reviewed base: `1c2103890d16f81f6c6ae4c2d8626281b841e417`.
+Status: DF-00–DF-14 complete; DF-15 pending. Checked items identify completed work in the records below. Reviewed base: `1c2103890d16f81f6c6ae4c2d8626281b841e417`.
 Reviewed head: `0fb7882982cfefd55df300e06549731c6fbb33bb` ([PR #647](https://github.com/atick-faisal/Jetpack-Android-Starter/pull/647)).
 
 Complete each task by recording the changed paths, verification result, and any unresolved follow-up
@@ -1879,33 +1879,141 @@ granted access succeeded.
 Depends on: final page destinations from DF-03–13. Scope: `mkdocs.yml`, `.github/workflows/docs.yml`,
 documentation links, generated-output handling in `.gitignore`; PR validation workflow if needed.
 
-- [ ] Build the site from a clean checkout using DF-04's documented process, including the generated
+- [x] Build the site from a clean checkout using DF-04's documented process, including the generated
   README homepage and real Dokka API output. Do not use dummy API files to obtain a strict pass.
-- [ ] Confirm the generated homepage is reachable at the site root and navigable from every page;
+- [x] Confirm the generated homepage is reachable at the site root and navigable from every page;
   decide whether Home needs an explicit nav entry. Check the README link transformation does not
   damage external URLs or anchors.
-- [ ] Audit local links, headings/anchors, source paths, API links, images, and section links across
+- [x] Audit local links, headings/anchors, source paths, API links, images, and section links across
   all root/module/docs files. Resolve the duplicate `pymdownx.superfences` entry if confirmed redundant.
-- [ ] Map every deleted public page URL and relevant old anchor to its replacement. Implement
+- [x] Map every deleted public page URL and relevant old anchor to its replacement. Implement
   lightweight compatibility pages/anchors where feasible with existing tooling; record any
   unavoidable break explicitly. Do not add a redirects dependency without approval.
-- [ ] Check branch-specific source/README links that point to `main`: before merge they can show
+- [x] Check branch-specific source/README links that point to `main`: before merge they can show
   incompatible content. Choose a deliberate preview/release link strategy and verify it at both stages.
-- [ ] Review module README links in generated Dokka, KDoc unresolved references, generated asset
+- [x] Review module README links in generated Dokka, KDoc unresolved references, generated asset
   paths, and the API nav entry. A passing MkDocs build is only one part of this check.
   Include DF-11’s recorded missing aggregate modules, absent README introductions/source-set
   inclusion, thirteen network KDoc-link warnings, and pinned review-link release reconciliation.
-- [ ] Inspect representative GitHub and MkDocs rendering: tables, Mermaid, Kotlin fences, alerts,
+- [x] Inspect representative GitHub and MkDocs rendering: tables, Mermaid, Kotlin fences, alerts,
   details/summary contents, narrow-screen layout, and link destinations. Render claims require
   an actual rendering check, not inference from syntax alone.
-- [ ] Add or wire strict docs validation for PRs and before deployment using the same preparation
+- [x] Add or wire strict docs validation for PRs and before deployment using the same preparation
   steps as local preview. Keep deployment separate from validation; avoid a workflow that ignores
   docs/config-only changes. Explain any remaining checks that require a human.
-- [ ] Keep `docs/index.md`, `docs/api/`, `site/`, and local environment artifacts out of commits;
+- [x] Keep `docs/index.md`, `docs/api/`, `site/`, and local environment artifacts out of commits;
   confirm `.gitignore` covers the chosen process without hiding authored recovery pages.
 
 Accept: the site builds with real inputs, old navigation has a recorded outcome, docs changes are
 validated before merge, and both guide and API reading surfaces work.
+
+### DF-14 completion record
+
+Completed 2026-10-18 from clean starting HEAD `fa1d26001d9d7f8bf30af50a78f056cf99f82994`
+on `fix/docs-v3`. This is an uncommitted documentation/publication patch. The agreed scope includes
+the Dokka convention repair, seventeen aggregate API modules, and separate benchmark/lint guide
+references. No runtime APIs, application dependencies, SDK/toolchain versions, Firebase configuration,
+signing material, database policy, or Spotless configuration changed.
+
+#### Publication changes
+
+- `scripts/prepare_docs.py` assembles real Dokka output, authored guides, the README homepage and
+  two tooling references into disposable `build/docs-source/`; `build/docs-mkdocs.yml` inherits the
+  authored configuration. Preparation rejects missing API output, removes stale assembled output,
+  preserves external destinations/fragments, and keeps published API links inside the preview.
+  The local-preview guide and CI use this same process. Legacy ignored `docs/index.md` and
+  `docs/api/` are no longer inputs. Build/site/environment outputs and Python caches remain ignored;
+  the thirteen authored compatibility pages are not ignored.
+- Root Dokka aggregation now includes navigation and testing. The convention includes each README
+  in actual Android source sets, with Gradle-tracked file inputs, and fails on documentation warnings.
+  API pages show declared members; superclass links expose inherited SDK references. This also
+  avoids generated inherited-overload links whose hashes do not match their emitted anchors.
+  Benchmark and lint READMEs become Tooling pages without changing their build configurations.
+- Unresolved KDoc references now resolve to qualified declarations, source/guide links, or plain code
+  for private/nonexistent targets. Explicit property references avoid nonexistent `--root--` pages;
+  links to unpublished internal implementations lead to their source files. Removed the obsolete
+  `androidTheme` parameter claim. Kotlin changes outside the convention plugin are comments only.
+  Module alert markers that Dokka parsed as unresolved links use bold blockquote labels instead.
+- Home is explicit in navigation; duplicate SuperFences registration is removed. A small MkDocs
+  hook points generated-page source actions at the authored README files. Strict page/anchor
+  validation is supplemented by `scripts/check_docs.py`, which checks authored root/module/guide
+  links, generated HTML links/assets/fragments, and module README introductions. Dokka's unused
+  per-module navigation fragments are excluded; its actual root navigation is checked. Confirmed
+  the runtime loader fetches that root fragment through `pathToRoot`.
+- `docs.yml` validates every PR and main push, including workflow-only changes. Read-only validation
+  checks out the PR head/main commit, builds and checks the real site, and uploads an artifact.
+  A separate, dependent main-push-only job publishes that artifact without rebuilding, using the
+  existing MkDocs dependency `ghp-import`. Only deployment has write permission. No deployment ran.
+- The license badge returned valid Apache-2.0 content. The contributors counter repeatedly returned
+  an `INVALID` SVG; it is now a static, branded “contributors welcome” link without a count claim.
+  The existing build badge continues to report upstream CI state.
+
+#### Source-link policy
+
+Generated site/source links use the selected commit: PR head for validation, the main push commit
+for deployment, and HEAD by default locally. Historical evidence pins are preserved. Repository
+module READMEs use absolute `main` links because a checked relative-link attempt was rejected by
+Dokka as unresolved module-documentation references. Unmerged guide review therefore uses the
+assembled preview; repository README links follow released guides until merge. At release, the
+same preparation pins those links to the main build's commit. Other authored guide links stay
+relative where supported. Uncommitted local changes have no matching remote commit; local path
+checks do not establish that new remote source URLs already exist.
+
+#### Old URL and anchor disposition
+
+Every retired guide path below is an authored compatibility page, published at its original
+MkDocs directory URL. Each preserves the old heading anchors and links to the maintained section.
+No redirects package or automatic JavaScript redirect was added.
+
+| Retired page | Maintained destination(s) |
+|---|---|
+| `data-flow/` | Data; Architecture |
+| `dependency-injection/` | Data → Dependency injection; Guide |
+| `dependency/` | Build & Tooling → Apply or extend the build configuration |
+| `faq/` | Getting Started; Troubleshooting |
+| `fastlane/` | Build & Tooling → Play access and Bundler; Lanes, metadata, and publication |
+| `github/` | Build & Tooling → CI/CD; Repository secrets |
+| `license/` | Authoritative root LICENSE; also present in site navigation |
+| `performance/` | Build & Tooling → Compose compiler metrics and reports; Components → Performance checks |
+| `philosophy/` | Architecture; Data |
+| `plugins/` | Build & Tooling → Convention plugins; Guide |
+| `quick-reference/` | Build & Tooling → Command reference; Guide |
+| `spotless/` | Build & Tooling → Spotless, via an init script; Code quality |
+| `tips/` | Build & Tooling → Local documentation preview; Components → Previews |
+
+The thirteen pages preserve all 343 heading IDs extracted from the pinned audit base, plus eight
+GitHub-style duplicate-heading aliases. The generated homepage remains `/`; README includes 22
+missing historical homepage anchors at the corresponding current reading-map sections. Existing
+homepage anchors remain intact. Old statistics bookmarks lead to the reading map; removed numerical
+claims are not restored. Old section bookmarks reach replacement guidance, not the deleted text.
+
+#### Verification
+
+| Check | Result |
+|---|---|
+| `python -m unittest discover -s scripts -p 'test_*.py'` in the documentation environment | Passed. Tests cover destination/fragment preservation, root paths, preview API links, historical pins, absent API input, stale-output removal, isolated tooling inputs, broken HTML links/assets and missing README introductions. |
+| Fresh checkout plus authored patch | Disposable worktree at `/private/tmp/jetpack-df14-clean`; no local settings, API output or site output copied. The ignored legacy homepage was absent for final assembly. Android SDK supplied through ANDROID_HOME; existing Gradle dependency/build caches were permitted. |
+| `./gradlew dokkaGeneratePublicationHtml -PdocsRevision="$(git rev-parse HEAD)"` | Passed with real output. All seventeen module introductions and both tooling references are checked by the publication gate. |
+| Forced aggregate regeneration | Ran every `:<module>:dokkaGenerateModuleHtml --rerun` from the root's seventeen `dokka(projects...)` declarations, followed by `:dokkaGeneratePublicationHtml --rerun`, with the same revision property. BUILD SUCCESSFUL in 27 seconds; 265 tasks, 22 executed and 243 up-to-date. No unresolved-link warnings. |
+| `python scripts/prepare_docs.py`, then `python -m mkdocs build --strict -f build/docs-mkdocs.yml`, then `python scripts/check_docs.py --site site` | Passed in the main worktree and disposable checkout with real inputs. The checker includes root historical records as well as active docs. Final link audit: 19,629 destinations, zero errors. |
+| Historical anchor replay | Verified all 377 original heading anchors across the thirteen retired guides and old homepage in both authored Markdown and built HTML; the eight extra duplicate-heading aliases also remain. |
+| Negative KDoc probe | A temporary unresolved reference in the disposable network interface made generation fail with warningCount=1. Restored the source and regenerated successfully. |
+| Negative site probes | A temporary missing Markdown destination failed strict MkDocs. Broken API fragment/image references failed the HTML checker. Probe changes were confined to disposable/generated files and restored. |
+| `./gradlew spotlessApply --init-script gradle/init.gradle.kts --no-configuration-cache` | Passed, 8 seconds; formatting changes reviewed. |
+| `./gradlew spotlessCheck --init-script gradle/init.gradle.kts --no-configuration-cache check` | Passed, 6 seconds; 1,141 tasks. |
+| `./gradlew :build-logic:convention:check` | Passed separately, 2 seconds; six tasks. Combining it with the init script reproduced the already documented missing build-logic/spotless header-template issue; no formatting configuration was changed. Root Spotless success does not establish included-build formatting coverage. |
+| Workflow review | YAML parsed; PR/main triggers, head revision, read-only validation permissions, artifact transfer, deployment dependency and main-only write boundary inspected. GitHub Actions and public deployment were not executed locally. |
+| Rendering | Browser-reviewed homepage/navigation, navigation-module API introduction/table/Kotlin snippet, tooling reference, compatibility page, and expanded troubleshooting at 390×844. Rendered the unchanged sync Mermaid excerpt with the actual MkDocs renderer in a disposable QA page. GitHub's Markdown API rendered the updated app README; its returned HTML and a local GFM preview were inspected. These are engine/local-browser checks, not a hosted PR-page review. |
+| `git diff --check`; generated-output review | Passed; no generated site/API files, environments, credentials or local configuration are included in the patch. |
+
+Validated authored patch SHA-256, including the new compatibility pages and scripts but excluding
+this execution record: `63b35c881e9db619af661ad71ade00b30c7a13748927d57609c88293ac6d90ae`.
+
+Temporary logs and QA files are under `/private/tmp/df14-*`; the disposable checkout contains the
+patch and generated verification outputs. Final hosted PR rendering, the first actual Actions run,
+and deployment remain observable only after the separate commit/publication workflow. DF-15 owns
+the full reader walkthrough and PR-update preparation. DF-02 runtime limitations are unchanged.
+No commit, push, PR update, Firebase operation, device installation or site publication was performed.
 
 ## DF-15 — Validate the finished repair and prepare the PR update
 

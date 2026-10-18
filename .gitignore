@@ -72,3 +72,6 @@ GEMINI.local.md
 CLAUDE.local.md
 CHECKLIST.local.md
 CHANGELOG.local.md
+
+# Python documentation helpers
+__pycache__/

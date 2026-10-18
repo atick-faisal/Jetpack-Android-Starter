@@ -1,24 +1,31 @@
-name: 📚 Documentation Deployment
+name: 📚 Documentation Validation & Deployment
 
 on:
+  pull_request:
   push:
     branches:
       - main
-    paths:
-      - '**/*'
-      - '!**/.github/workflows/**'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: documentation-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  mkdocs:
-    name: 📖 Generate & Deploy Docs
+  validate:
+    name: 📖 Validate Documentation
     runs-on: ubuntu-latest
     timeout-minutes: 45
+    env:
+      DOCS_REVISION: ${{ github.event.pull_request.head.sha || github.sha }}
 
     steps:
-      - name: ⬇️ Checkout Repository
+      - name: ⬇️ Checkout Documented Revision
         uses: actions/checkout@v7
         with:
-          fetch-depth: 0  # Ensures full history for mkdocs deployment
+          ref: ${{ env.DOCS_REVISION }}
 
       - name: ✅ Validate Gradle Wrapper
         uses: gradle/actions/wrapper-validation@v6.3.0
@@ -31,7 +38,6 @@ jobs:
         with:
           java-version: 21
           distribution: 'temurin'
-          cache: gradle
 
       - name: ⚙️ Setup Gradle
         uses: gradle/actions/setup-gradle@v6.3.0
@@ -41,20 +47,55 @@ jobs:
         with:
           python-version: '3.14'
 
-      - name: 🏗️ Generate Documentation
+      - name: 📦 Install Documentation Tools
+        run: python -m pip install mkdocs mkdocs-material mkdocs-github-admonitions-plugin==0.1.1 Pygments
+
+      - name: 🧪 Test Site Preparation
+        run: python -m unittest discover -s scripts -p 'test_*.py'
+
+      - name: 🏗️ Generate Real API Documentation
+        run: ./gradlew dokkaGeneratePublicationHtml -PdocsRevision="$DOCS_REVISION"
+
+      - name: 📂 Prepare and Validate Site
         run: |
-          pip install mkdocs mkdocs-material mkdocs-github-admonitions-plugin==0.1.1 Pygments
-          ./gradlew dokkaGeneratePublicationHtml
-          mkdir -p docs/api
-          mv build/dokka/html/* docs/api/
+          python scripts/prepare_docs.py --revision "$DOCS_REVISION"
+          python -m mkdocs build --strict --config-file build/docs-mkdocs.yml
+          python scripts/check_docs.py --site site
 
-      - name: 📂 Copy Repo Contents to Docs
+      - name: 📦 Save Validated Site
+        uses: actions/upload-artifact@v4
+        with:
+          name: documentation-site
+          path: site/
+          retention-days: 7
+
+  deploy:
+    name: 🚀 Deploy Validated Documentation
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: validate
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: ⬇️ Checkout Repository
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: 📥 Download Validated Site
+        uses: actions/download-artifact@v4
+        with:
+          name: documentation-site
+          path: site/
+
+      - name: 🐍 Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: '3.14'
+
+      - name: 🚀 Deploy Without Rebuilding
         run: |
-          cp README.md docs/index.md
-          sed -i 's/docs\///' docs/index.md
-
-      - name: 🚀 Deploy Documentation
-        run: mkdocs gh-deploy
-
-permissions:
-  contents: write
+          python -m pip install mkdocs
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          ghp-import --no-jekyll --push --message "[no-task] docs: publish documentation for $GITHUB_SHA" site

@@ -5,7 +5,7 @@
 <p align="center">
     <a href="https://github.com/atick-faisal/Jetpack-Android-Starter/releases"><img src="https://img.shields.io/github/release/atick-faisal/Jetpack-Android-Starter?colorA=363a4f&colorB=b7bdf8&style=for-the-badge"></a>
     <a href="https://github.com/atick-faisal/Jetpack-Android-Starter/issues"><img src="https://img.shields.io/github/issues/atick-faisal/Jetpack-Android-Starter?colorA=363a4f&colorB=f5a97f&style=for-the-badge"></a>
-    <a href="https://github.com/atick-faisal/Jetpack-Android-Starter/contributors"><img src="https://img.shields.io/github/contributors/atick-faisal/Jetpack-Android-Starter?colorA=363a4f&colorB=a6da95&style=for-the-badge"></a>
+    <a href="https://github.com/atick-faisal/Jetpack-Android-Starter/contributors"><img src="https://img.shields.io/badge/contributors-welcome-a6da95?labelColor=363a4f&style=for-the-badge"></a>
     <img src="https://img.shields.io/github/actions/workflow/status/atick-faisal/Jetpack-Android-Starter/ci.yml?style=for-the-badge&logo=android&labelColor=363a4f"/>
 </p>
 
@@ -70,14 +70,33 @@ Before preparing an app for release, review the [sync limitations](docs/data.md#
 
 ![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
 
+<span id="documentation-map"></span>
+<span id="documentation-structure"></span>
+<span id="1-guide-documentation-mkdocs-site"></span>
+<span id="cross-references-integration"></span>
+<span id="documentation-statistics"></span>
+
 ## 📖 Documentation
 
 ### [📚 Full Documentation](https://atick.dev/Jetpack-Android-Starter)
+
+<span id="getting-started-path"></span>
+<span id="quick-reference"></span>
 
 ### 🎯 Getting Started
 
 - [Quick Start Guide](docs/getting-started.md)
 - [Firebase Setup](docs/firebase.md)
+
+<span id="deep-dive-guides"></span>
+<span id="core-concepts"></span>
+<span id="implementation-guides"></span>
+<span id="module-documentation"></span>
+<span id="core-modules"></span>
+<span id="data-sync"></span>
+<span id="firebase-modules"></span>
+<span id="feature-modules"></span>
+<span id="module-dependency-graph"></span>
 
 ### 🏛️ Architecture & Design
 
@@ -88,11 +107,18 @@ Before preparing an app for release, review the [sync limitations](docs/data.md#
 - [Data Layer](docs/data.md)
 - [Testing a Feature](docs/guide.md#testing)
 
+<span id="advanced-topics"></span>
+
 ### 🎨 Customize the App
 
 - [Shared Components and Accessibility](docs/components.md)
 - [Colors and Typography](docs/components.md#theming)
 - [Localization and RTL](docs/components.md#localization)
+
+<span id="deployment"></span>
+<span id="tool-process-documentation"></span>
+<span id="development-tools_1"></span>
+<span id="deployment-cicd"></span>
 
 ### 🚧 Development Tools
 
@@ -100,6 +126,8 @@ Before preparing an app for release, review the [sync limitations](docs/data.md#
 - [Release Preparation](docs/build-and-tooling.md#release)
 - [Local Documentation Preview](docs/build-and-tooling.md#local-documentation-preview)
 - [Troubleshooting](docs/troubleshooting.md)
+
+<span id="2-api-reference-dokka"></span>
 
 ### [📚 API Reference](https://atick.dev/Jetpack-Android-Starter/api/)
 
