@@ -51,6 +51,13 @@ internal fun Project.configureAndroidTest(commonExtension: CommonExtension) {
     // be greeted by a build failure — so report that as "nothing to do" rather than an error.
     tasks.withType(Test::class.java).configureEach {
         failOnNoDiscoveredTests.set(false)
+
+        // Robolectric 4.17 reflects into jdk.internal.access.SharedSecrets while setting up the
+        // sandbox (ApplicationSharedMemory on SDK 36+). The JDK blocks that unless the package
+        // is opened. See https://github.com/robolectric/robolectric/issues/11434
+        // Robolectric opens the same package for its own tests:
+        // https://github.com/robolectric/robolectric/blob/26d5dc6063e1c87919d1f85d4ee6d4250241c624/build-logic/convention/src/main/java/org/robolectric/gradle/TestTaskConfiguration.kt#L58-L79
+        jvmArgs("--add-opens=java.base/jdk.internal.access=ALL-UNNAMED")
     }
 
     dependencies.apply {
