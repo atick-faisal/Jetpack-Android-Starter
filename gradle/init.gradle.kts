@@ -18,7 +18,7 @@
 // Root-project files are outside this scope. Included-build checks resolve header paths under
 // build-logic, where the templates are missing; see docs/build-and-tooling.md#spotless-via-an-init-script.
 initscript {
-    val spotlessVersion = "8.9.0"
+    val spotlessVersion = "8.10.4"
 
     repositories {
         mavenCentral()
@@ -44,7 +44,7 @@ rootProject {
                     ),
                 ).customRuleSets(
                     listOf(
-                        "io.nlopez.compose.rules:ktlint:0.6.3",
+                        "io.nlopez.compose.rules:ktlint:0.6.8",
                     ),
                 )
                 licenseHeaderFile(rootProject.file("spotless/copyright.kt"))
