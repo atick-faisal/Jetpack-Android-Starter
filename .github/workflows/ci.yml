@@ -104,7 +104,7 @@ jobs:
       # https://docs.github.com/en/actions/managing-workflow-runs-and-deployments/managing-workflow-runs/skipping-workflow-runs
       - name: 🤖 Commit Dependency Baseline
         if: steps.dependency_guard_baseline.outcome == 'success'
-        uses: stefanzweifel/git-auto-commit-action@v7.2.0
+        uses: stefanzweifel/git-auto-commit-action@v7.2.1
         with:
           file_pattern: 'app/dependencies/*.txt'
           commit_message: '📌 chore(deps): update Dependency Guard baseline [no-task] [skip ci]'
