@@ -392,7 +392,8 @@ to update its baseline/golden file and inspect the diff. Follow [custom lint](bu
 for reported resource/API rules. Rerun the failing gate; regenerating a baseline is not diagnosis.
 
 **Renovate PRs:** CI commits the Dependency Guard baseline itself, so review that bot commit's
-diff instead of regenerating it. The bot commit shows no checks; that is expected. Badging still
+diff instead of regenerating it. The bot commit shows no checks; that is expected. If GitHub asks
+you to approve a run for that commit, the commit is missing `[skip ci]`. Badging still
 fails until updated by hand. See [Renovate PRs](build-and-tooling.md#renovate-prs).
 </details>
 

@@ -207,13 +207,15 @@ checks it (also run in CI); `./gradlew :app:dependencyGuardBaseline` regenerates
 The hosted Renovate app cannot run Gradle, so its version bumps never update the baseline. On a
 pull request opened by `renovate[bot]` from this repository, the `build` job in `ci.yml` regenerates
 the baseline when the check fails, commits it to the PR branch as
-`📌 chore(deps): update Dependency Guard baseline [no-task]`, and runs the remaining checks against
-it. This follows [Now in Android](https://github.com/android/nowinandroid/blob/main/.github/workflows/Build.yaml).
+`📌 chore(deps): update Dependency Guard baseline [no-task] [skip ci]`, and runs the remaining checks
+against it. This follows [Now in Android](https://github.com/android/nowinandroid/blob/main/.github/workflows/Build.yaml).
 Every other run, including your own PRs, fork PRs and `repository_dispatch`, still fails on drift.
 
-- The bot commit has no checks of its own: a push made with `GITHUB_TOKEN` does not start a new
-  workflow run. The run that made the commit already tested the regenerated baseline. If
-  `🏗️ Build & Test` is a required check, merge these PRs as an admin.
+- The bot commit has no checks of its own, because of `[skip ci]`. Without it, GitHub starts a run
+  for the bot's push and holds it until someone approves it. Renovate rewrites its branch almost
+  daily, which drops the bot commit, so the approval prompt would return every day. The run that
+  made the commit already tested the regenerated baseline. If `🏗️ Build & Test` is a required
+  check, merge these PRs as an admin.
 - That job checks out the PR branch (`github.head_ref`) on Renovate PRs, because
   `git-auto-commit-action` cannot push from the default merge ref. Keep that `ref:` line.
 - APK badging is not updated automatically. A bump that changes merged-manifest permissions
