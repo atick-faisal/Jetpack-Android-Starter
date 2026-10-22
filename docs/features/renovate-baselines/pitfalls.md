@@ -1,3 +1,4 @@
 # Renovate Baseline Auto-Commit — Pitfalls
 
 - [x] [RENOVATE-BASELINES-01] `git-auto-commit-action` on a `pull_request` run needs `actions/checkout` with `ref: github.head_ref`, because the default checkout is a detached merge ref (only stated in the action README) — without it the baseline push fails or puts GitHub's merge commit on the Renovate branch
+- [x] [RENOVATE-BASELINES-01] The `GITHUB_TOKEN` baseline push *does* start a `pull_request` run (actor `github-actions[bot]`), contrary to the docs this feature relied on, and GitHub holds it as `action_required` under the first-time-contributor approval policy — without `[skip ci]` in the bot commit message, every Renovate PR needs a manual approval, and Renovate's near-daily branch rewrites bring the prompt back each day so the PR never settles
