@@ -98,15 +98,16 @@ jobs:
         if: steps.dependency_guard.outcome == 'failure' && env.IS_RENOVATE_PR == 'true'
         run: ./gradlew :app:dependencyGuardBaseline
 
-      # A push made with GITHUB_TOKEN does not start a new workflow run, so the bot's commit gets
-      # no checks of its own. The steps below still run against the regenerated baseline.
-      # https://docs.github.com/en/actions/security-for-github-actions/security-guides/automatic-token-authentication#using-the-github_token-in-a-workflow
+      # The bot's push does start a new run, but GitHub holds it for manual approval, and Renovate's
+      # daily rewrites bring the prompt back each day. That run would only re-test what the steps
+      # below already test, so [skip ci] stops GitHub from creating it.
+      # https://docs.github.com/en/actions/managing-workflow-runs-and-deployments/managing-workflow-runs/skipping-workflow-runs
       - name: 🤖 Commit Dependency Baseline
         if: steps.dependency_guard_baseline.outcome == 'success'
         uses: stefanzweifel/git-auto-commit-action@v7.2.0
         with:
           file_pattern: 'app/dependencies/*.txt'
-          commit_message: '📌 chore(deps): update Dependency Guard baseline [no-task]'
+          commit_message: '📌 chore(deps): update Dependency Guard baseline [no-task] [skip ci]'
 
       - name: 🧪 Run Unit Tests
         run: ./gradlew test
