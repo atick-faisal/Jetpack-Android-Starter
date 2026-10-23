@@ -1,0 +1,75 @@
+// Firestore security rules for the dev.atick.compose Play Store project.
+//
+// Not deployed from this repo: paste into Firebase Console → Firestore Database → Rules,
+// check in the Rules Playground, then Publish.
+//
+// TRANSITIONAL (since v2.0.0): accepts both document shapes so v1.3.0 installs keep syncing
+// while v2.0.0 rolls out. Once no v1.3.0 installs remain, delete isLegacyJetpack and require
+// isV2Jetpack only — that is the strict example in docs/firebase.md.
+//
+// Accepted legacy documents have no serverUpdatedAt, so v2.0.0's pull query never returns them.
+// Making them visible again needs a separate backfill.
+
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Helper function to check if user is authenticated
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // Helper function to check if the user is accessing their own data
+    function isUserOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    // Fields every app version writes
+    function hasCoreFields(jetpack) {
+      return 'id' in jetpack && jetpack.id is string
+        && 'name' in jetpack && jetpack.name is string
+        && 'price' in jetpack && jetpack.price is number && jetpack.price >= 0
+        && 'userId' in jetpack && jetpack.userId is string
+        && 'lastUpdated' in jetpack && jetpack.lastUpdated is number
+        && 'lastSynced' in jetpack && jetpack.lastSynced is number
+        && 'deleted' in jetpack && jetpack.deleted is bool;
+    }
+
+    // v2.0.0+: adds serverUpdatedAt, which must be the Firestore-assigned write time
+    function isV2Jetpack(jetpack) {
+      return jetpack.size() == 8
+        && 'serverUpdatedAt' in jetpack
+        && jetpack.serverUpdatedAt == request.time;
+    }
+
+    // v1.3.0 and older: the original 7-field shape.
+    // TRANSITIONAL: remove this once no v1.3.0 installs remain.
+    function isLegacyJetpack(jetpack) {
+      return jetpack.size() == 7;
+    }
+
+    // Helper function to validate Jetpack data structure
+    function isValidJetpack(jetpack) {
+      return hasCoreFields(jetpack)
+        && (isV2Jetpack(jetpack) || isLegacyJetpack(jetpack));
+    }
+
+    // Match the specific path structure: dev.atick.jetpack/{userId}/jetpacks/{jetpackId}
+    match /dev.atick.jetpack/{userId}/jetpacks/{jetpackId} {
+      allow read: if isUserOwner(userId);
+
+      allow create: if isUserOwner(userId)
+        && isValidJetpack(request.resource.data);
+
+      allow update: if isUserOwner(userId)
+        && isValidJetpack(request.resource.data)
+        && request.resource.data.id == resource.data.id;
+
+      allow delete: if isUserOwner(userId);
+    }
+
+    // Deny access to all other documents by default
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
