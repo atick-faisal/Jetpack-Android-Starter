@@ -1,7 +1,8 @@
 // Firestore security rules for the dev.atick.compose Play Store project.
 //
-// Not deployed from this repo: paste into Firebase Console → Firestore Database → Rules,
-// check in the Rules Playground, then Publish.
+// Deploy: firebase deploy --only firestore:rules --project <your-project-id>
+// (firebase.json points here). Nothing deploys this automatically; check changes in the
+// Rules Playground first.
 //
 // TRANSITIONAL (since v2.0.0): accepts both document shapes so v1.3.0 installs keep syncing
 // while v2.0.0 rolls out. Once no v1.3.0 installs remain, delete isLegacyJetpack and require
