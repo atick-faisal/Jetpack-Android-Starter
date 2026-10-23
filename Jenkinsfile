@@ -1,76 +1,65 @@
 pipeline {
-    agent none
+    agent { label 'android' }
 
     options {
-        timeout(time: 45, unit: 'MINUTES')
+        skipDefaultCheckout()
+        disableConcurrentBuilds()
+        timeout(time: 120, unit: 'MINUTES')
+        buildDiscarder(logRotator(numToKeepStr: '10'))
+    }
+
+    environment {
+        GRADLE_USER_HOME = "${WORKSPACE}/.gradle/ci-home"
     }
 
     stages {
-        stage('Generate & Deploy Docs') {
-            agent {
-                docker {
-                    image 'thyrlian/android-sdk:latest'
-                    args '-u root:root -v $HOME/.gradle:/root/.gradle'
-                }
-            }
-
+        stage('Checkout') {
             steps {
-                script {
-                    // Checkout
-                    checkout scm
-
-                    // Validate Gradle Wrapper
-                    sh '''
-                        chmod +x gradlew
-                        ./gradlew --version
-                    '''
-
-                    // Copy CI gradle properties
-                    sh '''
-                        mkdir -p ~/.gradle
-                        cp .github/ci-gradle.properties ~/.gradle/gradle.properties
-                    '''
-
-                    // Install Python and dependencies
-                    sh '''
-                        apt-get update
-                        apt-get install -y python3 python3-pip python3-venv git
-                        python3 -m venv venv
-                        . venv/bin/activate
-                        pip install mkdocs mkdocs-material mkdocs-github-admonitions-plugin Pygments
-                    '''
-
-                    // Generate Documentation
-                    sh '''
-                        ./gradlew dokkaGeneratePublicationHtml
-                        mkdir -p docs/api
-                        mv build/dokka/html/* docs/api/
-                    '''
-
-                    // Copy README
-                    sh '''
-                        cp README.md docs/index.md
-                        sed -i 's/docs\\///' docs/index.md
-                    '''
-
-                    // Deploy to GitHub Pages with authentication
-                    withCredentials([usernamePassword(credentialsId: 'github-pat', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
-                        sh '''
-                            . venv/bin/activate
-
-                            # Configure git
-                            git config --global user.email "jenkins@ci.local"
-                            git config --global user.name "Jenkins CI"
-
-                            # Set remote URL with authentication
-                            git remote set-url origin https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/atick-faisal/Jetpack-Android-Starter.git
-
-                            # Deploy
-                            mkdocs gh-deploy --force
-                        '''
-                    }
-                }
+                // Discard stale reports and local configuration before checking out this revision.
+                deleteDir()
+                checkout scm
             }
+        }
+
+        stage('Prepare environment') {
+            steps {
+                sh '''
+                    set -eu
+                    for tool in java git bash just python3.14; do
+                        command -v "$tool"
+                    done
+                    java -version 2>&1 | head -n 1 | grep -E '\"21[.\"]'
+                    export ANDROID_HOME="${ANDROID_HOME:-${ANDROID_SDK_ROOT:-}}"
+                    : "${ANDROID_HOME:?Configure ANDROID_HOME or ANDROID_SDK_ROOT on the android agent}"
+                    test -d "$ANDROID_HOME/platforms"
+                    mkdir -p "$GRADLE_USER_HOME"
+                    cp .github/ci-gradle.properties "$GRADLE_USER_HOME/gradle.properties"
+                    ./gradlew --version
+                    python3.14 -m venv .venv
+                    .venv/bin/python -m pip install mkdocs mkdocs-material mkdocs-github-admonitions-plugin==0.1.1 Pygments
+                '''
+            }
+        }
+
+        stage('Verify') {
+            steps {
+                sh 'just verify'
+            }
+        }
+    }
+
+    post {
+        always {
+            archiveArtifacts artifacts: '**/build/test-results/**/*.xml,**/build/reports/lint-results-*',
+                allowEmptyArchive: true
+            junit testResults: '**/build/test-results/**/TEST-*.xml',
+                allowEmptyResults: currentBuild.currentResult != 'SUCCESS',
+                skipPublishingChecks: true
+        }
+        success {
+            sh 'test -s app/build/outputs/apk/debug/app-debug.apk && test -s site/index.html'
+            archiveArtifacts artifacts: 'app/build/outputs/apk/debug/app-debug.apk', fingerprint: true
+            archiveArtifacts artifacts: 'site/**'
         }
     }
 }

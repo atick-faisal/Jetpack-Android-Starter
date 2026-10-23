@@ -29,6 +29,67 @@ Regenerate guard files only after reviewing an intentional dependency or manifes
 [guardrail sections](#build-guardrails) explain the update tasks. Use a focused module task while
 iterating; a routine build does not require `clean`.
 
+## Jenkins verification
+
+`Jenkinsfile` runs `just verify` and archives its results. GitHub Actions continues to handle
+publication; Jenkins does not deploy documentation, upload releases, or update dependency baselines.
+A release APK built by verification can use the debug signing fallback, so only the **debug** APK
+is archived.
+
+### Controller and agent setup
+
+Install the Jenkins **Pipeline** (including Declarative Pipeline), **Git**, and **JUnit** plugins.
+Create a Pipeline job using **Pipeline script from SCM**, select this repository and the desired
+branch, and leave the script path as `Jenkinsfile`. A Multibranch Pipeline also works; configure
+branch/PR discovery in Jenkins. The Jenkinsfile does not configure webhooks or polling. Use read-only
+SCM credentials if the repository needs authentication; no GitHub publishing credential is required.
+
+Provide a dedicated Unix agent with label `android` and these tools on the agent process's `PATH`:
+
+- JDK 21 (`JAVA_HOME` must match), Git, Bash, and `just`.
+- Python 3.14 available as `python3.14`, with `venv` and pip support.
+- Android SDK packages matching the version catalog and Android Gradle Plugin, including the
+  compile SDK platform and build tools. Set `ANDROID_HOME` (or `ANDROID_SDK_ROOT`) in the agent
+  environment and accept the SDK licenses before running the job.
+
+Allow network access to the repository, Gradle distributions, JVM toolchain downloads, Maven
+repositories, and PyPI. The wrapper controls Gradle's version; the checked-in daemon criteria select
+JetBrains JDK 21. Provision enough memory for the CI Gradle configuration's 4 GiB heap plus compiler,
+test, and Jenkins agent processes. No emulator, release signing key, or private Firebase configuration
+is needed for this verification job.
+
+Each build clears its workspace before checkout, creates an isolated Gradle user home under
+`.gradle/ci-home`, copies the existing CI properties there, and installs the existing documentation
+packages into `.venv`. It does not modify the agent user's global Gradle properties. This prioritizes
+clean inputs over cache reuse, so cold builds download their dependencies. Builds of the same job
+run sequentially, have a 120-minute timeout after agent allocation, and retain the latest ten builds.
+
+### Results and validation
+
+The **Verify** stage uses the same `just verify` command as local development, including real Dokka,
+strict MkDocs, and documentation link validation. A failed check fails the build. Available Gradle
+JUnit XML and lint reports are archived even on failure, including reports from the included
+`build-logic` build. JUnit results appear in Jenkins's test report; missing results fail an otherwise
+successful build. Successful builds require and archive `app/build/outputs/apk/debug/app-debug.apk`
+and the validated `site/` tree. No HTML publishing plugin is required; download the site artifact
+to inspect it locally.
+
+Before running a changed pipeline, use the controller's
+[Declarative Pipeline linter](https://www.jenkins.io/doc/book/pipeline/development/).
+For an authenticated controller, provide a username/API-token pair through `JENKINS_AUTH` in your
+terminal environment, set `JENKINS_URL`, and run:
+
+```bash
+curl --fail --user "$JENKINS_AUTH" --form 'jenkinsfile=<Jenkinsfile' "$JENKINS_URL/pipeline-model-converter/validate"
+```
+
+Require the response to say `Jenkinsfile successfully validated.`; HTTP success alone does not mean
+that the pipeline is valid. Then build the candidate revision in a disposable job using a prepared
+`android` agent. Confirm that verification succeeds, test results are recorded, and both the debug
+APK and site artifacts exist. In a disposable checkout, force `just verify` to fail after writing a
+test report and confirm that Jenkins fails the build while retaining diagnostics. A linter pass
+alone does not establish that checkout, tools, tests, or artifact collection work.
+
 ## Convention plugins
 
 Every module applies build configuration through one of seven convention plugins in
