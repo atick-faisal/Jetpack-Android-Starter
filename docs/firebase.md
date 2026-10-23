@@ -172,6 +172,26 @@ publishing. A rule that deploys successfully can still deny the app's requests a
 example checks ownership by path and the stated field shape; assess any additional application
 validation before using it beyond this demonstration.
 
+### Deploy rules from the CLI
+
+The repository tracks a deployable rule set in [`firestore.rules`](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/main/firestore.rules), and
+[`firebase.json`](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/main/firebase.json) points the Firebase CLI at it:
+
+```bash
+npm install -g firebase-tools   # once
+firebase login                  # once
+firebase deploy --only firestore:rules --project <your-project-id>
+```
+
+`firestore.rules` differs from the example above. It is a transitional set for projects that still
+have pre-2.0.0 installs (see [Existing installs and documents](#existing-installs-and-documents)):
+it also accepts the older 7-field shape, and it requires a non-negative `price`. A new project with
+no older installs can replace its contents with the example above before deploying.
+
+Nothing deploys rules automatically: not CI, not CD, not the Gradle build. No `.firebaserc` is
+tracked, because each adopter uses their own project; pass `--project`, or run `firebase use --add`
+to create one locally.
+
 Deletion is soft in local Room data, then sync calls Firestore's hard-delete operation. It does not
 publish a tombstone: another device's existing local copy is not removed by the incremental query
 merely because the remote document is absent.
@@ -179,15 +199,20 @@ merely because the remote document is absent.
 ### Existing installs and documents
 
 > [!WARNING]
-> This branch changes Room schema 1 → 2 without a migration and enables destructive fallback.
+> Version 2.0.0 changes Room schema 1 → 2 without a migration and enables destructive fallback.
 > Upgrading an existing install can erase local rows, including edits or deletions not yet uploaded.
 > Re-fetching remote data cannot restore changes that never reached the server.
 
 The new pull query filters on `serverUpdatedAt`; legacy documents missing that field are excluded,
-even on a first pull with a zero cursor. The eight-field rules also reject older writers that omit
-that timestamp. Existing deployments need a separately planned migration/backfill and coordinated
-client/rules rollout. This guide does not supply that compatibility procedure; do not assume an
-existing dataset can be upgraded by replacing configuration files alone.
+even on a first pull with a zero cursor. The eight-field example rules also reject older writers
+that omit that timestamp.
+
+For the rules side of a rollout, the tracked [`firestore.rules`](https://github.com/atick-faisal/Jetpack-Android-Starter/blob/main/firestore.rules) accepts both
+shapes. Publish it before releasing, so pre-2.0.0 clients keep writing while the update rolls out.
+Remove its `isLegacyJetpack` branch once no older installs remain. Legacy documents it accepts still
+lack `serverUpdatedAt`, so new clients never pull them. Making them visible needs a backfill, which
+this guide does not supply; do not assume an existing dataset can be upgraded by replacing
+configuration files alone.
 
 ### Verify a configured project
 

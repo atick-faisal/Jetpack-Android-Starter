@@ -282,6 +282,7 @@ files; never a hardcoded version string.
 - Requires Firebase project setup with package name `dev.atick.compose`
 - Configure the web client ID for Credential Manager as described in [Firebase](docs/firebase.md#local-project-setup); the auth module reads it from `local.properties` via the secrets plugin
 - Review [existing-install and document compatibility](docs/firebase.md#existing-installs-and-documents) before upgrading a configured project
+- Firestore rules live in `firestore.rules` (transitional: also accepts pre-2.0.0 documents); deploy with `firebase deploy --only firestore:rules --project <id>`. Nothing deploys them automatically. Change the rules together with the `FirebaseJetpack` field shape, or writes are rejected at runtime — see [Deploy rules from the CLI](docs/firebase.md#deploy-rules-from-the-cli)
 
 ### LeakCanary
 - Enabled in debug builds by default

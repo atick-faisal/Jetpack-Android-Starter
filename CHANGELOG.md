@@ -7,10 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- `firebase.json`, so `firebase deploy --only firestore:rules` deploys `firestore.rules`.
+
 ## [2.0.0] - 2026-10-23
 
 ### Added
 
+- Tracked `firestore.rules`: transitional rules that accept both the pre-2.0.0 7-field document
+  and the new 8-field document with `serverUpdatedAt`, so older installs keep syncing during the
+  rollout.
 - Custom lint checks for design-system usage and test names, distributed through `core:ui`.
 - Baseline profile generation and startup benchmarking in `:benchmarks`.
 - Shared Robolectric/Compose test support, dispatcher rules, and fakes in `:core:testing`.
