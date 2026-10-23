@@ -7,9 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-The navigation, lint, benchmark, testing, build-guardrail, and AGP entries below record earlier
-unreleased work. The documentation repair also includes the behavior fixes and compatibility
-changes listed here.
+## [2.0.0] - 2026-10-23
 
 ### Added
 
@@ -17,12 +15,16 @@ changes listed here.
 - Baseline profile generation and startup benchmarking in `:benchmarks`.
 - Shared Robolectric/Compose test support, dispatcher rules, and fakes in `:core:testing`.
 - Dependency Guard and APK badging checks for release dependency and manifest drift.
+- Renovate PRs regenerate and commit the Dependency Guard baseline in CI.
 
 ### Changed
 
 - Navigation uses Jetpack Navigation 3 with typed keys, multiple back stacks, and adaptive list/detail
   scenes.
-- Bump Android Gradle Plugin to 9.3.1.
+- Bump Android Gradle Plugin to 9.4.1 and Kotlin to 2.4.21.
+- Update dependencies, including Firebase BoM 35.1.0 and Room 2.8.5.
+- Enable resource shrinking for release builds.
+- Enable parallel IDE sync (`org.gradle.tooling.parallel`) for Gradle 9.4+.
 - Rework setup, Firebase, release, feature-development, testing, customization, and local
   documentation-preview guidance to match the implementation and expose known limitations.
 - Sync pulls use Firestore's `serverUpdatedAt`, stored locally as `serverUpdatedAtNanos`, instead of
@@ -35,6 +37,7 @@ changes listed here.
   duplicate states. This does not establish backend reachability.
 - Item price editing preserves raw text, including empty and partial input. Submit parses the
   text, with invalid or empty input becoming `0.0`; no non-negative-price validation is added.
+- Robolectric tests open `jdk.internal.access`, which Robolectric 4.17 needs to set up its sandbox.
 
 ### Removed
 

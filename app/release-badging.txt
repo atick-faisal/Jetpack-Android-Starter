@@ -1,4 +1,4 @@
-package: name='dev.atick.compose' versionCode='10300' versionName='1.3.0' platformBuildVersionName='17' platformBuildVersionCode='37' compileSdkVersion='37' compileSdkVersionCodename='17'
+package: name='dev.atick.compose' versionCode='20000' versionName='2.0.0' platformBuildVersionName='17' platformBuildVersionCode='37' compileSdkVersion='37' compileSdkVersionCodename='17'
 minSdkVersion:'24'
 targetSdkVersion:'36'
 uses-permission: name='android.permission.POST_NOTIFICATIONS'

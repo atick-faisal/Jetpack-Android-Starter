@@ -1,0 +1,9 @@
+What's new in 2.0.0
+• New navigation: each tab keeps its own history, with list/detail layouts on large screens
+• Faster app startup
+• Swipe-to-delete no longer fires repeatedly
+• The price field keeps exactly what you type
+• Network status shows up right away
+• More reliable sync, using the server's clock
+
+Note: this update clears the data stored on your device. Items saved with earlier versions of the app will not come back.

@@ -63,7 +63,7 @@ site/
 .bundle
 vendor/*
 fastlane/report.xml
-**/changelogs/*
+**/changelogs/default.txt
 
 # AI Tools
 .claude/*
