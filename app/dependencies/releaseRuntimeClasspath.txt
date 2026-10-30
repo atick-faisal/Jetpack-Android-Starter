@@ -209,7 +209,7 @@ com.google.android.gms:play-services-measurement-impl:24.0.0
 com.google.android.gms:play-services-measurement-sdk-api:24.0.0
 com.google.android.gms:play-services-measurement-sdk:24.0.0
 com.google.android.gms:play-services-measurement:24.0.0
-com.google.android.gms:play-services-oss-licenses:17.5.2
+com.google.android.gms:play-services-oss-licenses:17.5.3
 com.google.android.gms:play-services-stats:17.0.2
 com.google.android.gms:play-services-tasks:18.4.0
 com.google.android.libraries.identity.googleid:googleid:1.2.1
