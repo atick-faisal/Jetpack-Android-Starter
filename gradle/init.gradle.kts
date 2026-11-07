@@ -18,7 +18,7 @@
 // Root-project files are outside this scope. Included-build checks resolve header paths under
 // build-logic, where the templates are missing; see docs/build-and-tooling.md#spotless-via-an-init-script.
 initscript {
-    val spotlessVersion = "8.10.4"
+    val spotlessVersion = "8.11.0"
 
     repositories {
         mavenCentral()
