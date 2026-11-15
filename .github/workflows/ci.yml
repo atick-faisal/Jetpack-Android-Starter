@@ -22,7 +22,7 @@ jobs:
         uses: actions/checkout@v7
 
       - name: ✅ Validate Gradle Wrapper
-        uses: gradle/actions/wrapper-validation@v6.4.0
+        uses: gradle/actions/wrapper-validation@v6.4.1
 
       - name: 📜 Copy CI gradle.properties
         run: mkdir -p ~/.gradle && cp .github/ci-gradle.properties ~/.gradle/gradle.properties
@@ -35,7 +35,7 @@ jobs:
           cache: gradle
 
       - name: ⚙️ Setup Gradle
-        uses: gradle/actions/setup-gradle@v6.4.0
+        uses: gradle/actions/setup-gradle@v6.4.1
 
       - name: 🧼 Run Spotless Check
         run: ./gradlew spotlessCheck --init-script gradle/init.gradle.kts --no-configuration-cache
@@ -77,7 +77,7 @@ jobs:
           cache: gradle
 
       - name: ⚙️ Setup Gradle
-        uses: gradle/actions/setup-gradle@v6.4.0
+        uses: gradle/actions/setup-gradle@v6.4.1
 
       # Detects drift between the release runtime classpath and app/dependencies/. Renovate can't
       # regenerate the baseline itself, so on its PRs CI does it and commits the result; anywhere
